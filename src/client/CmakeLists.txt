@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.27)
+project(Game)
+
+include_directories("./")
+
+file(GLOB_RECURSE CLIENT-SRC *.cpp)
+
+add_executable(Client ${CLIENT-SRC})
+
+target_link_libraries(Client bebone_engine)
+target_link_libraries(Client shared)
