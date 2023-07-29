@@ -1,3 +1,3 @@
 cmake --build build
 
-build\src\game\Game.exe
+build\src\client\Client.exe
