@@ -8,4 +8,6 @@
 #include "ebo.tpp"
 #include "vao.tpp"
 
+#include "shader.h"
+
 #endif
