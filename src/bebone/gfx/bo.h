@@ -1,6 +1,8 @@
 #ifndef _BEBONE_GFX_BO_H_
 #define _BEBONE_GFX_BO_H_
 
+#include "gfx_backend.h"
+
 namespace bebone::gfx {
     class BO {
         protected:
