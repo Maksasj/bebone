@@ -1,4 +1,4 @@
-name: CMake
+name: Build, clang win
 
 on:
   push:
