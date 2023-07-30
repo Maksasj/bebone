@@ -2,4 +2,4 @@ file(GLOB_RECURSE SRC_FILES "*.cpp")
 
 include_directories("./")
 
-add_library(bebone_engine STATIC ${SRC_FILES})
+add_library(bebone STATIC ${SRC_FILES})
