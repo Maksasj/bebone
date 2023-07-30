@@ -1,0 +1,6 @@
+[submodule "3dparty/glfw"]
+	path = 3dparty/glfw
+	url = https://github.com/Maksasj/glfw
+[submodule "3dparty/glad"]
+	path = 3dparty/glad
+	url = https://github.com/Maksasj/glad
