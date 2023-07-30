@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     class BO {
         protected:
-            unsigned long _ID;
+            unsigned int _ID;
 
         public:
             virtual void bind() const {};
@@ -14,8 +14,8 @@ namespace bebone::gfx {
             
             virtual void terminate() const {};
 
-            unsigned long get_id() const;
-            unsigned long* get_id_ref();
+            unsigned int get_id() const;
+            unsigned int* get_id_ref();
     };
 }
 #endif
