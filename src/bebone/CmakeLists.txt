@@ -5,4 +5,4 @@ include_directories("../../3dparty/glfw/include")
 
 include_directories("./")
 
-add_library(bebone_engine STATIC ${SRC_FILES})
+add_library(bebone STATIC ${SRC_FILES})

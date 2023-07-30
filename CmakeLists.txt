@@ -6,4 +6,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE release)
 
 add_subdirectory(3dparty)
+add_subdirectory(tests)
 add_subdirectory(src)

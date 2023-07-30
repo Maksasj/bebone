@@ -13,5 +13,5 @@ add_executable(Client ${CLIENT-SRC})
 target_link_libraries(Client glfw)
 target_link_libraries(Client glad)
 
-target_link_libraries(Client bebone_engine)
+target_link_libraries(Client bebone)
 target_link_libraries(Client shared)
