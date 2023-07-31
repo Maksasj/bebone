@@ -16,12 +16,12 @@ GLFWwindow* window;
 
 bool stopRenderingThread = false;
 
-int render() {
+void render() {
     glfwMakeContextCurrent(window); 
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
+        exit(1);
     }
 
     using namespace bebone::gfx;
@@ -64,6 +64,8 @@ int render() {
     vbo.terminate();
     ebo.terminate();
     shader.terminate();
+
+    glfwMakeContextCurrent(NULL);
 }
 
 int main() {
@@ -85,21 +87,33 @@ int main() {
     }
     // glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    
+    glfwMakeContextCurrent(NULL);
+
     std::thread renderingThread(render);
 
     while(true) {
         processInput(window);
 
         glfwPollEvents();
-
         if(glfwWindowShouldClose(window)) {
-            stopRenderingThread = true;
             break;
         }
     };
 
-    renderingThread.join();
+    stopRenderingThread = true;
+
+    std::cout << "Starting joining !\n";
+
+    if(renderingThread.joinable()) {
+        std::cout << "Joining !\n";
+
+        renderingThread.join();
+
+        std::cout << "Joined !\n";
+    }
+
+    std::cout << "Stopped !\n";
+
     glfwMakeContextCurrent(window);
     glfwTerminate();
 
