@@ -3,6 +3,9 @@
 
 #include "bebone/bebone.h"
 
+using namespace bebone::gfx;
+using namespace bebone::common;
+
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -19,13 +22,7 @@ bool stopRenderingThread = false;
 void render() {
     glfwMakeContextCurrent(window); 
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        exit(1);
-    }
-
-    using namespace bebone::gfx;
-    using namespace bebone::common;
+    RenderingEngine::init();
 
     GLShader shader;
     
