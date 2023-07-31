@@ -6,22 +6,10 @@
 using namespace bebone::gfx;
 using namespace bebone::common;
 
-void processInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-GLFWwindow* window;
-
 bool stopRenderingThread = false;
 
-void render() {
-    glfwMakeContextCurrent(window); 
-
+void render(Window& window) {
+    RenderingEngine::setContext(window);
     RenderingEngine::init();
 
     GLShader shader;
@@ -54,7 +42,7 @@ void render() {
         vao.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
  
-        glfwSwapBuffers(window);
+        RenderingEngine::swapBuffers(window);
     }
 
     vao.terminate();
@@ -62,57 +50,29 @@ void render() {
     ebo.terminate();
     shader.terminate();
 
-    glfwMakeContextCurrent(NULL);
+    RenderingEngine::terminate();
 }
 
 int main() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    RenderingEngine::preinit();
+        
+    Window window;
 
-    #ifdef __APPLE__
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    #endif
-
-    window = glfwCreateWindow(800, 600, "Client", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    // glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwMakeContextCurrent(NULL);
-
-    std::thread renderingThread(render);
+    std::thread renderingThread(render, std::ref(window));
 
     while(true) {
-        processInput(window);
-
         glfwPollEvents();
-        if(glfwWindowShouldClose(window)) {
+
+        if(window.closing()) {
             break;
         }
     };
 
     stopRenderingThread = true;
 
-    std::cout << "Starting joining !\n";
-
     if(renderingThread.joinable()) {
-        std::cout << "Joining !\n";
-
         renderingThread.join();
-
-        std::cout << "Joined !\n";
     }
-
-    std::cout << "Stopped !\n";
-
-    glfwMakeContextCurrent(window);
-    glfwTerminate();
 
     return 0;
 }

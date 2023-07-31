@@ -9,6 +9,8 @@
 #include "opengl/gl_vertex_array_object.tpp"
 #include "opengl/gl_shader.h"
 
+#include "window/window.h"
+
 #include "rendering_engine.h"
 
 #endif
