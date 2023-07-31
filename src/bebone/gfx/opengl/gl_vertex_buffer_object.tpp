@@ -1,15 +1,15 @@
-#ifndef _BEBONE_GFX_VBO_TPP_
-#define _BEBONE_GFX_VBO_TPP_
+#ifndef _BEBONE_GFX_OPENGL_VERTEX_BUFFER_OBJECT_TPP_
+#define _BEBONE_GFX_OPENGL_VERTEX_BUFFER_OBJECT_TPP_
 
 #include <vector>
 
-#include "bo.h"
+#include "gl_buffer_object.h"
 
 namespace bebone::gfx {
     template<class VertexType>
-    class VBO : public BO {
+    class GLVertexBufferObject : public GLBufferObject {
         public:
-            VBO(const std::vector<VertexType>& vertices) {
+            GLVertexBufferObject(const std::vector<VertexType>& vertices) {
                 glGenBuffers(1, &_ID);
 
                 glBindBuffer(GL_ARRAY_BUFFER, _ID);

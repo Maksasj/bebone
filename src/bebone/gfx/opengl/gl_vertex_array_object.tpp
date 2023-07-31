@@ -1,14 +1,14 @@
-#ifndef _BVAONE_GFX_VAO_TPP_
-#define _BVAONE_GFX_VAO_TPP_
+#ifndef _BVAONE_GFX_OPENGL_VERTEX_ARRAY_OBJECT_TPP_
+#define _BVAONE_GFX_OPENGL_VERTEX_ARRAY_OBJECT_TPP_
 
 #include <vector>
 
-#include "bo.h"
+#include "gl_buffer_object.h"
 
 namespace bebone::gfx {
-    class VAO : public BO {
+    class GLVertexArrayObject : public GLBufferObject {
         public:
-            VAO() {
+            GLVertexArrayObject() {
                 glGenVertexArrays(1, &_ID);
             }
 

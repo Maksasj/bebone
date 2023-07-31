@@ -1,9 +1,10 @@
-#ifndef _BEBONE_GFX_SHADER_H_
-#define _BEBONE_GFX_SHADER_H_
+#ifndef _BEBONE_GFX_OPENGL_SHADER_H_
+#define _BEBONE_GFX_OPENGL_SHADER_H_
 
 #include <iostream>
 
-#include "gfx_backend.h"
+#include "../gfx_backend.h"
+#include "../i_shader.h"
 
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
@@ -19,12 +20,12 @@ const char *fragmentShaderSource = "#version 330 core\n"
     "}\n\0";
 
 namespace bebone::gfx {
-    class Shader {
+    class GLShader : public IShader {
         private:
             unsigned int shaderProgram;
 
         public:
-            Shader() {
+            GLShader() {
                 unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
                 glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
                 glCompileShader(vertexShader);
@@ -63,11 +64,15 @@ namespace bebone::gfx {
                 glDeleteShader(fragmentShader);
             }   
 
-            void activate() {
+            void compile() override {
                 glUseProgram(shaderProgram);
             }   
 
-            void terminate() {
+            void activate() const override {
+                glUseProgram(shaderProgram);
+            }   
+
+            void terminate() const override {
                 glDeleteProgram(shaderProgram);
             }
     };

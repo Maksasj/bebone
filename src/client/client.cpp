@@ -27,7 +27,7 @@ void render() {
     using namespace bebone::gfx;
     using namespace bebone::common;
 
-    Shader shader;
+    GLShader shader;
     
     const std::vector<Vertex> vertices = {
         Vertex{0.5f,  0.5f, 0.0f},
@@ -41,10 +41,10 @@ void render() {
         1, 2, 3
     };
 
-    VAO vao;
+    GLVertexArrayObject vao;
     vao.bind();
-    VBO<Vertex> vbo(vertices);
-    EBO<unsigned int> ebo(indices);
+    GLVertexBufferObject<Vertex> vbo(vertices);
+    GLElementBufferObject<unsigned int> ebo(indices);
     vao.link_attribute(0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
     vao.unbind();
 

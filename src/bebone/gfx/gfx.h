@@ -3,11 +3,10 @@
 
 #include "gfx_backend.h"
 
-#include "bo.h"
-#include "vbo.tpp"
-#include "ebo.tpp"
-#include "vao.tpp"
-
-#include "shader.h"
+#include "opengl/gl_buffer_object.h"
+#include "opengl/gl_vertex_buffer_object.tpp"
+#include "opengl/gl_element_buffer_object.tpp"
+#include "opengl/gl_vertex_array_object.tpp"
+#include "opengl/gl_shader.h"
 
 #endif
