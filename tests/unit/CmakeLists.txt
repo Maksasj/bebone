@@ -1,0 +1,5 @@
+enable_testing()
+
+add_subdirectory(bebone)
+add_subdirectory(client)
+add_subdirectory(shared)
