@@ -1,78 +1,30 @@
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+// #define GLM_FORCE_RADIANS
+// #define GLM_FORCE_DEPTH_ZERO_TO_ONE
+// #include <glm/mat4x4.hpp>
+// #include <glm/vec4.hpp>
 #include <iostream>
-#include <thread>
-
-#include "bebone/bebone.h"
-
-using namespace bebone::gfx;
-using namespace bebone::common;
-
-bool stopRenderingThread = false;
-
-void render(Window& window) {
-    RenderingEngine::setContext(window);
-    RenderingEngine::init();
-
-    GLShader shader;
-    
-    const std::vector<Vertex> vertices = {
-        Vertex{0.5f,  0.5f, 0.0f},
-        Vertex{0.5f, -0.5f, 0.0f},
-        Vertex{-0.5f, -0.5f, 0.0f},
-        Vertex{-0.5f,  0.5f, 0.0f},
-    };
-
-    const std::vector<unsigned int> indices = {
-        0, 1, 3,
-        1, 2, 3
-    };
-
-    GLVertexArrayObject vao;
-    vao.bind();
-    GLVertexBufferObject<Vertex> vbo(vertices);
-    GLElementBufferObject<unsigned int> ebo(indices);
-    vao.link_attribute(0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
-    vao.unbind();
-
-    while (!stopRenderingThread) {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        shader.activate();
-
-        vao.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
- 
-        RenderingEngine::swapBuffers(window);
-    }
-
-    vao.terminate();
-    vbo.terminate();
-    ebo.terminate();
-    shader.terminate();
-
-    RenderingEngine::terminate();
-}
 
 int main() {
-    RenderingEngine::preinit();
-        
-    Window window;
+    glfwInit();
 
-    std::thread renderingThread(render, std::ref(window));
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
 
-    while(true) {
+    uint32_t extensionCount = 0;
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+
+    std::cout << extensionCount << " extensions supported\n";
+
+    while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-
-        if(window.closing()) {
-            break;
-        }
-    };
-
-    stopRenderingThread = true;
-
-    if(renderingThread.joinable()) {
-        renderingThread.join();
     }
+
+    glfwDestroyWindow(window);
+
+    glfwTerminate();
 
     return 0;
 }
