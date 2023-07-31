@@ -11,7 +11,7 @@ namespace bebone::gfx {
         private:
             GLFWwindow* window;
         public:
-            Window() {
+            Window(const std::string& title) {
                 glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
                 glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
                 glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -20,7 +20,7 @@ namespace bebone::gfx {
                 //     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
                 // #endif
 
-                window = glfwCreateWindow(800, 600, "Client", NULL, NULL);
+                window = glfwCreateWindow(800, 600, title.c_str(), NULL, NULL);
                 if (window == NULL) {
                     glfwTerminate();
                     throw std::runtime_error("Failed to create GLFW window");
