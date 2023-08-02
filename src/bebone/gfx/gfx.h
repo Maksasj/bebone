@@ -11,6 +11,8 @@
 
 #include "window/window.h"
 
+#include "shader_compiler.h"
+
 #include "rendering_engine.h"
 
 #endif

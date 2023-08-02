@@ -2,6 +2,7 @@
 #define _BEBONE_GFX_OPENGL_SHADER_H_
 
 #include <iostream>
+#include <vector>
 
 #include "../gfx_backend.h"
 #include "../i_shader.h"
@@ -25,34 +26,57 @@ namespace bebone::gfx {
             unsigned int shaderProgram;
 
         public:
-            GLShader() {
+            GLShader(std::vector<unsigned int>& spirvCodeVertex) {
+                // unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+                // glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+                // glCompileShader(vertexShader);
+
+                int numFormats = 0;
+                glGetIntegerv(GL_NUM_SHADER_BINARY_FORMATS, &numFormats);
+                std::vector<GLint> binaryFormats(numFormats);
+                glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, binaryFormats.data());
+
+                for (GLint supportedFormat : binaryFormats) {
+                    if (supportedFormat == GL_SHADER_BINARY_FORMAT_SPIR_V) {
+                        std::cout << "suported !\n";
+                    }
+                }
+
                 unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-                glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-                glCompileShader(vertexShader);
+                std::cout << "Before binary\n";
+                glShaderBinary(1, &vertexShader, GL_SHADER_BINARY_FORMAT_SPIR_V, spirvCodeVertex.data(), spirvCodeVertex.size() * sizeof(unsigned int));
+                
+                std::cout << "After binary\n";
+                glSpecializeShader(vertexShader, "main", 0, nullptr, nullptr);
+                // std::cout << "After binary\n";
+                
 
                 int success;
                 char infoLog[512];
-                glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-                if (!success)
-                {
-                    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-                    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-                }
+                // glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+                // if (!success) {
+                //     glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+                //     std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+                // }
 
-                unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-                glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-                glCompileShader(fragmentShader);
 
-                glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-                if (!success)
-                {
-                    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-                    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-                }
+
+
+
+                // unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+                // glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+                // glCompileShader(fragmentShader);
+// 
+                // glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+                // if (!success)
+                // {
+                //     glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+                //     std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+                // }
 
                 shaderProgram = glCreateProgram();
                 glAttachShader(shaderProgram, vertexShader);
-                glAttachShader(shaderProgram, fragmentShader);
+                // glAttachShader(shaderProgram, fragmentShader);
                 glLinkProgram(shaderProgram);
 
                 glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
@@ -61,7 +85,7 @@ namespace bebone::gfx {
                     std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
                 }
                 glDeleteShader(vertexShader);
-                glDeleteShader(fragmentShader);
+                // glDeleteShader(fragmentShader);
             }   
 
             void compile() override {

@@ -12,4 +12,8 @@ add_library(bebone STATIC ${SRC_FILES})
 
 target_link_libraries(bebone glfw)
 target_link_libraries(bebone glad)
+target_link_libraries(bebone glslang)
+target_link_libraries(bebone SPIRV)
+target_link_libraries(bebone glslang-default-resource-limits)
+
 target_link_libraries(bebone ${Vulkan_LIBRARIES})
