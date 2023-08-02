@@ -11,20 +11,33 @@ namespace bebone::gfx {
         private:
             GLFWwindow* window;
         public:
+            Window(const Window&) = delete;
+            Window &operator=(const Window&) = delete;
+
             Window(const std::string& title) {
-                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-                glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+                glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+                // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+                // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+                // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
                 // #ifdef __APPLE__
                 //     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
                 // #endif
 
+                glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
                 window = glfwCreateWindow(800, 600, title.c_str(), NULL, NULL);
+
                 if (window == NULL) {
                     glfwTerminate();
                     throw std::runtime_error("Failed to create GLFW window");
                 }
+            }
+
+            ~Window() {
+                glfwDestroyWindow(window);
             }
 
             GLFWwindow* get_backend() const {
@@ -33,6 +46,16 @@ namespace bebone::gfx {
 
             bool closing() const {
                 return glfwWindowShouldClose(window);
+            }
+
+            VkExtent2D get_extend() {
+                return { static_cast<uint32_t>(800), static_cast<uint32_t>(600) };
+            }
+
+            void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface_) {
+                if(glfwCreateWindowSurface(instance, window, nullptr, surface_) != VK_SUCCESS) {
+                    throw std::runtime_error("failed to create window surface");
+                }
             }
     };
 }

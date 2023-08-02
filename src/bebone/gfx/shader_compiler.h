@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+/*
 const char *vvvertexShaderSource = "#version 450 core\n"
                                 "layout (location = 0) in vec3 aPos;\n"
                                 "void main() {\n"
@@ -17,6 +18,7 @@ const char *fffragmentShaderSource = "#version 450 core\n"
                                   "void main() {\n"
                                   "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
                                   "}\n\0";
+*/
 
 namespace bebone::gfx {
     class ShaderCompiler {
@@ -25,9 +27,19 @@ namespace bebone::gfx {
                 glslang::InitializeProcess();
                 glslang::TShader shader(shaderType);
                 shader.setStrings(&shaderSource, 1);
-                shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientOpenGL, 450);
-                shader.setEnvClient(glslang::EShClient::EShClientOpenGL, glslang::EShTargetClientVersion::EShTargetOpenGL_450);
-                shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
+                
+                #if 0
+                    // Set environment input for Vulkan
+                    shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientVulkan, 100);
+
+                    // Set environment target for Vulkan SPIR-V
+                    shader.setEnvClient(glslang::EShClient::EShClientVulkan, glslang::EShTargetClientVersion::EShTargetVulkan_1_0);
+                    shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
+                #else
+                    shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientOpenGL, 450);
+                    shader.setEnvClient(glslang::EShClient::EShClientOpenGL, glslang::EShTargetClientVersion::EShTargetOpenGL_450);
+                    shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
+                #endif
 
                 const int defaultVersion = 100;
                 EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);

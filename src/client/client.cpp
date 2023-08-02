@@ -1,117 +1,124 @@
 #include <iostream>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <vector>
 
 #include "bebone/bebone.h"
 
-GLFWwindow *InitGLFWWindow(int width, int height, const char *title) {
-    if (!glfwInit()) {
-        std::cerr << "GLFW initialization failed." << std::endl;
-        return nullptr;
-    }
+#include "swap_chain.h"
+#include "pipeline.h"
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+using namespace bebone::gfx;
 
-    GLFWwindow *window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-    if (!window) {
-        std::cerr << "Failed to create GLFW window." << std::endl;
-        glfwTerminate();
-        return nullptr;
-    }
-
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return nullptr;
-    }
-
-    glViewport(0, 0, width, height);
-
-    return window;
-}
+const char *vvvertexShaderSource = "#version 450 core\n"
+                                "vec2 positions[3] = vec2[] (\n"
+                                "   vec2(0.0, -0.5),\n"
+                                "   vec2(0.5, 0.5),\n"
+                                "   vec2(-0.5, 0.5)\n"
+                                ");\n"
+                                "void main() {\n"
+                                "   gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);\n"
+                                "}\0";
+const char *fffragmentShaderSource = "#version 450 core\n"
+                                  "layout (location = 0) out vec4 outColor;\n"
+                                  "void main() {\n"
+                                  "   outColor = vec4(1.0f, 0.5f, 1.0f, 1.0f);\n"
+                                  "}\n\0";
 
 int main() {
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-    const char *windowTitle = "GLFW Window with Triangle";
+    RenderingEngine::preinit();
 
+    std::vector<unsigned int> vertexSpirvCode, fragmentSpirvCode;
 
-    GLFWwindow *window = InitGLFWWindow(screenWidth, screenHeight, windowTitle);
-    if (!window) {
-        return -1;
-    }   
+    ShaderCompiler::compile_shader(vvvertexShaderSource, EShLangVertex, vertexSpirvCode);
+    ShaderCompiler::compile_shader(fffragmentShaderSource, EShLangFragment, fragmentSpirvCode);
 
-    std::vector<unsigned int> vertexSpirv, fragmentSpirv;
+    Window window("Client");
+    MyEngineDevice device(window);
 
-    bebone::gfx::ShaderCompiler::compile_shader(vvvertexShaderSource, EShLangVertex, vertexSpirv);
-    bebone::gfx::ShaderCompiler::compile_shader(fffragmentShaderSource, EShLangFragment, fragmentSpirv);
+    MyEngineSwapChain swapChain(device, window.get_extend());
+    VkPipelineLayout pipelineLayout;
 
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
-    };
+    VkPipelineLayoutCreateInfo pipelineLayouInfo{};
+    pipelineLayouInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineLayouInfo.setLayoutCount = 0;
+    pipelineLayouInfo.pSetLayouts = nullptr;
+    pipelineLayouInfo.pushConstantRangeCount = 0;
+    pipelineLayouInfo.pPushConstantRanges = nullptr;
 
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    GLuint VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    // glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glShaderBinary(1, &vertexShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, vertexSpirv.data(), vertexSpirv.size() * sizeof(unsigned int));
-    glSpecializeShaderARB(vertexShader, "main", 0, nullptr, nullptr);
-    
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    // glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-    glShaderBinary(1, &fragmentShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, fragmentSpirv.data(), fragmentSpirv.size() * sizeof(unsigned int));
-    glSpecializeShaderARB(fragmentShader, "main", 0, nullptr, nullptr);
-
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    GLint linkStatus;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
-    if (!linkStatus) {
-        GLint infoLogLength;
-        glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
-        std::vector<GLchar> infoLog(infoLogLength);
-        glGetProgramInfoLog(shaderProgram, infoLogLength, nullptr, infoLog.data());
-        std::cerr << "Shader program linking error:\n" << infoLog.data() << std::endl;
-        glfwTerminate();
-        return -1;
+    if(vkCreatePipelineLayout(device.device(), &pipelineLayouInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create pipeline layout");
     }
 
+    auto pipelineConfig = Pipeline::defaultPipelineConfigInfo(swapChain.width(), swapChain.height());
+    pipelineConfig.renderPass = swapChain.getRenderPass();
+    pipelineConfig.pipelineLayout = pipelineLayout;
+    Pipeline pipeline(device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
 
-    while (!glfwWindowShouldClose(window)) {
+     std::vector<VkCommandBuffer> commnandBuffers;
+    commnandBuffers.resize(swapChain.imageCount());
+
+    VkCommandBufferAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;\
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandPool = device.getCommandPool();
+    allocInfo.commandBufferCount = static_cast<uint32_t>(commnandBuffers.size());
+
+    if(vkAllocateCommandBuffers(device.device(), &allocInfo, commnandBuffers.data()) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to allocate command buffers !");
+    }
+
+    for(int i = 0; i < commnandBuffers.size(); ++i) {
+        VkCommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+        if(vkBeginCommandBuffer(commnandBuffers[i], &beginInfo) != VK_SUCCESS) {
+            throw std::runtime_error("failed to being recording command buffer");
+        }
+
+        VkRenderPassBeginInfo renderPassInfo{};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.renderPass = swapChain.getRenderPass();
+        renderPassInfo.framebuffer = swapChain.getFrameBuffer(i);
+        
+        renderPassInfo.renderArea.offset = {0, 0};
+        renderPassInfo.renderArea.extent = swapChain.getSwapChainExtent();
+        
+        std::array<VkClearValue, 2> clearValues{};
+        clearValues[0].color = { 0.1f, 0.1f, 0.1f, 1.0f };
+        clearValues[1].depthStencil = { 1.0f, 0 };
+        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+        renderPassInfo.pClearValues = clearValues.data();
+
+        vkCmdBeginRenderPass(commnandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+        pipeline.bind(commnandBuffers[i]);
+        vkCmdDraw(commnandBuffers[i], 3, 1, 0, 0);
+
+        vkCmdEndRenderPass(commnandBuffers[i]);
+        if (vkEndCommandBuffer(commnandBuffers[i]) != VK_SUCCESS) {
+            throw std::runtime_error("failed to end command buffer");
+        }
+    }
+
+    while (!window.closing()) {
         glfwPollEvents();
 
-        glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        uint32_t imageIndex;
+        auto result = swapChain.acquireNextImage(&imageIndex);
 
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+            throw std::runtime_error("failed to acquire swap chain image!");
+        }
 
-        glfwSwapBuffers(window);
+        result = swapChain.submitCommandBuffers(&commnandBuffers[imageIndex], &imageIndex);
+        if(result != VK_SUCCESS) {
+            throw std::runtime_error("failed to acquire submit command buffers !\n");
+        }
     }
+   
+    vkDeviceWaitIdle(device.device());
+    vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 
-    glDeleteProgram(shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    glDeleteBuffers(1, &VBO);
-    glDeleteVertexArrays(1, &VAO);
     glfwTerminate();
 
-    return 0;
+    return 0; 
 }
