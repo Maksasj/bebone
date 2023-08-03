@@ -50,12 +50,7 @@ MyEngineSwapChain::~MyEngineSwapChain() {
 }
 
 VkResult MyEngineSwapChain::acquireNextImage(uint32_t *imageIndex) {
-	vkWaitForFences(
-		device.device(),
-		1,
-		&inFlightFences[currentFrame],
-		VK_TRUE,
-		std::numeric_limits<uint64_t>::max());
+	vkWaitForFences(device.device(), 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 
 	VkResult result = vkAcquireNextImageKHR(
 		device.device(),

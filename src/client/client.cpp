@@ -131,15 +131,12 @@ int main() {
         renderPassInfo.pClearValues = clearValues.data();
 
         vkCmdBeginRenderPass(commnandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+            pipeline.bind(commnandBuffers[i]);
 
-        pipeline.bind(commnandBuffers[i]);
-
-        model.bind(commnandBuffers[i]);
-        model.draw(commnandBuffers[i]);
-
-        vkCmdDraw(commnandBuffers[i], 3, 1, 0, 0);
-
+            model.bind(commnandBuffers[i]);
+            model.draw(commnandBuffers[i]);
         vkCmdEndRenderPass(commnandBuffers[i]);
+
         if (vkEndCommandBuffer(commnandBuffers[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to end command buffer");
         }
@@ -147,7 +144,7 @@ int main() {
 
     while (!window.closing()) {
         glfwPollEvents();
-
+        
         uint32_t imageIndex;
         auto result = swapChain.acquireNextImage(&imageIndex);
 
