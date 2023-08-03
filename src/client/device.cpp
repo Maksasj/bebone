@@ -20,7 +20,7 @@ VkResult CreateDebugUtilsMessengerEXT(
     const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo,
     const VkAllocationCallbacks *pAllocator,
     VkDebugUtilsMessengerEXT *pDebugMessenger) {
-	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
+	auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(
 		instance,
 		"vkCreateDebugUtilsMessengerEXT");
 	if (func != nullptr) {
@@ -117,7 +117,7 @@ void MyEngineDevice::pickPhysicalDevice() {
 	for (const auto &device : devices) {
 		if (isDeviceSuitable(device)) {
 			physicalDevice = device;
-		break;
+			break;
 		}
 	}
 

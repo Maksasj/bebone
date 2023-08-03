@@ -5,23 +5,48 @@
 
 #include "swap_chain.h"
 #include "pipeline.h"
+#include "model.h"
 
 using namespace bebone::gfx;
 
 const char *vvvertexShaderSource = "#version 450 core\n"
-                                "vec2 positions[3] = vec2[] (\n"
-                                "   vec2(0.0, -0.5),\n"
-                                "   vec2(0.5, 0.5),\n"
-                                "   vec2(-0.5, 0.5)\n"
-                                ");\n"
+                                "layout(location = 0) in vec2 position;\n"
                                 "void main() {\n"
-                                "   gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);\n"
+                                "   gl_Position = vec4(position, 0.0, 1.0);\n"
                                 "}\0";
 const char *fffragmentShaderSource = "#version 450 core\n"
                                   "layout (location = 0) out vec4 outColor;\n"
                                   "void main() {\n"
                                   "   outColor = vec4(1.0f, 0.5f, 1.0f, 1.0f);\n"
                                   "}\n\0";
+
+
+#include <chrono>
+
+void printFPS() {
+    static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
+    static int fps; fps++;
+
+    if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - oldTime) >= std::chrono::seconds{ 1 }) {
+        oldTime = std::chrono::high_resolution_clock::now();
+        std::cout << "FPS: " << fps <<  std::endl;
+        fps = 0;
+    }
+}
+
+void sierpinski_triangle(std::vector<Vertex>& vertices, int depth, Vertex pos, float side) {
+    if(depth <= 0) {
+        vertices.push_back({pos.x, pos.y - side});
+        vertices.push_back({pos.x + side, pos.y + side});
+        vertices.push_back({pos.x - side, pos.y + side});
+    } else {
+        const auto halfSide = side / 2.0f;
+
+        sierpinski_triangle(vertices, depth - 1, {pos.x, pos.y - halfSide}, halfSide);
+        sierpinski_triangle(vertices, depth - 1, {pos.x + halfSide, pos.y + halfSide}, halfSide);
+        sierpinski_triangle(vertices, depth - 1, {pos.x - halfSide, pos.y + halfSide}, halfSide);
+    }
+};
 
 int main() {
     RenderingEngine::preinit();
@@ -66,7 +91,18 @@ int main() {
         throw std::runtime_error("Failed to allocate command buffers !");
     }
 
-    for(int i = 0; i < commnandBuffers.size(); ++i) {
+    const std::vector<Vertex> beginVertices = {
+        {0.0f, -0.5f}, // Top
+        {0.5f, 0.5f}, // Right
+        {-0.5f, 0.5f}, // Left
+    };
+
+    std::vector<Vertex> vertices;
+    sierpinski_triangle(vertices, 5, {0.0, 0.0}, 0.8f);
+
+    Model model(device, vertices);
+
+    for(size_t i = 0; i < commnandBuffers.size(); ++i) {
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -83,7 +119,7 @@ int main() {
         renderPassInfo.renderArea.extent = swapChain.getSwapChainExtent();
         
         std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = { 0.1f, 0.1f, 0.1f, 1.0f };
+        clearValues[0].color = {{ 0.1f, 0.1f, 0.1f, 1.0f }};
         clearValues[1].depthStencil = { 1.0f, 0 };
         renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
         renderPassInfo.pClearValues = clearValues.data();
@@ -91,6 +127,10 @@ int main() {
         vkCmdBeginRenderPass(commnandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         pipeline.bind(commnandBuffers[i]);
+
+        model.bind(commnandBuffers[i]);
+        model.draw(commnandBuffers[i]);
+
         vkCmdDraw(commnandBuffers[i], 3, 1, 0, 0);
 
         vkCmdEndRenderPass(commnandBuffers[i]);
@@ -113,6 +153,8 @@ int main() {
         if(result != VK_SUCCESS) {
             throw std::runtime_error("failed to acquire submit command buffers !\n");
         }
+
+        printFPS();
     }
    
     vkDeviceWaitIdle(device.device());

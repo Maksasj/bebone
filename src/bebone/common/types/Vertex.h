@@ -5,7 +5,6 @@ namespace bebone::common {
     struct Vertex {
         float x;
         float y;
-        float z;
     };
 }
 
