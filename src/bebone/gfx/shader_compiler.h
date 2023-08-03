@@ -52,6 +52,10 @@ namespace bebone::gfx {
 
                 glslang::TProgram program;
                 program.addShader(&shader);
+
+                // Todo take reflection there
+                // program.getReflectionIndex
+
                 if (!program.link(messages)) {
                     std::cerr << "Error while linking shaders:\n" << program.getInfoLog() << std::endl;
                     glslang::FinalizeProcess();

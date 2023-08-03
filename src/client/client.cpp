@@ -40,9 +40,9 @@ void printFPS() {
 
 void sierpinski_triangle(std::vector<Vertex>& vertices, int depth, Vertex pos, float side) {
     if(depth <= 0) {
-        vertices.push_back({pos.x, pos.y - side});
-        vertices.push_back({pos.x + side, pos.y + side});
-        vertices.push_back({pos.x - side, pos.y + side});
+        vertices.push_back({pos.x, pos.y - side, 1.0, 0.3, 1.0});
+        vertices.push_back({pos.x + side, pos.y + side, 1.0, 1.0, 0.3});
+        vertices.push_back({pos.x - side, pos.y + side, 0.3, 1.0, 1.0});
     } else {
         const auto halfSide = side / 2.0f;
 
@@ -82,7 +82,7 @@ int main() {
     pipelineConfig.pipelineLayout = pipelineLayout;
     Pipeline pipeline(device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
 
-     std::vector<VkCommandBuffer> commnandBuffers;
+    std::vector<VkCommandBuffer> commnandBuffers;
     commnandBuffers.resize(swapChain.imageCount());
 
     VkCommandBufferAllocateInfo allocInfo{};
@@ -95,7 +95,7 @@ int main() {
         throw std::runtime_error("Failed to allocate command buffers !");
     }
 
-    #if 1
+    #if 0
         const std::vector<Vertex> vertices = {
             {0.0f, -0.5f, 1.0, 0.3, 1.0}, // Top
             {0.5f, 0.5f, 1.0, 1.0, 0.3}, // Right
