@@ -11,13 +11,17 @@ using namespace bebone::gfx;
 
 const char *vvvertexShaderSource = "#version 450 core\n"
                                 "layout(location = 0) in vec2 position;\n"
+                                "layout(location = 1) in vec3 color;\n"
+                                "layout(location = 0) out vec3 fragColor;\n"
                                 "void main() {\n"
                                 "   gl_Position = vec4(position, 0.0, 1.0);\n"
+                                "   fragColor = color;\n"
                                 "}\0";
 const char *fffragmentShaderSource = "#version 450 core\n"
                                   "layout (location = 0) out vec4 outColor;\n"
+                                  "layout (location = 0) in vec3 fragColor;\n"
                                   "void main() {\n"
-                                  "   outColor = vec4(1.0f, 0.5f, 1.0f, 1.0f);\n"
+                                  "   outColor = vec4(fragColor, 1.0);\n"
                                   "}\n\0";
 
 
@@ -91,14 +95,16 @@ int main() {
         throw std::runtime_error("Failed to allocate command buffers !");
     }
 
-    const std::vector<Vertex> beginVertices = {
-        {0.0f, -0.5f}, // Top
-        {0.5f, 0.5f}, // Right
-        {-0.5f, 0.5f}, // Left
-    };
-
-    std::vector<Vertex> vertices;
-    sierpinski_triangle(vertices, 5, {0.0, 0.0}, 0.8f);
+    #if 1
+        const std::vector<Vertex> vertices = {
+            {0.0f, -0.5f, 1.0, 0.3, 1.0}, // Top
+            {0.5f, 0.5f, 1.0, 1.0, 0.3}, // Right
+            {-0.5f, 0.5f, 0.3, 1.0, 1.0}, // Left
+        };
+    #else
+        std::vector<Vertex> vertices;
+        sierpinski_triangle(vertices, 5, {0.0, 0.0}, 0.8f);
+    #endif
 
     Model model(device, vertices);
 
