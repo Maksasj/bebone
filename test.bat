@@ -2,6 +2,6 @@
 
 cmake --build build
 
-cd build\tests\
+cd build\tests\unit\
 ctest
-cd ..\..
+cd ..\..\..
