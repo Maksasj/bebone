@@ -4,4 +4,5 @@ project(BeboneTests)
 include_directories("../../src")
 include_directories("./")
 
+add_subdirectory(core)
 add_subdirectory(physics)
