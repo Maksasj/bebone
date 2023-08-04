@@ -3,6 +3,8 @@ enable_testing()
 include_directories("./")
 include_directories("../../src")
 
+include_directories("../../3dparty/Vulkan-Headers/include")
+
 add_subdirectory(bebone)
 add_subdirectory(client)
 add_subdirectory(shared)
