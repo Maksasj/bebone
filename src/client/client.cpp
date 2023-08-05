@@ -82,19 +82,9 @@ int main() {
     pipelineConfig.pipelineLayout = pipelineLayout;
     Pipeline pipeline(device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
 
-    std::vector<VkCommandBuffer> commnandBuffers;
-    commnandBuffers.resize(swapChain.imageCount());
 
-    VkCommandBufferAllocateInfo allocInfo{};
-    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;\
-    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandPool = device.getCommandPool();
-    allocInfo.commandBufferCount = static_cast<uint32_t>(commnandBuffers.size());
 
-    if(vkAllocateCommandBuffers(device.device(), &allocInfo, commnandBuffers.data()) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to allocate command buffers !");
-    }
-
+    
     #if 0
         const std::vector<Vertex> vertices = {
             {0.0f, -0.5f, 1.0, 0.3, 1.0}, // Top
@@ -108,13 +98,44 @@ int main() {
 
     Model model(device, vertices);
 
-    for(size_t i = 0; i < commnandBuffers.size(); ++i) {
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-        if(vkBeginCommandBuffer(commnandBuffers[i], &beginInfo) != VK_SUCCESS) {
-            throw std::runtime_error("failed to being recording command buffer");
-        }
+    auto renderingProxy = RenderingApiProxyProvider::get_proxy(VULKAN);
+    Renderer& renderer = renderingProxy->get_renderer();
+
+    CommandBuffer& commandBuffer = renderer.get_command_buffer();
+    CommandFactory& commandFactory = renderingProxy->get_command_factory();
+
+    commandBuffer.begin_record();
+        // *commandBuffer.push<BeginRenderPassCommand>() = BeginRenderPassCommand();
+
+        commandFactory.create<BeginRenderPassCommand>();
+
+        commandBuffer.push<BeginRenderPassCommand>();
+
+
+    commandBuffer.end_record();
+
+    // std::vector<VkCommandBuffer> commnandBuffers(2);
+// 
+    // VkCommandBufferAllocateInfo allocInfo{};
+    // allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    // allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    // allocInfo.commandPool = device.getCommandPool();
+    // allocInfo.commandBufferCount = static_cast<uint32_t>(2);
+// 
+    // if(vkAllocateCommandBuffers(device.device(), &allocInfo, commnandBuffers.data()) != VK_SUCCESS) {
+    //     throw std::runtime_error("Failed to allocate command buffers !");
+    // }
+
+
+
+    // for(size_t i = 0; i < commnandBuffers.size(); ++i) {
+        // VkCommandBufferBeginInfo beginInfo{};
+        // beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+// 
+        // if(vkBeginCommandBuffer(commnandBuffers[i], &beginInfo) != VK_SUCCESS) {
+        //     throw std::runtime_error("failed to being recording command buffer");
+        // }
 
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -127,20 +148,23 @@ int main() {
         std::array<VkClearValue, 2> clearValues{};
         clearValues[0].color = {{ 0.1f, 0.1f, 0.1f, 1.0f }};
         clearValues[1].depthStencil = { 1.0f, 0 };
+        
         renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
         renderPassInfo.pClearValues = clearValues.data();
 
         vkCmdBeginRenderPass(commnandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+
             pipeline.bind(commnandBuffers[i]);
 
             model.bind(commnandBuffers[i]);
             model.draw(commnandBuffers[i]);
         vkCmdEndRenderPass(commnandBuffers[i]);
 
-        if (vkEndCommandBuffer(commnandBuffers[i]) != VK_SUCCESS) {
-            throw std::runtime_error("failed to end command buffer");
-        }
-    }
+        // if (vkEndCommandBuffer(commnandBuffers[i]) != VK_SUCCESS) {
+        //     throw std::runtime_error("failed to end command buffer");
+        // }
+    // }
 
     while (!window.closing()) {
         glfwPollEvents();
