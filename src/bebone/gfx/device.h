@@ -1,8 +1,9 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include "bebone/bebone.h"
+#include "gfx_backend.h"
 
+#include "window/window.h"
 // std lib headers
 #include <string>
 #include <vector>

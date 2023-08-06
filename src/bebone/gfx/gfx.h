@@ -6,8 +6,6 @@
 #include "opengl/gl_api.h"
 #include "vulkan/vulkan_api.h"
 
-#include "window/window.h"
-
 #include "shader_compiler.h"
 
 #include "renderer.h"
@@ -19,5 +17,13 @@
 
 #include "rendering_engine.h"
 #include "commands.h"
+
+#include "device.h"
+#include "pipeline.h"
+#include "swap_chain.h"
+#include "model.h"
+
+#include "window/window.h"
+
 
 #endif

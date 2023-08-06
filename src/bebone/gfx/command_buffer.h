@@ -3,33 +3,25 @@
 
 #include "../core/arena_allocator.h"
 
-#include "gfx_backend.h"
+#include "rendering_apis.h"
 
-#include "commands.h"
+#include "gfx_backend.h"
 
 namespace bebone::gfx {
     class CommandBuffer {
         private:
 
-        protected:
-            virtual void* push_iternal(const size_t&) = 0;
-
         public:
+            virtual ~CommandBuffer() {}
+
             virtual void begin_record() = 0;
             virtual void end_record() = 0;
 
-            template<class CommandType, class... Args>
-            void* push(Args&&... args) {
-                CommandType* ptr = static_cast<CommandType*>(this->push_iternal(sizeof(CommandType)));
-                
-                if(ptr == nullptr) {
-                    throw std::runtime_error("Failed to allocate memory for command");
-                }
-
-                *ptr = CommandType(std::forward<Args>(args)...);
-            }
+            virtual void* push_bytes(const size_t&) = 0;
 
             virtual void preprocess() = 0;
+
+            virtual RenderingApi get_api() = 0;
     };
 }
 

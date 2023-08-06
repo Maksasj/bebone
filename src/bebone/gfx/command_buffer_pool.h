@@ -10,6 +10,8 @@ namespace bebone::gfx {
         private:
 
         public:
+            virtual ~CommandBufferPool() {}
+
             virtual CommandBuffer& get_command_buffer(const size_t& commandBufferIndex) = 0;
     };
 }

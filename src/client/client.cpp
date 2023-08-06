@@ -1,11 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include "bebone/bebone.h"
-
-#include "swap_chain.h"
-#include "pipeline.h"
-#include "model.h"
 
 using namespace bebone::gfx;
 
@@ -25,7 +22,6 @@ const char *fffragmentShaderSource = "#version 450 core\n"
                                   "}\n\0";
 
 
-#include <chrono>
 
 void printFPS() {
     static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
@@ -99,20 +95,25 @@ int main() {
     Model model(device, vertices);
 
 
-    auto renderingProxy = RenderingApiProxyProvider::get_proxy(VULKAN);
+    auto renderingProxy = RenderingApiProxyProvider::get_proxy(VULKAN, device);
     Renderer& renderer = renderingProxy->get_renderer();
 
     CommandBuffer& commandBuffer = renderer.get_command_buffer();
-    CommandFactory& commandFactory = renderingProxy->get_command_factory();
+    // CommandFactory& commandFactory = renderingProxy->get_command_factory();
 
     commandBuffer.begin_record();
-        // *commandBuffer.push<BeginRenderPassCommand>() = BeginRenderPassCommand();
+        BeginRenderPassCommand::push(commandBuffer, swapChain);
 
-        commandFactory.create<BeginRenderPassCommand>();
+        BindPipelineCommand::push(commandBuffer, pipeline);
 
-        commandBuffer.push<BeginRenderPassCommand>();
+        // pipeline.bind(commnandBuffers[i]);
 
+        VkCommandBuffer& __commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBuffer).commandBuffer; 
 
+        model.bind(__commnandBuffer);
+        model.draw(__commnandBuffer);
+
+        EndRenderPassCommand::push(commandBuffer);
     commandBuffer.end_record();
 
     // std::vector<VkCommandBuffer> commnandBuffers(2);
@@ -137,29 +138,26 @@ int main() {
         //     throw std::runtime_error("failed to being recording command buffer");
         // }
 
-        VkRenderPassBeginInfo renderPassInfo{};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = swapChain.getRenderPass();
-        renderPassInfo.framebuffer = swapChain.getFrameBuffer(i);
-        
-        renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChain.getSwapChainExtent();
-        
-        std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = {{ 0.1f, 0.1f, 0.1f, 1.0f }};
-        clearValues[1].depthStencil = { 1.0f, 0 };
-        
-        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-        renderPassInfo.pClearValues = clearValues.data();
+        // VkRenderPassBeginInfo renderPassInfo{};
+        // renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        // renderPassInfo.renderPass = swapChain.getRenderPass();
+        // renderPassInfo.framebuffer = swapChain.getFrameBuffer(i);
+        // 
+        // renderPassInfo.renderArea.offset = {0, 0};
+        // renderPassInfo.renderArea.extent = swapChain.getSwapChainExtent();
+        // 
+        // std::array<VkClearValue, 2> clearValues{};
+        // clearValues[0].color = {{ 0.1f, 0.1f, 0.1f, 1.0f }};
+        // clearValues[1].depthStencil = { 1.0f, 0 };
+        // 
+        // renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+        // renderPassInfo.pClearValues = clearValues.data();
+// 
+        // vkCmdBeginRenderPass(commnandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-        vkCmdBeginRenderPass(commnandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 
-            pipeline.bind(commnandBuffers[i]);
-
-            model.bind(commnandBuffers[i]);
-            model.draw(commnandBuffers[i]);
-        vkCmdEndRenderPass(commnandBuffers[i]);
+        // vkCmdEndRenderPass(commnandBuffers[i]);
 
         // if (vkEndCommandBuffer(commnandBuffers[i]) != VK_SUCCESS) {
         //     throw std::runtime_error("failed to end command buffer");
@@ -176,7 +174,10 @@ int main() {
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
-        result = swapChain.submitCommandBuffers(&commnandBuffers[imageIndex], &imageIndex);
+
+        VkCommandBuffer& _commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBuffer).commandBuffer; 
+
+        result = swapChain.submitCommandBuffers(&_commnandBuffer, &imageIndex);
         if(result != VK_SUCCESS) {
             throw std::runtime_error("failed to acquire submit command buffers !\n");
         }

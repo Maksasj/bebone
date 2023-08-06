@@ -6,7 +6,7 @@
 #include "../gfx_backend.h"
 #include "../command_buffer_pool.h"
 
-#include "../../client/device.h"
+#include "../device.h"
 
 #include "vulkan_command_buffer.h"
 
@@ -17,16 +17,16 @@ namespace bebone::gfx {
             
         public:
             VulkanCommandBufferPool(const MyEngineDevice& device, const size_t& commandBufferCount) {
-                for(size_t i = 0; i < commandBufferCount; ++i) {
-                    commandBuffers.push_back(VulkanCommandBuffer());
+                commandBuffers = std::vector<VulkanCommandBuffer>(commandBufferCount);
 
+                for(size_t i = 0; i < commandBufferCount; ++i) {
                     VkCommandBufferAllocateInfo allocInfo{};
                     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
                     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
                     allocInfo.commandPool = device.getCommandPool();
                     allocInfo.commandBufferCount = static_cast<uint32_t>(1);
 
-                    if(vkAllocateCommandBuffers(device.device(), &allocInfo, &commandBuffers[0].commandBuffer) != VK_SUCCESS) {
+                    if(vkAllocateCommandBuffers(device.device(), &allocInfo, &commandBuffers[i].commandBuffer) != VK_SUCCESS) {
                         throw std::runtime_error("Failed to allocate command buffers !");
                     }
                 }

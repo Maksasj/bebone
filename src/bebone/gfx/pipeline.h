@@ -1,10 +1,9 @@
 #ifndef PIPLELINE_H
 #define PIPLELINE_H
 
+#include "gfx_backend.h"
 #include "device.h"
-
 #include "model.h"
-#include "bebone/bebone.h"
 
 class Pipeline {
     private:

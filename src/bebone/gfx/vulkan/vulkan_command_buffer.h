@@ -1,21 +1,18 @@
 #ifndef _BEBONE_GFX_VULKAN_VULKAN_COMMAND_BUFFER_H_
 #define _BEBONE_GFX_VULKAN_VULKAN_COMMAND_BUFFER_H_
 
+#include <stdexcept>
+
 #include "../command_buffer.h"
 
 namespace bebone::gfx {
     class VulkanCommandBuffer : public CommandBuffer {
         private:
-            CommandFactory& _commandFactory;
             core::ArenaAllocator arena;
-
         protected:
-            void* push_iternal(const size_t& size) override {
-                return arena.alloc(size);
-            }
 
         public:
-            VulkanCommandBuffer(CommandFactory& commandFactory) : _commandFactory(commandFactory), arena(_BEBONE_MEMORY_BYTES_8KB_) {
+            VulkanCommandBuffer() : arena(_BEBONE_MEMORY_BYTES_8KB_) {
                 
             }
 
@@ -34,11 +31,19 @@ namespace bebone::gfx {
                 }
             }
 
+            void* push_bytes(const size_t& size) override {
+                return arena.alloc(size);
+            }
+
             void preprocess() override {
 
             }
 
             VkCommandBuffer commandBuffer;
+
+            RenderingApi get_api() override {
+                return VULKAN;
+            }
     };  
 }
 

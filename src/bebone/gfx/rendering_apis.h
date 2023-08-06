@@ -4,7 +4,7 @@
 #include "gfx_backend.h"
 
 namespace bebone::gfx {
-    enum RenderingApis {
+    enum RenderingApi {
         NONE,
         OPENGL,
         VULKAN,

@@ -12,6 +12,8 @@ namespace bebone::gfx {
         private:
 
         public:
+            virtual ~Renderer() {}
+
             virtual CommandBuffer& get_command_buffer() = 0;
     };
 }

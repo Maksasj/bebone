@@ -13,14 +13,15 @@
 namespace bebone::gfx {
     class RenderingApiProxyProvider {
         public:
-            static std::unique_ptr<RenderingApiProxy> get_proxy(const RenderingApis& api) {
+            static std::unique_ptr<RenderingApiProxy> get_proxy(const RenderingApi& api, MyEngineDevice& device) {
                 switch (api) {
-                    case RenderingApis::OPENGL: return std::make_unique<GLApiProxy>();
-                    case RenderingApis::VULKAN: return std::make_unique<VulkanApiProxy>();
+                    case RenderingApi::OPENGL: return std::make_unique<GLApiProxy>(device);
+                    case RenderingApi::VULKAN: return std::make_unique<VulkanApiProxy>(device);
                     default: throw std::runtime_error("Failed to get rendering api proxy, rendering api not implemented");
                 }
                 
-                return std::make_unique<RenderingApiProxy>();
+                throw std::runtime_error("Failed to get rendering api proxy, rendering api not implemented");
+                // return std::unique_ptr<RenderingApiProxy>(nullptr);
             }   
     };
 }

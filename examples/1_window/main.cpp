@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 
-#include "bebone/bebone.h"
+#include "bebone.h"
 
 using namespace bebone::gfx;
 using namespace bebone::common;

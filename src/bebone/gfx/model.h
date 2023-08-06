@@ -2,9 +2,10 @@
 #define MODEL_H
 
 #include <vector>
-#include "bebone/bebone.h"
-
+#include "gfx_backend.h"
 #include "device.h"
+
+#include "../common/common.h"
 
 using namespace bebone::common;
 
