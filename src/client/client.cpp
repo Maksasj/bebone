@@ -94,27 +94,27 @@ int main() {
 
     Model model(device, vertices);
 
-
     auto renderingProxy = RenderingApiProxyProvider::get_proxy(VULKAN, device);
     Renderer& renderer = renderingProxy->get_renderer();
 
-    CommandBuffer& commandBuffer = renderer.get_command_buffer();
+    CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
     // CommandFactory& commandFactory = renderingProxy->get_command_factory();
 
-    commandBuffer.begin_record();
-        BeginRenderPassCommand::push(commandBuffer, swapChain);
+    for(int i = 0; i < 2; ++i) {
+        CommandBuffer& commandBuffer = commandBufferPool.get_command_buffer(i);
 
-        BindPipelineCommand::push(commandBuffer, pipeline);
+        commandBuffer.begin_record();
+            commandBuffer.begin_render_pass(swapChain, i);
+            commandBuffer.bind_pipeline(pipeline);
+            commandBuffer.bind_buffer(model);
+            commandBuffer.draw(model);
+            commandBuffer.end_render_pass();
+        commandBuffer.end_record();
 
-        // pipeline.bind(commnandBuffers[i]);
+        commandBuffer.submit();
+    }
 
-        VkCommandBuffer& __commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBuffer).commandBuffer; 
 
-        model.bind(__commnandBuffer);
-        model.draw(__commnandBuffer);
-
-        EndRenderPassCommand::push(commandBuffer);
-    commandBuffer.end_record();
 
     // std::vector<VkCommandBuffer> commnandBuffers(2);
 // 
@@ -175,7 +175,7 @@ int main() {
         }
 
 
-        VkCommandBuffer& _commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBuffer).commandBuffer; 
+        VkCommandBuffer& _commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBufferPool.get_command_buffer(imageIndex)).commandBuffer; 
 
         result = swapChain.submitCommandBuffers(&_commnandBuffer, &imageIndex);
         if(result != VK_SUCCESS) {

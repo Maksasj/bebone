@@ -51,15 +51,12 @@ class Model {
             return atrributeDescriptions;
         }
 
-        void bind(VkCommandBuffer commandBuffer) {
-            VkBuffer buffers[] = {vertexBuffer};
-            VkDeviceSize offset[] = {0};
-            vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
-        };
 
-        void draw(VkCommandBuffer commandBuffer) {
-            vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
-        };
+        MyEngineDevice& device;
+
+        VkBuffer vertexBuffer;
+        VkDeviceMemory vertexBufferMemory;
+        uint32_t vertexCount;
 
     private:
         void createVertexBuffers(const std::vector<Vertex> &vertices) {
@@ -73,12 +70,6 @@ class Model {
             memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
             vkUnmapMemory(device.device(), vertexBufferMemory);
         }
-
-        MyEngineDevice& device;
-
-        VkBuffer vertexBuffer;
-        VkDeviceMemory vertexBufferMemory;
-        uint32_t vertexCount;
 };
 
 #endif

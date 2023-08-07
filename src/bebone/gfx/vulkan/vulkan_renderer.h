@@ -24,6 +24,10 @@ namespace bebone::gfx {
             CommandBuffer& get_command_buffer() override {
                 return commandBuffers->get_command_buffer(1);
             }
+
+            CommandBufferPool& get_command_buffer_pool() override {
+                return *commandBuffers;
+            }
     };
 }
 #endif

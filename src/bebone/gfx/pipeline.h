@@ -6,7 +6,7 @@
 #include "model.h"
 
 class Pipeline {
-    private:
+    public:
         MyEngineDevice& device;
 
         VkPipeline grapgicsPipeline;
