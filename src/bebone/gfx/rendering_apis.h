@@ -10,4 +10,5 @@ namespace bebone::gfx {
         VULKAN,
     };
 }
+
 #endif

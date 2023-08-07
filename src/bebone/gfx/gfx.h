@@ -20,7 +20,6 @@
 #include "device.h"
 #include "pipeline.h"
 #include "swap_chain.h"
-#include "model.h"
 
 #include "window/window.h"
 

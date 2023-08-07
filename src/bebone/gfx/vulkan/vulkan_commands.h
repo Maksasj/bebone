@@ -3,8 +3,9 @@
 
 #include <array>
 
+#include "vulkan_vertex_buffer.h"
+
 #include "../command.h"
-#include "../model.h"
 #include "../swap_chain.h"
 #include "../pipeline.h"
 
@@ -108,15 +109,15 @@ namespace bebone::gfx {
     class VulkanBindBufferCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
-            Model& _model;
+            VulkanVertexBuffer& _vertexBuffer;
 
         public:
-            VulkanBindBufferCommand(VulkanCommandBuffer& commandBuffer, Model& model) : _commandBuffer(commandBuffer), _model(model) {
+            VulkanBindBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanVertexBuffer& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
 
             }
 
             void execute() override {
-                VkBuffer buffers[] = {_model.vertexBuffer};
+                VkBuffer buffers[] = {_vertexBuffer.get_buffer()};
                 VkDeviceSize offset[] = {0};
                 vkCmdBindVertexBuffers(_commandBuffer.commandBuffer, 0, 1, buffers, offset);
             }
@@ -125,15 +126,15 @@ namespace bebone::gfx {
     class VulkanDrawCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
-            Model& _model;
+            const size_t _vertexCount;
 
         public:
-            VulkanDrawCommand(VulkanCommandBuffer& commandBuffer, Model& model) : _commandBuffer(commandBuffer), _model(model) {
+            VulkanDrawCommand(VulkanCommandBuffer& commandBuffer, const size_t& vertexCount) : _commandBuffer(commandBuffer), _vertexCount(vertexCount) {
 
             }
 
             void execute() override {
-                vkCmdDraw(_commandBuffer.commandBuffer, _model.vertexCount, 1, 0, 0);
+                vkCmdDraw(_commandBuffer.commandBuffer, _vertexCount, 1, 0, 0);
             }
     };
 }

@@ -26,19 +26,19 @@ namespace bebone::gfx {
         (void*) new (ptr) VulkanEndRenderPassCommand(*this);
     }
 
-    void VulkanCommandBuffer::bind_pipeline(Pipeline& pipeline) {
+    void VulkanCommandBuffer::bind_pipeline(std::shared_ptr<Pipeline>& pipeline) {
         VulkanBindPipelineCommand* ptr = static_cast<VulkanBindPipelineCommand*>(arena.alloc(sizeof(VulkanBindPipelineCommand)));
-        (void*) new (ptr) VulkanBindPipelineCommand(*this, pipeline);
+        (void*) new (ptr) VulkanBindPipelineCommand(*this, *pipeline);
     }
 
-    void VulkanCommandBuffer::bind_buffer(Model& model) {
+    void VulkanCommandBuffer::bind_buffer(std::shared_ptr<VertexBuffer>& vertexBuffer) {
         VulkanBindBufferCommand* ptr = static_cast<VulkanBindBufferCommand*>(arena.alloc(sizeof(VulkanBindBufferCommand)));
-        (void*) new (ptr) VulkanBindBufferCommand(*this, model);
+        (void*) new (ptr) VulkanBindBufferCommand(*this, *static_cast<VulkanVertexBuffer*>(vertexBuffer.get()));
     }
 
-    void VulkanCommandBuffer::draw(Model& model) {
+    void VulkanCommandBuffer::draw(const size_t& vertexCount) {
         VulkanDrawCommand* ptr = static_cast<VulkanDrawCommand*>(arena.alloc(sizeof(VulkanDrawCommand)));
-        (void*) new (ptr) VulkanDrawCommand(*this, model);
+        (void*) new (ptr) VulkanDrawCommand(*this, vertexCount);
     }
 
     void VulkanCommandBuffer::preprocess() {

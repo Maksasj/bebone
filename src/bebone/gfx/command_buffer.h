@@ -3,9 +3,10 @@
 
 #include "../core/arena_allocator.h"
 
-#include "model.h"
 #include "swap_chain.h"
 #include "pipeline.h"
+
+#include "vertex_buffer.h"
 
 #include "rendering_apis.h"
 
@@ -24,9 +25,9 @@ namespace bebone::gfx {
             virtual void begin_render_pass(MyEngineSwapChain& swapChain, int frameBuffer) = 0;
             virtual void end_render_pass() = 0;
 
-            virtual void bind_pipeline(Pipeline& pipeline) = 0;
-            virtual void bind_buffer(Model& model) = 0;
-            virtual void draw(Model& model) = 0;
+            virtual void bind_pipeline(std::shared_ptr<Pipeline>& pipeline) = 0;
+            virtual void bind_buffer(std::shared_ptr<VertexBuffer>& vertexBuffer) = 0;
+            virtual void draw(const size_t& vertexCount) = 0;
 
             virtual void submit() = 0;
             virtual void preprocess() = 0;

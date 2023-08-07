@@ -1,6 +1,8 @@
 #ifndef _BEBONE_COMMON_VERTEX_H_
 #define _BEBONE_COMMON_VERTEX_H_
 
+#include <vector>
+
 namespace bebone::common {
     struct Vertex {
         float x;

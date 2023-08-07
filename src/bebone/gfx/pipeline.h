@@ -3,7 +3,7 @@
 
 #include "gfx_backend.h"
 #include "device.h"
-#include "model.h"
+#include "vertex_buffer.h"
 
 class Pipeline {
     public:
@@ -50,8 +50,8 @@ class Pipeline {
             shaderStages[1].pNext = nullptr;
             shaderStages[1].pSpecializationInfo = nullptr;
 
-            auto bindingDescriptions = Model::getBindingDescriptions();
-            auto attributeDescriptions = Model::getAttributeDescriptions();
+            auto bindingDescriptions = bebone::gfx::getBindingDescriptions();
+            auto attributeDescriptions = bebone::gfx::getAttributeDescriptions();
 
             VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
             vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

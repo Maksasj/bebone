@@ -11,7 +11,7 @@ namespace bebone::gfx {
             VulkanRenderer renderer;
 
         public:
-            GLApiProxy(MyEngineDevice& device) : RenderingApiProxy(OPENGL), renderer(device) {
+            GLApiProxy(Window& window) : RenderingApiProxy(OPENGL), renderer(window) {
                 
             }
 

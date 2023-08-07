@@ -4,8 +4,6 @@
 
 #include "bebone/bebone.h"
 
-using namespace bebone::gfx;
-
 const char *vvvertexShaderSource = "#version 450 core\n"
                                 "layout(location = 0) in vec2 position;\n"
                                 "layout(location = 1) in vec3 color;\n"
@@ -21,20 +19,7 @@ const char *fffragmentShaderSource = "#version 450 core\n"
                                   "   outColor = vec4(fragColor, 1.0);\n"
                                   "}\n\0";
 
-
-
-void printFPS() {
-    static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
-    static int fps; fps++;
-
-    if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - oldTime) >= std::chrono::seconds{ 1 }) {
-        oldTime = std::chrono::high_resolution_clock::now();
-        std::cout << "FPS: " << fps <<  std::endl;
-        fps = 0;
-    }
-}
-
-void sierpinski_triangle(std::vector<Vertex>& vertices, int depth, Vertex pos, float side) {
+void sierpinski_triangle(std::vector<bebone::common::Vertex>& vertices, int depth, bebone::common::Vertex pos, float side) {
     if(depth <= 0) {
         vertices.push_back({pos.x, pos.y - side, 1.0, 0.3, 1.0});
         vertices.push_back({pos.x + side, pos.y + side, 1.0, 1.0, 0.3});
@@ -46,40 +31,12 @@ void sierpinski_triangle(std::vector<Vertex>& vertices, int depth, Vertex pos, f
         sierpinski_triangle(vertices, depth - 1, {pos.x + halfSide, pos.y + halfSide}, halfSide);
         sierpinski_triangle(vertices, depth - 1, {pos.x - halfSide, pos.y + halfSide}, halfSide);
     }
-};
+}
 
 int main() {
+    using namespace bebone::gfx;
+
     RenderingEngine::preinit();
-
-    std::vector<unsigned int> vertexSpirvCode, fragmentSpirvCode;
-
-    ShaderCompiler::compile_shader(vvvertexShaderSource, EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(fffragmentShaderSource, EShLangFragment, fragmentSpirvCode);
-
-    Window window("Client");
-    MyEngineDevice device(window);
-
-    MyEngineSwapChain swapChain(device, window.get_extend());
-    VkPipelineLayout pipelineLayout;
-
-    VkPipelineLayoutCreateInfo pipelineLayouInfo{};
-    pipelineLayouInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayouInfo.setLayoutCount = 0;
-    pipelineLayouInfo.pSetLayouts = nullptr;
-    pipelineLayouInfo.pushConstantRangeCount = 0;
-    pipelineLayouInfo.pPushConstantRanges = nullptr;
-
-    if(vkCreatePipelineLayout(device.device(), &pipelineLayouInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create pipeline layout");
-    }
-
-    auto pipelineConfig = Pipeline::defaultPipelineConfigInfo(swapChain.width(), swapChain.height());
-    pipelineConfig.renderPass = swapChain.getRenderPass();
-    pipelineConfig.pipelineLayout = pipelineLayout;
-    Pipeline pipeline(device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
-
-
-
     
     #if 0
         const std::vector<Vertex> vertices = {
@@ -92,101 +49,39 @@ int main() {
         sierpinski_triangle(vertices, 5, {0.0, 0.0}, 0.8f);
     #endif
 
-    Model model(device, vertices);
+    std::vector<unsigned int> vertexSpirvCode, fragmentSpirvCode;
+    ShaderCompiler::compile_shader(vvvertexShaderSource, EShLangVertex, vertexSpirvCode);
+    ShaderCompiler::compile_shader(fffragmentShaderSource, EShLangFragment, fragmentSpirvCode);
 
-    auto renderingProxy = RenderingApiProxyProvider::get_proxy(VULKAN, device);
-    Renderer& renderer = renderingProxy->get_renderer();
+    Window window("Client");
 
-    CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-    // CommandFactory& commandFactory = renderingProxy->get_command_factory();
+    auto renderer = RenderingApiProvider::create_renderer(VULKAN, window);
 
-    for(int i = 0; i < 2; ++i) {
+    std::shared_ptr<MyEngineSwapChain> swapChain = renderer->get_swap_chain();
+    std::shared_ptr<Pipeline> pipeline = renderer->create_pipeline(vertexSpirvCode, fragmentSpirvCode);
+    std::shared_ptr<VertexBuffer> vertexBuffer = renderer->create_vertex_buffer(vertices);
+
+    CommandBufferPool& commandBufferPool = renderer->get_command_buffer_pool();
+
+    for(size_t i = 0; i < 2; ++i) {
         CommandBuffer& commandBuffer = commandBufferPool.get_command_buffer(i);
 
         commandBuffer.begin_record();
-            commandBuffer.begin_render_pass(swapChain, i);
+            commandBuffer.begin_render_pass(*swapChain, i);
             commandBuffer.bind_pipeline(pipeline);
-            commandBuffer.bind_buffer(model);
-            commandBuffer.draw(model);
+            commandBuffer.bind_buffer(vertexBuffer);
+            commandBuffer.draw(vertices.size());
             commandBuffer.end_render_pass();
         commandBuffer.end_record();
 
         commandBuffer.submit();
     }
 
-
-
-    // std::vector<VkCommandBuffer> commnandBuffers(2);
-// 
-    // VkCommandBufferAllocateInfo allocInfo{};
-    // allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    // allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    // allocInfo.commandPool = device.getCommandPool();
-    // allocInfo.commandBufferCount = static_cast<uint32_t>(2);
-// 
-    // if(vkAllocateCommandBuffers(device.device(), &allocInfo, commnandBuffers.data()) != VK_SUCCESS) {
-    //     throw std::runtime_error("Failed to allocate command buffers !");
-    // }
-
-
-
-    // for(size_t i = 0; i < commnandBuffers.size(); ++i) {
-        // VkCommandBufferBeginInfo beginInfo{};
-        // beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-// 
-        // if(vkBeginCommandBuffer(commnandBuffers[i], &beginInfo) != VK_SUCCESS) {
-        //     throw std::runtime_error("failed to being recording command buffer");
-        // }
-
-        // VkRenderPassBeginInfo renderPassInfo{};
-        // renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        // renderPassInfo.renderPass = swapChain.getRenderPass();
-        // renderPassInfo.framebuffer = swapChain.getFrameBuffer(i);
-        // 
-        // renderPassInfo.renderArea.offset = {0, 0};
-        // renderPassInfo.renderArea.extent = swapChain.getSwapChainExtent();
-        // 
-        // std::array<VkClearValue, 2> clearValues{};
-        // clearValues[0].color = {{ 0.1f, 0.1f, 0.1f, 1.0f }};
-        // clearValues[1].depthStencil = { 1.0f, 0 };
-        // 
-        // renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-        // renderPassInfo.pClearValues = clearValues.data();
-// 
-        // vkCmdBeginRenderPass(commnandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-
-
-        // vkCmdEndRenderPass(commnandBuffers[i]);
-
-        // if (vkEndCommandBuffer(commnandBuffers[i]) != VK_SUCCESS) {
-        //     throw std::runtime_error("failed to end command buffer");
-        // }
-    // }
-
     while (!window.closing()) {
         glfwPollEvents();
-        
-        uint32_t imageIndex;
-        auto result = swapChain.acquireNextImage(&imageIndex);
 
-        if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-            throw std::runtime_error("failed to acquire swap chain image!");
-        }
-
-
-        VkCommandBuffer& _commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBufferPool.get_command_buffer(imageIndex)).commandBuffer; 
-
-        result = swapChain.submitCommandBuffers(&_commnandBuffer, &imageIndex);
-        if(result != VK_SUCCESS) {
-            throw std::runtime_error("failed to acquire submit command buffers !\n");
-        }
-
-        printFPS();
+        renderer->present();
     }
-   
-    vkDeviceWaitIdle(device.device());
-    vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 
     glfwTerminate();
 
