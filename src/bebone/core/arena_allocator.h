@@ -37,9 +37,10 @@ namespace bebone::core {
                     return nullptr;
                 }
 
+                const size_t allocated = _allocated;
                 _allocated += size;
 
-                return static_cast<char*>(_data) + _allocated;
+                return static_cast<char*>(_data) + allocated;
             }
 
             void clear() noexcept {
@@ -52,6 +53,10 @@ namespace bebone::core {
 
             size_t capacity() const noexcept {
                 return _capacity;
+            }
+
+            void* data() noexcept {
+                return _data;
             }
     };
 }
