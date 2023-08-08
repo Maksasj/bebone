@@ -3,11 +3,11 @@
 
 #include <array>
 
-#include "vulkan_vertex_buffer.h"
+#include "vulkan_vertex_buffer_impl.h"
+#include "vulkan_pipeline_impl.h"
 
 #include "../command.h"
-#include "../swap_chain.h"
-#include "../pipeline.h"
+#include "../swap_chain_impl.h"
 
 namespace bebone::gfx {
 
@@ -49,11 +49,11 @@ namespace bebone::gfx {
     class VulkanBeginRenderPassCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
-            MyEngineSwapChain& _swapChain;
+            MyEngineSwapChainImpl& _swapChain;
             int _frameBuffer;
 
         public:
-            VulkanBeginRenderPassCommand(VulkanCommandBuffer& commandBuffer, MyEngineSwapChain& swapChain, int frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
+            VulkanBeginRenderPassCommand(VulkanCommandBuffer& commandBuffer, MyEngineSwapChainImpl& swapChain, int frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
                 _frameBuffer = frameBuffer;
             }
 
@@ -94,10 +94,10 @@ namespace bebone::gfx {
     class VulkanBindPipelineCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
-            Pipeline& _pipeline;
+            VulkanPipelineImpl& _pipeline;
 
         public:
-            VulkanBindPipelineCommand(VulkanCommandBuffer& commandBuffer, Pipeline& pipeline) : _commandBuffer(commandBuffer), _pipeline(pipeline) {
+            VulkanBindPipelineCommand(VulkanCommandBuffer& commandBuffer, VulkanPipelineImpl& pipeline) : _commandBuffer(commandBuffer), _pipeline(pipeline) {
 
             }
 
@@ -109,10 +109,10 @@ namespace bebone::gfx {
     class VulkanBindBufferCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
-            VulkanVertexBuffer& _vertexBuffer;
+            VulkanVertexBufferImpl& _vertexBuffer;
 
         public:
-            VulkanBindBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanVertexBuffer& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
+            VulkanBindBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanVertexBufferImpl& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
 
             }
 

@@ -3,19 +3,19 @@
 
 #include "../rendering_api_proxy.h"
 
-#include "../vulkan/vulkan_renderer.h"
+#include "../vulkan/vulkan_renderer_impl.h"
 
 namespace bebone::gfx {
     class GLApiProxy : public RenderingApiProxy {
         private:
-            VulkanRenderer renderer;
+            VulkanRendererImpl renderer;
 
         public:
             GLApiProxy(Window& window) : RenderingApiProxy(OPENGL), renderer(window) {
                 
             }
 
-            Renderer& get_renderer() override {
+            RendererImpl& get_renderer() override {
                 throw std::runtime_error("Not impemented !");
 
                 return renderer;

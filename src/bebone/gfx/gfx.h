@@ -8,6 +8,7 @@
 
 #include "shader_compiler.h"
 
+#include "renderer_impl.h"
 #include "renderer.h"
 
 #include "rendering_api_proxy_provider.h"
@@ -18,10 +19,10 @@
 #include "rendering_engine.h"
 
 #include "device.h"
-#include "pipeline.h"
-#include "swap_chain.h"
+#include "pipeline_impl.h"
+#include "swap_chain_impl.h"
 
 #include "window/window.h"
-
+#include "vertex_buffer.h"
 
 #endif

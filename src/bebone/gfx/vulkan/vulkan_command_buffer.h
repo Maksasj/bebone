@@ -18,11 +18,11 @@ namespace bebone::gfx {
             void begin_record() override;
             void end_record() override;
 
-            void begin_render_pass(MyEngineSwapChain& swapChain, int frameBuffer) override;
+            void begin_render_pass(MyEngineSwapChainImpl& swapChain, int frameBuffer) override;
             void end_render_pass() override;
 
-            void bind_pipeline(std::shared_ptr<Pipeline>& pipeline) override;
-            void bind_buffer(std::shared_ptr<VertexBuffer>& model) override;
+            void bind_pipeline(Pipeline& pipeline) override;
+            void bind_buffer(VertexBuffer& vertexBuffer) override;
             void draw(const size_t& vertexCount) override;
 
             void preprocess() override;

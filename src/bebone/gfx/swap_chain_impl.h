@@ -9,15 +9,15 @@
 #include <string>
 #include <vector>
 
-class MyEngineSwapChain {
+class MyEngineSwapChainImpl {
 	public:
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-		MyEngineSwapChain(MyEngineDevice &deviceRef, VkExtent2D windowExtent);
-		~MyEngineSwapChain();
+		MyEngineSwapChainImpl(MyEngineDevice &deviceRef, VkExtent2D windowExtent);
+		~MyEngineSwapChainImpl();
 
-		MyEngineSwapChain(const MyEngineSwapChain &) = delete;
-		void operator=(const MyEngineSwapChain &) = delete;
+		MyEngineSwapChainImpl(const MyEngineSwapChainImpl &) = delete;
+		void operator=(const MyEngineSwapChainImpl &) = delete;
 
 		VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
 		VkRenderPass getRenderPass() { return renderPass; }

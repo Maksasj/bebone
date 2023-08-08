@@ -26,9 +26,9 @@ namespace bebone::gfx {
             } 
             */  
 
-            static std::unique_ptr<Renderer> create_renderer(const RenderingApi& api, Window& window) {
+            static std::unique_ptr<RendererImpl> create_renderer(const RenderingApi& api, Window& window) {
                 switch (api) {
-                    case RenderingApi::VULKAN: return std::make_unique<VulkanRenderer>(window);
+                    case RenderingApi::VULKAN: return std::make_unique<VulkanRendererImpl>(window);
                     default: throw std::runtime_error("Failed to get rendering api proxy, rendering api not implemented");
                 }
             }

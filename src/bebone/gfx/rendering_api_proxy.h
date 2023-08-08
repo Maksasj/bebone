@@ -2,7 +2,7 @@
 #define _BEBONE_GFX_RENDERING_API_PROXY_H_
 
 #include "rendering_apis.h"
-#include "renderer.h"
+#include "renderer_impl.h"
 
 namespace bebone::gfx {
     class RenderingApiProxy {
@@ -15,7 +15,7 @@ namespace bebone::gfx {
 
             virtual ~RenderingApiProxy() {}
 
-            virtual Renderer& get_renderer() = 0;
+            virtual RendererImpl& get_renderer() = 0;
 
             RenderingApi get_api() const {
                 return _api;

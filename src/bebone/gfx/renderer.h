@@ -3,27 +3,57 @@
 
 #include <memory>
 
-#include "gfx_backend.h"
-
-#include "vertex_buffer.h"
-#include "command_buffer.h"
-#include "command_buffer_pool.h"
+#include "renderer_impl.h"
 
 namespace bebone::gfx {
     class Renderer {
         private:
+            RendererImpl* _impl;
+
+            Renderer(RendererImpl* impl) : _impl(impl) {
+
+            }
 
         public:
-            virtual ~Renderer() {}
+            ~Renderer() {
+                if(_impl != nullptr) {
+                    delete _impl;
+                }
+            }
 
-            virtual CommandBuffer& get_command_buffer() = 0;
-            virtual CommandBufferPool& get_command_buffer_pool() = 0;
+            CommandBuffer& get_command_buffer() {
+                return _impl->get_command_buffer();
+            }
 
-            virtual std::shared_ptr<Pipeline> create_pipeline(const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) = 0;
-            virtual std::shared_ptr<VertexBuffer> create_vertex_buffer(const std::vector<Vertex>&) = 0;
-            virtual std::shared_ptr<MyEngineSwapChain> get_swap_chain() = 0;
+            CommandBufferPool& get_command_buffer_pool() {
+                return _impl->get_command_buffer_pool();
+            }
 
-            virtual void present() = 0;
+            Pipeline create_pipeline(const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
+                return _impl->create_pipeline(vertexSpirvCode, fragmentSpirvCode);
+            }
+
+            VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {
+                return _impl->create_vertex_buffer(vertices);
+            }
+
+            std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() {
+                return _impl->get_swap_chain();
+            }
+
+            void present() {
+                _impl->present();
+            }
+
+            RendererImpl* get_impl() {
+                return _impl;
+            }
+
+            template<class Impl, class... Args>
+            static Renderer create_from_impl(Args&&... args) {
+                return Renderer(new Impl(std::forward<Args>(args)...));
+            }
     };
 }
+
 #endif

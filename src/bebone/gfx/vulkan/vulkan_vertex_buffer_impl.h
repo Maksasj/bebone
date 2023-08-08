@@ -1,10 +1,10 @@
-#ifndef _BEBONE_GFX_VULKAN_VERTEX_BUFFER_H_
-#define _BEBONE_GFX_VULKAN_VERTEX_BUFFER_H_
+#ifndef _BEBONE_GFX_VULKAN_VERTEX_BUFFER_IMPLEMENTATION_H_
+#define _BEBONE_GFX_VULKAN_VERTEX_BUFFER_IMPLEMENTATION_H_
 
 #include <vector>
 
 #include "../../common/common.h"
-#include "../vertex_buffer.h"
+#include "../vertex_buffer_impl.h"
 #include "../device.h"
 
 #include "../gfx_backend.h"
@@ -12,7 +12,7 @@
 namespace bebone::gfx {
     using namespace bebone::common;
 
-    class VulkanVertexBuffer : public VertexBuffer {
+    class VulkanVertexBufferImpl : public VertexBufferImpl {
         private:
             MyEngineDevice& _device;
             VkBuffer vertexBuffer;
@@ -20,7 +20,7 @@ namespace bebone::gfx {
             uint32_t vertexCount;
 
         public:
-            VulkanVertexBuffer(const std::vector<Vertex> &vertices, MyEngineDevice& device) : _device(device) {
+            VulkanVertexBufferImpl(const std::vector<Vertex> &vertices, MyEngineDevice& device) : _device(device) {
                 vertexCount = static_cast<uint32_t>(vertices.size());
                 VkDeviceSize bufferSize = sizeof(Vertex) * vertexCount;
 
@@ -32,7 +32,7 @@ namespace bebone::gfx {
                 vkUnmapMemory(device.device(), vertexBufferMemory);
             }
 
-            ~VulkanVertexBuffer() {
+            ~VulkanVertexBufferImpl() {
                 vkDestroyBuffer(_device.device(), vertexBuffer, nullptr);
                 vkFreeMemory(_device.device(), vertexBufferMemory, nullptr);
             }

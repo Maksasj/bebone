@@ -55,13 +55,13 @@ int main() {
 
     Window window("Client");
 
-    auto renderer = RenderingApiProvider::create_renderer(VULKAN, window);
+    Renderer renderer = Renderer::create_from_impl<VulkanRendererImpl>(window);
 
-    std::shared_ptr<MyEngineSwapChain> swapChain = renderer->get_swap_chain();
-    std::shared_ptr<Pipeline> pipeline = renderer->create_pipeline(vertexSpirvCode, fragmentSpirvCode);
-    std::shared_ptr<VertexBuffer> vertexBuffer = renderer->create_vertex_buffer(vertices);
+    std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
+    Pipeline pipeline = renderer.create_pipeline(vertexSpirvCode, fragmentSpirvCode);
+    VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);
 
-    CommandBufferPool& commandBufferPool = renderer->get_command_buffer_pool();
+    CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
 
     for(size_t i = 0; i < 2; ++i) {
         CommandBuffer& commandBuffer = commandBufferPool.get_command_buffer(i);
@@ -80,7 +80,7 @@ int main() {
     while (!window.closing()) {
         glfwPollEvents();
 
-        renderer->present();
+        renderer.present();
     }
 
     glfwTerminate();

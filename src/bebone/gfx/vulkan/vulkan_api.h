@@ -3,6 +3,6 @@
 
 #include "vulkan_api_proxy.h"
 #include "vulkan_command_buffer.h"
-#include "vulkan_renderer.h"
+#include "vulkan_renderer_impl.h"
 
 #endif
