@@ -22,7 +22,7 @@ jobs:
       with:
         install: make mingw-w64-ucrt-x86_64-gcc
     
-    -name: Prepare Vulkan SDK
+    - name: Prepare Vulkan SDK
       uses: humbletim/setup-vulkan-sdk@v1.2.0
       with:
         vulkan-query-version: 1.3.204.0
