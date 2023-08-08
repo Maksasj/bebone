@@ -21,7 +21,6 @@ namespace bebone::gfx {
                 }
             }
 
-
             PipelineImpl* get_impl() {
                 return _impl;
             }

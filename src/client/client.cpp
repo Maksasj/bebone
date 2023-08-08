@@ -54,8 +54,7 @@ int main() {
     ShaderCompiler::compile_shader(fffragmentShaderSource, EShLangFragment, fragmentSpirvCode);
 
     Window window("Client");
-
-    Renderer renderer = Renderer::create_from_impl<VulkanRendererImpl>(window);
+    Renderer renderer = Renderer::create(VULKAN, window);
 
     std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
     Pipeline pipeline = renderer.create_pipeline(vertexSpirvCode, fragmentSpirvCode);

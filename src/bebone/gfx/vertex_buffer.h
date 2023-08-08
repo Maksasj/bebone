@@ -21,7 +21,6 @@ namespace bebone::gfx {
                 }
             }
 
-
             VertexBufferImpl* get_impl() {
                 return _impl;
             }

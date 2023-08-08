@@ -53,6 +53,16 @@ namespace bebone::gfx {
             static Renderer create_from_impl(Args&&... args) {
                 return Renderer(new Impl(std::forward<Args>(args)...));
             }
+
+            template<class... Args>
+            static Renderer create(const RenderingApi& api, Args&&... args) {
+                switch (api) {
+                    case VULKAN: return Renderer(new VulkanRendererImpl(std::forward<Args>(args)...));
+                    default: throw std::runtime_error("Renderer is not implemented for this rendering api");
+                }
+
+                throw std::runtime_error("Failed to create renderer");
+            }
     };
 }
 

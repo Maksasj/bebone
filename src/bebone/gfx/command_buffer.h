@@ -4,7 +4,7 @@
 #include "../core/arena_allocator.h"
 
 #include "swap_chain_impl.h"
-#include "rendering_apis.h"
+#include "rendering_api.h"
 
 #include "pipeline.h"
 #include "vertex_buffer.h"

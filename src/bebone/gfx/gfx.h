@@ -11,9 +11,7 @@
 #include "renderer_impl.h"
 #include "renderer.h"
 
-#include "rendering_api_proxy_provider.h"
-#include "rendering_api_proxy.h"
-#include "rendering_apis.h"
+#include "rendering_api.h"
 #include "command_buffer.h"
 
 #include "rendering_engine.h"
