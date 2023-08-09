@@ -8,7 +8,10 @@
 
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_command_buffer.h"
+
 #include "vulkan_vertex_buffer_impl.h"
+#include "vulkan_index_buffer_impl.h"
+
 #include "vulkan_pipeline_impl.h"
 
 #include "../vertex_buffer.h"
@@ -58,6 +61,10 @@ namespace bebone::gfx {
 
             VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) override {
                 return VertexBuffer::create_from_impl<VulkanVertexBufferImpl>(vertices, *device);
+            }
+
+            IndexBuffer create_index_buffer(const std::vector<int>& indices) override {
+                return IndexBuffer::create_from_impl<VulkanIndexBufferImpl>(indices, *device);
             }
 
             std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() override {

@@ -37,6 +37,10 @@ namespace bebone::gfx {
                 return _impl->create_vertex_buffer(vertices);
             }
 
+            IndexBuffer create_index_buffer(const std::vector<int>& indices) {
+                return _impl->create_index_buffer(indices);
+            }
+
             std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() {
                 return _impl->get_swap_chain();
             }

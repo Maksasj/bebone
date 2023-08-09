@@ -22,8 +22,12 @@ namespace bebone::gfx {
             void end_render_pass() override;
 
             void bind_pipeline(Pipeline& pipeline) override;
-            void bind_buffer(VertexBuffer& vertexBuffer) override;
+            
+            void bind_vertex_buffer(VertexBuffer& vertexBuffer) override;
+            void bind_index_buffer(IndexBuffer& indexBuffer) override;
+
             void draw(const size_t& vertexCount) override;
+            void draw_indexed(const size_t& vertexCount) override;
 
             void preprocess() override;
             void submit() override;

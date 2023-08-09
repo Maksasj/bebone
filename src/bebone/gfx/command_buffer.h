@@ -7,7 +7,9 @@
 #include "rendering_api.h"
 
 #include "pipeline.h"
+
 #include "vertex_buffer.h"
+#include "index_buffer.h"
 
 #include "gfx_backend.h"
 
@@ -25,8 +27,12 @@ namespace bebone::gfx {
             virtual void end_render_pass() = 0;
 
             virtual void bind_pipeline(Pipeline& pipeline) = 0;
-            virtual void bind_buffer(VertexBuffer& vertexBuffer) = 0;
+            
+            virtual void bind_vertex_buffer(VertexBuffer& vertexBuffer) = 0;
+            virtual void bind_index_buffer(IndexBuffer& indexBuffer) = 0;
+
             virtual void draw(const size_t& vertexCount) = 0;
+            virtual void draw_indexed(const size_t& vertexCount) = 0;
 
             virtual void submit() = 0;
             virtual void preprocess() = 0;

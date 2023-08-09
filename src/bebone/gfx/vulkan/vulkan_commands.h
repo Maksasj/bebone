@@ -4,6 +4,8 @@
 #include <array>
 
 #include "vulkan_vertex_buffer_impl.h"
+#include "vulkan_index_buffer_impl.h"
+
 #include "vulkan_pipeline_impl.h"
 
 #include "../command.h"
@@ -106,13 +108,13 @@ namespace bebone::gfx {
             }
     };
 
-    class VulkanBindBufferCommand : public Command {
+    class VulkanBindVertexBufferCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
             VulkanVertexBufferImpl& _vertexBuffer;
 
         public:
-            VulkanBindBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanVertexBufferImpl& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
+            VulkanBindVertexBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanVertexBufferImpl& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
 
             }
 
@@ -120,6 +122,22 @@ namespace bebone::gfx {
                 VkBuffer buffers[] = {_vertexBuffer.get_buffer()};
                 VkDeviceSize offset[] = {0};
                 vkCmdBindVertexBuffers(_commandBuffer.commandBuffer, 0, 1, buffers, offset);
+            }
+    };
+
+    class VulkanBindIndexBufferCommand : public Command {
+        private:
+            VulkanCommandBuffer& _commandBuffer;
+            VulkanIndexBufferImpl& _indexBuffer;
+
+        public:
+            VulkanBindIndexBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanIndexBufferImpl& indexBuffer) : _commandBuffer(commandBuffer), _indexBuffer(indexBuffer) {
+
+            }
+
+            void execute() override {
+                // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
+                vkCmdBindIndexBuffer(_commandBuffer.commandBuffer, _indexBuffer.get_buffer(), 0, VK_INDEX_TYPE_UINT32);
             }
     };
 
@@ -135,6 +153,21 @@ namespace bebone::gfx {
 
             void execute() override {
                 vkCmdDraw(_commandBuffer.commandBuffer, _vertexCount, 1, 0, 0);
+            }
+    };
+
+    class VulkanDrawIndexedCommand : public Command {
+        private:
+            VulkanCommandBuffer& _commandBuffer;
+            const size_t _indicesCount;
+
+        public:
+            VulkanDrawIndexedCommand(VulkanCommandBuffer& commandBuffer, const size_t& indicesCount) : _commandBuffer(commandBuffer), _indicesCount(indicesCount) {
+
+            }
+
+            void execute() override {
+                vkCmdDrawIndexed(_commandBuffer.commandBuffer, static_cast<uint32_t>(_indicesCount), 1, 0, 0, 0);
             }
     };
 }

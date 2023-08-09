@@ -38,16 +38,16 @@ int main() {
 
     RenderingEngine::preinit();
     
-    #if 0
-        const std::vector<Vertex> vertices = {
-            {0.0f, -0.5f, 1.0, 0.3, 1.0}, // Top
-            {0.5f, 0.5f, 1.0, 1.0, 0.3}, // Right
-            {-0.5f, 0.5f, 0.3, 1.0, 1.0}, // Left
-        };
-    #else
-        std::vector<Vertex> vertices;
-        sierpinski_triangle(vertices, 5, {0.0, 0.0}, 0.8f);
-    #endif
+    const std::vector<Vertex> vertices = {
+        {-0.5f, -0.5f, 1.0f, 0.0f, 0.0f},
+        {0.5f, -0.5f, 0.0f, 1.0f, 0.0f},
+        {0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
+        {-0.5f, 0.5f, 1.0f, 1.0f, 1.0f}
+    };
+
+    const std::vector<int> indices = {
+        0, 1, 2, 2, 3, 0
+    };
 
     std::vector<unsigned int> vertexSpirvCode, fragmentSpirvCode;
     ShaderCompiler::compile_shader(vvvertexShaderSource, EShLangVertex, vertexSpirvCode);
@@ -59,7 +59,8 @@ int main() {
     std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
     Pipeline pipeline = renderer.create_pipeline(vertexSpirvCode, fragmentSpirvCode);
     
-    VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);
+    VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);    
+    IndexBuffer indexBuffer = renderer.create_index_buffer(indices);
 
     CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
 
@@ -68,9 +69,14 @@ int main() {
 
         commandBuffer.begin_record();
             commandBuffer.begin_render_pass(*swapChain, i);
+            
             commandBuffer.bind_pipeline(pipeline);
-            commandBuffer.bind_buffer(vertexBuffer);
-            commandBuffer.draw(vertices.size());
+            commandBuffer.bind_vertex_buffer(vertexBuffer);
+            commandBuffer.bind_index_buffer(indexBuffer);
+
+            // commandBuffer.draw(vertices.size());
+            commandBuffer.draw_indexed(indices.size());
+
             commandBuffer.end_render_pass();
         commandBuffer.end_record();
 

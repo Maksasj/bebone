@@ -31,14 +31,24 @@ namespace bebone::gfx {
         std::ignore = new (ptr) VulkanBindPipelineCommand(*this, *static_cast<VulkanPipelineImpl*>(pipeline.get_impl()));
     }
 
-    void VulkanCommandBuffer::bind_buffer(VertexBuffer& vertexBuffer) {
-        VulkanBindBufferCommand* ptr = static_cast<VulkanBindBufferCommand*>(arena.alloc(sizeof(VulkanBindBufferCommand)));
-        std::ignore = new (ptr) VulkanBindBufferCommand(*this, *static_cast<VulkanVertexBufferImpl*>(vertexBuffer.get_impl()));
+    void VulkanCommandBuffer::bind_vertex_buffer(VertexBuffer& vertexBuffer) {
+        VulkanBindVertexBufferCommand* ptr = static_cast<VulkanBindVertexBufferCommand*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand)));
+        std::ignore = new (ptr) VulkanBindVertexBufferCommand(*this, *static_cast<VulkanVertexBufferImpl*>(vertexBuffer.get_impl()));
+    }
+
+    void VulkanCommandBuffer::bind_index_buffer(IndexBuffer& indexBuffer) {
+        VulkanBindIndexBufferCommand* ptr = static_cast<VulkanBindIndexBufferCommand*>(arena.alloc(sizeof(VulkanBindIndexBufferCommand)));
+        std::ignore = new (ptr) VulkanBindIndexBufferCommand(*this, *static_cast<VulkanIndexBufferImpl*>(indexBuffer.get_impl()));
     }
 
     void VulkanCommandBuffer::draw(const size_t& vertexCount) {
         VulkanDrawCommand* ptr = static_cast<VulkanDrawCommand*>(arena.alloc(sizeof(VulkanDrawCommand)));
         std::ignore = new (ptr) VulkanDrawCommand(*this, vertexCount);
+    }
+
+    void VulkanCommandBuffer::draw_indexed(const size_t& indexCount) {
+        VulkanDrawIndexedCommand* ptr = static_cast<VulkanDrawIndexedCommand*>(arena.alloc(sizeof(VulkanDrawIndexedCommand)));
+        std::ignore = new (ptr) VulkanDrawIndexedCommand(*this, indexCount);
     }
 
     void VulkanCommandBuffer::preprocess() {
