@@ -22,7 +22,7 @@ namespace bebone::gfx {
                 uint32_t subpass = 0;
             };
 
-            MyEngineDevice& device;
+            DeviceImpl& device;
 
             VkPipeline grapgicsPipeline;
             VkShaderModule vertShaderModule;
@@ -109,7 +109,7 @@ namespace bebone::gfx {
                 } 
             }
 
-            VulkanPipelineImpl(MyEngineDevice& _device, const std::vector<unsigned int>& vertSpirv, const std::vector<unsigned int>& fragSpirv, const PipelineConfigInfo& configInfo) : device{_device} {
+            VulkanPipelineImpl(DeviceImpl& _device, const std::vector<unsigned int>& vertSpirv, const std::vector<unsigned int>& fragSpirv, const PipelineConfigInfo& configInfo) : device{_device} {
                 createGraphicsPipeline(vertSpirv, fragSpirv, configInfo);
             }
 

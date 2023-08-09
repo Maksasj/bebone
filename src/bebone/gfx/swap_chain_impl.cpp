@@ -9,7 +9,7 @@
 #include <set>
 #include <stdexcept>
 
-MyEngineSwapChainImpl::MyEngineSwapChainImpl(MyEngineDevice &deviceRef, VkExtent2D extent) : device{deviceRef}, windowExtent{extent} {
+MyEngineSwapChainImpl::MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D extent) : device{deviceRef}, windowExtent{extent} {
 	createSwapChain();
 	createImageViews();
 	createRenderPass();

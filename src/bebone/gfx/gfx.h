@@ -16,7 +16,7 @@
 
 #include "rendering_engine.h"
 
-#include "device.h"
+#include "device_impl.h"
 #include "pipeline_impl.h"
 #include "swap_chain_impl.h"
 

@@ -5,7 +5,7 @@
 
 #include "gfx_backend.h"
 
-#include "vertex_buffer_impl.h"
+#include "buffer_impl.h"
 #include "command_buffer.h"
 #include "command_buffer_pool.h"
 

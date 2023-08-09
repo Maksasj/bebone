@@ -58,6 +58,7 @@ int main() {
 
     std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
     Pipeline pipeline = renderer.create_pipeline(vertexSpirvCode, fragmentSpirvCode);
+    
     VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);
 
     CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();

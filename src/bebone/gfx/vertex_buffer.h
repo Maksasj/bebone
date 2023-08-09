@@ -3,14 +3,14 @@
 
 #include <memory>
 
-#include "vertex_buffer_impl.h"
+#include "buffer_impl.h"
 
 namespace bebone::gfx {
     class VertexBuffer {
         private:
-            VertexBufferImpl* _impl;
+            BufferImpl* _impl;
 
-            VertexBuffer(VertexBufferImpl* impl) : _impl(impl) {
+            VertexBuffer(BufferImpl* impl) : _impl(impl) {
 
             }
 
@@ -21,7 +21,7 @@ namespace bebone::gfx {
                 }
             }
 
-            VertexBufferImpl* get_impl() {
+            BufferImpl* get_impl() {
                 return _impl;
             }
 

@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VERTEX_BUFFER_IMPLEMENTATION_H_
-#define _BEBONE_GFX_VERTEX_BUFFER_IMPLEMENTATION_H_
+#ifndef _BEBONE_GFX_BUFFER_IMPLEMENTATION_H_
+#define _BEBONE_GFX_BUFFER_IMPLEMENTATION_H_
 
 #include <vector>
 
@@ -36,11 +36,11 @@ namespace bebone::gfx {
         return atrributeDescriptions;
     }
 
-    class VertexBufferImpl {
+    class BufferImpl {
         private:
 
         public:
-            virtual ~VertexBufferImpl() {}
+            virtual ~BufferImpl() {}
     };
 }
 

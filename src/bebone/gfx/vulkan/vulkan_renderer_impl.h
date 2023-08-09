@@ -14,18 +14,18 @@
 #include "../vertex_buffer.h"
 #include "../pipeline.h"
 
-#include "../device.h"
+#include "../device_impl.h"
 
 namespace bebone::gfx {
     class VulkanRendererImpl : public RendererImpl {
         private:
             std::shared_ptr<VulkanCommandBufferPool> commandBuffers;
-            std::shared_ptr<MyEngineDevice> device;
+            std::shared_ptr<DeviceImpl> device;
             std::shared_ptr<MyEngineSwapChainImpl> swapChain;
 
         public:
             VulkanRendererImpl(Window& window) {
-                device = std::make_shared<MyEngineDevice>(window);
+                device = std::make_shared<DeviceImpl>(window);
                 swapChain = std::make_shared<MyEngineSwapChainImpl>(*device, window.get_extend());
                 commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, 2);
             }
