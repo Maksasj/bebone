@@ -29,6 +29,14 @@ namespace bebone::gfx {
                 return _impl->get_command_buffer_pool();
             }
 
+            DescriptorPool& get_descriptor_pool() {
+                return _impl->get_descriptor_pool();
+            }
+
+            PipelineLayout& get_pipeline_layout() {
+                return _impl->get_pipeline_layout();
+            }
+
             Pipeline create_pipeline(const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
                 return _impl->create_pipeline(vertexSpirvCode, fragmentSpirvCode);
             }

@@ -51,6 +51,11 @@ namespace bebone::gfx {
         std::ignore = new (ptr) VulkanDrawIndexedCommand(*this, indexCount);
     }
 
+    void VulkanCommandBuffer::bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) {
+        VulkanBindDescriptorSet* ptr = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
+        std::ignore = new (ptr) VulkanBindDescriptorSet(*this, static_cast<VulkanPipelineLayout&>(pipelineLayout), descriptorSet); 
+    }
+
     void VulkanCommandBuffer::preprocess() {
 
     }

@@ -5,11 +5,14 @@
 #include "bebone/bebone.h"
 
 const char *vvvertexShaderSource = "#version 450 core\n"
+                                "layout(binding = 0) uniform UniformBufferObject {\n"
+                                "   float x;"
+                                "} ubo;\n"
                                 "layout(location = 0) in vec2 position;\n"
                                 "layout(location = 1) in vec3 color;\n"
                                 "layout(location = 0) out vec3 fragColor;\n"
                                 "void main() {\n"
-                                "   gl_Position = vec4(position, 0.0, 1.0);\n"
+                                "   gl_Position = vec4(position.x + ubo.x, position.y, 0.0, 1.0);\n"
                                 "   fragColor = color;\n"
                                 "}\0";
 const char *fffragmentShaderSource = "#version 450 core\n"
@@ -63,6 +66,8 @@ int main() {
     IndexBuffer indexBuffer = renderer.create_index_buffer(indices);
 
     CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
+    DescriptorPool& descriptorPool = renderer.get_descriptor_pool();
+    PipelineLayout& pipelineLayout = renderer.get_pipeline_layout();
 
     for(size_t i = 0; i < 2; ++i) {
         CommandBuffer& commandBuffer = commandBufferPool.get_command_buffer(i);
@@ -71,6 +76,7 @@ int main() {
             commandBuffer.begin_render_pass(*swapChain, i);
             
             commandBuffer.bind_pipeline(pipeline);
+            commandBuffer.bind_descriptor_set(pipelineLayout, descriptorPool.get_descriptor_set(i));
             commandBuffer.bind_vertex_buffer(vertexBuffer);
             commandBuffer.bind_index_buffer(indexBuffer);
 

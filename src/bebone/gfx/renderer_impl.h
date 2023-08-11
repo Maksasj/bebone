@@ -9,6 +9,9 @@
 #include "command_buffer.h"
 #include "command_buffer_pool.h"
 
+#include "descriptor_pool.h"
+#include "pipeline_layout.h"
+
 namespace bebone::gfx {
     class RendererImpl {
         private:
@@ -18,6 +21,8 @@ namespace bebone::gfx {
 
             virtual CommandBuffer& get_command_buffer() = 0;
             virtual CommandBufferPool& get_command_buffer_pool() = 0;
+            virtual DescriptorPool& get_descriptor_pool() = 0;
+            virtual PipelineLayout& get_pipeline_layout() = 0;
 
             virtual Pipeline create_pipeline(const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) = 0;
             

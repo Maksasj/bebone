@@ -25,6 +25,7 @@ namespace bebone::gfx {
             
             void bind_vertex_buffer(VertexBuffer& vertexBuffer) override;
             void bind_index_buffer(IndexBuffer& indexBuffer) override;
+            void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) override;
 
             void draw(const size_t& vertexCount) override;
             void draw_indexed(const size_t& vertexCount) override;

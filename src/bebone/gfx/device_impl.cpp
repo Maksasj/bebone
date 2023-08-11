@@ -32,10 +32,10 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
 DeviceImpl::DeviceImpl(bebone::gfx::Window &window) : window{window} {
 	createInstance();
 	setupDebugMessenger();
+	
 	createSurface();
 	pickPhysicalDevice();
 	createLogicalDevice();
-	// createCommandPool();
 }
 
 DeviceImpl::~DeviceImpl() {

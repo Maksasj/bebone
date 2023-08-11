@@ -7,6 +7,7 @@
 #include "vulkan_index_buffer_impl.h"
 
 #include "vulkan_pipeline_impl.h"
+#include "vulkan_pipeline_layout.h"
 
 #include "../command.h"
 #include "../swap_chain_impl.h"
@@ -168,6 +169,25 @@ namespace bebone::gfx {
 
             void execute() override {
                 vkCmdDrawIndexed(_commandBuffer.commandBuffer, static_cast<uint32_t>(_indicesCount), 1, 0, 0, 0);
+            }
+    };
+
+    class VulkanBindDescriptorSet : public Command {
+        private:
+            VulkanCommandBuffer& _commandBuffer;
+            VkDescriptorSet& _descriptorSet;
+            VulkanPipelineLayout& _pipelineLayout;
+
+        public:
+            VulkanBindDescriptorSet(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) 
+                :   _commandBuffer(commandBuffer), 
+                    _descriptorSet(descriptorSet),
+                    _pipelineLayout(pipelineLayout) {
+
+            }
+
+            void execute() override {
+                vkCmdBindDescriptorSets(_commandBuffer.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayout.get_layout(), 0, 1, &_descriptorSet, 0, nullptr);
             }
     };
 }

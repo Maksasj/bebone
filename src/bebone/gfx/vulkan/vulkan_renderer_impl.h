@@ -19,42 +19,85 @@
 
 #include "../device_impl.h"
 
+
+#include "vulkan_uniform_buffer_pool.h"
+#include "vulkan_descriptor_pool.h"
+#include "vulkan_pipeline_layout.h"
+
 namespace bebone::gfx {
     class VulkanRendererImpl : public RendererImpl {
         private:
             std::shared_ptr<VulkanCommandBufferPool> commandBuffers;
+            std::shared_ptr<VulkanUniformBufferPool> uniformBuffers;
+
+            std::shared_ptr<VulkanDescriptorPool> descriptorPool;
+
             std::shared_ptr<DeviceImpl> device;
             std::shared_ptr<MyEngineSwapChainImpl> swapChain;
+
+            std::shared_ptr<VulkanPipelineLayout> pipelineLayout;
 
         public:
             VulkanRendererImpl(Window& window) {
                 device = std::make_shared<DeviceImpl>(window);
                 swapChain = std::make_shared<MyEngineSwapChainImpl>(*device, window.get_extend());
                 commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, 2);
+                uniformBuffers = std::make_shared<VulkanUniformBufferPool>(sizeof(float), 2,*device);
+            
+                /**
+                 * Todo
+                 * Theoretically set layours and all 
+                 * these constants things should be 
+                 * computed from shader code, as well 
+                 * as automatically should be created 
+                 * all descriptiors like ubo's, etc
+                */
+                VkDescriptorSetLayout descriptorSetLayout;
+
+                VkDescriptorSetLayoutBinding uboLayoutBinding{};
+                uboLayoutBinding.binding = 0;
+                uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                uboLayoutBinding.descriptorCount = 1;
+                uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+                uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
+
+                // Descriptor set
+                VkDescriptorSetLayoutCreateInfo layoutInfo{};
+                layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+                layoutInfo.bindingCount = 1;
+                layoutInfo.pBindings = &uboLayoutBinding;
+
+                if (vkCreateDescriptorSetLayout(device->device(), &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
+                    throw std::runtime_error("failed to create descriptor set layout!");
+                }
+
+
+                pipelineLayout = std::make_shared<VulkanPipelineLayout>(descriptorSetLayout, *device);
+
+                descriptorPool = std::make_shared<VulkanDescriptorPool>(descriptorSetLayout, *device, 2, *uniformBuffers);
             }
 
             ~VulkanRendererImpl() {
                 // vkDeviceWaitIdle(device.device());
                 // vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
+                // vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
             }
 
             Pipeline create_pipeline(const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) override {
-                VkPipelineLayout pipelineLayout;
+                /**
+                 * Todo
+                 * Theoretically set layours and all 
+                 * these constants things should be 
+                 * computed from shader code, as well 
+                 * as automatically should be created 
+                 * all descriptiors like ubo's, etc
+                */
 
-                VkPipelineLayoutCreateInfo pipelineLayouInfo{};
-                pipelineLayouInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-                pipelineLayouInfo.setLayoutCount = 0;
-                pipelineLayouInfo.pSetLayouts = nullptr;
-                pipelineLayouInfo.pushConstantRangeCount = 0;
-                pipelineLayouInfo.pPushConstantRanges = nullptr;
-
-                if(vkCreatePipelineLayout(device->device(), &pipelineLayouInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-                    throw std::runtime_error("Failed to create pipeline layout");
-                }
+                // pipelineLayout = std::make_shared<VkPipelineLayout>();
 
                 auto pipelineConfig = VulkanPipelineImpl::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
                 pipelineConfig.renderPass = swapChain->getRenderPass();
-                pipelineConfig.pipelineLayout = pipelineLayout;
+                pipelineConfig.pipelineLayout = pipelineLayout->get_layout();
 
                 return Pipeline::create_from_impl<VulkanPipelineImpl>(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
             }
@@ -77,6 +120,14 @@ namespace bebone::gfx {
 
             CommandBufferPool& get_command_buffer_pool() override {
                 return *commandBuffers;
+            }
+
+            VulkanDescriptorPool& get_descriptor_pool() override {
+                return *descriptorPool;
+            }
+
+            PipelineLayout& get_pipeline_layout() override {
+                return *pipelineLayout;
             }
 
             void present() override {
