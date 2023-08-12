@@ -4,17 +4,29 @@
 
 #include "bebone/bebone.h"
 
+#if 1
 const char *vvvertexShaderSource = "#version 450 core\n"
-                                "layout(binding = 0) uniform UniformBufferObject {\n"
+                                "layout(binding = 0) uniform TransformUniformBufferObject {\n"
                                 "   float x;"
-                                "} ubo;\n"
+                                "} transform;\n"
                                 "layout(location = 0) in vec2 position;\n"
                                 "layout(location = 1) in vec3 color;\n"
                                 "layout(location = 0) out vec3 fragColor;\n"
                                 "void main() {\n"
-                                "   gl_Position = vec4(position.x + ubo.x, position.y, 0.0, 1.0);\n"
+                                "   gl_Position = vec4(position.x + transform.x, position.y, 0.0, 1.0);\n"
                                 "   fragColor = color;\n"
                                 "}\0";
+#else
+const char *vvvertexShaderSource = "#version 450 core\n"
+                                "layout(location = 0) in vec2 position;\n"
+                                "layout(location = 1) in vec3 color;\n"
+                                "layout(location = 0) out vec3 fragColor;\n"
+                                "void main() {\n"
+                                "   gl_Position = vec4(position.x, position.y, 0.0, 1.0);\n"
+                                "   fragColor = color;\n"
+                                "}\0";
+#endif
+
 const char *fffragmentShaderSource = "#version 450 core\n"
                                   "layout (location = 0) out vec4 outColor;\n"
                                   "layout (location = 0) in vec3 fragColor;\n"
@@ -60,14 +72,15 @@ int main() {
     Renderer renderer = Renderer::create(VULKAN, window);
 
     std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
-    Pipeline pipeline = renderer.create_pipeline(vertexSpirvCode, fragmentSpirvCode);
+
+    PipelineLayout pipelineLayout = renderer.create_pipeline_layout();
+    Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
     
     VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);    
     IndexBuffer indexBuffer = renderer.create_index_buffer(indices);
 
     CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
     DescriptorPool& descriptorPool = renderer.get_descriptor_pool();
-    PipelineLayout& pipelineLayout = renderer.get_pipeline_layout();
 
     for(size_t i = 0; i < 2; ++i) {
         CommandBuffer& commandBuffer = commandBufferPool.get_command_buffer(i);

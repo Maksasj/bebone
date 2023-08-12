@@ -33,12 +33,8 @@ namespace bebone::gfx {
                 return _impl->get_descriptor_pool();
             }
 
-            PipelineLayout& get_pipeline_layout() {
-                return _impl->get_pipeline_layout();
-            }
-
-            Pipeline create_pipeline(const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
-                return _impl->create_pipeline(vertexSpirvCode, fragmentSpirvCode);
+            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
+                return _impl->create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
             }
 
             VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {
@@ -47,6 +43,10 @@ namespace bebone::gfx {
 
             IndexBuffer create_index_buffer(const std::vector<int>& indices) {
                 return _impl->create_index_buffer(indices);
+            }
+
+            PipelineLayout create_pipeline_layout() {
+                return _impl->create_pipeline_layout();
             }
 
             std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() {

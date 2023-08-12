@@ -6,12 +6,11 @@
 #include "swap_chain_impl.h"
 #include "rendering_api.h"
 
-#include "pipeline.h"
-
 #include "pipeline_layout.h"
-
 #include "vertex_buffer.h"
 #include "index_buffer.h"
+
+#include "pipeline.h"
 
 #include "gfx_backend.h"
 
