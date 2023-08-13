@@ -61,7 +61,7 @@ namespace bebone::gfx {
     }
 
     void VulkanCommandBuffer::submit() {
-        const size_t size = arena.size();
+        const size_t& size = arena.size();
 
         for(size_t i = 0; i < size; ++i) {
             Command* command = static_cast<Command*>(arena.at(i));

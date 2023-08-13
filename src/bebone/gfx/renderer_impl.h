@@ -9,8 +9,10 @@
 #include "command_buffer.h"
 #include "command_buffer_pool.h"
 
+#include "uniform_buffer.h"
+
 #include "descriptor_pool.h"
-#include "pipeline_layout.h"
+#include "pipeline_layout_builder.h"
 
 namespace bebone::gfx {
     class RendererImpl {
@@ -27,7 +29,8 @@ namespace bebone::gfx {
             
             virtual VertexBuffer create_vertex_buffer(const std::vector<Vertex>&) = 0;
             virtual IndexBuffer create_index_buffer(const std::vector<int>&) = 0;
-            virtual PipelineLayout create_pipeline_layout() = 0;
+            virtual UniformBuffer create_uniform_buffer(const size_t& size) = 0;
+            virtual PipelineLayoutBuilder create_pipeline_layout_builder() = 0;
 
             virtual std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() = 0;
 

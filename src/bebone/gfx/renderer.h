@@ -45,8 +45,12 @@ namespace bebone::gfx {
                 return _impl->create_index_buffer(indices);
             }
 
-            PipelineLayout create_pipeline_layout() {
-                return _impl->create_pipeline_layout();
+            UniformBuffer create_uniform_buffer(const size_t& size) {
+                return _impl->create_uniform_buffer(size);
+            }
+
+            PipelineLayoutBuilder create_pipeline_layout_builder() {
+                return _impl->create_pipeline_layout_builder();
             }
 
             std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() {

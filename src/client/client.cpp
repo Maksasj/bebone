@@ -6,7 +6,7 @@
 
 #if 1
 const char *vvvertexShaderSource = "#version 450 core\n"
-                                "layout(binding = 0) uniform TransformUniformBufferObject {\n"
+                                "layout(binding = 1) uniform TransformUniformBufferObject {\n"
                                 "   float x;"
                                 "} transform;\n"
                                 "layout(location = 0) in vec2 position;\n"
@@ -73,7 +73,12 @@ int main() {
 
     std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
 
-    PipelineLayout pipelineLayout = renderer.create_pipeline_layout();
+    UniformBuffer ubo = renderer.create_uniform_buffer(sizeof(float));
+
+    PipelineLayoutBuilder pipelineLayoutBuilder = renderer.create_pipeline_layout_builder();
+        pipelineLayoutBuilder.bind_uniform_buffer(1, ubo);
+    PipelineLayout pipelineLayout = pipelineLayoutBuilder.build();
+
     Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
     
     VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);    
@@ -90,10 +95,10 @@ int main() {
             
             commandBuffer.bind_pipeline(pipeline);
             commandBuffer.bind_descriptor_set(pipelineLayout, descriptorPool.get_descriptor_set(i));
+            
             commandBuffer.bind_vertex_buffer(vertexBuffer);
             commandBuffer.bind_index_buffer(indexBuffer);
 
-            // commandBuffer.draw(vertices.size());
             commandBuffer.draw_indexed(indices.size());
 
             commandBuffer.end_render_pass();

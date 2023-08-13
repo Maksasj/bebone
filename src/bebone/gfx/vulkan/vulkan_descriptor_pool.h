@@ -72,40 +72,6 @@ namespace bebone::gfx {
                 descriptorWrite.pTexelBufferView = nullptr; // Optional
 
                 vkUpdateDescriptorSets(_device.device(), 1, &descriptorWrite, 0, nullptr);
-
-                /*
-                std::vector<VkDescriptorSetLayout> layouts(descriptorPoolCount, descriptorSetLayout);
-                VkDescriptorSetAllocateInfo allocInfo{};
-                allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-                allocInfo.descriptorPool = descriptorPool;
-                allocInfo.descriptorSetCount = static_cast<uint32_t>(descriptorPoolCount);
-                allocInfo.pSetLayouts = layouts.data();
-                
-                descriptorSets.resize(descriptorPoolCount);
-                if (vkAllocateDescriptorSets(_device.device(), &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
-                    throw std::runtime_error("failed to allocate descriptor sets!");
-                }
-
-                for(size_t i = 0; i < descriptorPoolCount; i++) {
-                    VkDescriptorBufferInfo bufferInfo{};
-                    bufferInfo.buffer = uniformBufferPool.uniformBuffers[i]->get_buffer();
-                    bufferInfo.offset = 0;
-                    bufferInfo.range = sizeof(float);
-
-                    VkWriteDescriptorSet descriptorWrite{};
-                    descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                    descriptorWrite.dstSet = descriptorSets[i];
-                    descriptorWrite.dstBinding = 0;
-                    descriptorWrite.dstArrayElement = 0;
-                    descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                    descriptorWrite.descriptorCount = 1;
-                    descriptorWrite.pBufferInfo = &bufferInfo;
-                    descriptorWrite.pImageInfo = nullptr; // Optional
-                    descriptorWrite.pTexelBufferView = nullptr; // Optional
-
-                    vkUpdateDescriptorSets(_device.device(), 1, &descriptorWrite, 0, nullptr);
-                }
-                */
             }
 
             VkDescriptorSet& get_descriptor_set(const size_t& index) override {

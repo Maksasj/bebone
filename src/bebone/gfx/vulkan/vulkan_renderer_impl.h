@@ -23,26 +23,24 @@
 #include "vulkan_uniform_buffer_pool.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
+#include "vulkan_pipeline_layout_builder_impl.h"
 
 namespace bebone::gfx {
     class VulkanRendererImpl : public RendererImpl {
         private:
+            const static constexpr size_t FIF = 2; 
+
             std::shared_ptr<VulkanCommandBufferPool> commandBuffers;
-            std::shared_ptr<VulkanUniformBufferPool> uniformBuffers;
-
             std::shared_ptr<VulkanDescriptorPool> descriptorPool;
-
             std::shared_ptr<DeviceImpl> device;
             std::shared_ptr<MyEngineSwapChainImpl> swapChain;
-
-            VkDescriptorSetLayout descriptorSetLayout;
 
         public:
             VulkanRendererImpl(Window& window) {
                 device = std::make_shared<DeviceImpl>(window);
-                swapChain = std::make_shared<MyEngineSwapChainImpl>(*device, window.get_extend());
-                commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, 2);
-                uniformBuffers = std::make_shared<VulkanUniformBufferPool>(sizeof(float), 2,*device);
+                swapChain = std::make_shared<MyEngineSwapChainImpl>(*device, window.get_extend(), FIF);
+                commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, FIF);
+                descriptorPool = std::make_shared<VulkanDescriptorPool>(*device, 2); // <- this two cause we have 2 descriptors
             
                 /**
                  * Todo
@@ -54,31 +52,13 @@ namespace bebone::gfx {
                 */
 
 
-                VkDescriptorSetLayoutBinding uboLayoutBinding{};
-                uboLayoutBinding.binding = 0;
-                uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                uboLayoutBinding.descriptorCount = 1;
-                uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-                uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
-
-                // Descriptor set
-                VkDescriptorSetLayoutCreateInfo layoutInfo{};
-                layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-                layoutInfo.bindingCount = 1;
-                layoutInfo.pBindings = &uboLayoutBinding;
-
-                if (vkCreateDescriptorSetLayout(device->device(), &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
-                    throw std::runtime_error("failed to create descriptor set layout!");
-                }
-
                 /*
                 // pipelineLayout = std::make_shared<VulkanPipelineLayoutImpl>(descriptorSetLayout, *device);
                 descriptorPool = std::make_shared<VulkanDescriptorPool>(descriptorSetLayout, *device, 2, *uniformBuffers);
                 */
 
-                descriptorPool = std::make_shared<VulkanDescriptorPool>(*device, 2);
-                descriptorPool->create_descriptor(descriptorSetLayout, (uniformBuffers->uniformBuffers[0])->get_buffer());
-                descriptorPool->create_descriptor(descriptorSetLayout, (uniformBuffers->uniformBuffers[1])->get_buffer());
+                // descriptorPool->create_descriptor(descriptorSetLayout, (uniformBuffers->uniformBuffers[0])->get_buffer());
+                // descriptorPool->create_descriptor(descriptorSetLayout, (uniformBuffers->uniformBuffers[1])->get_buffer());
             }
 
             ~VulkanRendererImpl() {
@@ -105,17 +85,12 @@ namespace bebone::gfx {
                 return IndexBuffer::create_from_impl<VulkanIndexBufferImpl>(indices, *device);
             }
 
-            PipelineLayout create_pipeline_layout() override {
-                /**
-                 * Todo
-                 * Theoretically set layours and all 
-                 * these constants things should be 
-                 * computed from shader code, as well 
-                 * as automatically should be created 
-                 * all descriptiors like ubo's, etc
-                */
+            UniformBuffer create_uniform_buffer(const size_t& size) override {
+                return UniformBuffer::create_from_impl<VulkanUniformBufferImpl>(FIF, size, *device);
+            }
 
-                return PipelineLayout::create_from_impl<VulkanPipelineLayoutImpl>(*device, descriptorSetLayout);
+            PipelineLayoutBuilder create_pipeline_layout_builder() override {
+                return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(FIF, *device, *descriptorPool);
             }
 
             std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() override {

@@ -8,26 +8,38 @@
 namespace bebone::gfx {
     class UniformBuffer {
         private:
-            BufferImpl* _impl;
+            std::vector<BufferImpl*> _impl; 
 
-            UniformBuffer(BufferImpl* impl) : _impl(impl) {
+            UniformBuffer(std::vector<BufferImpl*> impl) : _impl(impl) {
 
             }
 
         public:
             ~UniformBuffer() {
-                if(_impl != nullptr) {
-                    delete _impl;
+                for(const auto& buf : _impl) {
+                    delete buf;
                 }
+
+                _impl.clear();
             }
 
-            BufferImpl* get_impl() {
-                return _impl;
+            BufferImpl* get_impl(const size_t index) {
+                return _impl[index];
+            }
+
+            size_t get_impl_size() const {
+                return _impl.size();
             }
 
             template<class Impl, class... Args>
-            static UniformBuffer create_from_impl(Args&&... args) {
-                return UniformBuffer(new Impl(std::forward<Args>(args)...));
+            static UniformBuffer create_from_impl(const size_t fif, Args&&... args) {
+                std::vector<BufferImpl*> impl;
+
+                for(size_t f = 0; f < fif; ++f) {
+                    impl.push_back(new Impl(std::forward<Args>(args)...));
+                }
+                
+                return UniformBuffer(impl);
             }
     };
 }

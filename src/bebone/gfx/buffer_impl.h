@@ -41,6 +41,7 @@ namespace bebone::gfx {
 
         public:
             virtual ~BufferImpl() {}
+            virtual size_t get_size() = 0;
     };
 }
 

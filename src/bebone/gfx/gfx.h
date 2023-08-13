@@ -25,4 +25,6 @@
 #include "vertex_buffer.h"
 #include "index_buffer.h"
 
+#include "pipeline_layout_builder.h"
+
 #endif

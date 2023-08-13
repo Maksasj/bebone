@@ -11,9 +11,9 @@
 
 class MyEngineSwapChainImpl {
 	public:
-		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+		const size_t FIF;
 
-		MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D windowExtent);
+		MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D windowExtent, const size_t& fif);
 		~MyEngineSwapChainImpl();
 
 		MyEngineSwapChainImpl(const MyEngineSwapChainImpl &) = delete;

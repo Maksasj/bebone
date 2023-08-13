@@ -9,7 +9,7 @@
 #include <set>
 #include <stdexcept>
 
-MyEngineSwapChainImpl::MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D extent) : device{deviceRef}, windowExtent{extent} {
+MyEngineSwapChainImpl::MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D extent, const size_t& fif) : FIF(fif), device{deviceRef}, windowExtent{extent} {
 	createSwapChain();
 	createImageViews();
 	createRenderPass();
@@ -30,7 +30,7 @@ MyEngineSwapChainImpl::~MyEngineSwapChainImpl() {
 		swapChain = nullptr;
 	}
 
-	for (int i = 0; i < depthImages.size(); i++) {
+	for (size_t i = 0; i < depthImages.size(); i++) {
 		vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
 		vkDestroyImage(device.device(), depthImages[i], nullptr);
 		vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
@@ -43,7 +43,7 @@ MyEngineSwapChainImpl::~MyEngineSwapChainImpl() {
 	vkDestroyRenderPass(device.device(), renderPass, nullptr);
 
 	// cleanup synchronization objects
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+	for (size_t i = 0; i < FIF; i++) {
 		vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
 		vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
 		vkDestroyFence(device.device(), inFlightFences[i], nullptr);
@@ -106,7 +106,7 @@ VkResult MyEngineSwapChainImpl::submitCommandBuffers(const VkCommandBuffer *buff
 
 	VkResult result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
 
-	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+	currentFrame = (currentFrame + 1) % FIF;
 
 	return result;
 }
@@ -285,7 +285,7 @@ void MyEngineSwapChainImpl::createDepthResources() {
 	depthImageMemorys.resize(imageCount());
 	depthImageViews.resize(imageCount());
 
-	for (int i = 0; i < depthImages.size(); i++) {
+	for (size_t i = 0; i < depthImages.size(); ++i) {
 		VkImageCreateInfo imageInfo{};
 		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -322,9 +322,9 @@ void MyEngineSwapChainImpl::createDepthResources() {
 }
 
 void MyEngineSwapChainImpl::createSyncObjects() {
-	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+	imageAvailableSemaphores.resize(FIF);
+	renderFinishedSemaphores.resize(FIF);
+	inFlightFences.resize(FIF);
 	imagesInFlight.resize(imageCount(), VK_NULL_HANDLE);
 
 	VkSemaphoreCreateInfo semaphoreInfo = {};
@@ -334,7 +334,7 @@ void MyEngineSwapChainImpl::createSyncObjects() {
 	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+	for (size_t i = 0; i < FIF; i++) {
 		if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) !=
 				VK_SUCCESS ||
 			vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) !=

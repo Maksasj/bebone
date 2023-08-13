@@ -18,8 +18,10 @@ namespace bebone::gfx {
             VkBuffer buffer;
             VkDeviceMemory bufferMemory;
 
+            const size_t _size;
+
         public:
-            VulkanBufferImpl(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, DeviceImpl& device) : device(device) {
+            VulkanBufferImpl(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, DeviceImpl& device) : device(device), _size(static_cast<size_t>(size)) {
                 VkBufferCreateInfo bufferInfo{};
                 bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 bufferInfo.size = size;
@@ -52,6 +54,10 @@ namespace bebone::gfx {
 
             VkBuffer get_buffer() const {
                 return buffer;
+            }
+
+            size_t get_size() override {
+                return _size;
             }
 
             DeviceImpl& get_device() {
