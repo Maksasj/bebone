@@ -6,7 +6,7 @@
 
 #if 1
 const char *vvvertexShaderSource = "#version 450 core\n"
-                                "layout(binding = 1) uniform TransformUniformBufferObject {\n"
+                                "layout(binding = 0) uniform TransformUniformBufferObject {\n"
                                 "   float x;"
                                 "} transform;\n"
                                 "layout(location = 0) in vec2 position;\n"
@@ -73,10 +73,10 @@ int main() {
 
     std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
 
-    UniformBuffer ubo = renderer.create_uniform_buffer(sizeof(float));
+    UniformBuffer transformUbo = renderer.create_uniform_buffer(sizeof(float));
 
     PipelineLayoutBuilder pipelineLayoutBuilder = renderer.create_pipeline_layout_builder();
-        pipelineLayoutBuilder.bind_uniform_buffer(1, ubo);
+        pipelineLayoutBuilder.bind_uniform_buffer(0, transformUbo);
     PipelineLayout pipelineLayout = pipelineLayoutBuilder.build();
 
     Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
@@ -85,7 +85,7 @@ int main() {
     IndexBuffer indexBuffer = renderer.create_index_buffer(indices);
 
     CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-    DescriptorPool& descriptorPool = renderer.get_descriptor_pool();
+
 
     for(size_t i = 0; i < 2; ++i) {
         CommandBuffer& commandBuffer = commandBufferPool.get_command_buffer(i);
@@ -94,8 +94,8 @@ int main() {
             commandBuffer.begin_render_pass(*swapChain, i);
             
             commandBuffer.bind_pipeline(pipeline);
-            commandBuffer.bind_descriptor_set(pipelineLayout, descriptorPool.get_descriptor_set(i));
             
+            commandBuffer.bind_uniform_buffer(pipelineLayout, transformUbo);
             commandBuffer.bind_vertex_buffer(vertexBuffer);
             commandBuffer.bind_index_buffer(indexBuffer);
 

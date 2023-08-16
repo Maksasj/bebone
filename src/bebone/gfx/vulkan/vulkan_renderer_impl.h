@@ -19,8 +19,7 @@
 
 #include "../device_impl.h"
 
-
-#include "vulkan_uniform_buffer_pool.h"
+#include "vulkan_uniform_buffer_impl.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
 #include "vulkan_pipeline_layout_builder_impl.h"
@@ -31,7 +30,6 @@ namespace bebone::gfx {
             const static constexpr size_t FIF = 2; 
 
             std::shared_ptr<VulkanCommandBufferPool> commandBuffers;
-            std::shared_ptr<VulkanDescriptorPool> descriptorPool;
             std::shared_ptr<DeviceImpl> device;
             std::shared_ptr<MyEngineSwapChainImpl> swapChain;
 
@@ -40,25 +38,6 @@ namespace bebone::gfx {
                 device = std::make_shared<DeviceImpl>(window);
                 swapChain = std::make_shared<MyEngineSwapChainImpl>(*device, window.get_extend(), FIF);
                 commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, FIF);
-                descriptorPool = std::make_shared<VulkanDescriptorPool>(*device, 2); // <- this two cause we have 2 descriptors
-            
-                /**
-                 * Todo
-                 * Theoretically set layours and all 
-                 * these constants things should be 
-                 * computed from shader code, as well 
-                 * as automatically should be created 
-                 * all descriptiors like ubo's, etc
-                */
-
-
-                /*
-                // pipelineLayout = std::make_shared<VulkanPipelineLayoutImpl>(descriptorSetLayout, *device);
-                descriptorPool = std::make_shared<VulkanDescriptorPool>(descriptorSetLayout, *device, 2, *uniformBuffers);
-                */
-
-                // descriptorPool->create_descriptor(descriptorSetLayout, (uniformBuffers->uniformBuffers[0])->get_buffer());
-                // descriptorPool->create_descriptor(descriptorSetLayout, (uniformBuffers->uniformBuffers[1])->get_buffer());
             }
 
             ~VulkanRendererImpl() {
@@ -71,7 +50,7 @@ namespace bebone::gfx {
                 VulkanPipelineLayoutImpl* vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
 
                 auto pipelineConfig = VulkanPipelineImpl::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
-                pipelineConfig.renderPass = swapChain->getRenderPass();
+                pipelineConfig.renderPass = swapChain->getRenderPass(); // Setting up render pass
                 pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
 
                 return Pipeline::create_from_impl<VulkanPipelineImpl>(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
@@ -90,7 +69,7 @@ namespace bebone::gfx {
             }
 
             PipelineLayoutBuilder create_pipeline_layout_builder() override {
-                return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(FIF, *device, *descriptorPool);
+                return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(FIF, *device);
             }
 
             std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() override {
@@ -103,10 +82,6 @@ namespace bebone::gfx {
 
             CommandBufferPool& get_command_buffer_pool() override {
                 return *commandBuffers;
-            }
-
-            VulkanDescriptorPool& get_descriptor_pool() override {
-                return *descriptorPool;
             }
 
             void present() override {

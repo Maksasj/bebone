@@ -10,30 +10,31 @@
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
 
-/*
-    // Pipeline layout builder atomatically insuers that all buffers have been craeted with proper count
-    PipelineLayoutBuilder pipelineLayoutBuilder = renderer.create_pipeline_layout_builder();
-
-        // x.add_uniform_buffer(binding, size)
-        pipelineLayoutBuilder.bind_uniform_buffer(0, sizeof(float));
-        pipelineLayoutBuilder.bind_uniform_buffer(1, sizeof(float) * 2);
-
-    PipelineLayout pipelineLayout = pipelineLayoutBuilder.build();
-
-*/
-
 namespace bebone::gfx {
+    class VulkanDescriptorSetLayoutBlueprint {
+        public:
+            const size_t _binding;
+            std::vector<VulkanBufferImpl*> _buffer;
+            VkDescriptorType _type;
+
+            VulkanDescriptorSetLayoutBlueprint(
+                const size_t& binding,
+                const VkDescriptorType& type, 
+                const std::vector<VulkanBufferImpl*>& buffer) : _binding(binding), _buffer(buffer), _type(type) {
+                    
+            }
+    };
+
     class VulkanPipelineLayoutBuilderImpl : public PipelineLayoutBuilderImpl {
         private:
             DeviceImpl& _device;
-            VulkanDescriptorPool& _descriptorPool;
             const size_t _fif;
 
-            VkDescriptorSetLayout descriptorSetLayout;
-
+            std::vector<VulkanDescriptorSetLayoutBlueprint> descriptorSetLayoutsBlueprints;
+            size_t descriptorsInNeed;
 
         public:
-            VulkanPipelineLayoutBuilderImpl(const size_t& fif, DeviceImpl& device, VulkanDescriptorPool& descriptorPool) : _device(device), _descriptorPool(descriptorPool), _fif(fif) {
+            VulkanPipelineLayoutBuilderImpl(const size_t& fif, DeviceImpl& device) : _device(device), _fif(fif), descriptorsInNeed(0) {
 
             }
 
@@ -42,32 +43,47 @@ namespace bebone::gfx {
             }
 
             void bind_uniform_buffer(const size_t& binding, UniformBuffer& buffer) override {
-                VkDescriptorSetLayoutBinding uboLayoutBinding{};
-                uboLayoutBinding.binding = binding;
-                uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                uboLayoutBinding.descriptorCount = 1;
-                uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-                uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
-
-                // Descriptor set
-                VkDescriptorSetLayoutCreateInfo layoutInfo{};
-                layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-                layoutInfo.bindingCount = 1;
-                layoutInfo.pBindings = &uboLayoutBinding;
-
-                if (vkCreateDescriptorSetLayout(_device.device(), &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
-                    throw std::runtime_error("failed to create descriptor set layout!");
-                }
+                std::vector<VulkanBufferImpl*> buffers;
 
                 for(size_t i = 0; i < buffer.get_impl_size(); ++i) {
-                    VulkanUniformBufferImpl* buf = static_cast<VulkanUniformBufferImpl*>(buffer.get_impl(i));
-
-                    _descriptorPool.create_descriptor(descriptorSetLayout, buf->get_buffer());
+                    VulkanBufferImpl* buf = static_cast<VulkanBufferImpl*>(buffer.get_impl(i));
+                    buffers.push_back(buf);
+                    ++descriptorsInNeed;
                 }
+
+                /*
+                
+                Look into dif, looks like that
+                there is no need to create
+                descriptorSetLayoutsBlueprints 
+                for each implementations of buffer,
+                even why do we need to do this lol ?
+                
+                */
+               
+                descriptorSetLayoutsBlueprints.push_back(VulkanDescriptorSetLayoutBlueprint(binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, buffers));
             }
 
             PipelineLayout build() override {
-                return PipelineLayout::create_from_impl<VulkanPipelineLayoutImpl>(_device, descriptorSetLayout);
+                std::shared_ptr<VulkanDescriptorPool> descriptorPool = std::make_shared<VulkanDescriptorPool>(_device, descriptorsInNeed);
+
+                for(auto& descriptorBlueprint : descriptorSetLayoutsBlueprints) {
+                    VkDescriptorSetLayout* descriptorSetLayout = descriptorPool->create_descriptor_set_layout(descriptorBlueprint._binding, descriptorBlueprint._type);
+
+                    // Making descriptor for every buffer
+                    for(auto& buffer : descriptorBlueprint._buffer) {
+                        VkDescriptorSet* descriptorSet = descriptorPool->create_descriptor(descriptorSetLayout, buffer->get_buffer());
+
+                        // Todo refactor this cringe
+                        if(descriptorBlueprint._type == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) {
+                            VulkanUniformBufferImpl* uniformBufferImpl = static_cast<VulkanUniformBufferImpl*>(buffer);
+
+                            uniformBufferImpl->bind_descriptor_set(descriptorSet);
+                        }
+                    }
+                }
+
+                return PipelineLayout::create_from_impl<VulkanPipelineLayoutImpl>(_device, descriptorPool);
             }
     };
 }

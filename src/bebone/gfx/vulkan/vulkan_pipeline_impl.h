@@ -109,7 +109,13 @@ namespace bebone::gfx {
                 } 
             }
 
-            VulkanPipelineImpl(DeviceImpl& _device, const std::vector<unsigned int>& vertSpirv, const std::vector<unsigned int>& fragSpirv, const PipelineConfigInfo& configInfo) : device{_device} {
+            VulkanPipelineImpl(
+                DeviceImpl& _device, 
+                const std::vector<unsigned int>& vertSpirv, 
+                const std::vector<unsigned int>& fragSpirv, 
+                const PipelineConfigInfo& configInfo)
+                     : device{_device} {
+                
                 createGraphicsPipeline(vertSpirv, fragSpirv, configInfo);
             }
 
