@@ -9,6 +9,7 @@
 #include "pipeline_layout.h"
 #include "vertex_buffer.h"
 #include "index_buffer.h"
+#include "uniform_buffer.h"
 
 #include "pipeline.h"
 
@@ -31,7 +32,8 @@ namespace bebone::gfx {
             
             virtual void bind_vertex_buffer(VertexBuffer& vertexBuffer) = 0;
             virtual void bind_index_buffer(IndexBuffer& indexBuffer) = 0;
-            virtual void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) = 0;
+            // virtual void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) = 0;
+            virtual void bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer) = 0;
 
             virtual void draw(const size_t& vertexCount) = 0;
             virtual void draw_indexed(const size_t& vertexCount) = 0;

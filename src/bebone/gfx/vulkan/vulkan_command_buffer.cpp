@@ -2,8 +2,8 @@
 #include "vulkan_commands.h"
 
 namespace bebone::gfx {
-    VulkanCommandBuffer::VulkanCommandBuffer() : arena(_BEBONE_MEMORY_BYTES_8KB_) {
-        
+    VulkanCommandBuffer::VulkanCommandBuffer(const size_t& frameIndex) : arena(_BEBONE_MEMORY_BYTES_8KB_), _frameIndex(frameIndex) {
+
     }
 
     void VulkanCommandBuffer::begin_record() {
@@ -51,9 +51,18 @@ namespace bebone::gfx {
         std::ignore = new (ptr) VulkanDrawIndexedCommand(*this, indexCount);
     }
 
-    void VulkanCommandBuffer::bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) {
+    void VulkanCommandBuffer::bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer) {
         VulkanBindDescriptorSet* ptr = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
-        std::ignore = new (ptr) VulkanBindDescriptorSet(*this, static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl()), descriptorSet); 
+        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+        VulkanUniformBufferImpl* uniformBufferImpl = static_cast<VulkanUniformBufferImpl*>(uniformBuffer.get_impl(_frameIndex));
+
+        VkDescriptorSet* descriptorSet = uniformBufferImpl->get_descriptor_set();
+
+        if(descriptorSet == nullptr) {
+            throw std::runtime_error("failed to get descriptor, uniform buffer implementation in not binded with any descriptor");
+        }
+
+        std::ignore = new (ptr) VulkanBindDescriptorSet(*this, pipelineLayoutImpl, descriptorSet); 
     }
 
     void VulkanCommandBuffer::preprocess() {

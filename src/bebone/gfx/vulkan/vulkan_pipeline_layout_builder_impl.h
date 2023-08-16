@@ -26,15 +26,14 @@ namespace bebone::gfx {
     class VulkanPipelineLayoutBuilderImpl : public PipelineLayoutBuilderImpl {
         private:
             DeviceImpl& _device;
-            VulkanDescriptorPool& _descriptorPool;
+            std::shared_ptr<VulkanDescriptorPool> _descriptorPool;
             const size_t _fif;
 
             VkDescriptorSetLayout descriptorSetLayout;
 
-
         public:
-            VulkanPipelineLayoutBuilderImpl(const size_t& fif, DeviceImpl& device, VulkanDescriptorPool& descriptorPool) : _device(device), _descriptorPool(descriptorPool), _fif(fif) {
-
+            VulkanPipelineLayoutBuilderImpl(const size_t& fif, DeviceImpl& device) : _device(device), _fif(fif) {
+                _descriptorPool = std::make_shared<VulkanDescriptorPool>(device, 2);
             }
 
             ~VulkanPipelineLayoutBuilderImpl() {
@@ -62,12 +61,13 @@ namespace bebone::gfx {
                 for(size_t i = 0; i < buffer.get_impl_size(); ++i) {
                     VulkanUniformBufferImpl* buf = static_cast<VulkanUniformBufferImpl*>(buffer.get_impl(i));
 
-                    _descriptorPool.create_descriptor(descriptorSetLayout, buf->get_buffer());
+                    VkDescriptorSet* descriptorSet = _descriptorPool->create_descriptor(&descriptorSetLayout, buf->get_buffer());
+                    buf->bind_descriptor_set(descriptorSet);
                 }
             }
 
             PipelineLayout build() override {
-                return PipelineLayout::create_from_impl<VulkanPipelineLayoutImpl>(_device, descriptorSetLayout);
+                return PipelineLayout::create_from_impl<VulkanPipelineLayoutImpl>(_device, _descriptorPool, descriptorSetLayout);
             }
     };
 }

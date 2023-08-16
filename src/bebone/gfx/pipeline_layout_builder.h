@@ -26,8 +26,12 @@ namespace bebone::gfx {
             PipelineLayoutBuilder(PipelineLayoutBuilderImpl* impl) : _impl(impl) {
                 
             }
-            
+
         public:
+            ~PipelineLayoutBuilder() {
+                delete _impl;
+            }
+
             void bind_uniform_buffer(const size_t& binding, UniformBuffer& buffer) {
                 _impl->bind_uniform_buffer(binding, buffer);
             }

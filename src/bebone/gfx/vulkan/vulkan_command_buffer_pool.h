@@ -16,10 +16,10 @@ namespace bebone::gfx {
             DeviceImpl& _device;
 
             VkCommandPool commandPool;
-            std::vector<VulkanCommandBuffer> commandBuffers;
+            core::ArenaContainer commandBuffers;
 
         public:
-            VulkanCommandBufferPool(DeviceImpl& device, const size_t& commandBufferCount) : _device(device) {
+            VulkanCommandBufferPool(DeviceImpl& device, const size_t& commandBufferCount) : _device(device), commandBuffers(sizeof(VulkanCommandBuffer) * commandBufferCount) {
                 QueueFamilyIndices queueFamilyIndices = device.findPhysicalQueueFamilies();
 
                 VkCommandPoolCreateInfo poolInfo = {};
@@ -31,16 +31,22 @@ namespace bebone::gfx {
                     throw std::runtime_error("failed to create command pool!");
                 }
 
-                commandBuffers = std::vector<VulkanCommandBuffer>(commandBufferCount);
-
                 for(size_t i = 0; i < commandBufferCount; ++i) {
+                    VulkanCommandBuffer* commandBuffer = static_cast<VulkanCommandBuffer*>(commandBuffers.alloc(sizeof(VulkanCommandBuffer)));
+
+                    if(commandBuffer == nullptr) {
+                        throw std::runtime_error("failed to allocate vulkam command buffer");
+                    }
+
+                    std::ignore = new (commandBuffer) VulkanCommandBuffer(i);
+
                     VkCommandBufferAllocateInfo allocInfo{};
                     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
                     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
                     allocInfo.commandPool = commandPool;
                     allocInfo.commandBufferCount = static_cast<uint32_t>(1);
 
-                    if(vkAllocateCommandBuffers(device.device(), &allocInfo, &commandBuffers[i].commandBuffer) != VK_SUCCESS) {
+                    if(vkAllocateCommandBuffers(device.device(), &allocInfo, &commandBuffer->commandBuffer) != VK_SUCCESS) {
                         throw std::runtime_error("Failed to allocate command buffers !");
                     }
                 }
@@ -114,8 +120,14 @@ namespace bebone::gfx {
                 end_single_time_commands(commandBuffer);
             }
 
-            CommandBuffer& get_command_buffer(const size_t& commandBufferIndex) override {
-                return commandBuffers[commandBufferIndex];
+            CommandBuffer& get_command_buffer(const size_t& index) override {
+                VulkanCommandBuffer* ptr = static_cast<VulkanCommandBuffer*>(commandBuffers.at(index));
+
+                if(ptr == nullptr) {
+                    throw std::runtime_error("Failed to retrive command buffer at index " + std::to_string(index));
+                }
+
+                return static_cast<CommandBuffer&>(*ptr);
             }
     };  
 }

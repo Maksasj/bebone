@@ -10,10 +10,12 @@ namespace bebone::gfx {
     class VulkanCommandBuffer : public CommandBuffer {
         private:
             core::ArenaContainer arena;
+            const size_t _frameIndex;
+
         protected:
 
         public:
-            VulkanCommandBuffer();
+            VulkanCommandBuffer(const size_t& frameIndex);
 
             void begin_record() override;
             void end_record() override;
@@ -25,7 +27,9 @@ namespace bebone::gfx {
             
             void bind_vertex_buffer(VertexBuffer& vertexBuffer) override;
             void bind_index_buffer(IndexBuffer& indexBuffer) override;
-            void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) override;
+            // void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) override;
+
+            void bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer) override;
 
             void draw(const size_t& vertexCount) override;
             void draw_indexed(const size_t& vertexCount) override;

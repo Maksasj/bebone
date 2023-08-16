@@ -23,7 +23,6 @@ namespace bebone::gfx {
 
             virtual CommandBuffer& get_command_buffer() = 0;
             virtual CommandBufferPool& get_command_buffer_pool() = 0;
-            virtual DescriptorPool& get_descriptor_pool() = 0;
 
             virtual Pipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) = 0;
             
