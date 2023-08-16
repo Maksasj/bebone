@@ -29,21 +29,25 @@ namespace bebone::gfx {
                 std::vector<VkDescriptorPoolSize> poolSizes;
 
                 // for(int i = 0; i < 1; ++i) {
-                    VkDescriptorPoolSize poolSize{};
-                    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                    poolSize.descriptorCount = static_cast<uint32_t>(descriptorPoolCount);
-                    poolSizes.push_back(poolSize);
+                VkDescriptorPoolSize poolSize{};
+                poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                poolSize.descriptorCount = static_cast<uint32_t>(descriptorPoolCount);
+                    // poolSizes.push_back(poolSize);
                 // }
 
                 VkDescriptorPoolCreateInfo poolInfo{};
                 poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-                poolInfo.poolSizeCount = poolSizes.size();
-                poolInfo.pPoolSizes = poolSizes.data();
+                poolInfo.poolSizeCount = 1;
+                poolInfo.pPoolSizes = &poolSize;
                 poolInfo.maxSets = static_cast<uint32_t>(descriptorPoolCount);
 
                 if (vkCreateDescriptorPool(_device.device(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
                     throw std::runtime_error("failed to create descriptor pool!");
                 }
+            }
+
+            ~VulkanDescriptorPool() {
+                vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
             }
 
             VkDescriptorSetLayout* create_descriptor_set_layout(const size_t& binding, const VkDescriptorType& _type) {
@@ -77,11 +81,14 @@ namespace bebone::gfx {
                 allocInfo.descriptorSetCount = 1;
                 allocInfo.pSetLayouts = descriptorSetLayout;
 
-                /** Aka taking last */
-                descriptorSets.push_back(VkDescriptorSet{});
-                VkDescriptorSet* descriptorSet = &descriptorSets[descriptorSets.size() - 1];
+                descriptorSets.push_back({});
 
-                if (vkAllocateDescriptorSets(_device.device(), &allocInfo, descriptorSet) != VK_SUCCESS) {
+                std::cout << "poggers !!!!!! creating descriptor \n";
+
+                auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
+
+                /** Aka taking last */
+                if (vkAllocateDescriptorSets(_device.device(), &allocInfo, &descriptorSet) != VK_SUCCESS) {
                     throw std::runtime_error("failed to allocate descriptor sets!");
                 }
 
@@ -89,11 +96,11 @@ namespace bebone::gfx {
                 VkDescriptorBufferInfo bufferInfo{};
                 bufferInfo.buffer = buffer;
                 bufferInfo.offset = 0;
-                bufferInfo.range = sizeof(float); // Todo size !!!!!
+                bufferInfo.range = sizeof(float);
 
                 VkWriteDescriptorSet descriptorWrite{};
                 descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                descriptorWrite.dstSet = *descriptorSet;
+                descriptorWrite.dstSet = descriptorSet;
                 descriptorWrite.dstBinding = 0;
                 descriptorWrite.dstArrayElement = 0;
                 descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -104,7 +111,7 @@ namespace bebone::gfx {
 
                 vkUpdateDescriptorSets(_device.device(), 1, &descriptorWrite, 0, nullptr);
 
-                return descriptorSet;
+                return &descriptorSet;
             }
 
             VkDescriptorSet& get_descriptor_set(const size_t& index) override {
@@ -117,10 +124,6 @@ namespace bebone::gfx {
 
             VkDescriptorSetLayout* get_layouts_data() {
                 return descriptorSetLayouts.data();
-            }
-
-            ~VulkanDescriptorPool() {
-                vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
             }
     };  
 }
