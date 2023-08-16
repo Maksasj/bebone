@@ -31,7 +31,6 @@ namespace bebone::gfx {
 
             VkDescriptorSetLayout descriptorSetLayout;
 
-
         public:
             VulkanPipelineLayoutBuilderImpl(const size_t& fif, DeviceImpl& device) : _device(device), _fif(fif) {
                 _descriptorPool = std::make_shared<VulkanDescriptorPool>(device, 2);
@@ -68,8 +67,6 @@ namespace bebone::gfx {
             }
 
             PipelineLayout build() override {
-                
-
                 return PipelineLayout::create_from_impl<VulkanPipelineLayoutImpl>(_device, _descriptorPool, descriptorSetLayout);
             }
     };

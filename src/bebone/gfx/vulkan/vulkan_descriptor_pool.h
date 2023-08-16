@@ -25,6 +25,9 @@ namespace bebone::gfx {
         public:
             // Todo Count should be pre computed 
             VulkanDescriptorPool(DeviceImpl& device, const size_t& descriptorPoolCount) : _device(device) {
+                // If vector resizes, then all pointers to descriptors will not be valid
+                descriptorSets.reserve(descriptorPoolCount);
+
                 // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
                 std::vector<VkDescriptorPoolSize> poolSizes;
 
@@ -82,8 +85,6 @@ namespace bebone::gfx {
                 allocInfo.pSetLayouts = descriptorSetLayout;
 
                 descriptorSets.push_back({});
-
-                std::cout << "poggers !!!!!! creating descriptor \n";
 
                 auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
 
