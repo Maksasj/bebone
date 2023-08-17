@@ -29,6 +29,8 @@ namespace bebone::gfx {
 
             // Todo maybe in the future we will need to abstract descriptors and make this function virtual
             void bind_descriptor_set(VkDescriptorSet* descriptorSet) {
+                // Todo , there we need to log warning if we binding descriptor set, if there already binded
+
                 _descriptorSet = descriptorSet;
             }
 

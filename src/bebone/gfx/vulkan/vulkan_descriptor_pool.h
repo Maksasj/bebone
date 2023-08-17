@@ -27,6 +27,7 @@ namespace bebone::gfx {
             VulkanDescriptorPool(DeviceImpl& device, const size_t& descriptorPoolCount) : _device(device) {
                 // If vector resizes, then all pointers to descriptors will not be valid
                 descriptorSets.reserve(descriptorPoolCount);
+                descriptorSetLayouts.reserve(descriptorPoolCount);
 
                 // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
                 std::vector<VkDescriptorPoolSize> poolSizes;

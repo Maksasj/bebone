@@ -86,7 +86,6 @@ int main() {
 
     CommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
 
-
     for(size_t i = 0; i < 2; ++i) {
         CommandBuffer& commandBuffer = commandBufferPool.get_command_buffer(i);
 
