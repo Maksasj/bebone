@@ -4,12 +4,10 @@
 #include <vector>
 
 #include "../../common/common.h"
-#include "../buffer_impl.h"
+#include "vulkan_buffer_impl.h"
 #include "../device_impl.h"
 
 #include "../gfx_backend.h"
-
-#include "vulkan_buffer_impl.h"
 
 namespace bebone::gfx {
     using namespace bebone::common;

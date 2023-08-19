@@ -3,14 +3,14 @@
 
 #include <memory>
 
-#include "buffer_impl.h"
+#include "vulkan_uniform_buffer_impl.h"
 
 namespace bebone::gfx {
     class UniformBuffer {
         private:
-            std::vector<BufferImpl*> _impl; 
+            std::vector<VulkanUniformBufferImpl*> _impl; 
 
-            UniformBuffer(std::vector<BufferImpl*> impl) : _impl(impl) {
+            UniformBuffer(std::vector<VulkanUniformBufferImpl*> impl) : _impl(impl) {
 
             }
 
@@ -23,7 +23,7 @@ namespace bebone::gfx {
                 _impl.clear();
             }
 
-            BufferImpl* get_impl(const size_t index) {
+            VulkanBufferImpl* get_impl(const size_t index) {
                 return _impl[index];
             }
 
@@ -33,7 +33,7 @@ namespace bebone::gfx {
 
             template<class Impl, class... Args>
             static UniformBuffer create_from_impl(const size_t fif, Args&&... args) {
-                std::vector<BufferImpl*> impl;
+                std::vector<VulkanUniformBufferImpl*> impl;
 
                 for(size_t f = 0; f < fif; ++f) {
                     impl.push_back(new Impl(std::forward<Args>(args)...));

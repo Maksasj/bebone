@@ -1,13 +1,12 @@
 #ifndef _BEBONE_GFX_VULKAN_UNIFORM_BUFFER_IMPLEMENTATION_H_
 #define _BEBONE_GFX_VULKAN_UNIFORM_BUFFER_IMPLEMENTATION_H_
 
-#include "../uniform_buffer_impl.h"
 #include "vulkan_buffer_impl.h"
 
 namespace bebone::gfx {
     using namespace bebone::common;
 
-    class VulkanUniformBufferImpl : public VulkanBufferImpl , public UniformBufferImpl {
+    class VulkanUniformBufferImpl : public VulkanBufferImpl {
         private:
             void* _data;
             VkDescriptorSet* _descriptorSet;
@@ -21,9 +20,11 @@ namespace bebone::gfx {
                 ), _descriptorSet(nullptr) {
 
                 vkMapMemory(device.device(), get_buffer_memory(), 0, size, 0, &_data);
+
+                *static_cast<float*>(_data) = 0.2f;
             }
 
-            void* data() override {
+            void* data() {
                 return _data;
             }
 

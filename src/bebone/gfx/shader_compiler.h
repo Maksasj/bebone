@@ -28,12 +28,12 @@ namespace bebone::gfx {
                 glslang::TShader shader(shaderType);
                 shader.setStrings(&shaderSource, 1);
                 
-                #if 0
+                #if 1
                     // Set environment input for Vulkan
                     shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientVulkan, 100);
 
                     // Set environment target for Vulkan SPIR-V
-                    shader.setEnvClient(glslang::EShClient::EShClientVulkan, glslang::EShTargetClientVersion::EShTargetVulkan_1_0);
+                    shader.setEnvClient(glslang::EShClient::EShClientVulkan, glslang::EShTargetClientVersion::EShTargetVulkan_1_2);
                     shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
                 #else
                     shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientOpenGL, 450);

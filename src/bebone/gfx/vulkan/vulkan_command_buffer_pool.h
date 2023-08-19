@@ -4,14 +4,13 @@
 #include <vector>
 
 #include "../gfx_backend.h"
-#include "../command_buffer_pool.h"
 
 #include "../device_impl.h"
 
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
-    class VulkanCommandBufferPool : public CommandBufferPool {
+    class VulkanCommandBufferPool {
         private:
             DeviceImpl& _device;
 
@@ -120,14 +119,16 @@ namespace bebone::gfx {
                 end_single_time_commands(commandBuffer);
             }
 
-            CommandBuffer& get_command_buffer(const size_t& index) override {
+            VulkanCommandBuffer& get_command_buffer(const size_t& index) {
                 VulkanCommandBuffer* ptr = static_cast<VulkanCommandBuffer*>(commandBuffers.at(index));
 
                 if(ptr == nullptr) {
                     throw std::runtime_error("Failed to retrive command buffer at index " + std::to_string(index));
                 }
 
-                return static_cast<CommandBuffer&>(*ptr);
+                // return static_cast<CommandBuffer&>(*ptr);
+                
+                return *ptr;
             }
     };  
 }

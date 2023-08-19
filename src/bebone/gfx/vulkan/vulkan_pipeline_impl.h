@@ -1,10 +1,8 @@
 #ifndef _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
 #define _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
 
-#include "../pipeline_impl.h"
-
 namespace bebone::gfx {
-    class VulkanPipelineImpl : public PipelineImpl {
+    class VulkanPipeline {
         public:
             struct PipelineConfigInfo {
                 VkViewport viewport;
@@ -109,7 +107,7 @@ namespace bebone::gfx {
                 } 
             }
 
-            VulkanPipelineImpl(
+            VulkanPipeline(
                 DeviceImpl& _device, 
                 const std::vector<unsigned int>& vertSpirv, 
                 const std::vector<unsigned int>& fragSpirv, 
@@ -119,7 +117,7 @@ namespace bebone::gfx {
                 createGraphicsPipeline(vertSpirv, fragSpirv, configInfo);
             }
 
-            ~VulkanPipelineImpl() {
+            ~VulkanPipeline() {
                 vkDestroyShaderModule(device.device(), vertShaderModule, nullptr);
                 vkDestroyShaderModule(device.device(), fragShaderModule, nullptr);
                 vkDestroyPipeline(device.device(), grapgicsPipeline, nullptr);

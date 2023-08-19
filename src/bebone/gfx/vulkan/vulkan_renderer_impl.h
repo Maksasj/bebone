@@ -1,10 +1,9 @@
-#ifndef _BEBONE_GFX_VULKAN_RENDERER_IMPLEMENTATION_H_
-#define _BEBONE_GFX_VULKAN_RENDERER_IMPLEMENTATION_H_
+#ifndef _BEBONE_GFX_VULKAN_RENDERER_H_
+#define _BEBONE_GFX_VULKAN_RENDERER_H_
 
 #include <memory>
 
 #include "../gfx_backend.h"
-#include "../renderer_impl.h"
 
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_command_buffer.h"
@@ -19,72 +18,78 @@
 
 #include "../device_impl.h"
 
-#include "vulkan_uniform_buffer_impl.h"
+#include "../vulkan_uniform_buffer_impl.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
 #include "vulkan_pipeline_layout_builder_impl.h"
 
+#include "../pipeline_layout_builder.h"
+
 namespace bebone::gfx {
-    class VulkanRendererImpl : public RendererImpl {
-        private:
+    class VulkanRenderer {
+        public:
+
             const static constexpr size_t FIF = 2; 
 
             std::shared_ptr<VulkanCommandBufferPool> commandBuffers;
             std::shared_ptr<DeviceImpl> device;
             std::shared_ptr<MyEngineSwapChainImpl> swapChain;
 
-        public:
-            VulkanRendererImpl(Window& window) {
+            VulkanRenderer(Window& window) {
                 device = std::make_shared<DeviceImpl>(window);
                 swapChain = std::make_shared<MyEngineSwapChainImpl>(*device, window.get_extend(), FIF);
                 commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, FIF);
             }
 
-            ~VulkanRendererImpl() {
+            ~VulkanRenderer() {
                 // vkDeviceWaitIdle(device.device());
                 // vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
                 // vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
             }
 
-            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) override {
+            VulkanPipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
                 VulkanPipelineLayoutImpl* vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
 
-                auto pipelineConfig = VulkanPipelineImpl::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
+                auto pipelineConfig = VulkanPipeline::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
                 pipelineConfig.renderPass = swapChain->getRenderPass(); // Setting up render pass
                 pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
 
-                return Pipeline::create_from_impl<VulkanPipelineImpl>(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
+                return VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
             }
 
-            VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) override {
+            VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {
                 return VertexBuffer::create_from_impl<VulkanVertexBufferImpl>(vertices, *device);
             }
 
-            IndexBuffer create_index_buffer(const std::vector<int>& indices) override {
+            IndexBuffer create_index_buffer(const std::vector<int>& indices) {
                 return IndexBuffer::create_from_impl<VulkanIndexBufferImpl>(indices, *device);
             }
 
-            UniformBuffer create_uniform_buffer(const size_t& size) override {
+            UniformBuffer create_uniform_buffer(const size_t& size) {
                 return UniformBuffer::create_from_impl<VulkanUniformBufferImpl>(FIF, size, *device);
             }
 
-            PipelineLayoutBuilder create_pipeline_layout_builder() override {
+            PipelineLayoutBuilder create_pipeline_layout_builder() {
                 return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(FIF, *device);
             }
 
-            std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() override {
+            std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() {
                 return swapChain;
             }
 
-            CommandBuffer& get_command_buffer() override {
+            VulkanCommandBuffer& get_command_buffer() {
                 return commandBuffers->get_command_buffer(1);
             }
 
-            CommandBufferPool& get_command_buffer_pool() override {
+            VulkanCommandBufferPool& get_command_buffer_pool() {
                 return *commandBuffers;
             }
 
-            void present() override {
+            VulkanDescriptorPool create_descriptor_pool() {
+                return VulkanDescriptorPool(*device);
+            }
+
+            void present() {
                 uint32_t imageIndex;
                 auto result = swapChain->acquireNextImage(&imageIndex);
 

@@ -5,7 +5,7 @@
 
 #include "vulkan_vertex_buffer_impl.h"
 #include "vulkan_index_buffer_impl.h"
-#include "vulkan_uniform_buffer_impl.h"
+#include "../vulkan_uniform_buffer_impl.h"
 
 #include "vulkan_pipeline_impl.h"
 #include "vulkan_pipeline_layout_impl.h"
@@ -98,10 +98,10 @@ namespace bebone::gfx {
     class VulkanBindPipelineCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
-            VulkanPipelineImpl& _pipeline;
+            VulkanPipeline& _pipeline;
 
         public:
-            VulkanBindPipelineCommand(VulkanCommandBuffer& commandBuffer, VulkanPipelineImpl& pipeline) : _commandBuffer(commandBuffer), _pipeline(pipeline) {
+            VulkanBindPipelineCommand(VulkanCommandBuffer& commandBuffer, VulkanPipeline& pipeline) : _commandBuffer(commandBuffer), _pipeline(pipeline) {
 
             }
 
@@ -189,6 +189,28 @@ namespace bebone::gfx {
 
             void execute() override {
                 vkCmdBindDescriptorSets(_commandBuffer.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayout->get_layout(), 0, 1, _descriptorSet, 0, nullptr);
+            }
+    };
+
+    class VulkanPushConstant : public Command {
+        private:
+            VulkanCommandBuffer& _commandBuffer;
+            VulkanPipelineLayoutImpl* _pipelineLayout;
+
+            const uint32_t _size;
+            void* _ptr;
+
+        public:
+            VulkanPushConstant(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, const uint32_t& size, void* ptr) 
+                :   _commandBuffer(commandBuffer), 
+                    _pipelineLayout(pipelineLayout),
+                    _size(size),
+                    _ptr(ptr) {
+
+            }
+
+            void execute() override {
+                vkCmdPushConstants(_commandBuffer.commandBuffer, _pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, _size, _ptr);
             }
     };
 }

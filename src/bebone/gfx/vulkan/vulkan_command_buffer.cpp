@@ -7,52 +7,59 @@ namespace bebone::gfx {
     }
 
     void VulkanCommandBuffer::begin_record() {
-        VulkanBeginRecordCommand* ptr = static_cast<VulkanBeginRecordCommand*>(arena.alloc(sizeof(VulkanBeginRecordCommand)));
-        std::ignore = new (ptr) VulkanBeginRecordCommand(*this);
+        VulkanBeginRecordCommand* ptrTarget = static_cast<VulkanBeginRecordCommand*>(arena.alloc(sizeof(VulkanBeginRecordCommand)));
+        std::ignore = new (ptrTarget) VulkanBeginRecordCommand(*this);
     }
 
     void VulkanCommandBuffer::end_record() {
-        VulkanEndRecordCommand* ptr = static_cast<VulkanEndRecordCommand*>(arena.alloc(sizeof(VulkanEndRecordCommand)));
-        std::ignore = new (ptr) VulkanEndRecordCommand(*this);
+        VulkanEndRecordCommand* ptrTarget = static_cast<VulkanEndRecordCommand*>(arena.alloc(sizeof(VulkanEndRecordCommand)));
+        std::ignore = new (ptrTarget) VulkanEndRecordCommand(*this);
     }
 
     void VulkanCommandBuffer::begin_render_pass(MyEngineSwapChainImpl& swapChain, int frameBuffer) {
-        VulkanBeginRenderPassCommand* ptr = static_cast<VulkanBeginRenderPassCommand*>(arena.alloc(sizeof(VulkanBeginRenderPassCommand)));
-        std::ignore = new (ptr) VulkanBeginRenderPassCommand(*this, swapChain, frameBuffer);
+        VulkanBeginRenderPassCommand* ptrTarget = static_cast<VulkanBeginRenderPassCommand*>(arena.alloc(sizeof(VulkanBeginRenderPassCommand)));
+        std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(*this, swapChain, frameBuffer);
     }
 
     void VulkanCommandBuffer::end_render_pass() {
-        VulkanEndRenderPassCommand* ptr = static_cast<VulkanEndRenderPassCommand*>(arena.alloc(sizeof(VulkanEndRenderPassCommand)));
-        std::ignore = new (ptr) VulkanEndRenderPassCommand(*this);
+        VulkanEndRenderPassCommand* ptrTarget = static_cast<VulkanEndRenderPassCommand*>(arena.alloc(sizeof(VulkanEndRenderPassCommand)));
+        std::ignore = new (ptrTarget) VulkanEndRenderPassCommand(*this);
     }
 
-    void VulkanCommandBuffer::bind_pipeline(Pipeline& pipeline) {
-        VulkanBindPipelineCommand* ptr = static_cast<VulkanBindPipelineCommand*>(arena.alloc(sizeof(VulkanBindPipelineCommand)));
-        std::ignore = new (ptr) VulkanBindPipelineCommand(*this, *static_cast<VulkanPipelineImpl*>(pipeline.get_impl()));
+    void VulkanCommandBuffer::bind_pipeline(VulkanPipeline& pipeline) {
+        VulkanBindPipelineCommand* ptrTarget = static_cast<VulkanBindPipelineCommand*>(arena.alloc(sizeof(VulkanBindPipelineCommand)));
+        std::ignore = new (ptrTarget) VulkanBindPipelineCommand(*this, *static_cast<VulkanPipeline*>(&pipeline));
     }
 
     void VulkanCommandBuffer::bind_vertex_buffer(VertexBuffer& vertexBuffer) {
-        VulkanBindVertexBufferCommand* ptr = static_cast<VulkanBindVertexBufferCommand*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand)));
-        std::ignore = new (ptr) VulkanBindVertexBufferCommand(*this, *static_cast<VulkanVertexBufferImpl*>(vertexBuffer.get_impl()));
+        VulkanBindVertexBufferCommand* ptrTarget = static_cast<VulkanBindVertexBufferCommand*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand)));
+        std::ignore = new (ptrTarget) VulkanBindVertexBufferCommand(*this, *static_cast<VulkanVertexBufferImpl*>(vertexBuffer.get_impl()));
     }
 
     void VulkanCommandBuffer::bind_index_buffer(IndexBuffer& indexBuffer) {
-        VulkanBindIndexBufferCommand* ptr = static_cast<VulkanBindIndexBufferCommand*>(arena.alloc(sizeof(VulkanBindIndexBufferCommand)));
-        std::ignore = new (ptr) VulkanBindIndexBufferCommand(*this, *static_cast<VulkanIndexBufferImpl*>(indexBuffer.get_impl()));
+        VulkanBindIndexBufferCommand* ptrTarget = static_cast<VulkanBindIndexBufferCommand*>(arena.alloc(sizeof(VulkanBindIndexBufferCommand)));
+        std::ignore = new (ptrTarget) VulkanBindIndexBufferCommand(*this, *static_cast<VulkanIndexBufferImpl*>(indexBuffer.get_impl()));
     }
 
     void VulkanCommandBuffer::draw(const size_t& vertexCount) {
-        VulkanDrawCommand* ptr = static_cast<VulkanDrawCommand*>(arena.alloc(sizeof(VulkanDrawCommand)));
-        std::ignore = new (ptr) VulkanDrawCommand(*this, vertexCount);
+        VulkanDrawCommand* ptrTarget = static_cast<VulkanDrawCommand*>(arena.alloc(sizeof(VulkanDrawCommand)));
+        std::ignore = new (ptrTarget) VulkanDrawCommand(*this, vertexCount);
     }
 
     void VulkanCommandBuffer::draw_indexed(const size_t& indexCount) {
-        VulkanDrawIndexedCommand* ptr = static_cast<VulkanDrawIndexedCommand*>(arena.alloc(sizeof(VulkanDrawIndexedCommand)));
-        std::ignore = new (ptr) VulkanDrawIndexedCommand(*this, indexCount);
+        VulkanDrawIndexedCommand* ptrTarget = static_cast<VulkanDrawIndexedCommand*>(arena.alloc(sizeof(VulkanDrawIndexedCommand)));
+        std::ignore = new (ptrTarget) VulkanDrawIndexedCommand(*this, indexCount);
+    }
+
+    void VulkanCommandBuffer::bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) {
+        VulkanBindDescriptorSet* ptrTarget = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
+        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+
+        std::ignore = new (ptrTarget) VulkanBindDescriptorSet(*this, pipelineLayoutImpl, &descriptorSet); 
     }
 
     void VulkanCommandBuffer::bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer) {
-        VulkanBindDescriptorSet* ptr = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
+        VulkanBindDescriptorSet* ptrTarget = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
         VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
         VulkanUniformBufferImpl* uniformBufferImpl = static_cast<VulkanUniformBufferImpl*>(uniformBuffer.get_impl(_frameIndex));
 
@@ -62,7 +69,14 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to get descriptor, uniform buffer implementation in not binded with any descriptor");
         }
 
-        std::ignore = new (ptr) VulkanBindDescriptorSet(*this, pipelineLayoutImpl, descriptorSet); 
+        std::ignore = new (ptrTarget) VulkanBindDescriptorSet(*this, pipelineLayoutImpl, descriptorSet); 
+    }
+
+    void VulkanCommandBuffer::push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, void* constantPtr) {
+        VulkanPushConstant* ptrTarget = static_cast<VulkanPushConstant*>(arena.alloc(sizeof(VulkanPushConstant)));
+        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+
+        std::ignore = new (ptrTarget) VulkanPushConstant(*this, pipelineLayoutImpl, size, constantPtr); 
     }
 
     void VulkanCommandBuffer::preprocess() {
@@ -77,9 +91,5 @@ namespace bebone::gfx {
 
             command->execute();
         }
-    }
-
-    RenderingApi VulkanCommandBuffer::get_api() {
-        return VULKAN;
     }
 }

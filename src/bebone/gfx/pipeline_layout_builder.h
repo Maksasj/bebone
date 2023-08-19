@@ -36,8 +36,12 @@ namespace bebone::gfx {
                 _impl->bind_uniform_buffer(binding, buffer);
             }
 
-            PipelineLayout build() {
-                return _impl->build();
+            void bind_texture(Texture& texture) {
+                _impl->bind_texture(texture);
+            }
+
+            PipelineLayout build(VulkanDescriptorPool& _descriptorPool) {
+                return _impl->build(_descriptorPool);
             }
 
             PipelineLayoutBuilderImpl* get_impl() {

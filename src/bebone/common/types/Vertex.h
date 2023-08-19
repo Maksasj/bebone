@@ -11,6 +11,9 @@ namespace bebone::common {
         float r = 1.0f;
         float g = 0.5f;
         float b = 1.0f;
+
+        float texCoordX = 0.0f;
+        float texCoordY = 0.0f;
     };
 }
 

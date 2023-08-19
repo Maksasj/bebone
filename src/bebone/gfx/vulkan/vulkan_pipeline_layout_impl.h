@@ -11,19 +11,29 @@ namespace bebone::gfx {
     class VulkanPipelineLayoutImpl : public PipelineLayoutImpl {
         private:
             DeviceImpl& _device;
+            VulkanDescriptorPool& _descriptorPool;
             VkPipelineLayout pipelineLayout;
-            std::shared_ptr<VulkanDescriptorPool> _descriptorPool;
 
         public:
-            VulkanPipelineLayoutImpl(DeviceImpl& device, std::shared_ptr<VulkanDescriptorPool>& descriptorPool) : _device(device), _descriptorPool(descriptorPool) {
+            VulkanPipelineLayoutImpl(DeviceImpl& device, VulkanDescriptorPool& descriptorPool) : _device(device), _descriptorPool(descriptorPool) {
                 VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
                 pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
-                pipelineLayoutInfo.setLayoutCount = descriptorPool->get_layouts_count(); // This thing should be computed from creatated descriptor sets, for now there is just constants
-                pipelineLayoutInfo.pSetLayouts = descriptorPool->get_layouts_data(); // This thing should be computed from creatated descriptor sets, for now there is just constants
+                std::vector<VkPushConstantRange> pushConstantRanges;
 
-                pipelineLayoutInfo.pushConstantRangeCount = 0;
-                pipelineLayoutInfo.pPushConstantRanges = nullptr;
+                {
+                    VkPushConstantRange pushConstant;
+                    pushConstant.offset = 0;
+                    pushConstant.size = sizeof(unsigned int);
+                    pushConstant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+
+                    pushConstantRanges.push_back(pushConstant);
+                }
+
+                pipelineLayoutInfo.setLayoutCount = descriptorPool.get_layouts_count(); // This thing should be computed from creatated descriptor sets, for now there is just constants
+                pipelineLayoutInfo.pSetLayouts = descriptorPool.get_layouts_data(); // This thing should be computed from creatated descriptor sets, for now there is just constants
+                pipelineLayoutInfo.pushConstantRangeCount = pushConstantRanges.size();
+                pipelineLayoutInfo.pPushConstantRanges = pushConstantRanges.data();
 
                 if(vkCreatePipelineLayout(_device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
                     throw std::runtime_error("Failed to create pipeline layout");

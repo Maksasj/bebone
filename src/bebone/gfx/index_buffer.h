@@ -3,14 +3,14 @@
 
 #include <memory>
 
-#include "buffer_impl.h"
+#include "vulkan/vulkan_buffer_impl.h"
 
 namespace bebone::gfx {
     class IndexBuffer {
         private:
-            BufferImpl* _impl;
+            VulkanBufferImpl* _impl;
 
-            IndexBuffer(BufferImpl* impl) : _impl(impl) {
+            IndexBuffer(VulkanBufferImpl* impl) : _impl(impl) {
 
             }
 
@@ -21,7 +21,7 @@ namespace bebone::gfx {
                 }
             }
 
-            BufferImpl* get_impl() {
+            VulkanBufferImpl* get_impl() {
                 return _impl;
             }
 
