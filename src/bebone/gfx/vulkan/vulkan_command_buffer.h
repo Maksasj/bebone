@@ -14,6 +14,8 @@
 #include "vulkan_pipeline_impl.h"
 
 namespace bebone::gfx {
+    class VulkanRenderer;
+
     class VulkanCommandBuffer {
         private:
             core::ArenaContainer arena;
@@ -26,7 +28,7 @@ namespace bebone::gfx {
             void begin_record();
             void end_record();
 
-            void begin_render_pass(MyEngineSwapChainImpl& swapChain, int frameBuffer);
+            void begin_render_pass(VulkanRenderer& renderer, int frameBuffer);
             void end_render_pass();
 
             void bind_pipeline(VulkanPipeline& pipeline);

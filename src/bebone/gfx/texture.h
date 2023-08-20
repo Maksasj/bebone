@@ -206,6 +206,8 @@ namespace bebone::gfx {
             void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
                 VulkanCommandBufferPool& pool = static_cast<VulkanCommandBufferPool&>(_commandBufferPool);
 
+                std::ignore = format;
+
                 VkCommandBuffer commandBuffer = pool.begin_single_time_commands();
 
                 VkImageMemoryBarrier barrier{};

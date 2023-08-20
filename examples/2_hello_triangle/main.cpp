@@ -4,7 +4,7 @@
 #include "bebone/bebone.h"
 
 using namespace bebone::gfx;
-using namespace bebone::common;
+using namespace bebone::core;
 
 int main() {
     RenderingEngine::preinit();

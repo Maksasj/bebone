@@ -6,27 +6,23 @@
 #include "vulkan/vulkan_buffer_impl.h"
 
 namespace bebone::gfx {
-    using namespace bebone::common;
+    using namespace bebone::core;
 
-    class VulkanUniformBufferImpl : public VulkanBufferImpl , public GPUResource {
+    class VulkanUniformBufferImpl : public VulkanBufferImpl , public GPUResource<UniformBufferHandle> {
         private:
             void* _data;
 
         public:
-            VulkanUniformBufferImpl(const size_t& size, DeviceImpl& device, const GPUResourceHandle& handle) 
+            VulkanUniformBufferImpl(const size_t& size, DeviceImpl& device, const UniformBufferHandle& handle) 
                 : VulkanBufferImpl(
                     size,
                     VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, 
                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, device
-                ), GPUResource(handle) {
+                ), GPUResource<UniformBufferHandle>(handle) {
 
                 vkMapMemory(device.device(), get_buffer_memory(), 0, size, 0, &_data);
-
+                
                 *static_cast<float*>(_data) = 0.2f;
-            }
-
-            void* data() {
-                return _data;
             }
 
             ~VulkanUniformBufferImpl() {

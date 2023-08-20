@@ -12,7 +12,7 @@ const char *vvvertexShaderSource =
                                 "   float x;"
                                 "} transform[];\n"
                                 ""
-                                "layout (location = 0) in vec2 position;\n"
+                                "layout (location = 0) in vec3 position;\n"
                                 "layout (location = 1) in vec3 color;\n"
                                 "layout (location = 2) in vec2 inTexCoord;\n"
 
@@ -76,10 +76,10 @@ const char *fffragmentShaderSource = "#version 450 core\n"
 using namespace bebone::gfx;
 
 const std::vector<Vertex> vertices = {
-    {-0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f},
-    {0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f},
-    {0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f},
-    {-0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f}
+    {{-0.5f, -0.5f, 0.0f},    {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    {{0.5f, -0.5f, 0.0f},     {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+    {{0.5f, 0.5f, 0.0f},      {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+    {{-0.5f, 0.5f, 0.0f},     {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
 };
 
 const std::vector<int> indices = {
@@ -95,19 +95,12 @@ int main() {
 
     Window window("Client");
     VulkanRenderer renderer = VulkanRenderer(window);
-
-    std::shared_ptr<MyEngineSwapChainImpl> swapChain = renderer.get_swap_chain();
-
-    VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-    VulkanDescriptorPool descriptorPool = renderer.create_descriptor_pool();
-
     GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
+
     GPUResourceSet resourceSet = resourceManager
         .create_resource_set()
-        .set_uniform_buffer_resource(0, sizeof(float))
+        .set_uniform_buffer_resource(0)
         .build();
-
-    UniformBuffer<float> transformUbo = resourceManager.create_uniform_buffer<float>(resourceSet, 0);
 
     PipelineLayout pipelineLayout = renderer
         .create_pipeline_layout_builder()
@@ -116,20 +109,20 @@ int main() {
 
     VulkanPipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
     
-    VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);    
+    UniformBuffer<float> transformUbo = resourceManager.create_uniform_buffer<float>(resourceSet, 0);
+    VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);
     IndexBuffer indexBuffer = renderer.create_index_buffer(indices);
 
+    VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
     for(size_t i = 0; i < 2; ++i) {
         VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(i);
         cmd.begin_record();
-            cmd.begin_render_pass(*swapChain, i);
+            cmd.begin_render_pass(renderer, i);
             
             cmd.bind_pipeline(pipeline);
             resourceSet.bind(cmd, pipelineLayout);
 
-            GPUResourceHandle uboHandle = transformUbo.get_handle(i);
-
-            // UniformBufferHandle uboHandle = transformUbo.get_handle(i);
+            UniformBufferHandle uboHandle = transformUbo.get_handle(i);
 
             cmd.push_constant(pipelineLayout, sizeof(unsigned int), &uboHandle.index);
 

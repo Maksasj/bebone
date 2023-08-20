@@ -2,6 +2,7 @@
 #define _BEBONE_CORE_H_
 
 #include "types.h"
+#include "vertex.h"
 
 #include "logger.tpp"
 

@@ -51,7 +51,7 @@ namespace bebone::gfx {
                 return *this;
             }
 
-            GPUResourceSetBlueprint& set_uniform_buffer_resource(const size_t& binding, const size_t& size) {
+            GPUResourceSetBlueprint& set_uniform_buffer_resource(const size_t& binding) {
                 VkDescriptorSetLayoutBinding layoutBinding{};
                 layoutBinding.binding = binding;
                 layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -104,8 +104,8 @@ namespace bebone::gfx {
                 std::vector<VulkanUniformBufferImpl*> bufferImpl(_fif, nullptr);
 
                 for(size_t i = 0; i < _fif; ++i) {
-                    const GPUResourceHandle resourceHandle = GPUResourceHandle::uniform(availableUniformHandle++);
-
+                    const UniformBufferHandle resourceHandle = UniformBufferHandle(availableUniformHandle++);
+    
                     bufferImpl[i] = new VulkanUniformBufferImpl(sizeof(DataType), _device, resourceHandle);
 
                     VkDescriptorBufferInfo bufferInfo{};

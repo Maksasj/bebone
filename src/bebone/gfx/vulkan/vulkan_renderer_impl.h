@@ -30,7 +30,6 @@
 namespace bebone::gfx {
     class VulkanRenderer {
         public:
-
             const static constexpr size_t FIF = 2; 
 
             std::shared_ptr<VulkanCommandBufferPool> commandBuffers;
@@ -58,7 +57,7 @@ namespace bebone::gfx {
 
                 return VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
             }
-
+            
             VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {
                 return VertexBuffer::create_from_impl<VulkanVertexBufferImpl>(vertices, *device);
             }
@@ -68,7 +67,7 @@ namespace bebone::gfx {
             }
 
             PipelineLayoutBuilder create_pipeline_layout_builder() {
-                return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(FIF, *device);
+                return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(*device);
             }
 
             std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() {
@@ -81,10 +80,6 @@ namespace bebone::gfx {
 
             VulkanCommandBufferPool& get_command_buffer_pool() {
                 return *commandBuffers;
-            }
-
-            VulkanDescriptorPool create_descriptor_pool() {
-                return VulkanDescriptorPool(*device);
             }
 
             GPUResourceManager create_gpu_resource_manager() {

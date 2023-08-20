@@ -1,5 +1,6 @@
 #include "vulkan_command_buffer.h"
 #include "vulkan_commands.h"
+#include "vulkan_renderer_impl.h"
 
 namespace bebone::gfx {
     VulkanCommandBuffer::VulkanCommandBuffer(const size_t& frameIndex) : arena(_BEBONE_MEMORY_BYTES_8KB_), _frameIndex(frameIndex) {
@@ -16,9 +17,12 @@ namespace bebone::gfx {
         std::ignore = new (ptrTarget) VulkanEndRecordCommand(*this);
     }
 
-    void VulkanCommandBuffer::begin_render_pass(MyEngineSwapChainImpl& swapChain, int frameBuffer) {
+    void VulkanCommandBuffer::begin_render_pass(VulkanRenderer& renderer, int frameBuffer) {
         VulkanBeginRenderPassCommand* ptrTarget = static_cast<VulkanBeginRenderPassCommand*>(arena.alloc(sizeof(VulkanBeginRenderPassCommand)));
-        std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(*this, swapChain, frameBuffer);
+        
+        auto swapChain = renderer.get_swap_chain();
+        
+        std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(*this, *swapChain, frameBuffer);
     }
 
     void VulkanCommandBuffer::end_render_pass() {

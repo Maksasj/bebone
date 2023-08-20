@@ -22,8 +22,6 @@
 
 #include "pipeline_layout_builder.h"
 
-#include "resource_handle.h"
-
 #include "texture.h"
 
 #endif

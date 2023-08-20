@@ -3,13 +3,12 @@
 
 #include <vector>
 
-#include "../../common/common.h"
 #include "../device_impl.h"
-
+#include "../../core/core.h"
 #include "../gfx_backend.h"
 
 namespace bebone::gfx {
-    using namespace bebone::common;
+    using namespace bebone::core;
 
     static std::vector<VkVertexInputBindingDescription> getBindingDescriptions() {
         std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
@@ -27,17 +26,17 @@ namespace bebone::gfx {
         atrributeDescriptions[0].binding = 0;
         atrributeDescriptions[0].location = 0;
         atrributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
-        atrributeDescriptions[0].offset = offsetof(Vertex, x);
+        atrributeDescriptions[0].offset = offsetof(Vertex, pos);
 
         atrributeDescriptions[1].binding = 0;
         atrributeDescriptions[1].location = 1;
         atrributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-        atrributeDescriptions[1].offset = offsetof(Vertex, r);
+        atrributeDescriptions[1].offset = offsetof(Vertex, color);
 
         atrributeDescriptions[2].binding = 0;
         atrributeDescriptions[2].location = 2;
         atrributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-        atrributeDescriptions[2].offset = offsetof(Vertex, texCoordX);
+        atrributeDescriptions[2].offset = offsetof(Vertex, texCoords);
 
         return atrributeDescriptions;
     }

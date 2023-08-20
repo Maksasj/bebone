@@ -14,12 +14,10 @@ namespace bebone::gfx {
     class VulkanPipelineLayoutBuilderImpl : public PipelineLayoutBuilderImpl {
         private:
             DeviceImpl& _device;
-            const size_t _fif;
-
             std::vector<VkPushConstantRange> constantRanges;
 
         public:
-            VulkanPipelineLayoutBuilderImpl(const size_t& fif, DeviceImpl& device) : _device(device), _fif(fif) {
+            VulkanPipelineLayoutBuilderImpl(DeviceImpl& device) : _device(device) {
             }
 
             ~VulkanPipelineLayoutBuilderImpl() {

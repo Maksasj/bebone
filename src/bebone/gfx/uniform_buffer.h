@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "uniform_buffer_handle.h"
+
 #include "vulkan/vulkan_command_buffer.h"
 #include "vulkan_uniform_buffer_impl.h"
 
@@ -28,10 +30,10 @@ namespace bebone::gfx {
             VulkanBufferImpl* get_impl(const size_t index) {
                 return _impl[index];
             }
-
-            const GPUResourceHandle& get_handle(const size_t& index) const {
+    
+            const UniformBufferHandle& get_handle(const size_t& index) const {
                 return _impl[index]->get_handle();
-            }   
+            }
 
             size_t get_impl_size() const {
                 return _impl.size();

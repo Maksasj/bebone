@@ -3,15 +3,14 @@
 
 #include <vector>
 
-#include "../../common/common.h"
 #include "vulkan_buffer_impl.h"
 #include "../device_impl.h"
 
 #include "../gfx_backend.h"
 
 namespace bebone::gfx {
-    using namespace bebone::common;
-
+    using namespace bebone::core;
+    
     class VulkanVertexBufferImpl : public VulkanBufferImpl {
         private:
             uint32_t vertexCount;

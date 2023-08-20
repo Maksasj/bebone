@@ -3,16 +3,14 @@
 
 #include <memory>
 
-#include "vulkan/vulkan_buffer_impl.h"
-
-#include "vulkan/vulkan_buffer_impl.h"
+#include "vulkan/vulkan_vertex_buffer_impl.h"
 
 namespace bebone::gfx {
     class VertexBuffer {
         private:
-            VulkanBufferImpl* _impl;
+            VulkanVertexBufferImpl* _impl;
 
-            VertexBuffer(VulkanBufferImpl* impl) : _impl(impl) {
+            VertexBuffer(VulkanVertexBufferImpl* impl) : _impl(impl) {
 
             }
 
@@ -23,7 +21,7 @@ namespace bebone::gfx {
                 }
             }
 
-            VulkanBufferImpl* get_impl() {
+            VulkanVertexBufferImpl* get_impl() {
                 return _impl;
             }
 
