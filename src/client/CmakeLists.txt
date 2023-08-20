@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 project(Game)
 
+include_directories("../../3dparty/omni_types/src")
 include_directories("../../3dparty/Vulkan-Headers/include")
 include_directories("../../3dparty/glslang")
 

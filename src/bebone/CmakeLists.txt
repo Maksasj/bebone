@@ -5,6 +5,7 @@ find_package(Vulkan REQUIRED)
 include_directories("../../3dparty/glad/include")
 include_directories("../../3dparty/glfw/include")
 include_directories("../../3dparty/Vulkan-Headers/include")
+include_directories("../../3dparty/omni_types/src")
 
 include_directories("./")
 
