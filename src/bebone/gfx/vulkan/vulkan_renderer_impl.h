@@ -25,6 +25,8 @@
 
 #include "../pipeline_layout_builder.h"
 
+#include "../gpu_resource_manager.h"
+
 namespace bebone::gfx {
     class VulkanRenderer {
         public:
@@ -65,10 +67,6 @@ namespace bebone::gfx {
                 return IndexBuffer::create_from_impl<VulkanIndexBufferImpl>(indices, *device);
             }
 
-            UniformBuffer create_uniform_buffer(const size_t& size) {
-                return UniformBuffer::create_from_impl<VulkanUniformBufferImpl>(FIF, size, *device);
-            }
-
             PipelineLayoutBuilder create_pipeline_layout_builder() {
                 return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(FIF, *device);
             }
@@ -87,6 +85,10 @@ namespace bebone::gfx {
 
             VulkanDescriptorPool create_descriptor_pool() {
                 return VulkanDescriptorPool(*device);
+            }
+
+            GPUResourceManager create_gpu_resource_manager() {
+                return GPUResourceManager(FIF, *device);
             }
 
             void present() {

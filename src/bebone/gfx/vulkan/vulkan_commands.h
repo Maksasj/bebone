@@ -198,10 +198,10 @@ namespace bebone::gfx {
             VulkanPipelineLayoutImpl* _pipelineLayout;
 
             const uint32_t _size;
-            void* _ptr;
+            const void* _ptr;
 
         public:
-            VulkanPushConstant(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, const uint32_t& size, void* ptr) 
+            VulkanPushConstant(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, const uint32_t& size, const void* ptr) 
                 :   _commandBuffer(commandBuffer), 
                     _pipelineLayout(pipelineLayout),
                     _size(size),

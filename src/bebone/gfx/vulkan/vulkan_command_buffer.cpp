@@ -58,21 +58,21 @@ namespace bebone::gfx {
         std::ignore = new (ptrTarget) VulkanBindDescriptorSet(*this, pipelineLayoutImpl, &descriptorSet); 
     }
 
-    void VulkanCommandBuffer::bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer) {
-        VulkanBindDescriptorSet* ptrTarget = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
-        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
-        VulkanUniformBufferImpl* uniformBufferImpl = static_cast<VulkanUniformBufferImpl*>(uniformBuffer.get_impl(_frameIndex));
+    // void VulkanCommandBuffer::bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer) {
+    //     VulkanBindDescriptorSet* ptrTarget = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
+    //     VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+    //     VulkanUniformBufferImpl* uniformBufferImpl = static_cast<VulkanUniformBufferImpl*>(uniformBuffer.get_impl(_frameIndex));
+// 
+    //     VkDescriptorSet* descriptorSet = uniformBufferImpl->get_descriptor_set();
+// 
+    //     if(descriptorSet == nullptr) {
+    //         throw std::runtime_error("failed to get descriptor, uniform buffer implementation in not binded with any descriptor");
+    //     }
+// 
+    //     std::ignore = new (ptrTarget) VulkanBindDescriptorSet(*this, pipelineLayoutImpl, descriptorSet); 
+    // }
 
-        VkDescriptorSet* descriptorSet = uniformBufferImpl->get_descriptor_set();
-
-        if(descriptorSet == nullptr) {
-            throw std::runtime_error("failed to get descriptor, uniform buffer implementation in not binded with any descriptor");
-        }
-
-        std::ignore = new (ptrTarget) VulkanBindDescriptorSet(*this, pipelineLayoutImpl, descriptorSet); 
-    }
-
-    void VulkanCommandBuffer::push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, void* constantPtr) {
+    void VulkanCommandBuffer::push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, const void* constantPtr) {
         VulkanPushConstant* ptrTarget = static_cast<VulkanPushConstant*>(arena.alloc(sizeof(VulkanPushConstant)));
         VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
 

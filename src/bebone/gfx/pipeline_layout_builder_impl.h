@@ -4,10 +4,11 @@
 #include <memory>
 
 #include "pipeline_layout.h"
-#include "uniform_buffer.h"
 #include "texture.h"
 
 #include "vulkan/vulkan_descriptor_pool.h"
+
+#include "gpu_resource_manager.h"
 
 /*
     // Pipeline layout builder atomatically insuers that all buffers have been craeted with proper count
@@ -28,10 +29,9 @@ namespace bebone::gfx {
         public:
             virtual ~PipelineLayoutBuilderImpl() {}
             
-            virtual void bind_uniform_buffer(const size_t& binding, UniformBuffer& buffer) = 0;
-            virtual void bind_texture(Texture& texture) = 0;
+            virtual void set_constant_range(const size_t& offset, const size_t& size) = 0;
 
-            virtual PipelineLayout build(VulkanDescriptorPool& _descriptorPool) = 0;
+            virtual PipelineLayout build(GPUResourceManager& _gpuResourceManager) = 0;
     };
 }
 

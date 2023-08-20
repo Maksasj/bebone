@@ -8,7 +8,6 @@
 #include "../vertex_buffer.h"
 #include "../index_buffer.h"
 #include "../pipeline_layout.h"
-#include "../uniform_buffer.h"
 
 #include "../swap_chain_impl.h"
 
@@ -18,11 +17,10 @@ namespace bebone::gfx {
     class VulkanCommandBuffer {
         private:
             core::ArenaContainer arena;
-            const size_t _frameIndex;
-
-        protected:
 
         public:
+            const size_t _frameIndex;
+
             VulkanCommandBuffer(const size_t& frameIndex);
 
             void begin_record();
@@ -37,8 +35,8 @@ namespace bebone::gfx {
             void bind_index_buffer(IndexBuffer& indexBuffer);
             void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet);
 
-            void bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer);
-            void push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, void* ptr);
+            // void bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer);
+            void push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, const void* ptr);
 
             void draw(const size_t& vertexCount);
             void draw_indexed(const size_t& vertexCount);

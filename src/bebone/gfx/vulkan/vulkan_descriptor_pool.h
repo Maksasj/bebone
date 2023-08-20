@@ -52,52 +52,14 @@ namespace bebone::gfx {
                 vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
             }
 
-            VkDescriptorSetLayout* create_descriptor_set_layout(const size_t& binding, const VkDescriptorType& _type) {
-                descriptorSetLayouts.push_back(VkDescriptorSetLayout{});
-                VkDescriptorSetLayout &descriptorSetLayout = descriptorSetLayouts[descriptorSetLayouts.size() - 1];
-
-                VkDescriptorSetLayoutBinding layoutBinding{};
-                layoutBinding.binding = binding;
-                layoutBinding.descriptorType = _type;
-                layoutBinding.descriptorCount = 1;
-                layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT; // Todo this should be confiruble
-                layoutBinding.pImmutableSamplers = nullptr; // Optional
-
-                // Descriptor set
-                VkDescriptorSetLayoutCreateInfo layoutInfo{};
-                layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-                layoutInfo.bindingCount = 1;
-                layoutInfo.pBindings = &layoutBinding;
-
-                if (vkCreateDescriptorSetLayout(_device.device(), &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
-                    throw std::runtime_error("failed to create descriptor set layout!");
-                }
-
-                return &descriptorSetLayout;
-            }
-
-           VkDescriptorSetLayout* create_descriptor_set_layout_bindless() {
-                VkDescriptorBindingFlags bindless_flags = 
+            VkDescriptorSetLayout* create_descriptor_set_layout(const std::vector<VkDescriptorSetLayoutBinding>& bindings) {
+                VkDescriptorBindingFlags bindlessFlags = 
                     VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | 
                     VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT | 
                     VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
 
                 descriptorSetLayouts.push_back(VkDescriptorSetLayout{});
                 VkDescriptorSetLayout &descriptorSetLayout = descriptorSetLayouts[descriptorSetLayouts.size() - 1];
-
-                std::vector<VkDescriptorSetLayoutBinding> bindings;
-
-                {
-                    VkDescriptorSetLayoutBinding layoutBinding{};
-                    layoutBinding.binding = 0;
-                    layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                    layoutBinding.descriptorCount = maxBindlessResources;
-
-                    layoutBinding.stageFlags = VK_SHADER_STAGE_ALL; // Todo this should be confiruble
-                    layoutBinding.pImmutableSamplers = nullptr; // Optional
-
-                    bindings.push_back(layoutBinding);
-                }
 
                 // Descriptor set
                 VkDescriptorSetLayoutCreateInfo layoutInfo{};
@@ -109,8 +71,8 @@ namespace bebone::gfx {
                 VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo;
                 extendedInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
                 extendedInfo.pNext = nullptr;
-                extendedInfo.bindingCount = 1;
-                extendedInfo.pBindingFlags = &bindless_flags;
+                extendedInfo.bindingCount = bindings.size();
+                extendedInfo.pBindingFlags = &bindlessFlags;
 
                 layoutInfo.pNext = &extendedInfo;
         

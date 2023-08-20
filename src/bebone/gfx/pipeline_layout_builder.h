@@ -18,6 +18,8 @@
 
 */
 
+#include "gpu_resource_manager.h"
+
 namespace bebone::gfx {
     class PipelineLayoutBuilder {
         private:
@@ -32,16 +34,14 @@ namespace bebone::gfx {
                 delete _impl;
             }
 
-            void bind_uniform_buffer(const size_t& binding, UniformBuffer& buffer) {
-                _impl->bind_uniform_buffer(binding, buffer);
+            PipelineLayoutBuilder& set_constant_range(const size_t& offset, const size_t& size) {
+                _impl->set_constant_range(offset, size);
+                return *this;
             }
 
-            void bind_texture(Texture& texture) {
-                _impl->bind_texture(texture);
-            }
 
-            PipelineLayout build(VulkanDescriptorPool& _descriptorPool) {
-                return _impl->build(_descriptorPool);
+            PipelineLayout build(GPUResourceManager& _gpuResourceManager) {
+                return _impl->build(_gpuResourceManager);
             }
 
             PipelineLayoutBuilderImpl* get_impl() {

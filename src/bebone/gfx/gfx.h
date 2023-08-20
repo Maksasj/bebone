@@ -9,6 +9,8 @@
 
 #include "rendering_engine.h"
 
+#include "gpu_resource_manager.h"
+
 #include "device_impl.h"
 #include "pipeline_impl.h"
 #include "swap_chain_impl.h"
@@ -19,6 +21,8 @@
 #include "index_buffer.h"
 
 #include "pipeline_layout_builder.h"
+
+#include "resource_handle.h"
 
 #include "texture.h"
 

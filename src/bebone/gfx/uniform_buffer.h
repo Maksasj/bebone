@@ -3,9 +3,11 @@
 
 #include <memory>
 
+#include "vulkan/vulkan_command_buffer.h"
 #include "vulkan_uniform_buffer_impl.h"
 
 namespace bebone::gfx {
+    template<class DataType>
     class UniformBuffer {
         private:
             std::vector<VulkanUniformBufferImpl*> _impl; 
@@ -27,19 +29,16 @@ namespace bebone::gfx {
                 return _impl[index];
             }
 
+            const GPUResourceHandle& get_handle(const size_t& index) const {
+                return _impl[index]->get_handle();
+            }   
+
             size_t get_impl_size() const {
                 return _impl.size();
             }
-
-            template<class Impl, class... Args>
-            static UniformBuffer create_from_impl(const size_t fif, Args&&... args) {
-                std::vector<VulkanUniformBufferImpl*> impl;
-
-                for(size_t f = 0; f < fif; ++f) {
-                    impl.push_back(new Impl(std::forward<Args>(args)...));
-                }
-                
-                return UniformBuffer(impl);
+            
+            static UniformBuffer create_from_impl_array(const std::vector<VulkanUniformBufferImpl*>& impls) {
+                return UniformBuffer(impls);
             }
     };
 }
