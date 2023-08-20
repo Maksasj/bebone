@@ -10,3 +10,6 @@
 [submodule "3dparty/glslang"]
 	path = 3dparty/glslang
 	url = https://github.com/KhronosGroup/glslang
+[submodule "3dparty/omni_types"]
+	path = 3dparty/omni_types
+	url = https://github.com/Maksasj/omni_types
