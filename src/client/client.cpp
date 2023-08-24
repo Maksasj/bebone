@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 
+#define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
 #include "bebone/bebone.h"
 
 std::string read_file(const std::string& path) {
@@ -17,47 +18,31 @@ using namespace bebone::gfx;
 using namespace omni::types;
 
 const std::vector<Vertex> vertices = {
-    {{-1.0f,   -1.0f,  1.0},    {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-    {{ 1.0f,   -1.0f,  1.0},     {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-    {{-1.0f,    1.0f,  1.0},    {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
-    {{ 1.0f,    1.0f,  1.0},     {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-    {{-1.0f,   -1.0f, -1.0},    {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-    {{ 1.0f,   -1.0f, -1.0},     {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-    {{-1.0f,    1.0f, -1.0},    {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
-    {{ 1.0f,    1.0f, -1.0},     {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}
+    {{-1.0f, -1.0f,  1.0}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    {{ 1.0f, -1.0f,  1.0}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+    {{-1.0f,  1.0f,  1.0}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+    {{ 1.0f,  1.0f,  1.0}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+    {{-1.0f, -1.0f, -1.0}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    {{ 1.0f, -1.0f, -1.0}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+    {{-1.0f,  1.0f, -1.0}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+    {{ 1.0f,  1.0f, -1.0}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}
 
 };
 
 const std::vector<int> indices = {
-    //Top
-    2, 6, 7,
-    2, 3, 7,
-
-    //Bottom
-    0, 4, 5,
-    0, 1, 5,
-
-    //Left
-    0, 2, 6,
-    0, 4, 6,
-
-    //Right
-    1, 3, 7,
-    1, 5, 7,
-
-    //Front
-    0, 2, 3,
-    0, 1, 3,
-
-    //Back
-    4, 6, 7,
-    4, 5, 7
+    2, 6, 7, 2, 3, 7, //Top
+    0, 4, 5, 0, 1, 5, //Bottom
+    0, 2, 6, 0, 4, 6, //Left
+    1, 3, 7, 1, 5, 7, //Right
+    0, 2, 3, 0, 1, 3, //Front
+    4, 6, 7, 4, 5, 7  //Back
 };
 
 int main() {
     RenderingEngine::preinit();
 
     std::vector<unsigned int> vertexSpirvCode, fragmentSpirvCode;
+
     ShaderCompiler::compile_shader(read_file("assets/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
     ShaderCompiler::compile_shader(read_file("assets/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
 
@@ -68,7 +53,6 @@ int main() {
     struct Handles {
         unsigned int transform;
         unsigned int camera;
-        float frame;
     };
 
     struct Transform {
@@ -104,14 +88,14 @@ int main() {
     VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
 
     Transform t = {
-        Mat4f::translation(Vec3f(0.0f, 0.0f, 5.0f)),
+        Mat4f::translation(Vec3f(0.0f, 0.0f, 2.5f)),
         Mat4f::scale(0.3f),
-        Mat4f::identity()
+        Mat4f::rotation_y(0.4f)
     };
 
     Camera c = {
-        Mat4f::identity(),
-        Mat4f::identity()
+        Mat4f::translation(Vec3f(0.0f, 0.0f, 0.0f)),
+        Mat4f::perspective(1.0472, 800.0f/600.0f, 0.1f, 10.0f)
     };
 
     f32 f = 0;
@@ -122,6 +106,8 @@ int main() {
         uint32_t frame = renderer.get_frame();
 
         VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
+
+        t.rotation = trait_bryan_angle_yxz(Vec3f(f, f, 0.0f));
 
         transformUbo.get_impl(frame)->set_data(t);
         cameraUbo.get_impl(frame)->set_data(c);
@@ -134,8 +120,7 @@ int main() {
 
             Handles handle = {
                 static_cast<u32>(transformUbo.get_handle(frame).index),
-                static_cast<u32>(cameraUbo.get_handle(frame).index),
-                f
+                static_cast<u32>(cameraUbo.get_handle(frame).index)
             };
 
             cmd.push_constant(pipelineLayout, sizeof(Handles), &handle);
