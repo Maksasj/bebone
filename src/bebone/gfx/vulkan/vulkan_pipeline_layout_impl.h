@@ -33,7 +33,7 @@ namespace bebone::gfx {
             }
 
             ~VulkanPipelineLayoutImpl() {
-
+                vkDestroyPipelineLayout(_device.device(), pipelineLayout, nullptr);
             }
     };
 }

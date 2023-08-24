@@ -33,8 +33,8 @@ namespace bebone::gfx {
             }
 
             ~VulkanIndexBufferImpl() {
-                vkDestroyBuffer(get_device().device(), get_buffer(), nullptr);
-                vkFreeMemory(get_device().device(), get_buffer_memory(), nullptr);
+                // vkDestroyBuffer(get_device().device(), get_buffer(), nullptr);
+                // vkFreeMemory(get_device().device(), get_buffer_memory(), nullptr);
             }
     };
 }

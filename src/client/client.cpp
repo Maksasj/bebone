@@ -137,6 +137,9 @@ int main() {
         renderer.present(frame);
     }
 
+    vkDeviceWaitIdle(renderer.device->device());
+
+
     glfwTerminate();
 
     return 0; 

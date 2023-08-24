@@ -49,6 +49,10 @@ namespace bebone::gfx {
             }
 
             ~VulkanDescriptorPool() {
+                for(const auto& layouts : descriptorSetLayouts) {
+                    vkDestroyDescriptorSetLayout(_device.device(), layouts, nullptr);
+                }
+
                 vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
             }
 

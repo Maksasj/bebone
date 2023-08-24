@@ -32,9 +32,9 @@ namespace bebone::gfx {
         public:
             const static constexpr size_t FIF = 2; 
 
-            std::shared_ptr<VulkanCommandBufferPool> commandBuffers;
-            std::shared_ptr<DeviceImpl> device;
-            std::shared_ptr<MyEngineSwapChainImpl> swapChain;
+            std::shared_ptr<DeviceImpl> device; // ORDER MATTERS FOR DESTRUCTOR
+            std::shared_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
+            std::shared_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
             VulkanRenderer(Window& window) {
                 device = std::make_shared<DeviceImpl>(window);
