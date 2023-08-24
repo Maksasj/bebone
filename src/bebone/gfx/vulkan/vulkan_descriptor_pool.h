@@ -53,10 +53,24 @@ namespace bebone::gfx {
             }
 
             VkDescriptorSetLayout* create_descriptor_set_layout(const std::vector<VkDescriptorSetLayoutBinding>& bindings) {
-                VkDescriptorBindingFlags bindlessFlags = 
-                    VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | 
-                    VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT | 
-                    VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
+                std::vector<VkDescriptorBindingFlags> bindingFlags;
+                
+                for(size_t i = 0; i < bindings.size(); ++i) {
+                    VkDescriptorBindingFlags bindlessFlags;
+
+                    if(i == bindings.size() - 1) {
+                        bindlessFlags = 
+                            VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | 
+                            // VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT | 
+                            VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
+                    } else {
+                        bindlessFlags = 
+                            VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | 
+                            VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
+                    }
+
+                    bindingFlags.push_back(bindlessFlags);
+                }
 
                 descriptorSetLayouts.push_back(VkDescriptorSetLayout{});
                 VkDescriptorSetLayout &descriptorSetLayout = descriptorSetLayouts[descriptorSetLayouts.size() - 1];
@@ -71,8 +85,8 @@ namespace bebone::gfx {
                 VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo;
                 extendedInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
                 extendedInfo.pNext = nullptr;
-                extendedInfo.bindingCount = bindings.size();
-                extendedInfo.pBindingFlags = &bindlessFlags;
+                extendedInfo.bindingCount = bindingFlags.size();
+                extendedInfo.pBindingFlags = bindingFlags.data();
 
                 layoutInfo.pNext = &extendedInfo;
         

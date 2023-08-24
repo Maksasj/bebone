@@ -27,7 +27,7 @@ namespace bebone::gfx {
                 _impl.clear();
             }
 
-            VulkanBufferImpl* get_impl(const size_t index) {
+            VulkanUniformBufferImpl* get_impl(const size_t index) {
                 return _impl[index];
             }
     

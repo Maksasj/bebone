@@ -13,16 +13,19 @@ namespace bebone::gfx {
             void* _data;
 
         public:
-            VulkanUniformBufferImpl(const size_t& size, DeviceImpl& device, const UniformBufferHandle& handle) 
+            VulkanUniformBufferImpl(const size_t& size, DeviceImpl& device, const size_t& handleIndex) 
                 : VulkanBufferImpl(
                     size,
                     VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, 
                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, device
-                ), GPUResource<UniformBufferHandle>(handle) {
+                ), GPUResource<UniformBufferHandle>(UniformBufferHandle(handleIndex)) {
 
                 vkMapMemory(device.device(), get_buffer_memory(), 0, size, 0, &_data);
-                
-                *static_cast<float*>(_data) = 0.2f;
+            }
+
+            template<class T>
+            void set_data(const T& data) {
+                *static_cast<T*>(_data) = data;
             }
 
             ~VulkanUniformBufferImpl() {

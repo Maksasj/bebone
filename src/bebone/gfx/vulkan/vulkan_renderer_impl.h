@@ -86,7 +86,7 @@ namespace bebone::gfx {
                 return GPUResourceManager(FIF, *device);
             }
 
-            void present() {
+            uint32_t get_frame() const {
                 uint32_t imageIndex;
                 auto result = swapChain->acquireNextImage(&imageIndex);
 
@@ -94,9 +94,13 @@ namespace bebone::gfx {
                     throw std::runtime_error("failed to acquire swap chain image!");
                 }
 
+                return imageIndex;
+            }
+
+            void present(uint32_t& imageIndex) {
                 VkCommandBuffer& _commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBuffers->get_command_buffer(imageIndex)).commandBuffer; 
 
-                result = swapChain->submitCommandBuffers(&_commnandBuffer, &imageIndex);
+                auto result = swapChain->submitCommandBuffers(&_commnandBuffer, &imageIndex);
                 if(result != VK_SUCCESS) {
                     throw std::runtime_error("failed to acquire submit command buffers !\n");
                 }

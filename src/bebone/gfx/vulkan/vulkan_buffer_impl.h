@@ -25,7 +25,7 @@ namespace bebone::gfx {
         
         atrributeDescriptions[0].binding = 0;
         atrributeDescriptions[0].location = 0;
-        atrributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+        atrributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
         atrributeDescriptions[0].offset = offsetof(Vertex, pos);
 
         atrributeDescriptions[1].binding = 0;

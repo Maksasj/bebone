@@ -1,130 +1,144 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <cmath>
+#include <fstream>
 
 #include "bebone/bebone.h"
 
-#if 1
-const char *vvvertexShaderSource = 
-                                "#version 450 core\n"
-                                "#extension GL_EXT_nonuniform_qualifier : enable\n"
-                                "layout(binding = 0) uniform TransformUniformBufferObject {\n"
-                                "   float x;"
-                                "} transform[];\n"
-                                ""
-                                "layout (location = 0) in vec3 position;\n"
-                                "layout (location = 1) in vec3 color;\n"
-                                "layout (location = 2) in vec2 inTexCoord;\n"
-
-                                "layout (location = 0) out vec3 fragColor;\n"
-                                "layout (location = 1) out vec2 fragTexCoord;\n"
-
-                                "layout( push_constant ) uniform Handles {\n"
-                                "    uint transformHandle;\n"
-                                "} handles;\n"
-
-                                "void main() {\n"
-                                "    gl_Position = vec4(position.x + transform[handles.transformHandle].x, position.y, 0.0, 1.0);\n"
-                                "    fragColor = color;\n"
-                                "    fragTexCoord = inTexCoord;\n"
-                                "}\0";
-#else
-const char *vvvertexShaderSource = "#version 450 core\n"
-                                "layout (location = 0) in vec2 position;\n"
-                                "layout (location = 1) in vec3 color;\n"
-                                "layout (location = 2) in vec2 inTexCoord;\n"
-
-                                "layout (location = 0) out vec3 fragColor;\n"
-                                "layout (location = 1) out vec2 fragTexCoord;\n"
-
-                                "layout( push_constant ) uniform Handles {\n"
-                                "    uint transformHandle;\n"
-                                "} handles;\n"
-
-                                "void main() {\n"
-                                "   gl_Position = vec4(position.x, position.y, 0.0, 1.0);\n"
-                                "   fragColor = color;\n"
-                                "   fragTexCoord = inTexCoord;\n"
-                                "}\0";
-#endif
-
-#if 0
-const char *fffragmentShaderSource = "#version 450 core\n"
-                                  "layout (location = 0) out vec4 outColor;\n"
-                                  "\n"
-                                  "layout (location = 0) in vec3 fragColor;\n"
-                                  "layout (location = 1) in vec2 fragTexCoord;\n"
-                                  "layout (set = 1, binding = 0) uniform sampler2D texSampler;\n"
-                                  "void main() {\n"
-                                  "   outColor = texture(texSampler, fragTexCoord);\n"
-                                  "}\n\0";
-#else 
-const char *fffragmentShaderSource = "#version 450 core\n"
-                                "layout (location = 0) out vec4 outColor;\n"
-                                "layout (location = 0) in vec3 fragColor;\n"
-                                "layout (location = 1) in vec2 fragTexCoord;\n"
-                                    
-                                "layout( push_constant ) uniform Handles {\n"
-                                "    uint transformHandle;\n"
-                                "} handles;\n"
-
-                                "void main() {\n"
-                                "   outColor = vec4(fragColor, 1.0);\n"
-                                "}\n\0";
-#endif
+std::string read_file(const std::string& path) {
+    std::ifstream file(path);
+    std::stringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
+}
 
 using namespace bebone::gfx;
+using namespace omni::types;
 
 const std::vector<Vertex> vertices = {
-    {{-0.5f, -0.5f, 0.0f},    {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-    {{0.5f, -0.5f, 0.0f},     {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-    {{0.5f, 0.5f, 0.0f},      {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-    {{-0.5f, 0.5f, 0.0f},     {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
+    {{-1.0f,   -1.0f,  1.0},    {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    {{ 1.0f,   -1.0f,  1.0},     {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+    {{-1.0f,    1.0f,  1.0},    {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+    {{ 1.0f,    1.0f,  1.0},     {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+    {{-1.0f,   -1.0f, -1.0},    {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    {{ 1.0f,   -1.0f, -1.0},     {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+    {{-1.0f,    1.0f, -1.0},    {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+    {{ 1.0f,    1.0f, -1.0},     {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}
+
 };
 
 const std::vector<int> indices = {
-    0, 1, 2, 2, 3, 0
+    //Top
+    2, 6, 7,
+    2, 3, 7,
+
+    //Bottom
+    0, 4, 5,
+    0, 1, 5,
+
+    //Left
+    0, 2, 6,
+    0, 4, 6,
+
+    //Right
+    1, 3, 7,
+    1, 5, 7,
+
+    //Front
+    0, 2, 3,
+    0, 1, 3,
+
+    //Back
+    4, 6, 7,
+    4, 5, 7
 };
 
 int main() {
     RenderingEngine::preinit();
 
     std::vector<unsigned int> vertexSpirvCode, fragmentSpirvCode;
-    ShaderCompiler::compile_shader(vvvertexShaderSource, EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(fffragmentShaderSource, EShLangFragment, fragmentSpirvCode);
+    ShaderCompiler::compile_shader(read_file("assets/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
+    ShaderCompiler::compile_shader(read_file("assets/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
 
     Window window("Client");
     VulkanRenderer renderer = VulkanRenderer(window);
     GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
 
+    struct Handles {
+        unsigned int transform;
+        unsigned int camera;
+        float frame;
+    };
+
+    struct Transform {
+        Mat4f transform;
+        Mat4f scale;
+        Mat4f rotation;
+    };
+
+    struct Camera {
+        Mat4f view;
+        Mat4f proj;
+    };
+
     GPUResourceSet resourceSet = resourceManager
         .create_resource_set()
         .set_uniform_buffer_resource(0)
+        .set_uniform_buffer_resource(1)
         .build();
 
     PipelineLayout pipelineLayout = renderer
         .create_pipeline_layout_builder()
-        .set_constant_range(0, sizeof(unsigned int))
+        .set_constant_range(0, sizeof(Handles))
         .build(resourceManager);
 
     VulkanPipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
     
-    UniformBuffer<float> transformUbo = resourceManager.create_uniform_buffer<float>(resourceSet, 0);
+    UniformBuffer<Transform> transformUbo = resourceManager.create_uniform_buffer<Transform>(resourceSet, 0);
+    UniformBuffer<Camera> cameraUbo = resourceManager.create_uniform_buffer<Camera>(resourceSet, 1);
+    
     VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);
     IndexBuffer indexBuffer = renderer.create_index_buffer(indices);
 
     VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-    for(size_t i = 0; i < 2; ++i) {
-        VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(i);
+
+    Transform t = {
+        Mat4f::translation(Vec3f(0.0f, 0.0f, 5.0f)),
+        Mat4f::scale(0.3f),
+        Mat4f::identity()
+    };
+
+    Camera c = {
+        Mat4f::identity(),
+        Mat4f::identity()
+    };
+
+    f32 f = 0;
+    while (!window.closing()) {
+        f += 0.001f;
+        glfwPollEvents();
+
+        uint32_t frame = renderer.get_frame();
+
+        VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
+
+        transformUbo.get_impl(frame)->set_data(t);
+        cameraUbo.get_impl(frame)->set_data(c);
+
         cmd.begin_record();
-            cmd.begin_render_pass(renderer, i);
+            cmd.begin_render_pass(renderer, frame);
             
             cmd.bind_pipeline(pipeline);
             resourceSet.bind(cmd, pipelineLayout);
 
-            UniformBufferHandle uboHandle = transformUbo.get_handle(i);
+            Handles handle = {
+                static_cast<u32>(transformUbo.get_handle(frame).index),
+                static_cast<u32>(cameraUbo.get_handle(frame).index),
+                f
+            };
 
-            cmd.push_constant(pipelineLayout, sizeof(unsigned int), &uboHandle.index);
+            cmd.push_constant(pipelineLayout, sizeof(Handles), &handle);
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);
@@ -134,12 +148,8 @@ int main() {
         cmd.end_record();
 
         cmd.submit();
-    }
 
-    while (!window.closing()) {
-        glfwPollEvents();
-
-        renderer.present();
+        renderer.present(frame);
     }
 
     glfwTerminate();

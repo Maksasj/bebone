@@ -7,14 +7,14 @@ namespace bebone::gfx {
     template<class GPUResourceHandleType>
     class GPUResource {
         private:
-            const GPUResourceHandleType handle;
+            GPUResourceHandleType handle;
 
         public:
             GPUResource(const GPUResourceHandleType& _handle) : handle(_handle) {
                 
             }
 
-            const GPUResourceHandleType& get_handle() const {
+            GPUResourceHandleType& get_handle() {
                 return handle;
             }
     };
