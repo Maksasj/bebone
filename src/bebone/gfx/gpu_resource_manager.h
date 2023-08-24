@@ -104,7 +104,7 @@ namespace bebone::gfx {
                 std::vector<VulkanUniformBufferImpl*> bufferImpl(_fif, nullptr);
 
                 for(size_t i = 0; i < _fif; ++i) {
-                    bufferImpl[i] = new VulkanUniformBufferImpl(sizeof(DataType), _device, 0);
+                    bufferImpl[i] = new VulkanUniformBufferImpl(sizeof(DataType), _device, availableUniformHandle++); // Todo available handles should be refactored
                     // const UniformBufferHandle resourceHandle = bufferImpl[i]->get_handle();
 
                     VkDescriptorBufferInfo bufferInfo{};
@@ -117,7 +117,7 @@ namespace bebone::gfx {
                     
                     descriptorWrite.dstSet = *resourceSet.get_descriptor(i);
                     descriptorWrite.dstBinding = binding;
-                    descriptorWrite.dstArrayElement = 0; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
+                    descriptorWrite.dstArrayElement = bufferImpl[i]->get_handle().index; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
                     descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                     descriptorWrite.descriptorCount = 1;

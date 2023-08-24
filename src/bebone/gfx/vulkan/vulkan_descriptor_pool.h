@@ -127,27 +127,6 @@ namespace bebone::gfx {
                     throw std::runtime_error("failed to allocate descriptor sets!");
                 }
 
-                /*
-                // So for each  buffer we should create this thing, and update 'descriptorWrite.descriptorCount' and 'descriptorWrite.pBufferInfo'
-                VkDescriptorBufferInfo bufferInfo{};
-                bufferInfo.buffer = buffer;
-                bufferInfo.offset = 0;
-                bufferInfo.range = sizeof(float);
-
-                VkWriteDescriptorSet descriptorWrite{};
-                descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                descriptorWrite.dstSet = descriptorSet;
-                descriptorWrite.dstBinding = 0;
-                descriptorWrite.dstArrayElement = 0;
-                descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                descriptorWrite.descriptorCount = 1;
-                descriptorWrite.pBufferInfo = &bufferInfo;
-                descriptorWrite.pImageInfo = nullptr; // Optional
-                descriptorWrite.pTexelBufferView = nullptr; // Optional
-
-                vkUpdateDescriptorSets(_device.device(), 1, &descriptorWrite, 0, nullptr);
-                */
-
                 return &descriptorSet;
             }
 

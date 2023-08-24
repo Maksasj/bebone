@@ -79,7 +79,9 @@ int main() {
 
     VulkanPipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
     
-    UniformBuffer<Transform> transformUbo = resourceManager.create_uniform_buffer<Transform>(resourceSet, 0);
+    UniformBuffer<Transform> tUbo0 = resourceManager.create_uniform_buffer<Transform>(resourceSet, 0);
+    UniformBuffer<Transform> tUbo1 = resourceManager.create_uniform_buffer<Transform>(resourceSet, 0);
+
     UniformBuffer<Camera> cameraUbo = resourceManager.create_uniform_buffer<Camera>(resourceSet, 1);
     
     VertexBuffer vertexBuffer = renderer.create_vertex_buffer(vertices);
@@ -87,8 +89,14 @@ int main() {
 
     VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
 
-    Transform t = {
-        Mat4f::translation(Vec3f(0.0f, 0.0f, 2.5f)),
+    Transform t0 = {
+        Mat4f::translation(Vec3f(1.0f, 0.0f, 2.5f)),
+        Mat4f::scale(0.3f),
+        Mat4f::rotation_y(0.4f)
+    };
+
+    Transform t1 = {
+        Mat4f::translation(Vec3f(-1.0f, 0.0f, 2.5f)),
         Mat4f::scale(0.3f),
         Mat4f::rotation_y(0.4f)
     };
@@ -107,9 +115,12 @@ int main() {
 
         VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
 
-        t.rotation = trait_bryan_angle_yxz(Vec3f(f, f, 0.0f));
+        t0.rotation = trait_bryan_angle_yxz(Vec3f(f, f, 0.0f));
+        t1.rotation = trait_bryan_angle_yxz(Vec3f(0.0f, f, 0.0f));
+        t1.transform = Mat4f::translation(Vec3f(-1.0f, 0.0f, 2.5f + sin(f)));
 
-        transformUbo.get_impl(frame)->set_data(t);
+        tUbo0.get_impl(frame)->set_data(t0);
+        tUbo1.get_impl(frame)->set_data(t1);
         cameraUbo.get_impl(frame)->set_data(c);
 
         cmd.begin_record();
@@ -118,15 +129,23 @@ int main() {
             cmd.bind_pipeline(pipeline);
             resourceSet.bind(cmd, pipelineLayout);
 
-            Handles handle = {
-                static_cast<u32>(transformUbo.get_handle(frame).index),
+            cmd.bind_vertex_buffer(vertexBuffer);
+            cmd.bind_index_buffer(indexBuffer);
+
+            Handles h1 = {
+                static_cast<u32>(tUbo1.get_handle(frame).index),
                 static_cast<u32>(cameraUbo.get_handle(frame).index)
             };
 
-            cmd.push_constant(pipelineLayout, sizeof(Handles), &handle);
+            cmd.push_constant(pipelineLayout, sizeof(Handles), &h1);
+            cmd.draw_indexed(indices.size());
+            
+            Handles h0 = {
+                static_cast<u32>(tUbo0.get_handle(frame).index),
+                static_cast<u32>(cameraUbo.get_handle(frame).index)
+            };
 
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
+            cmd.push_constant(pipelineLayout, sizeof(Handles), &h0);
             cmd.draw_indexed(indices.size());
 
             cmd.end_render_pass();
