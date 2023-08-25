@@ -36,25 +36,18 @@ namespace bebone::gfx {
                 vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
                 vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
-                VkPipelineViewportStateCreateInfo viewportInfo{};
-                viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-                viewportInfo.viewportCount = 1;
-                viewportInfo.pViewports = &configInfo.viewport;
-                viewportInfo.scissorCount = 1;
-                viewportInfo.pScissors = &configInfo.scissor;
-
                 VkGraphicsPipelineCreateInfo pipelineInfo{};
                 pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
                 pipelineInfo.stageCount = 2;
                 pipelineInfo.pStages = shaderStages;
                 pipelineInfo.pVertexInputState = &vertexInputInfo;
                 pipelineInfo.pInputAssemblyState = &configInfo.inputAssemblyInfo;
-                pipelineInfo.pViewportState = &viewportInfo;
+                pipelineInfo.pViewportState = &configInfo.viewportInfo;
                 pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
                 pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
                 pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
                 pipelineInfo.pDepthStencilState = &configInfo.depthStencilInfo;
-                pipelineInfo.pDynamicState = nullptr;
+                pipelineInfo.pDynamicState = &configInfo.dynamicStateInfo;
 
                 pipelineInfo.layout = configInfo.pipelineLayout;
                 pipelineInfo.renderPass = configInfo.renderPass;
@@ -63,13 +56,7 @@ namespace bebone::gfx {
                 pipelineInfo.basePipelineIndex = -1;
                 pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-                if (vkCreateGraphicsPipelines(
-                        device.device(),
-                        VK_NULL_HANDLE,
-                        1,
-                        &pipelineInfo,
-                        nullptr,
-                        &grapgicsPipeline) != VK_SUCCESS) {
+                if (vkCreateGraphicsPipelines(device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &grapgicsPipeline) != VK_SUCCESS) {
                     throw std::runtime_error("failed to create graphics pipeline");
                 } else {
                     std::cout << "Created graphics pipeline !\n";

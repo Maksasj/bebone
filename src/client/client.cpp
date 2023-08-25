@@ -46,7 +46,7 @@ int main() {
     ShaderCompiler::compile_shader(read_file("assets/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
     ShaderCompiler::compile_shader(read_file("assets/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
 
-    Window window("Client");
+    Window window("Client", 800, 600);
     VulkanRenderer renderer = VulkanRenderer(window);
     GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
 
@@ -103,7 +103,7 @@ int main() {
 
     Camera c = {
         Mat4f::translation(Vec3f(0.0f, 0.0f, 0.0f)),
-        Mat4f::perspective(1.0472, 800.0f/600.0f, 0.1f, 10.0f)
+        Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 10.0f)
     };
 
     f32 f = 0;
@@ -125,7 +125,8 @@ int main() {
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame);
-            
+            cmd.set_viewport(0, 0, window.get_width(), window.get_height());
+
             cmd.bind_pipeline(pipeline);
             resourceSet.bind(cmd, pipelineLayout);
 
@@ -157,7 +158,6 @@ int main() {
     }
 
     vkDeviceWaitIdle(renderer.device->device());
-
 
     glfwTerminate();
 

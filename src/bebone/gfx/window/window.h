@@ -4,56 +4,67 @@
 #include <iostream>
 #include <exception>
 
+#include "../../core/core.h"
+
 #include "../gfx_backend.h"
 
 namespace bebone::gfx {
+    using namespace core;   
+
     class Window {
         private:
-            GLFWwindow* window;
+            GLFWwindow* _window;
+            int _width;
+            int _height;
+
         public:
             Window(const Window&) = delete;
             Window &operator=(const Window&) = delete;
 
-            Window(const std::string& title) {
+            Window(const std::string& title, const int width, const int height) :
+                _width(width), _height(height) {
 
                 glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-                // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-                // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-                // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-                // #ifdef __APPLE__
-                //     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-                // #endif
-
                 glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-                window = glfwCreateWindow(800, 600, title.c_str(), NULL, NULL);
+                _window = glfwCreateWindow(_width, _height, title.c_str(), NULL, NULL);
 
-                if (window == NULL) {
+                if (_window == NULL) {
                     glfwTerminate();
                     throw std::runtime_error("Failed to create GLFW window");
                 }
             }
 
             ~Window() {
-                glfwDestroyWindow(window);
+                glfwDestroyWindow(_window);
             }
 
             GLFWwindow* get_backend() const {
-                return window;
+                return _window;
             }
 
             bool closing() const {
-                return glfwWindowShouldClose(window);
+                return glfwWindowShouldClose(_window);
             }
 
-            VkExtent2D get_extend() {
-                return { static_cast<uint32_t>(800), static_cast<uint32_t>(600) };
+            VkExtent2D get_extend() const {
+                return { static_cast<uint32_t>(_width), static_cast<uint32_t>(_height) };
+            }
+
+            int get_width() const {
+                return _width;
+            }
+
+            int get_height() const {
+                return _height;
+            }
+
+            f32 get_aspect() const {
+                return static_cast<f32>(_width) / static_cast<f32>(_height);
             }
 
             void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface_) {
-                if(glfwCreateWindowSurface(instance, window, nullptr, surface_) != VK_SUCCESS) {
+                if(glfwCreateWindowSurface(instance, _window, nullptr, surface_) != VK_SUCCESS) {
                     throw std::runtime_error("failed to create window surface");
                 }
             }

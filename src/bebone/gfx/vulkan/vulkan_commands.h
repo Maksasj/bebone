@@ -14,6 +14,7 @@
 #include "../swap_chain_impl.h"
 
 namespace bebone::gfx {
+    using namespace bebone::core;
 
     class VulkanBeginRecordCommand : public Command {
         private:
@@ -78,6 +79,39 @@ namespace bebone::gfx {
                 renderPassInfo.pClearValues = clearValues.data();
         
                 vkCmdBeginRenderPass(_commandBuffer.commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+            }
+    };
+
+    class VulkanSetViewportCommand : public Command {
+        private:
+            VulkanCommandBuffer& _commandBuffer;
+
+            const i32 _x;
+            const i32 _y;
+            const u32 _width;
+            const u32 _height;
+
+        public:
+            VulkanSetViewportCommand(VulkanCommandBuffer& commandBuffer, const i32& x, const i32& y, const u32& width, const u32& height) 
+                : _commandBuffer(commandBuffer), _x(x), _y(y), _width(width), _height(height) {
+
+            }
+
+            void execute() override {
+                VkViewport viewport;
+
+                viewport.x = static_cast<float>(_x);
+                viewport.y = static_cast<float>(_y);
+                viewport.width = static_cast<float>(_width);
+                viewport.height = static_cast<float>(_height);
+
+                viewport.minDepth = 0.0f;
+                viewport.maxDepth = 1.0f;   // Todo for now this set as default
+
+                VkRect2D scissor = {{_x, _y}, {_width, _height}};
+
+                vkCmdSetViewport(_commandBuffer.commandBuffer, 0, 1, &viewport);
+                vkCmdSetScissor(_commandBuffer.commandBuffer, 0, 1, &scissor);
             }
     };
 

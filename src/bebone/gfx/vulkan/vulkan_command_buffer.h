@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-#include "../../core/arena_container.h"
+#include "../../core/core.h"
 
 #include "../vertex_buffer.h"
 #include "../index_buffer.h"
@@ -14,6 +14,8 @@
 #include "vulkan_pipeline_impl.h"
 
 namespace bebone::gfx {
+    using namespace bebone::core;
+
     class VulkanRenderer;
 
     class VulkanCommandBuffer {
@@ -30,6 +32,8 @@ namespace bebone::gfx {
 
             void begin_render_pass(VulkanRenderer& renderer, int frameBuffer);
             void end_render_pass();
+
+            void set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);
 
             void bind_pipeline(VulkanPipeline& pipeline);
             

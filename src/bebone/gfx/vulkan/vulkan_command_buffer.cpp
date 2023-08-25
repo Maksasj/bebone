@@ -25,6 +25,11 @@ namespace bebone::gfx {
         std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(*this, *swapChain, frameBuffer);
     }
 
+    void VulkanCommandBuffer::set_viewport(const i32& x, const i32& y, const u32& width, const u32& height) {
+        VulkanSetViewportCommand* ptrTarget = static_cast<VulkanSetViewportCommand*>(arena.alloc(sizeof(VulkanSetViewportCommand)));
+        std::ignore = new (ptrTarget) VulkanSetViewportCommand(*this, x, y, width, height);
+    }
+
     void VulkanCommandBuffer::end_render_pass() {
         VulkanEndRenderPassCommand* ptrTarget = static_cast<VulkanEndRenderPassCommand*>(arena.alloc(sizeof(VulkanEndRenderPassCommand)));
         std::ignore = new (ptrTarget) VulkanEndRenderPassCommand(*this);
