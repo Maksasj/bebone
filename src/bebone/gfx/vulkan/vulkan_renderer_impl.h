@@ -51,7 +51,7 @@ namespace bebone::gfx {
             VulkanPipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
                 VulkanPipelineLayoutImpl* vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
 
-                auto pipelineConfig = VulkanPipeline::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
+                auto pipelineConfig = PipelineConfigInfo::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
                 pipelineConfig.renderPass = swapChain->getRenderPass(); // Setting up render pass
                 pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
 
