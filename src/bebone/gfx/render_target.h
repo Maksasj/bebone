@@ -17,9 +17,11 @@ namespace bebone::gfx {
 
             // Framebuffer things
             std::vector<VkFramebuffer> swapChainFramebuffers;
+            
             std::vector<VkImage> depthImages;
             std::vector<VkDeviceMemory> depthImageMemorys;
             std::vector<VkImageView> depthImageViews;
+
             std::vector<VkImage> swapChainImages;
             std::vector<VkImageView> swapChainImageViews;
             VkFormat imageFormat;
@@ -30,13 +32,8 @@ namespace bebone::gfx {
                 
                 createImageViews();
                 createDepthResources();
-                
                 createFramebuffers();
             }
-		
-            VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
-            VkImageView getImageView(int index) { return swapChainImageViews[index]; }
-            size_t imageCount() { return swapChainImages.size(); }
 
             ~RenderTarget() {
                 for (auto imageView : swapChainImageViews) {
@@ -54,8 +51,6 @@ namespace bebone::gfx {
                 for (auto framebuffer : swapChainFramebuffers) {
                     vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
                 }
-
-                // vkDestroyRenderPass(device.device(), renderPass, nullptr);
             }
 
             void createImageViews() {
@@ -80,9 +75,9 @@ namespace bebone::gfx {
             }
             
             void createFramebuffers() {
-                swapChainFramebuffers.resize(imageCount());
+                swapChainFramebuffers.resize(swapChainImages.size());
 
-                for (size_t i = 0; i < imageCount(); i++) {
+                for (size_t i = 0; i < swapChainImages.size(); i++) {
                     std::array<VkImageView, 2> attachments = {swapChainImageViews[i], depthImageViews[i]};
 
                     VkFramebufferCreateInfo framebufferInfo = {};
@@ -103,9 +98,9 @@ namespace bebone::gfx {
             void createDepthResources() {
                 VkFormat depthFormat = findDepthFormat();
 
-                depthImages.resize(imageCount());
-                depthImageMemorys.resize(imageCount());
-                depthImageViews.resize(imageCount());
+                depthImages.resize(swapChainImages.size());
+                depthImageMemorys.resize(swapChainImages.size());
+                depthImageViews.resize(swapChainImages.size());
 
                 for(size_t i = 0; i < depthImages.size(); ++i) {
                     VkImageCreateInfo imageInfo{};

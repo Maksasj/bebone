@@ -10,9 +10,13 @@
 #include <stdexcept>
 
 MyEngineSwapChainImpl::MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D _windowExtent, const size_t& fif) 
-	: FIF(fif), device{deviceRef}, windowExtent{_windowExtent} {
+	: device{deviceRef}, FIF(fif) {
 	
+	SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
+	extent = chooseSwapExtent(swapChainSupport.capabilities, _windowExtent);
+
 	createSwapChain();
+	createRenderTarget();
 	createSyncObjects();
 }
 
@@ -94,9 +98,8 @@ VkResult MyEngineSwapChainImpl::submitCommandBuffers(const VkCommandBuffer *buff
 void MyEngineSwapChainImpl::createSwapChain() {
 	SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
 
-	VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
-	VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-	VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
+	surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+	presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
 
 	// uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
 	uint32_t imageCount = 2; // Todo this is a fif
@@ -140,19 +143,22 @@ void MyEngineSwapChainImpl::createSwapChain() {
 	if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create swap chain!");
 	}
+}
 
-
+void MyEngineSwapChainImpl::createRenderTarget() {
 	std::vector<VkImage> swapChainImages;
 
 	// we only specified a minimum number of images in the swap chain, so the implementation is
 	// allowed to create a swap chain with more. That's why we'll first query the final number of
 	// images with vkGetSwapchainImagesKHR, then resize the container and finally call it again to
 	// retrieve the handles.
+	uint32_t imageCount = 2; // Todo this is a fif
+
 	vkGetSwapchainImagesKHR(device.device(), swapChain, &imageCount, nullptr);
 	swapChainImages.resize(imageCount);
 	vkGetSwapchainImagesKHR(device.device(), swapChain, &imageCount, swapChainImages.data());
 
-	renderTarget = std::make_shared<RenderTarget>(device, swapChainImages, surfaceFormat.format, extent);
+	renderTarget = std::make_unique<RenderTarget>(device, swapChainImages, surfaceFormat.format, extent);
 }
 
 void MyEngineSwapChainImpl::createSyncObjects() {
@@ -169,12 +175,16 @@ void MyEngineSwapChainImpl::createSyncObjects() {
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
 	for (size_t i = 0; i < FIF; i++) {
-		if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) !=
-				VK_SUCCESS ||
-			vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) !=
-				VK_SUCCESS ||
-			vkCreateFence(device.device(), &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create synchronization objects for a frame!");
+		if(vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create synchronization objects for a frame!");
+		}
+
+		if(vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create synchronization objects for a frame!");
+		}
+
+		if (vkCreateFence(device.device(), &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create synchronization objects for a frame!");
 		}
 	}
 }
@@ -197,22 +207,17 @@ VkPresentModeKHR MyEngineSwapChainImpl::chooseSwapPresentMode(const std::vector<
 		}
 	}
 
-	// for (const auto &availablePresentMode : availablePresentModes) {
-	//   if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
-	//     std::cout << "Present mode: Immediate" << std::endl;
-	//     return availablePresentMode;
-	//   }
-	// }
-
 	std::cout << "Present mode: V-Sync" << std::endl;
+	
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D MyEngineSwapChainImpl::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {
+VkExtent2D MyEngineSwapChainImpl::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D _windowExtent) {
 	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
 		return capabilities.currentExtent;
 	} else {
-		VkExtent2D actualExtent = windowExtent;
+		VkExtent2D actualExtent = _windowExtent;
+		
 		actualExtent.width = std::max(
 			capabilities.minImageExtent.width,
 			std::min(capabilities.maxImageExtent.width, actualExtent.width));
