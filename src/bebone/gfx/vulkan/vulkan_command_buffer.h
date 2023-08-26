@@ -13,6 +13,8 @@
 
 #include "vulkan_pipeline_impl.h"
 
+#include "../pipeline.h"
+
 namespace bebone::gfx {
     using namespace bebone::core;
 
@@ -35,7 +37,7 @@ namespace bebone::gfx {
 
             void set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);
 
-            void bind_pipeline(VulkanPipeline& pipeline);
+            void bind_pipeline(Pipeline& pipeline);
             
             void bind_vertex_buffer(VertexBuffer& vertexBuffer);
             void bind_index_buffer(IndexBuffer& indexBuffer);

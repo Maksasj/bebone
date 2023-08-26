@@ -76,7 +76,7 @@ int main() {
         .set_constant_range(0, sizeof(Handles))
         .build(resourceManager);
 
-    VulkanPipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
+    Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
     
     UniformBuffer<Transform> tUbo0 = resourceManager.create_uniform_buffer<Transform>(resourceSet, 0);
     UniformBuffer<Transform> tUbo1 = resourceManager.create_uniform_buffer<Transform>(resourceSet, 0);

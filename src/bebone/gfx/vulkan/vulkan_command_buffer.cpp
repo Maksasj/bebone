@@ -35,9 +35,12 @@ namespace bebone::gfx {
         std::ignore = new (ptrTarget) VulkanEndRenderPassCommand(*this);
     }
 
-    void VulkanCommandBuffer::bind_pipeline(VulkanPipeline& pipeline) {
+    void VulkanCommandBuffer::bind_pipeline(Pipeline& pipeline) {
         VulkanBindPipelineCommand* ptrTarget = static_cast<VulkanBindPipelineCommand*>(arena.alloc(sizeof(VulkanBindPipelineCommand)));
-        std::ignore = new (ptrTarget) VulkanBindPipelineCommand(*this, *static_cast<VulkanPipeline*>(&pipeline));
+
+        VulkanPipeline* vulkanPipeline = pipeline.get_impl(); 
+
+        std::ignore = new (ptrTarget) VulkanBindPipelineCommand(*this, *vulkanPipeline);
     }
 
     void VulkanCommandBuffer::bind_vertex_buffer(VertexBuffer& vertexBuffer) {

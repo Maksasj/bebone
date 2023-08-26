@@ -1,10 +1,12 @@
 #ifndef _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
 #define _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
 
+#include "../pipeline_impl.h"
+
 #include "vulkan_pipeline_config_info.h"
 
 namespace bebone::gfx {
-    class VulkanPipeline {
+    class VulkanPipeline : public PipelineImpl {
         private:
             void create_graphics_pipeline(const std::vector<unsigned int>& vertSpirv, const std::vector<unsigned int>& fragSpirv, const PipelineConfigInfo& configInfo) {
                 create_shader_module(vertSpirv, &vertShaderModule);

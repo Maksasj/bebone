@@ -1,6 +1,7 @@
 #ifndef _BEBONE_GFX_VULKAN_RENDERER_H_
 #define _BEBONE_GFX_VULKAN_RENDERER_H_
 
+#include <list>
 #include <memory>
 
 #include "../gfx_backend.h"
@@ -38,6 +39,9 @@ namespace bebone::gfx {
             std::unique_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
             std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
+            // Linked list since we want to avoid re allocations
+            std::list<VulkanPipeline*> pipelines;
+
             VulkanRenderer(Window& window) {
                 device = std::make_unique<DeviceImpl>(window);
                 swapChain = std::make_unique<MyEngineSwapChainImpl>(*device, window.get_extend(), FIF);
@@ -45,12 +49,12 @@ namespace bebone::gfx {
             }
 
             ~VulkanRenderer() {
-                // vkDeviceWaitIdle(device.device());
-                // vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
-                // vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+                for(auto& pipeline : pipelines) {
+                    delete pipeline;
+                }
             }
 
-            VulkanPipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
+            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
                 VulkanPipelineLayoutImpl* vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
 
                 PipelineConfigInfo pipelineConfig;
@@ -59,7 +63,10 @@ namespace bebone::gfx {
                 pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
                 pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
 
-                return VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
+                VulkanPipeline* pipeline = new VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
+                pipelines.push_back(pipeline);
+
+                return Pipeline(&pipelines.back());
             }
             
             VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {

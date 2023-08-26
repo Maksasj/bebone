@@ -3,31 +3,20 @@
 
 #include <memory>
 
-#include "pipeline_impl.h"
+#include "vulkan/vulkan_pipeline_impl.h"
 
 namespace bebone::gfx {
     class Pipeline {
         private:
-            PipelineImpl* _impl;
-
-            Pipeline(PipelineImpl* impl) : _impl(impl) {
-
-            }
+            VulkanPipeline** _impl;
 
         public:
-            ~Pipeline() {
-                if(_impl != nullptr) {
-                    delete _impl;
-                }
+            Pipeline(VulkanPipeline** impl) : _impl(impl) {
+
             }
 
-            PipelineImpl* get_impl() {
-                return _impl;
-            }
-
-            template<class Impl, class... Args>
-            static Pipeline create_from_impl(Args&&... args) {
-                return Pipeline(new Impl(std::forward<Args>(args)...));
+            VulkanPipeline* get_impl() {
+                return *_impl;
             }
     };
 }
