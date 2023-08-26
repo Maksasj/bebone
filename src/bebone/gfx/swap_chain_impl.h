@@ -34,6 +34,8 @@ class MyEngineSwapChainImpl {
 		std::vector<VkFence> inFlightFences;
 		std::vector<VkFence> imagesInFlight;
 	public:
+		void recreate(VkExtent2D windowExtent);
+
 		std::unique_ptr<RenderTarget> renderTarget;
 		
 		const size_t FIF;

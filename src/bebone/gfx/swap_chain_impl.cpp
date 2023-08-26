@@ -34,6 +34,21 @@ MyEngineSwapChainImpl::~MyEngineSwapChainImpl() {
 	}
 }
 
+void MyEngineSwapChainImpl::recreate(VkExtent2D _windowExtent) {
+	renderTarget = nullptr;
+
+	SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
+	extent = chooseSwapExtent(swapChainSupport.capabilities, _windowExtent);
+
+	if (swapChain != nullptr) {
+		vkDestroySwapchainKHR(device.device(), swapChain, nullptr);
+		swapChain = nullptr;
+	}
+
+	createSwapChain();
+	createRenderTarget();
+}
+
 VkResult MyEngineSwapChainImpl::acquireNextImage(uint32_t *imageIndex) {
 	vkWaitForFences(device.device(), 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 

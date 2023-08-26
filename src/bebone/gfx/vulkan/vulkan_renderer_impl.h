@@ -39,7 +39,7 @@ namespace bebone::gfx {
             std::unique_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
             std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
-            // Linked list since we want to avoid re allocations
+            // Linked list since we want to avoid reallocations
             std::list<VulkanPipeline*> pipelines;
 
             VulkanRenderer(Window& window) {
