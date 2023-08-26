@@ -20,9 +20,9 @@ namespace bebone::gfx {
     void VulkanCommandBuffer::begin_render_pass(VulkanRenderer& renderer, int frameBuffer) {
         VulkanBeginRenderPassCommand* ptrTarget = static_cast<VulkanBeginRenderPassCommand*>(arena.alloc(sizeof(VulkanBeginRenderPassCommand)));
         
-        auto swapChain = renderer.get_swap_chain();
+        MyEngineSwapChainImpl& swapChain = renderer.get_swap_chain();
         
-        std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(*this, *swapChain, frameBuffer);
+        std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(*this, swapChain, frameBuffer);
     }
 
     void VulkanCommandBuffer::set_viewport(const i32& x, const i32& y, const u32& width, const u32& height) {

@@ -32,14 +32,14 @@ namespace bebone::gfx {
         public:
             const static constexpr size_t FIF = 2; 
 
-            std::shared_ptr<DeviceImpl> device; // ORDER MATTERS FOR DESTRUCTOR
-            std::shared_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
-            std::shared_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
+            std::unique_ptr<DeviceImpl> device; // ORDER MATTERS FOR DESTRUCTOR
+            std::unique_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
+            std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
             VulkanRenderer(Window& window) {
-                device = std::make_shared<DeviceImpl>(window);
-                swapChain = std::make_shared<MyEngineSwapChainImpl>(*device, window.get_extend(), FIF);
-                commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, FIF);
+                device = std::make_unique<DeviceImpl>(window);
+                swapChain = std::make_unique<MyEngineSwapChainImpl>(*device, window.get_extend(), FIF);
+                commandBuffers = std::make_unique<VulkanCommandBufferPool>(*device, FIF);
             }
 
             ~VulkanRenderer() {
@@ -72,12 +72,8 @@ namespace bebone::gfx {
                 return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(*device);
             }
 
-            std::shared_ptr<MyEngineSwapChainImpl> get_swap_chain() {
-                return swapChain;
-            }
-
-            VulkanCommandBuffer& get_command_buffer() {
-                return commandBuffers->get_command_buffer(1);
+            MyEngineSwapChainImpl& get_swap_chain() {
+                return *swapChain;
             }
 
             VulkanCommandBufferPool& get_command_buffer_pool() {

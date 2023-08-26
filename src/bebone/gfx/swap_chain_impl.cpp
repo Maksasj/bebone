@@ -11,10 +11,12 @@
 
 MyEngineSwapChainImpl::MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D extent, const size_t& fif) : FIF(fif), device{deviceRef}, windowExtent{extent} {
 	createSwapChain();
+
 	createImageViews();
 	createRenderPass();
 	createDepthResources();
 	createFramebuffers();
+	
 	createSyncObjects();
 }
 
@@ -119,7 +121,7 @@ void MyEngineSwapChainImpl::createSwapChain() {
 	VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
 
 	// uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-	uint32_t imageCount = 2;
+	uint32_t imageCount = 2; // Todo this is a fif
 
 	// if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
 	// 	imageCount = swapChainSupport.capabilities.maxImageCount;
