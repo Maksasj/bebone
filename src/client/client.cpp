@@ -111,12 +111,16 @@ int main() {
         glfwPollEvents();
 
         uint32_t frame = renderer.get_frame();
+        if(frame == 9999) {
+            continue;
+        }
 
         VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
 
         t0.rotation = trait_bryan_angle_yxz(Vec3f(f, f, 0.0f));
         t1.rotation = trait_bryan_angle_yxz(Vec3f(0.0f, f, 0.0f));
         t1.transform = Mat4f::translation(Vec3f(-1.0f, 0.0f, 2.5f + sin(f)));
+        c.proj = Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 10.0f);
 
         tUbo0.get_impl(frame)->set_data(t0);
         tUbo1.get_impl(frame)->set_data(t1);

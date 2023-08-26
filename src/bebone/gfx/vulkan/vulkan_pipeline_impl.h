@@ -8,10 +8,7 @@
 namespace bebone::gfx {
     class VulkanPipeline : public PipelineImpl {
         private:
-            void create_graphics_pipeline(const std::vector<unsigned int>& vertSpirv, const std::vector<unsigned int>& fragSpirv, const PipelineConfigInfo& configInfo) {
-                create_shader_module(vertSpirv, &vertShaderModule);
-                create_shader_module(fragSpirv, &fragShaderModule);
-
+            void create_graphics_pipeline(const PipelineConfigInfo& configInfo) {
                 VkPipelineShaderStageCreateInfo shaderStages[2];
                 shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
                 shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -82,11 +79,18 @@ namespace bebone::gfx {
             VkShaderModule vertShaderModule;
             VkShaderModule fragShaderModule;
 
-
             VulkanPipeline(DeviceImpl& _device, const std::vector<unsigned int>& vertSpirv, const std::vector<unsigned int>& fragSpirv, const PipelineConfigInfo& configInfo)
-                     : device{_device} {
-                
-                create_graphics_pipeline(vertSpirv, fragSpirv, configInfo);
+                     : device(_device) {
+                create_shader_module(vertSpirv, &vertShaderModule);
+                create_shader_module(fragSpirv, &fragShaderModule);
+
+                create_graphics_pipeline(configInfo);
+            }
+
+            void recreate(const PipelineConfigInfo& configInfo) {
+                vkDestroyPipeline(device.device(), grapgicsPipeline, nullptr);
+
+                create_graphics_pipeline(configInfo);
             }
 
             ~VulkanPipeline() {

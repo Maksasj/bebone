@@ -17,22 +17,45 @@ namespace bebone::gfx {
             int _width;
             int _height;
 
+            // Lets maybe implement this in some sort of bit flag and funstion should be like get_window_flags();
+            bool windowResized;
+
         public:
             Window(const Window&) = delete;
             Window &operator=(const Window&) = delete;
 
             Window(const std::string& title, const int width, const int height) :
                 _width(width), _height(height) {
+                
+                windowResized = false;
 
                 glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-                glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+                // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+                glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
                 _window = glfwCreateWindow(_width, _height, title.c_str(), NULL, NULL);
+                glfwSetWindowUserPointer(_window, this);
+                glfwSetFramebufferSizeCallback(_window, window_resize_callback);
 
                 if (_window == NULL) {
                     glfwTerminate();
                     throw std::runtime_error("Failed to create GLFW window");
                 }
+            }
+
+            bool is_resized() {
+                return windowResized;
+            }
+
+            void reset_resize_flag() {
+                windowResized = false;
+            }
+
+            static void window_resize_callback(GLFWwindow* glfwWindow, int width, int height) {
+                Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+                window->windowResized = true;
+                window->_width = width;
+                window->_height = height;
             }
 
             ~Window() {
