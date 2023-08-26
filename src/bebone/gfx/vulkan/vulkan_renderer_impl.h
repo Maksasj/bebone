@@ -23,6 +23,8 @@
 #include "vulkan_pipeline_layout_impl.h"
 #include "vulkan_pipeline_layout_builder_impl.h"
 
+#include "../render_target.h"
+
 #include "../pipeline_layout_builder.h"
 
 #include "../gpu_resource_manager.h"
@@ -54,7 +56,7 @@ namespace bebone::gfx {
                 PipelineConfigInfo pipelineConfig;
                 PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
                 
-                pipelineConfig.renderPass = swapChain->getRenderPass(); // Setting up render pass
+                pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
                 pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
 
                 return VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);

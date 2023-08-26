@@ -65,11 +65,11 @@ namespace bebone::gfx {
             void execute() override {
                 VkRenderPassBeginInfo renderPassInfo{};
                 renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-                renderPassInfo.renderPass = _swapChain.getRenderPass();
-                renderPassInfo.framebuffer = _swapChain.getFrameBuffer(_frameBuffer);
+                renderPassInfo.renderPass = _swapChain.renderTarget->renderPass.renderPass;
+                renderPassInfo.framebuffer = _swapChain.renderTarget->swapChainFramebuffers[_frameBuffer];
                 
                 renderPassInfo.renderArea.offset = {0, 0};
-                renderPassInfo.renderArea.extent = _swapChain.getSwapChainExtent();
+                renderPassInfo.renderArea.extent = _swapChain.renderTarget->extent;
                 
                 std::array<VkClearValue, 2> clearValues{};
                 clearValues[0].color = {{ 0.2f, 0.2f, 0.2f, 1.0f }};
