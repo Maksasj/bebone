@@ -33,7 +33,7 @@ void main() {
     mat4 view = camera[handles.camera].view;
 
     mat4 model = translation * rotation * scale;
-    gl_Position = proj * model * vec4(position, 1.0);
+    gl_Position = proj * view * model * vec4(position, 1.0);
 
     fragColor = color;
     fragTexCoord = inTexCoord;

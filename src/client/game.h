@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "client_backend.h"
 
+#include "camera.h"
 #include "rendering_world.h"
 
 using namespace bebone::gfx;
@@ -52,11 +53,8 @@ class Game {
 
             Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
 
-            struct Camera {
-                Mat4f view;
-                Mat4f proj;
-            };
-
+            Camera mainCamera(resourceManager, resourceSet);
+            
             Object object = Object{
                 .position = Vec3f(0.0f, 0.0f, 2.5f),
                 .scale = 0.3f,
@@ -71,26 +69,46 @@ class Game {
 
             renderingWorld->add_object(&object);
 
-            UniformBuffer<Camera> cameraUbo = resourceManager.create_uniform_buffer<Camera>(resourceSet, 1);
+
+            Object object1 = Object{
+                .position = Vec3f(0.0f, -3.0f, 0.0f),
+                .scale = 2.0f,
+                .rotation = Vec3f::splat(0.0f),
+
+                .velocity = Vec3f::splat(0.0f),
+                .force = Vec3f::splat(0.0f),
+                .mass = 10.0f,
+
+                .renderer = new BoxRenderer(renderer, resourceManager, resourceSet)
+            };
+
+            renderingWorld->add_object(&object1);
+
+
+            Object object2 = Object{
+                .position = Vec3f(0.0f, 10.0f, 0.0f),
+                .scale = 5.0f,
+                .rotation = Vec3f::splat(0.0f),
+
+                .velocity = Vec3f::splat(0.0f),
+                .force = Vec3f::splat(0.0f),
+                .mass = 10.0f,
+
+                .renderer = new BoxRenderer(renderer, resourceManager, resourceSet)
+            };
+
+            renderingWorld->add_object(&object2);
 
             VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-
-            Camera c = {
-                Mat4f::translation(Vec3f(0.0f, 0.0f, 0.0f)),
-                Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 10.0f)
-            };
 
             while (!window->closing()) {
                 glfwPollEvents();
 
                 uint32_t frame = renderer.get_frame();
-                if(frame == 9999) {
+                if(frame == 9999)
                     continue;
-                }
 
                 VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
-
-                cameraUbo.get_impl(frame)->set_data(c);
 
                 cmd.begin_record();
                     cmd.begin_render_pass(renderer, frame);
@@ -99,7 +117,8 @@ class Game {
                     cmd.bind_pipeline(pipeline);
                     resourceSet.bind(cmd, pipelineLayout);
 
-                    cmd.push_constant(pipelineLayout, sizeof(u32), offsetof(GPUHandles, cameraIndex), &cameraUbo.get_handle(frame).index);
+                    mainCamera.calculate_transform(*window);
+                    mainCamera.activate(cmd, pipelineLayout);
 
                     renderingWorld->record_draw_commands(cmd, pipelineLayout);
 
