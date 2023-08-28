@@ -43,8 +43,8 @@ namespace bebone::gfx {
             void bind_index_buffer(IndexBuffer& indexBuffer);
             void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet);
 
-            // void bind_uniform_buffer(PipelineLayout& pipelineLayout, UniformBuffer& uniformBuffer);
             void push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, const void* ptr);
+            void push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, const size_t& offset, const void* ptr);
 
             void draw(const size_t& vertexCount);
             void draw_indexed(const size_t& vertexCount);

@@ -74,7 +74,14 @@ namespace bebone::gfx {
         VulkanPushConstant* ptrTarget = static_cast<VulkanPushConstant*>(arena.alloc(sizeof(VulkanPushConstant)));
         VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
 
-        std::ignore = new (ptrTarget) VulkanPushConstant(*this, pipelineLayoutImpl, size, constantPtr); 
+        std::ignore = new (ptrTarget) VulkanPushConstant(*this, pipelineLayoutImpl, size, 0, constantPtr); 
+    }
+
+    void VulkanCommandBuffer::push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
+        VulkanPushConstant* ptrTarget = static_cast<VulkanPushConstant*>(arena.alloc(sizeof(VulkanPushConstant)));
+        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+
+        std::ignore = new (ptrTarget) VulkanPushConstant(*this, pipelineLayoutImpl, size, offset, constantPtr); 
     }
 
     void VulkanCommandBuffer::preprocess() {

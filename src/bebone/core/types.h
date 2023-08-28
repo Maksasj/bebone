@@ -24,6 +24,9 @@ namespace bebone::core {
     using Vec2i = omni::types::Vec2i;
     using Vec3i = omni::types::Vec3i;
     using Vec4i = omni::types::Vec4i;
+
+    using Mat4f = omni::types::Mat4f;
+    using Mat2f = omni::types::Mat2f;
 }
 
 #endif

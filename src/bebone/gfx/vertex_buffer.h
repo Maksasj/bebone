@@ -10,11 +10,11 @@ namespace bebone::gfx {
         private:
             VulkanVertexBufferImpl* _impl;
 
+        public:
             VertexBuffer(VulkanVertexBufferImpl* impl) : _impl(impl) {
 
             }
 
-        public:
             ~VertexBuffer() {
                 if(_impl != nullptr) {
                     delete _impl;
@@ -23,11 +23,6 @@ namespace bebone::gfx {
 
             VulkanVertexBufferImpl* get_impl() {
                 return _impl;
-            }
-
-            template<class Impl, class... Args>
-            static VertexBuffer create_from_impl(Args&&... args) {
-                return VertexBuffer(new Impl(std::forward<Args>(args)...));
             }
     };
 }

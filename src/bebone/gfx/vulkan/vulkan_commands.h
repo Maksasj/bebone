@@ -232,19 +232,21 @@ namespace bebone::gfx {
             VulkanPipelineLayoutImpl* _pipelineLayout;
 
             const uint32_t _size;
+            const uint32_t _offset;
             const void* _ptr;
 
         public:
-            VulkanPushConstant(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, const uint32_t& size, const void* ptr) 
+            VulkanPushConstant(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, const uint32_t& size, const uint32_t& offset, const void* ptr) 
                 :   _commandBuffer(commandBuffer), 
                     _pipelineLayout(pipelineLayout),
                     _size(size),
+                    _offset(offset),
                     _ptr(ptr) {
 
             }
 
             void execute() override {
-                vkCmdPushConstants(_commandBuffer.commandBuffer, _pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, _size, _ptr);
+                vkCmdPushConstants(_commandBuffer.commandBuffer, _pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, _offset, _size, _ptr);
             }
     };
 }

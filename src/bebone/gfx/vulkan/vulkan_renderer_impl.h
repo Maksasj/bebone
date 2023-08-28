@@ -75,13 +75,24 @@ namespace bebone::gfx {
 
                 return Pipeline(&pipelines.back());
             }
-            
+
+            VulkanVertexBufferImpl* create_vertex_buffer_impl(const std::vector<Vertex>& vertices) {
+                VulkanVertexBufferImpl* vertexBufferImpl = new VulkanVertexBufferImpl(vertices, *device);
+                return vertexBufferImpl;
+            }
+
             VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {
-                return VertexBuffer::create_from_impl<VulkanVertexBufferImpl>(vertices, *device);
+                return VertexBuffer(create_vertex_buffer_impl(vertices));
+            }
+
+
+            VulkanIndexBufferImpl* create_index_buffer_impl(const std::vector<int>& indices) {
+                VulkanIndexBufferImpl* indexBufferImpl = new VulkanIndexBufferImpl(indices, *device);
+                return indexBufferImpl;
             }
 
             IndexBuffer create_index_buffer(const std::vector<int>& indices) {
-                return IndexBuffer::create_from_impl<VulkanIndexBufferImpl>(indices, *device);
+                return IndexBuffer(create_index_buffer_impl(indices));
             }
 
             PipelineLayoutBuilder create_pipeline_layout_builder() {

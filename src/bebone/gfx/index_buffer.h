@@ -10,11 +10,11 @@ namespace bebone::gfx {
         private:
             VulkanBufferImpl* _impl;
 
+        public:
             IndexBuffer(VulkanBufferImpl* impl) : _impl(impl) {
 
             }
 
-        public:
             ~IndexBuffer() {
                 if(_impl != nullptr) {
                     delete _impl;
@@ -23,11 +23,6 @@ namespace bebone::gfx {
 
             VulkanBufferImpl* get_impl() {
                 return _impl;
-            }
-
-            template<class Impl, class... Args>
-            static IndexBuffer create_from_impl(Args&&... args) {
-                return IndexBuffer(new Impl(std::forward<Args>(args)...));
             }
     };
 }

@@ -100,7 +100,7 @@ namespace bebone::gfx {
             }
 
             template<class DataType>
-            UniformBuffer<DataType> create_uniform_buffer(GPUResourceSet& resourceSet, const size_t& binding) {
+            std::vector<VulkanUniformBufferImpl*> create_uniform_buffer_impl(GPUResourceSet& resourceSet, const size_t& binding) {
                 std::vector<VulkanUniformBufferImpl*> bufferImpl(_fif, nullptr);
 
                 for(size_t i = 0; i < _fif; ++i) {
@@ -129,7 +129,12 @@ namespace bebone::gfx {
                     vkUpdateDescriptorSets(descriptorPool._device.device(), 1, &descriptorWrite, 0, nullptr);
                 }
 
-                return UniformBuffer<DataType>::create_from_impl_array(bufferImpl);
+                return bufferImpl;
+            }
+
+            template<class DataType>
+            UniformBuffer<DataType> create_uniform_buffer(GPUResourceSet& resourceSet, const size_t& binding) {
+                return UniformBuffer<DataType>(create_uniform_buffer_impl<DataType>(resourceSet, binding));
             }
 
             GPUResourceSetBlueprint create_resource_set() {

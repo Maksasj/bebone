@@ -14,11 +14,13 @@ namespace bebone::gfx {
         private:
             std::vector<VulkanUniformBufferImpl*> _impl; 
 
+
+
+        public:
             UniformBuffer(std::vector<VulkanUniformBufferImpl*> impl) : _impl(impl) {
 
             }
 
-        public:
             ~UniformBuffer() {
                 for(const auto& buf : _impl) {
                     delete buf;
@@ -37,10 +39,6 @@ namespace bebone::gfx {
 
             size_t get_impl_size() const {
                 return _impl.size();
-            }
-            
-            static UniformBuffer create_from_impl_array(const std::vector<VulkanUniformBufferImpl*>& impls) {
-                return UniformBuffer(impls);
             }
     };
 }
