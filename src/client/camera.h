@@ -49,10 +49,10 @@ class Camera {
             }
 
             if (glfwGetKey(window.get_backend(), GLFW_KEY_SPACE) == GLFW_PRESS)
-                position.y -= 0.01f;
+                position.y += 0.01f;
 
             if (glfwGetKey(window.get_backend(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-                position.y += 0.01f;
+                position.y -= 0.01f;
 
             bool oldMouseLockState = mouseLocked;
             static bool buttonPressed = false;
@@ -76,8 +76,8 @@ class Camera {
                 const f32 deltaX = floor(centerXPos) - xPos;
                 const f32 deltaY = floor(centerYPos) - yPos;
 
-                rotation.x -= deltaY * 0.005f;
-                rotation.y += deltaX * 0.005f;
+                rotation.x += deltaY * 0.005f;
+                rotation.y += deltaX * 0.005f; // If this is confusing just think that we rotate Y axis cause of movement mouse a long X axis, actual this make sence
 
                 glfwSetCursorPos(window.get_backend(), centerXPos, centerYPos);   
             } else {
