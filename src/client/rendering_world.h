@@ -20,7 +20,8 @@ class RenderingWorld {
 
         }
 
-        void add_object(Object* object) {
+        void add_object(Object* object, GPUResourceManager& resourceManager, GPUResourceSet& resourceSet) {
+            object->renderer = new BoxRenderer(renderer, resourceManager, resourceSet);
             objects.push_back(object);
         }
 

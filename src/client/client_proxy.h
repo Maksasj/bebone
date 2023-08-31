@@ -1,6 +1,8 @@
 #ifndef _CLIENT_INTERFACE_H_
 #define _CLIENT_INTERFACE_H_
 
+#include <thread>
+
 #include "utils.h"
 #include "client_backend.h"
 
@@ -9,15 +11,29 @@
 
 #include "proxy_interface.h"
 
+#include <chrono>
+
+void printFPS() {
+    static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
+    static int fps; fps++;
+
+    if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - oldTime) >= std::chrono::seconds{ 1 }) {
+        oldTime = std::chrono::high_resolution_clock::now();
+        std::cout << "FPS: " << fps <<  std::endl;
+        fps = 0;
+    }
+}
+
 class ClientProxy : public IProxy {
     private:
         std::unique_ptr<Window> window;
         std::vector<unsigned int> vertexSpirvCode, fragmentSpirvCode;
         std::unique_ptr<RenderingWorld> renderingWorld;
+        bool running;
 
     public:
         ClientProxy() {
-            
+            running = true;
         }
 
         ~ClientProxy() override {
@@ -29,7 +45,7 @@ class ClientProxy : public IProxy {
         }
 
         void init() override {
-            window = std::make_unique<Window>("Client", 800, 600);
+            
         }
 
         void load() override {
@@ -38,27 +54,9 @@ class ClientProxy : public IProxy {
         }
 
         void run() override {
-            VulkanRenderer renderer = VulkanRenderer(*window);
+            std::vector<Object> objects;
 
-            renderingWorld = std::make_unique<RenderingWorld>(renderer);
-
-            GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
-            GPUResourceSet resourceSet = resourceManager
-                .create_resource_set()
-                .set_uniform_buffer_resource(0)
-                .set_uniform_buffer_resource(1)
-                .build();
-
-            PipelineLayout pipelineLayout = renderer
-                .create_pipeline_layout_builder()
-                .set_constant_range(0, sizeof(GPUHandles))
-                .build(resourceManager);
-
-            Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
-
-            Camera mainCamera(resourceManager, resourceSet);
-            
-            Object object = Object{
+            objects.push_back(Object{
                 .position = Vec3f(0.0f, 0.0f, 2.5f),
                 .scale = 0.3f,
                 .rotation = Vec3f::splat(0.0f),
@@ -66,77 +64,118 @@ class ClientProxy : public IProxy {
                 .velocity = Vec3f::splat(0.0f),
                 .force = Vec3f::splat(0.0f),
                 .mass = 10.0f,
+            }); 
 
-                .renderer = new BoxRenderer(renderer, resourceManager, resourceSet)
-            };
-
-            renderingWorld->add_object(&object);
-
-
-            Object object1 = Object{
-                .position = Vec3f(0.0f, -3.0f, 0.0f),
-                .scale = 2.0f,
+            objects.push_back(Object{
+                .position = Vec3f(0.0f, -25.0f, 0.0f),
+                .scale = 15.0f,
                 .rotation = Vec3f::splat(0.0f),
 
                 .velocity = Vec3f::splat(0.0f),
                 .force = Vec3f::splat(0.0f),
                 .mass = 10.0f,
+            }); 
 
-                .renderer = new BoxRenderer(renderer, resourceManager, resourceSet)
-            };
-
-            renderingWorld->add_object(&object1);
-
-
-            Object object2 = Object{
-                .position = Vec3f(0.0f, 10.0f, 0.0f),
+            objects.push_back(Object{
+                .position = Vec3f(5.0f, 10.0f, 0.0f),
                 .scale = 5.0f,
-                .rotation = Vec3f::splat(0.0f),
+                .rotation = Vec3f(1.7f, 1.0f, 0.3f),
 
                 .velocity = Vec3f::splat(0.0f),
                 .force = Vec3f::splat(0.0f),
                 .mass = 10.0f,
+            }); 
 
-                .renderer = new BoxRenderer(renderer, resourceManager, resourceSet)
-            };
+            std::thread physicsThread([&]() {
+                f32 dt = 0.0f;
+                const Vec3f gravity = Vec3f(0.0f, -9.81f, 0.0f);
 
-            renderingWorld->add_object(&object2);
+                while(running) {
+                    auto t_start = std::chrono::high_resolution_clock::now();
 
-            VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
+                    for(auto& obj : objects) {
+                        obj.force += gravity * obj.mass;
 
-            while (!window->closing()) {
-                glfwPollEvents();
+                        obj.velocity += obj.force / obj.mass * dt;
+                        obj.position += obj.velocity * dt;
 
-                uint32_t frame = renderer.get_frame();
-                if(frame == 9999)
-                    continue;
+                        obj.force = Vec3f::splat(0.0f);
+                    }
+                    auto t_end = std::chrono::high_resolution_clock::now();
+                    dt = std::chrono::duration<f32, std::milli>(t_end-t_start).count();
 
-                VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
+                    const f32 timeToSlip = omni::types::clamp(16.0f - dt, 0.0f, 16.0f - dt); 
+                    std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<i64>(timeToSlip)));
+                }
+            });
 
-                cmd.begin_record();
-                    cmd.begin_render_pass(renderer, frame);
-                    cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+            std::thread renderingThread([&]() {
+                window = std::make_unique<Window>("Client", 800, 600);
+                VulkanRenderer renderer = VulkanRenderer(*window);
 
-                    cmd.bind_pipeline(pipeline);
-                    resourceSet.bind(cmd, pipelineLayout);
+                renderingWorld = std::make_unique<RenderingWorld>(renderer);
 
-                    mainCamera.calculate_transform(*window);
-                    mainCamera.activate(cmd, pipelineLayout);
+                GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
+                GPUResourceSet resourceSet = resourceManager
+                    .create_resource_set()
+                    .set_uniform_buffer_resource(0)
+                    .set_uniform_buffer_resource(1)
+                    .build();
 
-                    renderingWorld->record_draw_commands(cmd, pipelineLayout);
+                PipelineLayout pipelineLayout = renderer
+                    .create_pipeline_layout_builder()
+                    .set_constant_range(0, sizeof(GPUHandles))
+                    .build(resourceManager);
 
-                    cmd.end_render_pass();
-                cmd.end_record();
+                Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
 
-                cmd.submit();
+                Camera mainCamera(resourceManager, resourceSet);
 
-                renderer.present(frame);
-            }
+                renderingWorld->add_object(&objects[0], resourceManager, resourceSet);
+                renderingWorld->add_object(&objects[1], resourceManager, resourceSet);
+                renderingWorld->add_object(&objects[2], resourceManager, resourceSet);
 
-            vkDeviceWaitIdle(renderer.device->device());
+                VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
 
-            // Todo since renderer is initilized in this funciton renderingWorld should be delete in this scope
-            renderingWorld = nullptr;
+                while (!window->closing()) {
+                    glfwPollEvents();
+
+                    uint32_t frame = renderer.get_frame();
+                    if(frame == 9999)
+                        continue;
+
+                    VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
+
+                    cmd.begin_record();
+                        cmd.begin_render_pass(renderer, frame);
+                        cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+
+                        cmd.bind_pipeline(pipeline);
+                        resourceSet.bind(cmd, pipelineLayout);
+
+                        mainCamera.calculate_transform(*window);
+                        mainCamera.activate(cmd, pipelineLayout);
+
+                        renderingWorld->record_draw_commands(cmd, pipelineLayout);
+
+                        cmd.end_render_pass();
+                    cmd.end_record();
+
+                    cmd.submit();
+
+                    renderer.present(frame);
+                }
+
+                running = false;
+
+                vkDeviceWaitIdle(renderer.device->device());
+
+                // Todo since renderer is initilized in this funciton renderingWorld should be delete in this scope
+                objects.clear(); // Todo since renderer is stored inside object, it needs to be cleared there
+                renderingWorld = nullptr;
+            });
+
+            renderingThread.join();
         }
 
         void unload() override {
