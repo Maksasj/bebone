@@ -1,4 +1,6 @@
+#define SOUNDIO_STATIC_LIBRARY 
 #include <soundio/soundio.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,9 +8,7 @@
 
 static const float PI = 3.1415926535f;
 static float seconds_offset = 0.0f;
-static void write_callback(struct SoundIoOutStream *outstream,
-        int frame_count_min, int frame_count_max)
-{
+static void write_callback(struct SoundIoOutStream *outstream,int frame_count_min, int frame_count_max) {
     const struct SoundIoChannelLayout *layout = &outstream->layout;
     float float_sample_rate = outstream->sample_rate;
     float seconds_per_frame = 1.0f / float_sample_rate;
