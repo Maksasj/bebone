@@ -13,3 +13,6 @@
 [submodule "3dparty/omni_types"]
 	path = 3dparty/omni_types
 	url = https://github.com/Maksasj/omni_types
+[submodule "3dparty/libsoundio"]
+	path = 3dparty/libsoundio
+	url = https://github.com/andrewrk/libsoundio
