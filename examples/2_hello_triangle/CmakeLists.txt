@@ -1,7 +1,0 @@
-file(GLOB_RECURSE 2_HELLO_TRIANGLE_SRC *.cpp)
-
-include_directories("../../src")
-include_directories("./")
-
-add_executable(2_Hello_Triangle ${2_HELLO_TRIANGLE_SRC})
-target_link_libraries(2_Hello_Triangle bebone)

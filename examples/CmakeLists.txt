@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.27)
 project(BeboneExamples)
 
-add_subdirectory(1_window)
-add_subdirectory(2_hello_triangle)
+include_directories("./")
+include_directories("../src")
+include_directories("../3dparty/glad/include")
+include_directories("../3dparty/glfw/include")
+include_directories("../3dparty/Vulkan-Headers/include")
+include_directories("../3dparty/omni_types/src")
+
+add_subdirectory(gfx)
