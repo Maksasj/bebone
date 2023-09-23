@@ -14,8 +14,6 @@ namespace bebone::gfx {
         private:
             std::vector<VulkanUniformBufferImpl*> _impl; 
 
-
-
         public:
             UniformBuffer(std::vector<VulkanUniformBufferImpl*> impl) : _impl(impl) {
 

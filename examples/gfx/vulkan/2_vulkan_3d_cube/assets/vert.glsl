@@ -20,8 +20,8 @@ layout(binding = 1) uniform CameraUBO {
 } camera[];
 
 layout( push_constant ) uniform Handles {
-    uint transform;
-    uint camera;
+    int camera;
+    int transform;
 } handles;
 
 void main() {
@@ -29,8 +29,8 @@ void main() {
     mat4 scale = transform[handles.transform].scale;
     mat4 rotation = transform[handles.transform].rotation;
 
-    mat4 view = camera[handles.camera].view;
     mat4 proj = camera[handles.camera].proj;
+    mat4 view = camera[handles.camera].view;
 
     mat4 model = translation * rotation * scale;
     gl_Position = proj * view * model * vec4(position, 1.0);
