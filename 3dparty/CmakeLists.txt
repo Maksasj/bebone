@@ -2,6 +2,12 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL  "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL  "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
+set(SHADERC_SKIP_TESTS ON)
+set(SHADERC_SKIP_EXAMPLES ON)
+set(SHADERC_SKIP_COPYRIGHT_CHECK ON)
+
+add_subdirectory(omni_types)
 add_subdirectory(glad)
 add_subdirectory(glfw)
-add_subdirectory(omni_types)
+add_subdirectory(glslang)
+add_subdirectory("Vulkan-Headers")

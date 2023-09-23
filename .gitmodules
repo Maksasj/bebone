@@ -4,6 +4,12 @@
 [submodule "3dparty/glad"]
 	path = 3dparty/glad
 	url = https://github.com/Maksasj/glad
+[submodule "3dparty/Vulkan-Headers"]
+	path = 3dparty/Vulkan-Headers
+	url = https://github.com/Maksasj/Vulkan-Headers.git
+[submodule "3dparty/glslang"]
+	path = 3dparty/glslang
+	url = https://github.com/KhronosGroup/glslang
 [submodule "3dparty/omni_types"]
 	path = 3dparty/omni_types
 	url = https://github.com/Maksasj/omni_types

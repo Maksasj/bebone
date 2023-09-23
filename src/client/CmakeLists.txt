@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.27)
 project(Game)
 
-include_directories("../../3dparty/glad/include")
-include_directories("../../3dparty/glfw/include")
+include_directories("../../3dparty/omni_types/src")
+include_directories("../../3dparty/Vulkan-Headers/include")
+include_directories("../../3dparty/glslang")
 
 include_directories("./")
 include_directories("../")
@@ -10,8 +11,6 @@ include_directories("../")
 file(GLOB_RECURSE CLIENT-SRC *.cpp)
 
 add_executable(Client ${CLIENT-SRC})
-target_link_libraries(Client glfw)
-target_link_libraries(Client glad)
 
 target_link_libraries(Client bebone)
 target_link_libraries(Client shared)

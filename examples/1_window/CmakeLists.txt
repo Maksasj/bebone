@@ -1,7 +1,0 @@
-file(GLOB_RECURSE 1_WINDOW_SRC *.cpp)
-
-add_executable(1_Window ${1_WINDOW_SRC})
-target_link_libraries(1_Window glfw)
-target_link_libraries(1_Window glad)
-
-target_link_libraries(1_Window bebone)
