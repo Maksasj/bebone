@@ -95,8 +95,8 @@ int main() {
     std::vector<unsigned int> vertexSpirvCode;
     std::vector<unsigned int> fragmentSpirvCode;
 
-    ShaderCompiler::compile_shader(read_file("assets/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(read_file("assets/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
+    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
+    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
 
     Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
 
