@@ -5,7 +5,7 @@ using namespace bebone::gfx;
 int main() {
     RenderingEngine::preinit();
 
-    Window window("Vulkan window", 800, 600);
+    Window window("0. Vulkan window example", 800, 600);
 
     while (!window.closing()) {
         glfwPollEvents();

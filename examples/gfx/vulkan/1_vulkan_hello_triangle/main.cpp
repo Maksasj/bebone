@@ -17,17 +17,12 @@ const std::vector<int> indices = {
     0, 1, 2
 };
 
-std::string read_file(const std::string& path) {
-    std::ifstream file(path);
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
-}
+std::string read_file(const std::string& path);
 
 int main() {
     RenderingEngine::preinit();
 
-    Window window("Vulkan window", 800, 600);
+    Window window("1. Vulkan hello window example", 800, 600);
 
     VulkanRenderer renderer = VulkanRenderer(window);
     
@@ -49,22 +44,21 @@ int main() {
 
     Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
 
-    VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-
     VertexBuffer vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
     IndexBuffer indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
 
     while (!window.closing()) {
         glfwPollEvents();
 
-        uint32_t frame = renderer.get_frame();
-        if(frame == 9999)
+        VulkanFrame frame = renderer.get_frame();
+
+        if(!frame.valid())
             continue;
 
-        VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
+        VulkanCommandBuffer& cmd = frame.get_command_buffer();
 
         cmd.begin_record();
-            cmd.begin_render_pass(renderer, frame);
+            cmd.begin_render_pass(renderer, frame.frameIndex);
             cmd.set_viewport(0, 0, window.get_width(), window.get_height());
 
             cmd.bind_pipeline(pipeline);
@@ -72,6 +66,7 @@ int main() {
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);
+
             cmd.draw_indexed(indices.size());
 
             cmd.end_render_pass();
@@ -87,4 +82,11 @@ int main() {
     glfwTerminate();
 
     return 0;
+}
+
+std::string read_file(const std::string& path) {
+    std::ifstream file(path);
+    std::stringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
 }

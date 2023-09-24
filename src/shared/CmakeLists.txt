@@ -1,5 +1,0 @@
-file(GLOB_RECURSE SRC_FILES "*.cpp")
-
-include_directories("./")
-
-add_library(shared STATIC ${SRC_FILES})

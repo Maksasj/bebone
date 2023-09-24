@@ -44,6 +44,106 @@ struct Transform {
     Mat4f rotation;
 };
 
+std::string read_file(const std::string& path);
+
+Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up);
+
+int main() {
+    RenderingEngine::preinit();
+
+    Window window("2. Vulkan 3d cube example", 800, 600);
+
+    VulkanRenderer renderer = VulkanRenderer(window);
+    
+    GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
+    GPUResourceSet resourceSet = resourceManager
+        .create_resource_set()
+        .set_uniform_buffer_resource(0)
+        .set_uniform_buffer_resource(1)
+        .build();
+
+    PipelineLayout pipelineLayout = renderer
+        .create_pipeline_layout_builder()
+        .set_constant_range(0, sizeof(Handles))
+        .build(resourceManager);
+
+    std::vector<unsigned int> vertexSpirvCode;
+    std::vector<unsigned int> fragmentSpirvCode;
+
+    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
+    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
+
+    Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
+
+    VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
+
+    VertexBuffer vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
+    IndexBuffer indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
+
+    UniformBuffer transformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
+    UniformBuffer cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
+
+    const CameraTransform cameraTransform = CameraTransform{
+        getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
+        Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 100.0f)
+    };
+
+    Transform transform = Transform{
+        Mat4f::translation(Vec3f::splat(0.0f)),
+        Mat4f::scale(1.0f),
+        Mat4f::identity()
+    };
+
+    f32 t = 0.0f;
+    while (!window.closing()) {
+        glfwPollEvents();
+
+        VulkanFrame frame = renderer.get_frame();
+
+        if(!frame.valid())
+            continue;
+
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+
+        Handles handles = Handles {
+            static_cast<u32>(cameraUBO.get_handle(frame.frameIndex).index),
+            static_cast<u32>(transformUBO.get_handle(frame.frameIndex).index)
+        };
+        
+        VulkanCommandBuffer& cmd = frame.get_command_buffer();
+
+        cmd.begin_record();
+            cmd.begin_render_pass(renderer, frame.frameIndex);
+            cmd.set_viewport(0, 0, window.get_width(), window.get_height());
+
+            cmd.bind_pipeline(pipeline);
+            resourceSet.bind(cmd, pipelineLayout);
+
+            cmd.bind_vertex_buffer(vertexBuffer);
+            cmd.bind_index_buffer(indexBuffer);
+
+            transformUBO.set_data(frame, transform);
+            cameraUBO.set_data(frame, cameraTransform);
+
+            cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
+
+            cmd.draw_indexed(indices.size());
+
+            cmd.end_render_pass();
+        cmd.end_record();
+
+        cmd.submit();
+
+        renderer.present(frame);
+    }
+
+    vkDeviceWaitIdle(renderer.device->device());
+
+    glfwTerminate();
+
+    return 0;
+}
+
 std::string read_file(const std::string& path) {
     std::ifstream file(path);
     std::stringstream ss;
@@ -71,104 +171,4 @@ Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up) {
     viewMatrix[3 * 4 + 2] = -1.0f * (w).dot(position);
 
     return viewMatrix;
-}
-
-int main() {
-    RenderingEngine::preinit();
-
-    Window window("Vulkan window", 800, 600);
-
-    VulkanRenderer renderer = VulkanRenderer(window);
-    
-    GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
-    GPUResourceSet resourceSet = resourceManager
-        .create_resource_set()
-        .set_uniform_buffer_resource(0)
-        .set_uniform_buffer_resource(1)
-        .build();
-
-    PipelineLayout pipelineLayout = renderer
-        .create_pipeline_layout_builder()
-        .set_constant_range(0, sizeof(CameraTransform))
-        .build(resourceManager);
-
-    std::vector<unsigned int> vertexSpirvCode;
-    std::vector<unsigned int> fragmentSpirvCode;
-
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
-
-    Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
-
-    VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-
-    VertexBuffer vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    IndexBuffer indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
-
-    UniformBuffer modelTransformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
-    UniformBuffer cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
-
-    Vec3f cameraPos = Vec3f(0.0f, 0.0f, 10.0f);
-    Vec3f cameraDir = Vec3f(0.0f, 0.0f, -1.0f);
-    Vec3f cameraRot = Vec3f(0.0f, 0.0f, 0.0f);
-
-    f32 t = 0.0f;
-
-    while (!window.closing()) {
-        glfwPollEvents();
-
-        CameraTransform cameraTransform = CameraTransform{
-            getViewMatrix(cameraPos, cameraDir, Vec3f(0.0f, -1.0f, 0.0f)),
-            Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 100.0f)
-        };
-
-        Transform transform = Transform{
-            Mat4f::translation(Vec3f::splat(0.0f)),
-            Mat4f::scale(1.0f),
-            trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f))
-        };
-
-        ++t;
-
-        uint32_t frame = renderer.get_frame();
-        if(frame == 9999)
-            continue;
-
-        VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
-
-        cmd.begin_record();
-            cmd.begin_render_pass(renderer, frame);
-            cmd.set_viewport(0, 0, window.get_width(), window.get_height());
-
-            cmd.bind_pipeline(pipeline);
-            resourceSet.bind(cmd, pipelineLayout);
-
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
-
-            modelTransformUBO.get_impl(cmd._frameIndex)->set_data(transform);
-            cameraUBO.get_impl(cmd._frameIndex)->set_data(cameraTransform);
-
-            Handles handles = Handles{
-                static_cast<u32>(cameraUBO.get_handle(frame).index),
-                static_cast<u32>(modelTransformUBO.get_handle(frame).index)
-            };
-            
-            cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
-
-            cmd.draw_indexed(indices.size());
-
-            cmd.end_render_pass();
-        cmd.end_record();
-
-        cmd.submit();
-
-        renderer.present(frame);
-    }
-
-    vkDeviceWaitIdle(renderer.device->device());
-
-    glfwTerminate();
-
-    return 0;
 }

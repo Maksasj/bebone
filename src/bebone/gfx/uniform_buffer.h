@@ -27,6 +27,10 @@ namespace bebone::gfx {
                 _impl.clear();
             }
 
+            void set_data(const VulkanFrame& frame, const DataType& data) {
+                _impl[frame.frameIndex]->set_data(data);
+            }
+
             VulkanUniformBufferImpl* get_impl(const size_t index) {
                 return _impl[index];
             }

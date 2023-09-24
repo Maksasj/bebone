@@ -19,6 +19,8 @@
 
 #include "../device_impl.h"
 
+#include "vulkan_frame.h"
+
 #include "../vulkan_uniform_buffer_impl.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
@@ -111,7 +113,7 @@ namespace bebone::gfx {
                 return GPUResourceManager(FIF, *device);
             }
 
-            uint32_t get_frame() const {
+            VulkanFrame get_frame() const {
                 uint32_t imageIndex;
                 auto result = swapChain->acquireNextImage(&imageIndex);
 
@@ -131,20 +133,20 @@ namespace bebone::gfx {
                         pipeline->recreate(pipelineConfig);
                     }
 
-                    return 9999; 
+                    return VulkanFrame::invalid; 
                 }
 
                 if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
                     throw std::runtime_error("failed to acquire swap chain image!");
                 }
 
-                return imageIndex;
+                return VulkanFrame(imageIndex, &commandBuffers->get_command_buffer(imageIndex));
             }
 
-            void present(uint32_t& imageIndex) {
-                VkCommandBuffer& _commnandBuffer = static_cast<VulkanCommandBuffer&>(commandBuffers->get_command_buffer(imageIndex)).commandBuffer; 
+            void present(VulkanFrame& frame) {
+                VkCommandBuffer& _commnandBuffer = frame.get_command_buffer().commandBuffer;
 
-                auto result = swapChain->submitCommandBuffers(&_commnandBuffer, &imageIndex);
+                auto result = swapChain->submitCommandBuffers(&_commnandBuffer, &frame.frameIndex);
 
                 if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window.is_resized()) {
                     // This logic needs to be abstracted away
