@@ -29,7 +29,6 @@ int main() {
     GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
     GPUResourceSet resourceSet = resourceManager
         .create_resource_set()
-        .set_uniform_buffer_resource(0)
         .build();
 
     PipelineLayout pipelineLayout = renderer

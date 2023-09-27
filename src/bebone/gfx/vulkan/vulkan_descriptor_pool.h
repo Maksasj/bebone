@@ -12,7 +12,8 @@
 namespace bebone::gfx {
     class VulkanDescriptorPool {
         private:
-            static constexpr uint32_t maxBindlessResources = 512;
+            // static constexpr uint32_t maxBindlessResources = 512;
+            static constexpr uint32_t maxBindlessResources = 65536;
 
             VkDescriptorPool descriptorPool;
 
@@ -26,8 +27,8 @@ namespace bebone::gfx {
             VulkanDescriptorPool(DeviceImpl& device) : _device(device) {
                 // If vector resizes, then all pointers to descriptors will not be valid
                 
-                descriptorSets.reserve(512);
-                descriptorSetLayouts.reserve(512);
+                descriptorSets.reserve(65536);
+                descriptorSetLayouts.reserve(65536);
 
 
                 // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
@@ -40,7 +41,7 @@ namespace bebone::gfx {
                 poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
                 poolInfo.poolSizeCount = poolSizes.size();
                 poolInfo.pPoolSizes = poolSizes.data();
-                poolInfo.maxSets = static_cast<uint32_t>(512 * poolSizes.size());
+                poolInfo.maxSets = static_cast<uint32_t>(65536 * poolSizes.size());
                 poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
                 if (vkCreateDescriptorPool(_device.device(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
@@ -90,7 +91,11 @@ namespace bebone::gfx {
                 extendedInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
                 extendedInfo.pNext = nullptr;
                 extendedInfo.bindingCount = bindingFlags.size();
-                extendedInfo.pBindingFlags = bindingFlags.data();
+
+                if(bindingFlags.size() == 0) {
+                    extendedInfo.pBindingFlags = nullptr;                    
+                } else
+                    extendedInfo.pBindingFlags = bindingFlags.data();
 
                 layoutInfo.pNext = &extendedInfo;
         
@@ -118,7 +123,7 @@ namespace bebone::gfx {
                 countInfo.descriptorSetCount = 1;
 
                 countInfo.pDescriptorCounts = &maxBinding;
-                allocInfo.pNext = &countInfo;
+                allocInfo.pNext = &countInfo; // Todo
 
                 auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
 

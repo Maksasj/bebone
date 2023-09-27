@@ -3,7 +3,7 @@
 #include "vulkan_renderer_impl.h"
 
 namespace bebone::gfx {
-    VulkanCommandBuffer::VulkanCommandBuffer(const size_t& frameIndex) : arena(_BEBONE_MEMORY_BYTES_8KB_), _frameIndex(frameIndex) {
+    VulkanCommandBuffer::VulkanCommandBuffer(const size_t& frameIndex) : arena(_BEBONE_MEMORY_BYTES_8KB_ * _BEBONE_MEMORY_BYTES_8KB_), _frameIndex(frameIndex) {
 
     }
 

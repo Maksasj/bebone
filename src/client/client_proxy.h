@@ -118,8 +118,8 @@ class ClientProxy : public IProxy {
                 GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
                 GPUResourceSet resourceSet = resourceManager
                     .create_resource_set()
-                    .set_uniform_buffer_resource(0)
-                    .set_uniform_buffer_resource(1)
+                    .add_uniform_buffer_resource(0)
+                    .add_uniform_buffer_resource(1)
                     .build();
 
                 PipelineLayout pipelineLayout = renderer

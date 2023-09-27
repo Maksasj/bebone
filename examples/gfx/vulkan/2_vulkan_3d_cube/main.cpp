@@ -58,8 +58,8 @@ int main() {
     GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
     GPUResourceSet resourceSet = resourceManager
         .create_resource_set()
-        .set_uniform_buffer_resource(0)
-        .set_uniform_buffer_resource(1)
+        .add_uniform_buffer_resource(0)
+        .add_uniform_buffer_resource(1)
         .build();
 
     PipelineLayout pipelineLayout = renderer
@@ -83,7 +83,7 @@ int main() {
     UniformBuffer transformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
     UniformBuffer cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
 
-    const CameraTransform cameraTransform = CameraTransform{
+    CameraTransform cameraTransform = CameraTransform{
         getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
         Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 100.0f)
     };
@@ -104,6 +104,7 @@ int main() {
             continue;
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+        cameraTransform.proj = Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 100.0f);
 
         Handles handles = Handles {
             static_cast<u32>(cameraUBO.get_handle(frame.frameIndex).index),
