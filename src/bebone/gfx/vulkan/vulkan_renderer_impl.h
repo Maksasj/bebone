@@ -63,7 +63,7 @@ namespace bebone::gfx {
                 }
             }
 
-            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
+            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const ShaderCode& vertexSpirvCode, const ShaderCode& fragmentSpirvCode) {
                 vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl()); // vulkanPipelineLayout should be saved somewhere
 
                 PipelineConfigInfo pipelineConfig;

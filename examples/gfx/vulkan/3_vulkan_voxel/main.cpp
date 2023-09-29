@@ -36,13 +36,30 @@ int main() {
         .set_constant_range(0, sizeof(Handles))
         .build(resourceManager);
 
-    std::vector<unsigned int> vertexSpirvCode;
-    std::vector<unsigned int> fragmentSpirvCode;
+    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
+    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
 
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/3_vulkan_voxel/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/3_vulkan_voxel/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
+    {   // Compiling glsl vertex shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(
+            read_file("examples/assets/gfx/vulkan/3_vulkan_voxel/vert.glsl"),
+            ShaderTypes::VERTEX_SHADER
+        ));
+        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
+    }
 
-    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
+    {   // Compiling glsl fragment shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(
+            read_file("examples/assets/gfx/vulkan/3_vulkan_voxel/frag.glsl"),
+            ShaderTypes::FRAGMENT_SHADER
+        ));
+        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
+    }
+
+    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
 
     Camera mainCamera(resourceManager, resourceSet);
     World world;
@@ -54,12 +71,12 @@ int main() {
         mainCamera.update(window);
         world.update(renderer, resourceManager, resourceSet, mainCamera);
 
-        VulkanFrame frame = renderer.get_frame();
+        auto frame = renderer.get_frame();
 
         if(!frame.valid())
             continue;
         
-        VulkanCommandBuffer& cmd = frame.get_command_buffer();
+        auto& cmd = frame.get_command_buffer();
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame.frameIndex);

@@ -1,42 +1,58 @@
 #ifndef _BEBONE_GFX_SHADER_COMPILER_H_
 #define _BEBONE_GFX_SHADER_COMPILER_H_
 
-#include <SPIRV/GlslangToSpv.h>
-#include <glslang/Public/ShaderLang.h>
-#include <glslang/Public/ResourceLimits.h>
-
-#include <iostream>
-
-/*
-const char *vvvertexShaderSource = "#version 450 core\n"
-                                "layout (location = 0) in vec3 aPos;\n"
-                                "void main() {\n"
-                                "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-                                "}\0";
-const char *fffragmentShaderSource = "#version 450 core\n"
-                                  "layout (location = 0) out vec4 FragColor;\n"
-                                  "void main() {\n"
-                                  "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-                                  "}\n\0";
-*/
+#include "shader_code.h"
+#include "shader_source.h"
 
 namespace bebone::gfx {
     class ShaderCompiler {
+        private:
+            std::vector<ShaderSource> m_shaderSources;
+
         public:
-            static void compile_shader(const char *shaderSource, EShLanguage shaderType, std::vector<unsigned int> &spirvCode) {
+            void add_shader_source(const ShaderSource& p_shaderSource) {
+                m_shaderSources.push_back(p_shaderSource);
+            }
+
+            void clear_shader_source() {
+                m_shaderSources.clear();
+            }
+
+            ShaderCode compile(const ShaderType& p_shaderType) {
+                const EShLanguage targetShaderType = p_shaderType.to_glslang();
+
+                // First we check if all shader source type match
+                for(auto& shaderSource : m_shaderSources) {
+                    if(p_shaderType != shaderSource.get_type())
+                        throw std::runtime_error("shader source type do not match with desired shader code target type");
+                }
+
+                const size_t shaderSourcesSize = m_shaderSources.size();
+                std::vector<char*> rawShaderSources(shaderSourcesSize);
+
+                for(size_t i = 0; i < shaderSourcesSize; ++i) {
+                    auto& shaderSource = m_shaderSources[i];
+                    auto& shaderSourceStr = shaderSource.get_shader_source();
+
+                    rawShaderSources[i] = new char[sizeof(u8) * shaderSourceStr.size()];
+                    std::strcpy(rawShaderSources[i], shaderSourceStr.data());
+                }
+
                 glslang::InitializeProcess();
-                glslang::TShader shader(shaderType);
-                shader.setStrings(&shaderSource, 1);
+                glslang::TShader shader(targetShaderType);
+                shader.setStrings(rawShaderSources.data(), 1);
+                shader.setEntryPoint("main");
                 
                 #if 1
                     // Set environment input for Vulkan
-                    shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientVulkan, 100);
+                    shader.setEnvInput(glslang::EShSource::EShSourceGlsl, targetShaderType, glslang::EShClient::EShClientVulkan, 100);
 
                     // Set environment target for Vulkan SPIR-V
                     shader.setEnvClient(glslang::EShClient::EShClientVulkan, glslang::EShTargetClientVersion::EShTargetVulkan_1_2);
                     shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
                 #else
                     shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientOpenGL, 450);
+                    
                     shader.setEnvClient(glslang::EShClient::EShClientOpenGL, glslang::EShTargetClientVersion::EShTargetOpenGL_450);
                     shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
                 #endif
@@ -45,7 +61,7 @@ namespace bebone::gfx {
                 EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
                 if (!shader.parse(GetDefaultResources(), defaultVersion, false, messages)) {
                     std::cerr << "Error in shader compilation:\n" << shader.getInfoLog() << std::endl;
-                    std::cerr << "Error in shader source:\n" << shaderSource << std::endl;
+                    // std::cerr << "Error in shader source:\n" << shaderSource << std::endl;
                     glslang::FinalizeProcess();
                     throw std::runtime_error("Error in shader source");
                 }
@@ -62,18 +78,28 @@ namespace bebone::gfx {
                     throw std::runtime_error("Error while linking shaders");
                 }
 
-                glslang::TIntermediate *intermediate = program.getIntermediate(shaderType);
+                glslang::TIntermediate *intermediate = program.getIntermediate(targetShaderType);
                 if (!intermediate) {
                     std::cerr << "Failed to get SPIR-V intermediate code." << std::endl;
                     glslang::FinalizeProcess();
                     throw std::runtime_error("Failed to get SPIR-V intermediate code");
                 }
 
+                // SpirV to be returned
+                RawSpirVByteCode spirVCode;
+
                 spv::SpvBuildLogger logger;
                 glslang::SpvOptions spvOptions;
-                glslang::GlslangToSpv(*intermediate, spirvCode, &logger, &spvOptions);
+                glslang::GlslangToSpv(*intermediate, spirVCode, &logger, &spvOptions);
 
                 glslang::FinalizeProcess();
+
+                // Cleanup
+                for(size_t i = 0; i < shaderSourcesSize; ++i) {
+                    delete [] rawShaderSources[i];
+                }
+
+                return ShaderCode(spirVCode, p_shaderType);
             }
     };
 }

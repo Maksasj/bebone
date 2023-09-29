@@ -5,7 +5,7 @@
 
 #include "vulkan/vulkan_api.h"
 
-#include "shader_compiler.h"
+#include "shaders/shader_compiler.h"
 
 #include "rendering_engine.h"
 

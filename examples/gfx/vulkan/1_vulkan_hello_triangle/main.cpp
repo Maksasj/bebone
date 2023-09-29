@@ -7,9 +7,9 @@ using namespace bebone::gfx;
 using namespace bebone::core;
 
 const std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-    {{0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+    {{0.0f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, 0},
+    {{0.5f, 0.5f, 0.0f},  {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, 0},
+    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, 0},
     
 };
 
@@ -24,37 +24,55 @@ int main() {
 
     Window window("1. Vulkan hello window example", 800, 600);
 
-    VulkanRenderer renderer = VulkanRenderer(window);
+    auto renderer = VulkanRenderer(window);
     
-    GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
-    GPUResourceSet resourceSet = resourceManager
+    auto resourceManager = renderer.create_gpu_resource_manager();
+    auto resourceSet = resourceManager
         .create_resource_set()
+        .add_uniform_buffer_resource(0) // Todo this thing not realy should be there
         .build();
 
-    PipelineLayout pipelineLayout = renderer
+    auto pipelineLayout = renderer
         .create_pipeline_layout_builder()
         .build(resourceManager);
 
-    std::vector<unsigned int> vertexSpirvCode;
-    std::vector<unsigned int> fragmentSpirvCode;
+    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
+    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
 
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
+    {   // Compiling glsl vertex shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(
+            read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl"),
+            ShaderTypes::VERTEX_SHADER
+        ));
+        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
+    }
 
-    Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
+    {   // Compiling glsl fragment shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(
+            read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl"),
+            ShaderTypes::FRAGMENT_SHADER
+        ));
+        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
+    }
 
-    VertexBuffer vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    IndexBuffer indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
+    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
+
+    auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
+    auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
 
     while (!window.closing()) {
         glfwPollEvents();
 
-        VulkanFrame frame = renderer.get_frame();
+        auto frame = renderer.get_frame();
 
         if(!frame.valid())
             continue;
 
-        VulkanCommandBuffer& cmd = frame.get_command_buffer();
+        auto& cmd = frame.get_command_buffer();
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame.frameIndex);

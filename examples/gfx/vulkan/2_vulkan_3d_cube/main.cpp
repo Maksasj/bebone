@@ -9,14 +9,14 @@ using namespace bebone::gfx;
 using namespace bebone::core;
 
 const std::vector<Vertex> vertices = {
-    {{-1.0, -1.0,  1.0}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-    {{ 1.0, -1.0,  1.0}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
-    {{ 1.0,  1.0,  1.0}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-    {{-1.0,  1.0,  1.0}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
-    {{-1.0, -1.0, -1.0}, {0.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-    {{ 1.0, -1.0, -1.0}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
-    {{ 1.0,  1.0, -1.0}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-    {{-1.0,  1.0, -1.0}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+    {{-1.0, -1.0,  1.0}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}, 0},
+    {{ 1.0, -1.0,  1.0}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f}, 0},
+    {{ 1.0,  1.0,  1.0}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, 0},
+    {{-1.0,  1.0,  1.0}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}, 0},
+    {{-1.0, -1.0, -1.0}, {0.0f, 1.0f, 1.0f}, {0.0f, 1.0f}, 0},
+    {{ 1.0, -1.0, -1.0}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}, 0},
+    {{ 1.0,  1.0, -1.0}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, 0},
+    {{-1.0,  1.0, -1.0}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f}, 0},
 };
 
 const std::vector<int> indices = {
@@ -53,42 +53,59 @@ int main() {
 
     Window window("2. Vulkan 3d cube example", 800, 600);
 
-    VulkanRenderer renderer = VulkanRenderer(window);
+    auto renderer = VulkanRenderer(window);
     
-    GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
-    GPUResourceSet resourceSet = resourceManager
+    auto resourceManager = renderer.create_gpu_resource_manager();
+    auto resourceSet = resourceManager
         .create_resource_set()
         .add_uniform_buffer_resource(0)
         .add_uniform_buffer_resource(1)
         .build();
 
-    PipelineLayout pipelineLayout = renderer
+    auto pipelineLayout = renderer
         .create_pipeline_layout_builder()
         .set_constant_range(0, sizeof(Handles))
         .build(resourceManager);
 
-    std::vector<unsigned int> vertexSpirvCode;
-    std::vector<unsigned int> fragmentSpirvCode;
+    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
+    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
 
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
+    {   // Compiling glsl vertex shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(
+            read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl"),
+            ShaderTypes::VERTEX_SHADER
+        ));
+        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
+    }
 
-    Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
+    {   // Compiling glsl fragment shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(
+            read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl"),
+            ShaderTypes::FRAGMENT_SHADER
+        ));
+        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
+    }
 
-    VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
+    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
 
-    VertexBuffer vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    IndexBuffer indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
+    auto& commandBufferPool = renderer.get_command_buffer_pool();
 
-    UniformBuffer transformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
-    UniformBuffer cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
+    auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
+    auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
 
-    CameraTransform cameraTransform = CameraTransform{
+    auto transformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
+    auto cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
+
+    auto cameraTransform = CameraTransform{
         getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
         Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 100.0f)
     };
 
-    Transform transform = Transform{
+    auto transform = Transform{
         Mat4f::translation(Vec3f::splat(0.0f)),
         Mat4f::scale(1.0f),
         Mat4f::identity()
@@ -98,7 +115,7 @@ int main() {
     while (!window.closing()) {
         glfwPollEvents();
 
-        VulkanFrame frame = renderer.get_frame();
+        auto frame = renderer.get_frame();
 
         if(!frame.valid())
             continue;
@@ -106,12 +123,12 @@ int main() {
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 100.0f);
 
-        Handles handles = Handles {
+        auto handles = Handles {
             static_cast<u32>(cameraUBO.get_handle(frame.frameIndex).index),
             static_cast<u32>(transformUBO.get_handle(frame.frameIndex).index)
         };
         
-        VulkanCommandBuffer& cmd = frame.get_command_buffer();
+        auto& cmd = frame.get_command_buffer();
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame.frameIndex);
