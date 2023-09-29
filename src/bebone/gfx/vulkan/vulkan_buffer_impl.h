@@ -21,7 +21,7 @@ namespace bebone::gfx {
     }
 
     static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() {
-        std::vector<VkVertexInputAttributeDescription> atrributeDescriptions(3);
+        std::vector<VkVertexInputAttributeDescription> atrributeDescriptions(4);
         
         atrributeDescriptions[0].binding = 0;
         atrributeDescriptions[0].location = 0;
@@ -37,6 +37,11 @@ namespace bebone::gfx {
         atrributeDescriptions[2].location = 2;
         atrributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
         atrributeDescriptions[2].offset = offsetof(Vertex, texCoords);
+
+        atrributeDescriptions[3].binding = 0;
+        atrributeDescriptions[3].location = 3;
+        atrributeDescriptions[3].format = VK_FORMAT_R32_UINT;
+        atrributeDescriptions[3].offset = offsetof(Vertex, norm);
 
         return atrributeDescriptions;
     }

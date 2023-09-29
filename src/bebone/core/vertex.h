@@ -8,6 +8,7 @@ namespace bebone::core {
         Vec3f pos;
         Vec3f color;
         Vec2f texCoords;
+        int norm;
     };
 }
 

@@ -37,8 +37,12 @@ class Camera {
             mouseLocked = true;
         }
 
-        void calculate_transform(Window& window) {
-            float speed = 0.1f;
+        const Vec3f& get_pos() const {
+            return position;
+        }
+
+        void update(Window& window) {
+            float speed = 0.5f;
 
             if (glfwGetKey(window.get_backend(), 'W') == GLFW_PRESS) {
                 position += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
@@ -125,7 +129,7 @@ class Camera {
             return viewMatrix;
         }
 
-        void activate(VulkanCommandBuffer& cmd, PipelineLayout& pipelineLayout) {
+        void bind(VulkanCommandBuffer& cmd, PipelineLayout& pipelineLayout) {
             const size_t frame = cmd._frameIndex;
             const size_t* transformIndex = &transformBuffer->get_handle(frame).index;
 
