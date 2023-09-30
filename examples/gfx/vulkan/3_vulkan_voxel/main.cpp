@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
-#include <functional>
 
 #define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
 #define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
