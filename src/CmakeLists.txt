@@ -1,2 +1,1 @@
 add_subdirectory(bebone)
-# add_subdirectory(client)
