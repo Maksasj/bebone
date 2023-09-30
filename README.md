@@ -2,9 +2,9 @@
   <img align="left" src="https://github.com/Maksasj/bebone/blob/master/docs/images/tmpLogo.png" width="288px">
   
   # Bebone
-  Bebone - Is a frame work/engine aimed for flexible and comfortable game development, written in C++. 
+  Bebone - Is a framework/engine aimed for flexible and comfortable game development, written in C++. 
   In other words Bebone is a set of useful game development libraries, written and integrated 
-  in Bebone frame work ecosystem.
+  in Bebone framework ecosystem.
   
   > Bebone is not a new javascript framework btw, this time it is and game development one !
   
