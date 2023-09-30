@@ -16,6 +16,9 @@
   <br>
 </div>
 
+## Features
+*Todo*
+
 ## Build
 ```bash
 cmake -B build -G Ninja
