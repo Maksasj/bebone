@@ -1,5 +1,5 @@
 <div>
-  <img align="left" src="https://github.com/Maksasj/omni_reflector/blob/master/docs/images/tmpLogo.png" width="288px">
+  <img align="left" src="https://github.com/Maksasj/bebone/blob/master/docs/images/tmpLogo.png" width="288px">
   
   # Bebone
   Bebone - Is a C++ game development engine/frame work. 
