@@ -2,11 +2,11 @@
   <img align="left" src="https://github.com/Maksasj/bebone/blob/master/docs/images/tmpLogo.png" width="288px">
   
   # Bebone
-  Bebone - Is a C++ game development engine/frame work. 
+  Bebone - Is a frame work/engine aimed for flexible and comfortable game development, written in C++. 
+  In other words Bebone is a set of useful game development libraries, written and integrated 
+  in Bebone frame work ecosystem.
   
-  *Note serialization api depeneds on [nlohmann/json](https://github.com/nlohmann/json) library*
-  
-  > Bebone is not a new javascript framework btw !
+  > Bebone is not a new javascript framework btw, this time it is and game development one !
   
   Cool looking widgets 
   <img src="https://img.shields.io/github/stars/Maksasj/bebone" alt="stars">
@@ -27,4 +27,5 @@ make.bat
 *Todo*
 
 ## License
-*Todo*
+Bebone is free, open source game. All code in this repository FOR NOW is licensed under
+- MIT License ([LICENSE.md](https://github.com/Maksasj/bebone/blob/master/LICENSE.md) or https://opensource.org/license/mit/)
