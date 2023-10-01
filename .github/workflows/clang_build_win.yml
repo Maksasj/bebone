@@ -19,13 +19,11 @@ jobs:
       with:
         version: 1.10.0
       
-    - name: Install LLVM and Clang
-      uses: KyleMayes/install-llvm-action@v1
+    - name: Set up Clang
+      uses: egor-tensin/setup-clang@v1
       with:
-        version: "15.0.5"
-
-    - name: Add clang path to $PATH env
-      run: echo "PATH=$PATH:C:\Program Files\LLVM\bin" >> $GITHUB_ENV
+        version: latest
+        platform: x64
 
     - name: Install Vulkan SDK
       uses: jakoch/install-vulkan-sdk-action@v1.0.0
