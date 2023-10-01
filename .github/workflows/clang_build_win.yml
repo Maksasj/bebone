@@ -24,12 +24,16 @@ jobs:
       with:
         version: "15.0.5"
 
-    - name: Prepare Vulkan SDK
-      uses: humbletim/setup-vulkan-sdk@v1.2.0
+    - name: Install Vulkan SDK
+      uses: jakoch/install-vulkan-sdk-action@v1.0.0
       with:
-        vulkan-query-version: 1.3.204.0
-        vulkan-components: Vulkan-Headers, Vulkan-Loader
-        vulkan-use-cache: true  
+        # You can set the Vulkan SDK version to download.
+        # Defaults to latest version, if version not set.
+        vulkan_version: 1.3.231.1
+        optional_components: com.lunarg.vulkan.vma
+        install_runtime: true
+        cache: true
+        stripdown: true
 
     - uses: actions/checkout@v1
       with:
