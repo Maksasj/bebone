@@ -14,10 +14,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@master
-        with:
-          version: 1.10.0
+    - name: Setup Ninja
+      uses: ashutoshvarma/setup-ninja@master
+      with:
+        version: 1.10.0
       
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
