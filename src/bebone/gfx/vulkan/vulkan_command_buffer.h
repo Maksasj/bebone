@@ -32,7 +32,7 @@ namespace bebone::gfx {
             void begin_record();
             void end_record();
 
-            void begin_render_pass(VulkanRenderer& renderer, int frameBuffer);
+            void begin_render_pass(VulkanRenderer& renderer, const u32& frameBuffer);
             void end_render_pass();
 
             void set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);

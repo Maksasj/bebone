@@ -27,10 +27,6 @@ int main() {
     auto renderer = VulkanRenderer(window);
     
     auto resourceManager = renderer.create_gpu_resource_manager();
-    auto resourceSet = resourceManager
-        .create_resource_set()
-        .add_uniform_buffer_resource(0) // Todo this thing not realy should be there
-        .build();
 
     auto pipelineLayout = renderer
         .create_pipeline_layout_builder()
@@ -79,7 +75,6 @@ int main() {
             cmd.set_viewport(0, 0, window.get_width(), window.get_height());
 
             cmd.bind_pipeline(pipeline);
-            resourceSet.bind(cmd, pipelineLayout);
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);
