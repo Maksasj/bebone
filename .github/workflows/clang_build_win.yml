@@ -24,11 +24,12 @@ jobs:
       with:
         version: "15.0.5"
 
+    - name: Add clang path to $PATH env
+      run: echo "PATH=$PATH:C:\Program Files\LLVM\bin" >> $GITHUB_ENV
+
     - name: Install Vulkan SDK
       uses: jakoch/install-vulkan-sdk-action@v1.0.0
       with:
-        # You can set the Vulkan SDK version to download.
-        # Defaults to latest version, if version not set.
         vulkan_version: 1.3.231.1
         optional_components: com.lunarg.vulkan.vma
         install_runtime: true
@@ -40,7 +41,7 @@ jobs:
         submodules: recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
       env:
         CC: clang
         CXX: clang++
