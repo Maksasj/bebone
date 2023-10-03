@@ -4,6 +4,7 @@
 #include "gfx_backend.h"
 
 #include "vulkan/vulkan_api.h"
+#include "opengl/opengl_api.h"
 
 #include "shader_compiler.h"
 
