@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "pipeline_layout.h"
-#include "texture.h"
 
 #include "vulkan/vulkan_descriptor_pool.h"
 

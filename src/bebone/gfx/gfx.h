@@ -24,6 +24,4 @@
 
 #include "render_target.h"
 
-#include "texture.h"
-
 #endif
