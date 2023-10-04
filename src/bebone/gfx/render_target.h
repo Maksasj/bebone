@@ -3,9 +3,9 @@
 
 #include <array>
 
-#include "render_pass.h"
+#include "vulkan_render_pass.h"
 
-#include "vulkan_device.h"
+#include "vulkan/vulkan_device.h"
 #include "gfx_backend.h"
 
 namespace bebone::gfx {
@@ -13,7 +13,7 @@ namespace bebone::gfx {
         public:
             VulkanDevice& device;
 
-            RenderPass renderPass;
+            VulkanRenderPass renderPass;
 
             // Framebuffer things
             std::vector<VkFramebuffer> swapChainFramebuffers;

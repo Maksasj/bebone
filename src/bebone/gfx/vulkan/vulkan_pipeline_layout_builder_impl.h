@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include "../vulkan_device.h"
+#include "vulkan_device.h"
 
 #include "../pipeline_layout_builder_impl.h"
 

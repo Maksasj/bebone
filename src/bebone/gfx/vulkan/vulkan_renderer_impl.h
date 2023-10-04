@@ -17,7 +17,7 @@
 #include "../vertex_buffer.h"
 #include "../pipeline.h"
 
-#include "../vulkan_device.h"
+#include "vulkan_device.h"
 
 #include "vulkan_frame.h"
 

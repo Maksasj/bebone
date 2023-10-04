@@ -1,7 +1,7 @@
 #ifndef _BEBONE_GFX_VULKAN_PIPELINE_LAYOUT_IMPLEMENTATION_H_
 #define _BEBONE_GFX_VULKAN_PIPELINE_LAYOUT_IMPLEMENTATION_H_
 
-#include "../vulkan_device.h"
+#include "vulkan_device.h"
 #include "../gfx_backend.h"
 #include "../pipeline_layout_impl.h"
 

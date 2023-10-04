@@ -138,7 +138,7 @@ bool bebone::gfx::VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice dev
 	return requiredExtensions.empty();
 }
 
-QueueFamilyIndices bebone::gfx::VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
+bebone::gfx::QueueFamilyIndices bebone::gfx::VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
 	QueueFamilyIndices indices;
 
 	uint32_t queueFamilyCount = 0;
@@ -172,7 +172,7 @@ QueueFamilyIndices bebone::gfx::VulkanDevice::findQueueFamilies(VkPhysicalDevice
 	return indices;
 }
 
-SwapChainSupportDetails bebone::gfx::VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) {
+bebone::gfx::SwapChainSupportDetails bebone::gfx::VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) {
 	SwapChainSupportDetails details;
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface_, &details.capabilities);
 

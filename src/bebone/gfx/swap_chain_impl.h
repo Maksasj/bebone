@@ -1,7 +1,7 @@
 #ifndef _BEBONE_GFX_SWAP_CHAIN_IMPL_H_
 #define _BEBONE_GFX_SWAP_CHAIN_IMPL_H_
 
-#include "vulkan_device.h"
+#include "vulkan/vulkan_device.h"
 
 #include <string>
 #include <vector>
