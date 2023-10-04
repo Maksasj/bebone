@@ -1,4 +1,4 @@
-#include "opengl_vbo.h"
+#include "opengl_vertex_buffer_object.h"
 
 namespace bebone::gfx::opengl {
     GLVertexBufferObject::GLVertexBufferObject(GLfloat* vertices, GLsizeiptr size) {

@@ -48,6 +48,21 @@ namespace bebone::gfx::opengl {
         glLinkProgram(id);
     }
 
+    void GLShaderProgram::set_uniform(const char* uniformName, GLint value) {
+        GLint uniform = glGetUniformLocation(id, uniformName);
+        glUniform1i(uniform, value);
+    }
+
+    void GLShaderProgram::set_uniform(const char* uniformName, GLuint value) {
+        GLuint uniform = glGetUniformLocation(id, uniformName);
+        glUniform1ui(uniform, value);
+    }
+
+    void GLShaderProgram::set_uniform(const char* uniformName, GLfloat value) {
+        GLfloat uniform = glGetUniformLocation(id, uniformName);
+        glUniform1f(uniform, value);
+    }
+
     void GLShaderProgram::enable() {
         glUseProgram(id);
     }

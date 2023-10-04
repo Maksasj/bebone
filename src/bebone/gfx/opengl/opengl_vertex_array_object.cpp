@@ -1,4 +1,4 @@
-#include "opengl_vao.h"
+#include "opengl_vertex_array_object.h"
 
 namespace bebone::gfx::opengl {
     GLVertexArrayObject::GLVertexArrayObject() {

@@ -1,8 +1,8 @@
-#ifndef _OPENGL_VAO_H_
-#define _OPENGL_VAO_H_
+#ifndef _OPENGL_VERTEX_ARRAY_OBJECT_H_
+#define _OPENGL_VERTEX_ARRAY_OBJECT_H_
 
-#include "opengl_buffer.h"
-#include "opengl_vbo.h"
+#include "opengl_buffer_object.h"
+#include "opengl_vertex_buffer_object.h"
 
 namespace bebone::gfx::opengl {
     class GLVertexArrayObject : public GLBufferObject {

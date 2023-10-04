@@ -1,7 +1,7 @@
-#ifndef _OPENGL_EBO_H_
-#define _OPENGL_EBO_H_
+#ifndef _OPENGL_ELEMENT_BUFFER_OBJECT_H_
+#define _OPENGL_ELEMENT_BUFFER_OBJECT_H_
 
-#include "opengl_buffer.h"
+#include "opengl_buffer_object.h"
 
 namespace bebone::gfx::opengl {
     class GLElementBufferObject : public GLBufferObject {

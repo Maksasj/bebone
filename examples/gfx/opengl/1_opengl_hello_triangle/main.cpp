@@ -8,10 +8,10 @@ const unsigned int SCR_HEIGHT = 600;
 using namespace bebone::gfx::opengl;
 
 GLfloat vertices[] = {
-        -0.5f, -0.5f, 0.0f, // left  
-         0.5f, -0.5f, 0.0f, // right 
-         0.0f,  0.5f, 0.0f  // top   
-    };
+    -0.5f, -0.5f, 0.0f, // left  
+    0.5f, -0.5f, 0.0f, // right 
+    0.0f,  0.5f, 0.0f  // top   
+};
 
 GLuint indices[] = {
 	0, 1, 2,
@@ -70,6 +70,7 @@ int main()
 
     vao.destroy();
     vbo.destroy();
+    ebo.destroy();
     shaderProgram.destroy();
 
     glfwTerminate();

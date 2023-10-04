@@ -1,4 +1,4 @@
-#include "opengl_ebo.h"
+#include "opengl_element_buffer_object.h"
 
 namespace bebone::gfx::opengl {
     GLElementBufferObject::GLElementBufferObject(GLuint* indices, GLsizeiptr size) {
