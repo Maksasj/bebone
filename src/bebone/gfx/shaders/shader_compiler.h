@@ -1,6 +1,8 @@
 #ifndef _BEBONE_GFX_SHADER_COMPILER_H_
 #define _BEBONE_GFX_SHADER_COMPILER_H_
 
+#include <cstring>
+
 #include "shader_code.h"
 #include "shader_source.h"
 
@@ -45,7 +47,8 @@ namespace bebone::gfx {
                     auto& shaderSourceStr = shaderSource.get_shader_source();
 
                     rawShaderSources[i] = new char[sizeof(u8) * shaderSourceStr.size()];
-                    std::strcpy(rawShaderSources[i], shaderSourceStr.data());
+
+                    shaderSourceStr.copy(rawShaderSources[i], shaderSourceStr.size());
                 }
 
                 glslang::InitializeProcess();

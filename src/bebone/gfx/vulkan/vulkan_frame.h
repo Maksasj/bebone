@@ -12,17 +12,17 @@ namespace bebone::gfx {
 
             VulkanCommandBuffer* commandBuffer;
 
-            VulkanFrame() 
-                : frameIndex(0), 
-                  _valid(false),
-                  commandBuffer(nullptr) {
+            VulkanFrame()
+                : _valid(false),
+                  commandBuffer(nullptr),
+                  frameIndex(0) {
 
             }
 
-            VulkanFrame(unsigned int _frameIndex, VulkanCommandBuffer* _commandBuffer) 
-                : frameIndex(_frameIndex),
-                  _valid(true),
-                  commandBuffer(_commandBuffer) {
+            VulkanFrame(unsigned int _frameIndex, VulkanCommandBuffer* _commandBuffer)
+                    : _valid(true),
+                      commandBuffer(_commandBuffer),
+                      frameIndex(_frameIndex) {
 
             }
         

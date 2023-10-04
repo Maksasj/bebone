@@ -62,7 +62,6 @@ int main() {
     Camera mainCamera(resourceManager, resourceSet);
     World world;
 
-    f32 t = 0.0f;
     while (!window.closing()) {
         glfwPollEvents();
 
