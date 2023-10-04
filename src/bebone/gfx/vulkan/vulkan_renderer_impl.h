@@ -42,8 +42,8 @@ namespace bebone::gfx {
             const static constexpr size_t FIF = 2; 
 
             std::shared_ptr<VulkanInstance> vulkanInstance;
-
             std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
+
             std::unique_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
             std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
@@ -57,6 +57,9 @@ namespace bebone::gfx {
                 vulkanInstance = VulkanInstance::create_instance();
 
                 device = vulkanInstance->create_device(_window);
+
+                // swapChain = device->create_swapchain(_window);
+                // commandBuffers = device->create_command_buffer_pool();
 
                 swapChain = std::make_unique<MyEngineSwapChainImpl>(*device, _window.get_extend(), FIF);
                 commandBuffers = std::make_unique<VulkanCommandBufferPool>(*device, FIF);

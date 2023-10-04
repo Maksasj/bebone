@@ -20,7 +20,6 @@ namespace bebone::gfx {
             static void hasGflwRequiredInstanceExtensions();
             static std::vector<const char *> getRequiredExtensions();
 
-
         public:
             bool const static enableValidationLayers = true;
 
