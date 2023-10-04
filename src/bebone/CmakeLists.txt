@@ -9,7 +9,9 @@ include_directories("../../3dparty/omni_types/src")
 
 include_directories("./")
 
-add_library(bebone STATIC ${SRC_FILES})
+add_library(bebone STATIC ${SRC_FILES}
+        gfx/vulkan/vulkan_debug_messenger.cpp
+        gfx/vulkan/vulkan_debug_messenger.h)
 
 target_link_libraries(bebone glfw)
 target_link_libraries(bebone glad)

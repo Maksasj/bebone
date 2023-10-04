@@ -4,6 +4,7 @@
 #include "gfx_backend.h"
 
 #include "window/window.h"
+#include "vulkan/vulkan_instance.h"
 // std lib headers
 #include <string>
 #include <vector>
@@ -26,7 +27,7 @@ class DeviceImpl {
 	public:
 		static const bool enableValidationLayers = false;
 
-		DeviceImpl(bebone::gfx::Window &window);
+		DeviceImpl(bebone::gfx::Window &window, bebone::gfx::VulkanInstance& vulkanInstance);
 		~DeviceImpl();
 
 		// Not copyable or movable
@@ -53,26 +54,24 @@ class DeviceImpl {
 		VkPhysicalDeviceProperties properties;
 
 	private:
-		void createInstance();
-		void setupDebugMessenger();
-		void createSurface();
-		void pickPhysicalDevice();
+        bebone::gfx::VulkanInstance& vulkanInstance;
+
+		void createSurface(bebone::gfx::VulkanInstance& vulkanInstance);
+
+		void pickPhysicalDevice(bebone::gfx::VulkanInstance& vulkanInstance);
 		void createLogicalDevice();
 		// void createCommandPool();
 
 		// helper functions
 		bool isDeviceSuitable(VkPhysicalDevice device);
-		static std::vector<const char *> getRequiredExtensions();
-		bool checkValidationLayerSupport();
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &createInfo);
-		static void hasGflwRequiredInstanceExtensions();
 		bool checkDeviceExtensionSupport(VkPhysicalDevice device);
 		SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 
+        /*
 		VkInstance instance;
 		VkDebugUtilsMessengerEXT debugMessenger;
-
+        */
 		
 		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 		bebone::gfx::Window &window;

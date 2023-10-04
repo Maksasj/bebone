@@ -18,8 +18,8 @@ namespace bebone::gfx {
                 VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
                 pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
-                pipelineLayoutInfo.setLayoutCount = descriptorPool.get_layouts_count(); // This thing should be computed from creatated descriptor sets, for now there is just constants
-                pipelineLayoutInfo.pSetLayouts = descriptorPool.get_layouts_data(); // This thing should be computed from creatated descriptor sets, for now there is just constants
+                pipelineLayoutInfo.setLayoutCount = descriptorPool.get_layouts_count(); // This thing should be computed from created descriptor sets, for now there is just constants
+                pipelineLayoutInfo.pSetLayouts = descriptorPool.get_layouts_data(); // This thing should be computed from created descriptor sets, for now there is just constants
                 pipelineLayoutInfo.pushConstantRangeCount = constantRanges.size();
                 pipelineLayoutInfo.pPushConstantRanges = constantRanges.data();
 

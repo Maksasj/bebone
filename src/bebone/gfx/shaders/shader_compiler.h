@@ -7,9 +7,19 @@
 namespace bebone::gfx {
     class ShaderCompiler {
         private:
+            std::string m_defaultEntryPoint;
             std::vector<ShaderSource> m_shaderSources;
 
         public:
+            ShaderCompiler()
+                : m_defaultEntryPoint("main") {
+
+            }
+
+            void set_entry_point(const std::string& p_entryPoint) {
+                m_defaultEntryPoint = p_entryPoint;
+            }
+
             void add_shader_source(const ShaderSource& p_shaderSource) {
                 m_shaderSources.push_back(p_shaderSource);
             }
@@ -41,7 +51,7 @@ namespace bebone::gfx {
                 glslang::InitializeProcess();
                 glslang::TShader shader(targetShaderType);
                 shader.setStrings(rawShaderSources.data(), 1);
-                shader.setEntryPoint("main");
+                shader.setEntryPoint(m_defaultEntryPoint.c_str());
                 
                 #if 1
                     // Set environment input for Vulkan

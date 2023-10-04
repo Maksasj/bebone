@@ -40,7 +40,7 @@ namespace bebone::gfx {
 
         atrributeDescriptions[3].binding = 0;
         atrributeDescriptions[3].location = 3;
-        atrributeDescriptions[3].format = VK_FORMAT_R32_UINT;
+        atrributeDescriptions[3].format = VK_FORMAT_R32_SINT;
         atrributeDescriptions[3].offset = offsetof(Vertex, norm);
 
         return atrributeDescriptions;

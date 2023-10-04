@@ -36,6 +36,7 @@ namespace bebone::gfx {
                     default: throw std::runtime_error("undefined shader type");
                 }
 
+                // Just do not want to have any warnings
                 return "";
             }
 
