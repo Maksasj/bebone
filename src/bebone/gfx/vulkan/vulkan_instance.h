@@ -7,9 +7,8 @@
 #include "../window/window.h"
 #include "vulkan_debug_messenger.h"
 
-class DeviceImpl;
-
 namespace bebone::gfx {
+    class VulkanDevice;
 
     class VulkanInstance {
         private:
@@ -20,21 +19,25 @@ namespace bebone::gfx {
             bool checkValidationLayerSupport();
             static void hasGflwRequiredInstanceExtensions();
             static std::vector<const char *> getRequiredExtensions();
+
+
         public:
             bool const static enableValidationLayers = true;
 
             void createInstance();
 
-
             VkInstance& get_instance();
 
             VulkanInstance();
-
             ~VulkanInstance();
 
-            std::shared_ptr<DeviceImpl> create_device(Window &window);
+            std::shared_ptr<VulkanDevice> create_device(Window &window);
 
             const std::vector<const char *> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+
+            static std::shared_ptr<VulkanInstance> create_instance() {
+                return std::make_shared<VulkanInstance>();
+            }
     };
 }
 

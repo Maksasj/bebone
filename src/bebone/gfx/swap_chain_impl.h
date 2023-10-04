@@ -1,7 +1,7 @@
 #ifndef _BEBONE_GFX_SWAP_CHAIN_IMPL_H_
 #define _BEBONE_GFX_SWAP_CHAIN_IMPL_H_
 
-#include "device_impl.h"
+#include "vulkan_device.h"
 
 #include <string>
 #include <vector>
@@ -21,7 +21,7 @@ class MyEngineSwapChainImpl {
 		static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
 		static VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D windowExtent);
 
-		DeviceImpl &device;
+		VulkanDevice &device;
 		
 		VkExtent2D extent;
 		VkSurfaceFormatKHR surfaceFormat;
@@ -40,7 +40,7 @@ class MyEngineSwapChainImpl {
 		
 		const size_t FIF;
 
-		MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D windowExtent, const size_t& fif);
+		MyEngineSwapChainImpl(VulkanDevice &deviceRef, VkExtent2D windowExtent, const size_t& fif);
 		~MyEngineSwapChainImpl();
 
 		MyEngineSwapChainImpl(const MyEngineSwapChainImpl &) = delete;

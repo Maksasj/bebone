@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "device_impl.h"
+#include "vulkan_device.h"
 
 #include "gfx_backend.h"
 
@@ -12,7 +12,7 @@
 namespace bebone::gfx {
     class Texture {
         public:
-            DeviceImpl& _device;
+            VulkanDevice& _device;
             VulkanCommandBufferPool& _commandBufferPool;
 
             VkImage textureImage;
@@ -22,7 +22,7 @@ namespace bebone::gfx {
 
             VkDescriptorSet* descriptorSet;
 
-            Texture(DeviceImpl& device, VulkanCommandBufferPool& commandBufferPool) : _device(device), _commandBufferPool(commandBufferPool) {
+            Texture(VulkanDevice& device, VulkanCommandBufferPool& commandBufferPool) : _device(device), _commandBufferPool(commandBufferPool) {
                 int texWidth = 512; 
                 int texHeight = 512;
                 int texChannels = 4;

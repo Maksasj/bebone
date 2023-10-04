@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../device_impl.h"
+#include "../vulkan_device.h"
 #include "../../core/core.h"
 #include "../gfx_backend.h"
 
@@ -48,7 +48,7 @@ namespace bebone::gfx {
 
     class VulkanBufferImpl {
         private:
-            DeviceImpl& device;
+            VulkanDevice& device;
 
             VkBuffer buffer;
             VkDeviceMemory bufferMemory;
@@ -56,7 +56,7 @@ namespace bebone::gfx {
             const size_t _size;
 
         public:
-            VulkanBufferImpl(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, DeviceImpl& device) : device(device), _size(static_cast<size_t>(size)) {
+            VulkanBufferImpl(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VulkanDevice& device) : device(device), _size(static_cast<size_t>(size)) {
                 VkBufferCreateInfo bufferInfo{};
                 bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 bufferInfo.size = size;
@@ -95,7 +95,7 @@ namespace bebone::gfx {
                 return _size;
             }
 
-            DeviceImpl& get_device() {
+            VulkanDevice& get_device() {
                 return device;
             }
 

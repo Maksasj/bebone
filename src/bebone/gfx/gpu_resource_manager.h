@@ -84,14 +84,14 @@ namespace bebone::gfx {
         private:
             const size_t _fif;
 
-            DeviceImpl& _device;
+            VulkanDevice& _device;
             VulkanDescriptorPool descriptorPool;
 
             size_t availableUniformHandle;
             size_t availableTextureHandle;
 
         public:
-            GPUResourceManager(const size_t& fif, DeviceImpl& device) : _fif(fif), _device(device), descriptorPool(device) {
+            GPUResourceManager(const size_t& fif, VulkanDevice& device) : _fif(fif), _device(device), descriptorPool(device) {
                 availableUniformHandle = 0;
                 availableTextureHandle = 0;
             }

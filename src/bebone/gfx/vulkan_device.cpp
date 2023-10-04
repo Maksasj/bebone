@@ -1,32 +1,18 @@
-#include "device_impl.h"
+#include "vulkan_device.h"
 
-#include <cstring>
-#include <iostream>
-#include <set>
-#include <unordered_set>
-
-DeviceImpl::DeviceImpl(bebone::gfx::Window &window, bebone::gfx::VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
-	// createInstance();
-	// setupDebugMessenger();
-	
+bebone::gfx::VulkanDevice::VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
 	createSurface(_vulkanInstance);
+
 	pickPhysicalDevice(_vulkanInstance);
 	createLogicalDevice();
 }
 
-DeviceImpl::~DeviceImpl() {
+bebone::gfx::VulkanDevice::~VulkanDevice() {
 	vkDestroyDevice(device_, nullptr);
-
-	// if (enableValidationLayers) {
-	// 	DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
-	// }
-
 	vkDestroySurfaceKHR(vulkanInstance.get_instance(), surface_, nullptr);
-
-	// vkDestroyInstance(instance, nullptr);
 }
 
-void DeviceImpl::pickPhysicalDevice(bebone::gfx::VulkanInstance& vulkanInstance) {
+void bebone::gfx::VulkanDevice::pickPhysicalDevice(bebone::gfx::VulkanInstance& vulkanInstance) {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(vulkanInstance.get_instance(), &deviceCount, nullptr);
 	if (deviceCount == 0) {
@@ -52,7 +38,7 @@ void DeviceImpl::pickPhysicalDevice(bebone::gfx::VulkanInstance& vulkanInstance)
 	std::cout << "physical device: " << properties.deviceName << std::endl;
 }
 
-void DeviceImpl::createLogicalDevice() {
+void bebone::gfx::VulkanDevice::createLogicalDevice() {
 	QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -102,12 +88,12 @@ void DeviceImpl::createLogicalDevice() {
 
 	// might not really be necessary anymore because device specific validation layers
 	// have been deprecated
-	if (enableValidationLayers) {
-		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-		createInfo.ppEnabledLayerNames = validationLayers.data();
-	} else {
+	// if (enableValidationLayers) {
+	// 	createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+	// 	createInfo.ppEnabledLayerNames = validationLayers.data();
+	// } else {
 		createInfo.enabledLayerCount = 0;
-	}
+	// }
 
 	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device_) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create logical device!");
@@ -117,9 +103,9 @@ void DeviceImpl::createLogicalDevice() {
 	vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
 }
 
-void DeviceImpl::createSurface(bebone::gfx::VulkanInstance& vulkanInstance) { window.createWindowSurface(vulkanInstance.get_instance(), &surface_); }
+void bebone::gfx::VulkanDevice::createSurface(bebone::gfx::VulkanInstance& vulkanInstance) { window.createWindowSurface(vulkanInstance.get_instance(), &surface_); }
 
-bool DeviceImpl::isDeviceSuitable(VkPhysicalDevice device) {
+bool bebone::gfx::VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) {
 	QueueFamilyIndices indices = findQueueFamilies(device);
 
 	bool extensionsSupported = checkDeviceExtensionSupport(device);
@@ -136,7 +122,7 @@ bool DeviceImpl::isDeviceSuitable(VkPhysicalDevice device) {
 	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
 
-bool DeviceImpl::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+bool bebone::gfx::VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
 	uint32_t extensionCount;
 	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -152,7 +138,7 @@ bool DeviceImpl::checkDeviceExtensionSupport(VkPhysicalDevice device) {
 	return requiredExtensions.empty();
 }
 
-QueueFamilyIndices DeviceImpl::findQueueFamilies(VkPhysicalDevice device) {
+QueueFamilyIndices bebone::gfx::VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
 	QueueFamilyIndices indices;
 
 	uint32_t queueFamilyCount = 0;
@@ -186,7 +172,7 @@ QueueFamilyIndices DeviceImpl::findQueueFamilies(VkPhysicalDevice device) {
 	return indices;
 }
 
-SwapChainSupportDetails DeviceImpl::querySwapChainSupport(VkPhysicalDevice device) {
+SwapChainSupportDetails bebone::gfx::VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) {
 	SwapChainSupportDetails details;
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface_, &details.capabilities);
 
@@ -209,7 +195,7 @@ SwapChainSupportDetails DeviceImpl::querySwapChainSupport(VkPhysicalDevice devic
 	return details;
 }
 
-VkFormat DeviceImpl::findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+VkFormat bebone::gfx::VulkanDevice::findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
 	for (VkFormat format : candidates) {
 		VkFormatProperties props;
 		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
@@ -225,7 +211,7 @@ VkFormat DeviceImpl::findSupportedFormat(const std::vector<VkFormat> &candidates
 	throw std::runtime_error("failed to find supported format!");
 }
 
-uint32_t DeviceImpl::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+uint32_t bebone::gfx::VulkanDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
 	VkPhysicalDeviceMemoryProperties memProperties;
 	vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
 
@@ -238,7 +224,7 @@ uint32_t DeviceImpl::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags p
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void DeviceImpl::createImageWithInfo(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory) {
+void bebone::gfx::VulkanDevice::createImageWithInfo(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory) {
 	if (vkCreateImage(device_, &imageInfo, nullptr, &image) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create image!");
 	}

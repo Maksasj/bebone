@@ -5,13 +5,13 @@
 
 #include "render_pass.h"
 
-#include "device_impl.h"
+#include "vulkan_device.h"
 #include "gfx_backend.h"
 
 namespace bebone::gfx {
     class RenderTarget {
         public:
-            DeviceImpl& device;
+            VulkanDevice& device;
 
             RenderPass renderPass;
 
@@ -27,7 +27,7 @@ namespace bebone::gfx {
             VkFormat imageFormat;
             VkExtent2D extent;
 
-            RenderTarget(DeviceImpl& _device, std::vector<VkImage>& _swapChainImages, VkFormat _imageFormat, VkExtent2D _extent) 
+            RenderTarget(VulkanDevice& _device, std::vector<VkImage>& _swapChainImages, VkFormat _imageFormat, VkExtent2D _extent) 
                 : device(_device), renderPass(_device, _imageFormat), swapChainImages(_swapChainImages), imageFormat(_imageFormat), extent(_extent) {
                 
                 createImageViews();

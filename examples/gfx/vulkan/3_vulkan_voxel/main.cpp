@@ -7,7 +7,6 @@
 
 #include "camera.h"
 #include "handles.h"
-#include "chunk.h"
 #include "world.h"
 
 using namespace bebone::gfx;
@@ -23,6 +22,7 @@ int main() {
     auto renderer = VulkanRenderer(window);
     
     auto resourceManager = renderer.create_gpu_resource_manager();
+
     auto resourceSet = resourceManager
         .create_resource_set()
         .add_uniform_buffer_resource(0)

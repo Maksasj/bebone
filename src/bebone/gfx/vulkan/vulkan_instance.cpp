@@ -1,5 +1,5 @@
 #include "vulkan_instance.h"
-#include "../device_impl.h"
+#include "../vulkan_device.h"
 
 VkInstance& bebone::gfx::VulkanInstance::get_instance() {
     return instance;
@@ -122,6 +122,6 @@ std::vector<const char *> bebone::gfx::VulkanInstance::getRequiredExtensions() {
     return extensions;
 }
 
-std::shared_ptr<DeviceImpl> bebone::gfx::VulkanInstance::create_device(Window& window) {
-    return std::make_shared<DeviceImpl>(window, *this);
+std::shared_ptr<bebone::gfx::VulkanDevice> bebone::gfx::VulkanInstance::create_device(Window& window) {
+    return std::make_shared<VulkanDevice>(window, *this);
 }

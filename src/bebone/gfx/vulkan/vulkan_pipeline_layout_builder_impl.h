@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include "../device_impl.h"
+#include "../vulkan_device.h"
 
 #include "../pipeline_layout_builder_impl.h"
 
@@ -13,11 +13,11 @@
 namespace bebone::gfx {
     class VulkanPipelineLayoutBuilderImpl : public PipelineLayoutBuilderImpl {
         private:
-            DeviceImpl& _device;
+            VulkanDevice& _device;
             std::vector<VkPushConstantRange> constantRanges;
 
         public:
-            VulkanPipelineLayoutBuilderImpl(DeviceImpl& device) : _device(device) {
+            VulkanPipelineLayoutBuilderImpl(VulkanDevice& device) : _device(device) {
             }
 
             ~VulkanPipelineLayoutBuilderImpl() {

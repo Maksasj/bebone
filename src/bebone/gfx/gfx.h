@@ -11,7 +11,7 @@
 
 #include "gpu_resource_manager.h"
 
-#include "device_impl.h"
+#include "vulkan_device.h"
 #include "pipeline_impl.h"
 #include "swap_chain_impl.h"
 

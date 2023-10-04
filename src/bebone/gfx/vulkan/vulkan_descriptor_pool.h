@@ -5,7 +5,7 @@
 
 #include "../gfx_backend.h"
 
-#include "../device_impl.h"
+#include "../vulkan_device.h"
 
 #include "vulkan_command_buffer.h"
 
@@ -21,10 +21,10 @@ namespace bebone::gfx {
             std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
 
         public:
-            DeviceImpl& _device;
+            VulkanDevice& _device;
 
             // Todo Count should be pre computed 
-            VulkanDescriptorPool(DeviceImpl& device) : _device(device) {
+            VulkanDescriptorPool(VulkanDevice& device) : _device(device) {
                 // If vector resizes, then all pointers to descriptors will not be valid
                 
                 descriptorSets.reserve(65536);

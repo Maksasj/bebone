@@ -1,7 +1,7 @@
 #ifndef _BEBONE_GFX_VULKAN_PIPELINE_LAYOUT_IMPLEMENTATION_H_
 #define _BEBONE_GFX_VULKAN_PIPELINE_LAYOUT_IMPLEMENTATION_H_
 
-#include "../device_impl.h"
+#include "../vulkan_device.h"
 #include "../gfx_backend.h"
 #include "../pipeline_layout_impl.h"
 
@@ -10,11 +10,11 @@
 namespace bebone::gfx {
     class VulkanPipelineLayoutImpl : public PipelineLayoutImpl {
         private:
-            DeviceImpl& _device;
+            VulkanDevice& _device;
             VkPipelineLayout pipelineLayout;
 
         public:
-            VulkanPipelineLayoutImpl(DeviceImpl& device, VulkanDescriptorPool& descriptorPool, const std::vector<VkPushConstantRange>& constantRanges) : _device(device) {
+            VulkanPipelineLayoutImpl(VulkanDevice& device, VulkanDescriptorPool& descriptorPool, const std::vector<VkPushConstantRange>& constantRanges) : _device(device) {
                 VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
                 pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 

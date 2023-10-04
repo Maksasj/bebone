@@ -17,7 +17,7 @@
 #include "../vertex_buffer.h"
 #include "../pipeline.h"
 
-#include "../device_impl.h"
+#include "../vulkan_device.h"
 
 #include "vulkan_frame.h"
 
@@ -41,9 +41,9 @@ namespace bebone::gfx {
 
             const static constexpr size_t FIF = 2; 
 
-            std::unique_ptr<VulkanInstance> vulkanInstance;
+            std::shared_ptr<VulkanInstance> vulkanInstance;
 
-            std::shared_ptr<DeviceImpl> device; // ORDER MATTERS FOR DESTRUCTOR
+            std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
             std::unique_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
             std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
@@ -54,7 +54,7 @@ namespace bebone::gfx {
             VulkanPipelineLayoutImpl* vulkanPipelineLayout;
 
             VulkanRenderer(Window& window) : _window(window) {
-                vulkanInstance = std::make_unique<VulkanInstance>();
+                vulkanInstance = VulkanInstance::create_instance();
 
                 device = vulkanInstance->create_device(_window);
 
@@ -63,9 +63,8 @@ namespace bebone::gfx {
             }
 
             ~VulkanRenderer() {
-                for(auto& pipeline : pipelines) {
+                for(auto& pipeline : pipelines)
                     delete pipeline;
-                }
 
                 commandBuffers = nullptr;
                 swapChain = nullptr;

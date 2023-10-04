@@ -74,13 +74,13 @@ namespace bebone::gfx {
                 } 
             }
         public:
-            DeviceImpl& device;
+            VulkanDevice& device;
 
             VkPipeline grapgicsPipeline;
             VkShaderModule vertShaderModule;
             VkShaderModule fragShaderModule;
 
-            VulkanPipeline(DeviceImpl& _device, const ShaderCode& vertSpirv, const ShaderCode& fragSpirv, const PipelineConfigInfo& configInfo)
+            VulkanPipeline(VulkanDevice& _device, const ShaderCode& vertSpirv, const ShaderCode& fragSpirv, const PipelineConfigInfo& configInfo)
                      : device(_device) {
                 create_shader_module(vertSpirv, &vertShaderModule);
                 create_shader_module(fragSpirv, &fragShaderModule);

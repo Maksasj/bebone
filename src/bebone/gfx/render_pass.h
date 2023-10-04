@@ -1,16 +1,16 @@
 #ifndef _BEBONE_GFX_RENDER_PASS_H_
 #define _BEBONE_GFX_RENDER_PASS_H_
 
-#include "device_impl.h"
+#include "vulkan_device.h"
 #include "gfx_backend.h"
 
 namespace bebone::gfx {
     class RenderPass {
         public:
-            DeviceImpl& device;
+            VulkanDevice& device;
             VkRenderPass renderPass;
 
-            RenderPass(DeviceImpl& _device, VkFormat colorAttachmentImageFormat) : device(_device) {
+            RenderPass(VulkanDevice& _device, VkFormat colorAttachmentImageFormat) : device(_device) {
                 VkAttachmentDescription depthAttachment{};
                 depthAttachment.format = findDepthFormat();
                 depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;

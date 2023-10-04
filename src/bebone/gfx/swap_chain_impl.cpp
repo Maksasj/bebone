@@ -9,7 +9,7 @@
 #include <set>
 #include <stdexcept>
 
-MyEngineSwapChainImpl::MyEngineSwapChainImpl(DeviceImpl &deviceRef, VkExtent2D _windowExtent, const size_t& fif) 
+MyEngineSwapChainImpl::MyEngineSwapChainImpl(VulkanDevice &deviceRef, VkExtent2D _windowExtent, const size_t& fif) 
 	: device{deviceRef}, FIF(fif) {
 	
 	SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
