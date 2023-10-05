@@ -13,33 +13,16 @@ bebone::gfx::VulkanDevice::~VulkanDevice() {
 }
 
 void bebone::gfx::VulkanDevice::pickPhysicalDevice(bebone::gfx::VulkanInstance& vulkanInstance) {
-	uint32_t deviceCount = 0;
-	vkEnumeratePhysicalDevices(vulkanInstance.get_instance(), &deviceCount, nullptr);
-	if (deviceCount == 0) {
-		throw std::runtime_error("failed to find GPUs with Vulkan support!");
-	}
-	
-	std::cout << "Device count: " << deviceCount << std::endl;
-	std::vector<VkPhysicalDevice> devices(deviceCount);
-	vkEnumeratePhysicalDevices(vulkanInstance.get_instance(), &deviceCount, devices.data());
+    VulkanPhysicalDeviceChooser chooser;
 
-	for (const auto &device : devices) {
-		if (isDeviceSuitable(device)) {
-			physicalDevice = device;
-			break;
-		}
-	}
+    physicalDevice = chooser.get_physical_device(vulkanInstance, surface_);
 
-	if (physicalDevice == VK_NULL_HANDLE) {
-		throw std::runtime_error("failed to find a suitable GPU!");
-	}
-
-	vkGetPhysicalDeviceProperties(physicalDevice, &properties);
-	std::cout << "physical device: " << properties.deviceName << std::endl;
+    vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+    std::cout << "physical device: " << properties.deviceName << std::endl;
 }
 
 void bebone::gfx::VulkanDevice::createLogicalDevice() {
-	QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+	QueueFamilyIndices indices = VulkanPhysicalDeviceChooser::findQueueFamilies(physicalDevice, surface_);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily, indices.presentFamily};
@@ -65,8 +48,8 @@ void bebone::gfx::VulkanDevice::createLogicalDevice() {
 
 	// createInfo.pEnabledFeatures = &deviceFeatures;
 	createInfo.pEnabledFeatures = nullptr;
-	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
-	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(VulkanPhysicalDeviceChooser::deviceExtensions.size());
+	createInfo.ppEnabledExtensionNames = VulkanPhysicalDeviceChooser::deviceExtensions.data();
 
 	VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeatures{};
 	descriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
@@ -103,96 +86,8 @@ void bebone::gfx::VulkanDevice::createLogicalDevice() {
 	vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
 }
 
-void bebone::gfx::VulkanDevice::createSurface(bebone::gfx::VulkanInstance& vulkanInstance) { window.createWindowSurface(vulkanInstance.get_instance(), &surface_); }
-
-bool bebone::gfx::VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) {
-	QueueFamilyIndices indices = findQueueFamilies(device);
-
-	bool extensionsSupported = checkDeviceExtensionSupport(device);
-
-	bool swapChainAdequate = false;
-	if (extensionsSupported) {
-		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
-		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
-	}
-
-	VkPhysicalDeviceFeatures supportedFeatures;
-	vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
-
-	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
-}
-
-bool bebone::gfx::VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
-	uint32_t extensionCount;
-	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
-
-	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
-
-	std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
-
-	for (const auto &extension : availableExtensions) {
-		requiredExtensions.erase(extension.extensionName);
-	}
-
-	return requiredExtensions.empty();
-}
-
-bebone::gfx::QueueFamilyIndices bebone::gfx::VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
-	QueueFamilyIndices indices;
-
-	uint32_t queueFamilyCount = 0;
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-
-	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-
-	int i = 0;
-	for (const auto &queueFamily : queueFamilies) {
-		if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-			indices.graphicsFamily = i;
-			indices.graphicsFamilyHasValue = true;
-		}
-
-		VkBool32 presentSupport = false;
-		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface_, &presentSupport);
-		
-		if (queueFamily.queueCount > 0 && presentSupport) {
-			indices.presentFamily = i;
-			indices.presentFamilyHasValue = true;
-		}
-
-		if (indices.isComplete()) {
-			break;
-		}
-
-		i++;
-	}
-
-	return indices;
-}
-
-bebone::gfx::SwapChainSupportDetails bebone::gfx::VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) {
-	SwapChainSupportDetails details;
-	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface_, &details.capabilities);
-
-	uint32_t formatCount;
-	vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface_, &formatCount, nullptr);
-
-	if (formatCount != 0) {
-		details.formats.resize(formatCount);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface_, &formatCount, details.formats.data());
-	}
-
-	uint32_t presentModeCount;
-	vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface_, &presentModeCount, nullptr);
-
-	if (presentModeCount != 0) {
-		details.presentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface_, &presentModeCount, details.presentModes.data());
-	}
-
-	return details;
+void bebone::gfx::VulkanDevice::createSurface(bebone::gfx::VulkanInstance& vulkanInstance) {
+    window.createWindowSurface(vulkanInstance.get_instance(), &surface_);
 }
 
 VkFormat bebone::gfx::VulkanDevice::findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
