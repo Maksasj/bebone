@@ -17,7 +17,7 @@
 #include "../vertex_buffer.h"
 #include "../pipeline.h"
 
-#include "../device_impl.h"
+#include "vulkan_device.h"
 
 #include "vulkan_frame.h"
 
@@ -41,7 +41,9 @@ namespace bebone::gfx {
 
             const static constexpr size_t FIF = 2; 
 
-            std::unique_ptr<DeviceImpl> device; // ORDER MATTERS FOR DESTRUCTOR
+            std::shared_ptr<VulkanInstance> vulkanInstance;
+            std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
+
             std::unique_ptr<MyEngineSwapChainImpl> swapChain; // ORDER MATTERS FOR DESTRUCTOR
             std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
@@ -52,18 +54,28 @@ namespace bebone::gfx {
             VulkanPipelineLayoutImpl* vulkanPipelineLayout;
 
             VulkanRenderer(Window& window) : _window(window) {
-                device = std::make_unique<DeviceImpl>(_window);
+                vulkanInstance = VulkanInstance::create_instance();
+
+                device = vulkanInstance->create_device(_window);
+
+                // swapChain = device->create_swapchain(_window);
+                // commandBuffers = device->create_command_buffer_pool();
+
                 swapChain = std::make_unique<MyEngineSwapChainImpl>(*device, _window.get_extend(), FIF);
                 commandBuffers = std::make_unique<VulkanCommandBufferPool>(*device, FIF);
             }
 
             ~VulkanRenderer() {
-                for(auto& pipeline : pipelines) {
+                for(auto& pipeline : pipelines)
                     delete pipeline;
-                }
+
+                commandBuffers = nullptr;
+                swapChain = nullptr;
+                device = nullptr;
+                vulkanInstance = nullptr;
             }
 
-            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const std::vector<unsigned int>& vertexSpirvCode, const std::vector<unsigned int>& fragmentSpirvCode) {
+            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const ShaderCode& vertexSpirvCode, const ShaderCode& fragmentSpirvCode) {
                 vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl()); // vulkanPipelineLayout should be saved somewhere
 
                 PipelineConfigInfo pipelineConfig;
@@ -86,7 +98,6 @@ namespace bebone::gfx {
             VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {
                 return VertexBuffer(create_vertex_buffer_impl(vertices));
             }
-
 
             VulkanIndexBufferImpl* create_index_buffer_impl(const std::vector<int>& indices) {
                 VulkanIndexBufferImpl* indexBufferImpl = new VulkanIndexBufferImpl(indices, *device);

@@ -41,7 +41,7 @@ namespace bebone::gfx {
                 VkDescriptorSetLayoutBinding layoutBinding{};
                 layoutBinding.binding = binding;
                 layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                layoutBinding.descriptorCount = 512; // Todo this is max thing
+                layoutBinding.descriptorCount = 65536; // Todo this is max thing
 
                 layoutBinding.stageFlags = VK_SHADER_STAGE_ALL; // Todo this should be confiruble
                 layoutBinding.pImmutableSamplers = nullptr; // Optional
@@ -51,11 +51,12 @@ namespace bebone::gfx {
                 return *this;
             }
 
-            GPUResourceSetBlueprint& set_uniform_buffer_resource(const size_t& binding) {
+            GPUResourceSetBlueprint& add_uniform_buffer_resource(const size_t& binding) {
                 VkDescriptorSetLayoutBinding layoutBinding{};
+                
                 layoutBinding.binding = binding;
                 layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                layoutBinding.descriptorCount = 512; // Todo this is max thing
+                layoutBinding.descriptorCount = 65536; // Todo this is max thing
 
                 layoutBinding.stageFlags = VK_SHADER_STAGE_ALL; // Todo this should be confiruble
                 layoutBinding.pImmutableSamplers = nullptr; // Optional
@@ -83,14 +84,14 @@ namespace bebone::gfx {
         private:
             const size_t _fif;
 
-            DeviceImpl& _device;
+            VulkanDevice& _device;
             VulkanDescriptorPool descriptorPool;
 
             size_t availableUniformHandle;
             size_t availableTextureHandle;
 
         public:
-            GPUResourceManager(const size_t& fif, DeviceImpl& device) : _fif(fif), _device(device), descriptorPool(device) {
+            GPUResourceManager(const size_t& fif, VulkanDevice& device) : _fif(fif), _device(device), descriptorPool(device) {
                 availableUniformHandle = 0;
                 availableTextureHandle = 0;
             }

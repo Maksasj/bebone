@@ -6,13 +6,13 @@
 #include "vulkan/vulkan_api.h"
 #include "opengl/opengl_api.h"
 
-#include "shader_compiler.h"
+#include "shaders/shader_compiler.h"
 
 #include "rendering_engine.h"
 
 #include "gpu_resource_manager.h"
 
-#include "device_impl.h"
+#include "vulkan/vulkan_device.h"
 #include "pipeline_impl.h"
 #include "swap_chain_impl.h"
 
@@ -24,7 +24,5 @@
 #include "pipeline_layout_builder.h"
 
 #include "render_target.h"
-
-#include "texture.h"
 
 #endif

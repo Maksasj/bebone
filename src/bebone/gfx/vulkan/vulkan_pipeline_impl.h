@@ -1,6 +1,7 @@
 #ifndef _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
 #define _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
 
+#include "../shaders/shader_code.h"
 #include "../pipeline_impl.h"
 
 #include "vulkan_pipeline_config_info.h"
@@ -62,24 +63,24 @@ namespace bebone::gfx {
                 }
             }
 
-            void create_shader_module(const std::vector<unsigned int>& code, VkShaderModule* shaderModule) {
+            void create_shader_module(const ShaderCode& code, VkShaderModule* shaderModule) {
                 VkShaderModuleCreateInfo createInfo{};
                 createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-                createInfo.codeSize = code.size() * sizeof(unsigned int);
-                createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+                createInfo.codeSize = code.get_byte_code().size() * sizeof(unsigned int);
+                createInfo.pCode = reinterpret_cast<const uint32_t*>(code.get_byte_code().data());
 
                 if(vkCreateShaderModule(device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
                     throw std::runtime_error("Failed to create shader module");
                 } 
             }
         public:
-            DeviceImpl& device;
+            VulkanDevice& device;
 
             VkPipeline grapgicsPipeline;
             VkShaderModule vertShaderModule;
             VkShaderModule fragShaderModule;
 
-            VulkanPipeline(DeviceImpl& _device, const std::vector<unsigned int>& vertSpirv, const std::vector<unsigned int>& fragSpirv, const PipelineConfigInfo& configInfo)
+            VulkanPipeline(VulkanDevice& _device, const ShaderCode& vertSpirv, const ShaderCode& fragSpirv, const PipelineConfigInfo& configInfo)
                      : device(_device) {
                 create_shader_module(vertSpirv, &vertShaderModule);
                 create_shader_module(fragSpirv, &fragShaderModule);

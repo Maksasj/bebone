@@ -39,7 +39,6 @@ namespace bebone::gfx {
                 return *this;
             }
 
-
             PipelineLayout build(GPUResourceManager& _gpuResourceManager) {
                 return _impl->build(_gpuResourceManager);
             }

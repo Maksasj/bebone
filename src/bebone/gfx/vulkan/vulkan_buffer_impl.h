@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../device_impl.h"
+#include "vulkan_device.h"
 #include "../../core/core.h"
 #include "../gfx_backend.h"
 
@@ -21,7 +21,7 @@ namespace bebone::gfx {
     }
 
     static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() {
-        std::vector<VkVertexInputAttributeDescription> atrributeDescriptions(3);
+        std::vector<VkVertexInputAttributeDescription> atrributeDescriptions(4);
         
         atrributeDescriptions[0].binding = 0;
         atrributeDescriptions[0].location = 0;
@@ -38,12 +38,17 @@ namespace bebone::gfx {
         atrributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
         atrributeDescriptions[2].offset = offsetof(Vertex, texCoords);
 
+        atrributeDescriptions[3].binding = 0;
+        atrributeDescriptions[3].location = 3;
+        atrributeDescriptions[3].format = VK_FORMAT_R32_SINT;
+        atrributeDescriptions[3].offset = offsetof(Vertex, norm);
+
         return atrributeDescriptions;
     }
 
-    class VulkanBufferImpl {
+    class VulkanBufferImpl : private core::NonCopyable {
         private:
-            DeviceImpl& device;
+            VulkanDevice& device;
 
             VkBuffer buffer;
             VkDeviceMemory bufferMemory;
@@ -51,7 +56,7 @@ namespace bebone::gfx {
             const size_t _size;
 
         public:
-            VulkanBufferImpl(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, DeviceImpl& device) : device(device), _size(static_cast<size_t>(size)) {
+            VulkanBufferImpl(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VulkanDevice& device) : device(device), _size(static_cast<size_t>(size)) {
                 VkBufferCreateInfo bufferInfo{};
                 bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 bufferInfo.size = size;
@@ -90,7 +95,7 @@ namespace bebone::gfx {
                 return _size;
             }
 
-            DeviceImpl& get_device() {
+            VulkanDevice& get_device() {
                 return device;
             }
 

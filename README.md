@@ -23,11 +23,15 @@
 ```bash
 cmake -B build -G Ninja
 
-make.bat
+cmake --build build
 ```
 
 ## Testing
-*Todo*
+```bash
+cmake --build build
+
+build\tests\unit\ctest
+```
 
 ## License
 Bebone is free, open source game. All code in this repository FOR NOW is licensed under

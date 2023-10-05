@@ -1,35 +1,37 @@
 #include <iostream>
 #include <fstream>
 
+#define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+#define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
+
+#include "camera.h"
+#include "handles.h"
+#include "world.h"
 
 using namespace bebone::gfx;
 using namespace bebone::core;
-
-const std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, 0},
-    {{0.5f, 0.5f, 0.0f},  {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, 0},
-    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, 0},
-    
-};
-
-const std::vector<int> indices = {
-    0, 1, 2
-};
 
 std::string read_file(const std::string& path);
 
 int main() {
     RenderingEngine::preinit();
 
-    Window window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
+    Window window("2. Vulkan voxel example", 800, 600);
 
     auto renderer = VulkanRenderer(window);
     
     auto resourceManager = renderer.create_gpu_resource_manager();
 
+    auto resourceSet = resourceManager
+        .create_resource_set()
+        .add_uniform_buffer_resource(0)
+        .add_uniform_buffer_resource(1)
+        .build();
+
     auto pipelineLayout = renderer
         .create_pipeline_layout_builder()
+        .set_constant_range(0, sizeof(Handles))
         .build(resourceManager);
 
     ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
@@ -39,7 +41,7 @@ int main() {
         ShaderCompiler shaderCompiler;
         
         shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl"),
+            read_file("examples/assets/gfx/vulkan/3_vulkan_voxel/vert.glsl"),
             ShaderTypes::VERTEX_SHADER
         ));
         vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
@@ -49,7 +51,7 @@ int main() {
         ShaderCompiler shaderCompiler;
         
         shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl"),
+            read_file("examples/assets/gfx/vulkan/3_vulkan_voxel/frag.glsl"),
             ShaderTypes::FRAGMENT_SHADER
         ));
         fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
@@ -57,17 +59,20 @@ int main() {
 
     auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
 
-    auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
+    Camera mainCamera(resourceManager, resourceSet);
+    World world;
 
     while (!window.closing()) {
         glfwPollEvents();
+
+        mainCamera.update(window);
+        world.update(renderer, resourceManager, resourceSet, mainCamera);
 
         auto frame = renderer.get_frame();
 
         if(!frame.valid())
             continue;
-
+        
         auto& cmd = frame.get_command_buffer();
 
         cmd.begin_record();
@@ -75,17 +80,16 @@ int main() {
             cmd.set_viewport(0, 0, window.get_width(), window.get_height());
 
             cmd.bind_pipeline(pipeline);
+            resourceSet.bind(cmd, pipelineLayout);
 
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
+            mainCamera.bind(cmd, pipelineLayout);
 
-            cmd.draw_indexed(indices.size());
+            world.render(frame, pipelineLayout);
 
             cmd.end_render_pass();
         cmd.end_record();
 
         cmd.submit();
-
         renderer.present(frame);
     }
 

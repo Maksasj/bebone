@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "vulkan_buffer_impl.h"
-#include "../device_impl.h"
+#include "vulkan_device.h"
 
 #include "../gfx_backend.h"
 
@@ -16,7 +16,7 @@ namespace bebone::gfx {
             uint32_t vertexCount;
 
         public:
-            VulkanVertexBufferImpl(const std::vector<Vertex> &vertices, DeviceImpl& device) 
+            VulkanVertexBufferImpl(const std::vector<Vertex> &vertices, VulkanDevice& device) 
                 : VulkanBufferImpl(
                     sizeof(Vertex) * vertices.size(), 
                     VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 

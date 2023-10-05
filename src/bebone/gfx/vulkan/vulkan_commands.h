@@ -55,10 +55,10 @@ namespace bebone::gfx {
         private:
             VulkanCommandBuffer& _commandBuffer;
             MyEngineSwapChainImpl& _swapChain;
-            int _frameBuffer;
+            u32 _frameBuffer;
 
         public:
-            VulkanBeginRenderPassCommand(VulkanCommandBuffer& commandBuffer, MyEngineSwapChainImpl& swapChain, int frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
+            VulkanBeginRenderPassCommand(VulkanCommandBuffer& commandBuffer, MyEngineSwapChainImpl& swapChain, const u32& frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
                 _frameBuffer = frameBuffer;
             }
 

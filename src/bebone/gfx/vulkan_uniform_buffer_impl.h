@@ -13,7 +13,7 @@ namespace bebone::gfx {
             void* _data;
 
         public:
-            VulkanUniformBufferImpl(const size_t& size, DeviceImpl& device, const size_t& handleIndex) 
+            VulkanUniformBufferImpl(const size_t& size, VulkanDevice& device, const size_t& handleIndex) 
                 : VulkanBufferImpl(
                     size,
                     VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, 

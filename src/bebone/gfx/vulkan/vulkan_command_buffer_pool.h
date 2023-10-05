@@ -5,20 +5,20 @@
 
 #include "../gfx_backend.h"
 
-#include "../device_impl.h"
+#include "vulkan_device.h"
 
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
     class VulkanCommandBufferPool {
         private:
-            DeviceImpl& _device;
+            VulkanDevice& _device;
 
             VkCommandPool commandPool;
             core::ArenaContainer commandBuffers;
 
         public:
-            VulkanCommandBufferPool(DeviceImpl& device, const size_t& commandBufferCount) : _device(device), commandBuffers(sizeof(VulkanCommandBuffer) * commandBufferCount) {
+            VulkanCommandBufferPool(VulkanDevice& device, const size_t& commandBufferCount) : _device(device), commandBuffers(sizeof(VulkanCommandBuffer) * commandBufferCount) {
                 QueueFamilyIndices queueFamilyIndices = device.findPhysicalQueueFamilies();
 
                 VkCommandPoolCreateInfo poolInfo = {};
@@ -34,7 +34,7 @@ namespace bebone::gfx {
                     VulkanCommandBuffer* commandBuffer = static_cast<VulkanCommandBuffer*>(commandBuffers.alloc(sizeof(VulkanCommandBuffer)));
 
                     if(commandBuffer == nullptr) {
-                        throw std::runtime_error("failed to allocate vulkam command buffer");
+                        throw std::runtime_error("failed to allocate vulkan command buffer");
                     }
 
                     std::ignore = new (commandBuffer) VulkanCommandBuffer(i);
