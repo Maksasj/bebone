@@ -9,6 +9,13 @@ namespace bebone::gfx::opengl {
             GLuint id;
 
         public:
+            GLBufferObject();
+
+            GLBufferObject(const GLBufferObject &) = delete;
+            void operator=(const GLBufferObject &) = delete;
+            GLBufferObject(GLBufferObject &&) = delete;
+            GLBufferObject &operator=(GLBufferObject &&) = delete;
+
             virtual void bind() = 0;
             virtual void unbind() = 0;
             virtual void destroy() = 0;

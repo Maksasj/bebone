@@ -1,10 +1,9 @@
 #include "opengl_element_buffer_object.h"
 
 namespace bebone::gfx::opengl {
-    GLElementBufferObject::GLElementBufferObject(GLuint* indices, GLsizeiptr size) {
-        glGenBuffers(1, &id);
+    GLElementBufferObject::GLElementBufferObject(const std::vector<GLuint>& indices) : GLBufferObject() {
 	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-	    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+	    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size(), indices.data(), GL_STATIC_DRAW);
     }
 
     void GLElementBufferObject::bind() {

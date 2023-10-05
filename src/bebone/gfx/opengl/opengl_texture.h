@@ -11,6 +11,11 @@ namespace bebone::gfx::opengl {
         public:
             GLTexture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
 
+            GLTexture(const GLTexture &) = delete;
+            void operator=(const GLTexture &) = delete;
+            GLTexture(GLTexture &&) = delete;
+            GLTexture &operator=(GLTexture &&) = delete;
+
             void bind();
             void unbind();
             void destroy();

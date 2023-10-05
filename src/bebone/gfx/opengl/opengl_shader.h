@@ -21,6 +21,11 @@ namespace bebone::gfx::opengl {
         public:
             GLShaderProgram(const GLShader& vertex, const GLShader& fragment);
 
+            GLShaderProgram(const GLShaderProgram &) = delete;
+            void operator=(const GLShaderProgram &) = delete;
+            GLShaderProgram(GLShaderProgram &&) = delete;
+            GLShaderProgram &operator=(GLShaderProgram &&) = delete;
+
             void set_uniform(const char* uniformName, GLint value);
             void set_uniform(const char* uniformName, GLuint value);
             void set_uniform(const char* uniformName, GLfloat value);

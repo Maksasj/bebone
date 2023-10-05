@@ -1,20 +1,22 @@
 #include "bebone/bebone.h"
 
 #include <iostream>
+#include <vector>
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 using namespace bebone::gfx::opengl;
 
-float vertices[] = {
+std::vector<GLfloat> vertices {
     // positions          // colors           // texture coords
     0.5f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
     0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
     -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
     -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 };
-unsigned int indices[] = {
+
+std::vector<GLuint> indices {
     0, 1, 3, // first triangle
     1, 2, 3  // second triangle
 };
@@ -48,12 +50,12 @@ int main()
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices, sizeof(vertices));
-    GLElementBufferObject ebo(indices, sizeof(indices));
+    GLVertexBufferObject vbo(vertices);
+    GLElementBufferObject ebo(indices);
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, 8 * (sizeof(float)), (void*)0);
     vao.link_attributes(vbo, 1, 3, GL_FLOAT, 8 * (sizeof(float)), (void*)(3 * sizeof(float)));
-    vao.link_attributes(vbo, 2, 3, GL_FLOAT, 8 * (sizeof(float)), (void*)(6 * sizeof(float)));
+    vao.link_attributes(vbo, 2, 2, GL_FLOAT, 8 * (sizeof(float)), (void*)(6 * sizeof(float)));
 
     vao.unbind();
 	vbo.unbind();
