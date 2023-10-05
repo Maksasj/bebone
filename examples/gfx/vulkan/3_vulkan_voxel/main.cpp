@@ -17,7 +17,7 @@ std::string read_file(const std::string& path);
 int main() {
     RenderingEngine::preinit();
 
-    Window window("2. Vulkan voxel example", 800, 600);
+    Window window("2. Vulkan voxel example", 800, 600, GfxAPI::VULKAN);
 
     auto renderer = VulkanRenderer(window);
     
