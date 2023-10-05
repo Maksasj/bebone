@@ -5,7 +5,7 @@
 #include "../window/window.h"
 
 #include "vulkan_instance.h"
-#include "vulkan_physical_device_chooser.h"
+#include "vulkan_device_chooser.h"
 
 #include <iostream>
 #include <set>
@@ -44,8 +44,8 @@ namespace bebone::gfx {
 
             uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-            QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanPhysicalDeviceChooser::findQueueFamilies(physicalDevice, surface_); }
-            SwapChainSupportDetails getSwapChainSupport() { return VulkanPhysicalDeviceChooser::querySwapChainSupport(physicalDevice, surface_); }
+            QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::findQueueFamilies(physicalDevice, surface_); }
+            SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::querySwapChainSupport(physicalDevice, surface_); }
 
             VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     };

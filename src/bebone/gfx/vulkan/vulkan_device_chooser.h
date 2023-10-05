@@ -18,7 +18,7 @@ namespace bebone::gfx {
         bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
     };
 
-    class VulkanPhysicalDeviceChooser {
+    class VulkanDeviceChooser {
         private:
             bool checkDeviceExtensionSupport(VkPhysicalDevice device) {
                 uint32_t extensionCount;

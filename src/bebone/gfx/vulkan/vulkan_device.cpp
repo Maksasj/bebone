@@ -13,7 +13,7 @@ bebone::gfx::VulkanDevice::~VulkanDevice() {
 }
 
 void bebone::gfx::VulkanDevice::pickPhysicalDevice(bebone::gfx::VulkanInstance& vulkanInstance) {
-    VulkanPhysicalDeviceChooser chooser;
+    VulkanDeviceChooser chooser;
 
     physicalDevice = chooser.get_physical_device(vulkanInstance, surface_);
 
@@ -22,7 +22,7 @@ void bebone::gfx::VulkanDevice::pickPhysicalDevice(bebone::gfx::VulkanInstance& 
 }
 
 void bebone::gfx::VulkanDevice::createLogicalDevice() {
-	QueueFamilyIndices indices = VulkanPhysicalDeviceChooser::findQueueFamilies(physicalDevice, surface_);
+	QueueFamilyIndices indices = VulkanDeviceChooser::findQueueFamilies(physicalDevice, surface_);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily, indices.presentFamily};
@@ -48,8 +48,8 @@ void bebone::gfx::VulkanDevice::createLogicalDevice() {
 
 	// createInfo.pEnabledFeatures = &deviceFeatures;
 	createInfo.pEnabledFeatures = nullptr;
-	createInfo.enabledExtensionCount = static_cast<uint32_t>(VulkanPhysicalDeviceChooser::deviceExtensions.size());
-	createInfo.ppEnabledExtensionNames = VulkanPhysicalDeviceChooser::deviceExtensions.data();
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(VulkanDeviceChooser::deviceExtensions.size());
+	createInfo.ppEnabledExtensionNames = VulkanDeviceChooser::deviceExtensions.data();
 
 	VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeatures{};
 	descriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
