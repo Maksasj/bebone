@@ -180,7 +180,7 @@ void DeviceImpl::createLogicalDevice() {
 	vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
 }
 
-void DeviceImpl::createSurface() { window.createWindowSurface(instance, &surface_); }
+void DeviceImpl::createSurface() { window.create_window_surface(instance, &surface_); }
 
 bool DeviceImpl::isDeviceSuitable(VkPhysicalDevice device) {
 	QueueFamilyIndices indices = findQueueFamilies(device);

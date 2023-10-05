@@ -1,19 +1,20 @@
 #include "bebone/bebone.h"
 
 #include <iostream>
+#include <vector>
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 using namespace bebone::gfx::opengl;
 
-GLfloat vertices[] = {
+std::vector<GLfloat> vertices = {
     -0.5f, -0.5f, 0.0f, // left  
     0.5f, -0.5f, 0.0f, // right 
     0.0f,  0.5f, 0.0f  // top   
 };
 
-GLuint indices[] = {
+std::vector<GLuint> indices = {
 	0, 1, 2,
 };
 
@@ -46,8 +47,8 @@ int main()
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices, sizeof(vertices));
-    GLElementBufferObject ebo(indices, sizeof(indices));
+    GLVertexBufferObject vbo(vertices);
+    GLElementBufferObject ebo(indices);
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, 3 * (sizeof(float)), (void*)0);
 

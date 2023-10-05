@@ -22,7 +22,7 @@ std::string read_file(const std::string& path);
 int main() {
     RenderingEngine::preinit();
 
-    Window window("1. Vulkan hello window example", 800, 600);
+    Window window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
 
     VulkanRenderer renderer = VulkanRenderer(window);
     

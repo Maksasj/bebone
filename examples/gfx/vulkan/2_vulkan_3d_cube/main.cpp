@@ -51,7 +51,7 @@ Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up);
 int main() {
     RenderingEngine::preinit();
 
-    Window window("2. Vulkan 3d cube example", 800, 600);
+    Window window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
 
     VulkanRenderer renderer = VulkanRenderer(window);
     

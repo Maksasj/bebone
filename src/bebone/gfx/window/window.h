@@ -7,6 +7,7 @@
 #include "../../core/core.h"
 
 #include "../gfx_backend.h"
+#include "../gfx_api.h"
 
 namespace bebone::gfx {
     using namespace core;   
@@ -24,73 +25,22 @@ namespace bebone::gfx {
             Window(const Window&) = delete;
             Window &operator=(const Window&) = delete;
 
-            Window(const std::string& title, const int width, const int height) :
-                _width(width), _height(height) {
-                
-                windowResized = false;
+            Window(const std::string& title, const int width, const int height, const GfxAPI& gfxAPI);
+            ~Window();
 
-                glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-                // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-                glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+            void create_window_surface(VkInstance instance, VkSurfaceKHR *surface_);
+            void reset_resize_flag();
 
-                _window = glfwCreateWindow(_width, _height, title.c_str(), NULL, NULL);
-                glfwSetWindowUserPointer(_window, this);
-                glfwSetFramebufferSizeCallback(_window, window_resize_callback);
+            bool is_resized();
+            bool closing() const;
 
-                if (_window == NULL) {
-                    glfwTerminate();
-                    throw std::runtime_error("Failed to create GLFW window");
-                }
-            }
+            int get_width() const;
+            int get_height() const;
+            f32 get_aspect() const;
+            VkExtent2D get_extend() const;
+            GLFWwindow* get_backend() const;
 
-            bool is_resized() {
-                return windowResized;
-            }
-
-            void reset_resize_flag() {
-                windowResized = false;
-            }
-
-            static void window_resize_callback(GLFWwindow* glfwWindow, int width, int height) {
-                Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
-                window->windowResized = true;
-                window->_width = width;
-                window->_height = height;
-            }
-
-            ~Window() {
-                glfwDestroyWindow(_window);
-            }
-
-            GLFWwindow* get_backend() const {
-                return _window;
-            }
-
-            bool closing() const {
-                return glfwWindowShouldClose(_window);
-            }
-
-            VkExtent2D get_extend() const {
-                return { static_cast<uint32_t>(_width), static_cast<uint32_t>(_height) };
-            }
-
-            int get_width() const {
-                return _width;
-            }
-
-            int get_height() const {
-                return _height;
-            }
-
-            f32 get_aspect() const {
-                return static_cast<f32>(_width) / static_cast<f32>(_height);
-            }
-
-            void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface_) {
-                if(glfwCreateWindowSurface(instance, _window, nullptr, surface_) != VK_SUCCESS) {
-                    throw std::runtime_error("failed to create window surface");
-                }
-            }
+            static void window_resize_callback(GLFWwindow* glfwWindow, int width, int height);
     };
 }
 #endif
