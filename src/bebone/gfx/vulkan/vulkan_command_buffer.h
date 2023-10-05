@@ -9,7 +9,7 @@
 #include "../index_buffer.h"
 #include "../pipeline_layout.h"
 
-#include "../swap_chain_impl.h"
+#include "vulkan_swap_chain.h"
 
 #include "vulkan_pipeline_impl.h"
 

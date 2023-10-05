@@ -13,7 +13,7 @@
 
 #include "vulkan/vulkan_device.h"
 #include "pipeline_impl.h"
-#include "swap_chain_impl.h"
+#include "bebone/gfx/vulkan/vulkan_swap_chain.h"
 
 #include "window/window.h"
 

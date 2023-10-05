@@ -11,7 +11,7 @@
 #include "vulkan_pipeline_layout_impl.h"
 
 #include "../command.h"
-#include "../swap_chain_impl.h"
+#include "vulkan_swap_chain.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -54,11 +54,11 @@ namespace bebone::gfx {
     class VulkanBeginRenderPassCommand : public Command {
         private:
             VulkanCommandBuffer& _commandBuffer;
-            MyEngineSwapChainImpl& _swapChain;
+            VulkanSwapChain& _swapChain;
             u32 _frameBuffer;
 
         public:
-            VulkanBeginRenderPassCommand(VulkanCommandBuffer& commandBuffer, MyEngineSwapChainImpl& swapChain, const u32& frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
+            VulkanBeginRenderPassCommand(VulkanCommandBuffer& commandBuffer, VulkanSwapChain& swapChain, const u32& frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
                 _frameBuffer = frameBuffer;
             }
 
