@@ -9,7 +9,7 @@
 #include "../render_target.h"
 
 namespace bebone::gfx {
-    class VulkanSwapChain {
+    class VulkanSwapChain : private core::NonCopyable {
         private:
             void createSwapChain();
             void createRenderTarget();
@@ -41,9 +41,6 @@ namespace bebone::gfx {
 
             VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent, const size_t& fif);
             ~VulkanSwapChain();
-
-            VulkanSwapChain(const VulkanSwapChain &) = delete;
-            void operator=(const VulkanSwapChain &) = delete;
 
             VkResult acquireNextImage(uint32_t *imageIndex);
             VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
