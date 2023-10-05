@@ -33,11 +33,13 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
-      env:
-        CC: clang
-        CXX: clang
+    - name: Configure the project
+      uses: threeal/cmake-action@v1.3.0
+      with:
+        generator: Ninja
+        c-compiler: clang
+        cxx-compiler: clang++
+        build-dir: submodules/build
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
