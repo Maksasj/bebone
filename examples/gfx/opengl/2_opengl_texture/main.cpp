@@ -1,6 +1,5 @@
 #include "bebone/bebone.h"
 
-#include <iostream>
 #include <vector>
 
 const unsigned int SCR_WIDTH = 800;
@@ -8,7 +7,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 using namespace bebone::gfx::opengl;
 
-std::vector<GLfloat> vertices {
+const std::vector<GLfloat> vertices {
     // positions          // colors           // texture coords
     0.5f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
     0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
@@ -16,15 +15,15 @@ std::vector<GLfloat> vertices {
     -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 };
 
-std::vector<GLuint> indices {
+const std::vector<GLuint> indices {
     0, 1, 3, // first triangle
     1, 2, 3  // second triangle
 };
 
-int main()
-{
+int main() {
     glfwInit();
-    Window window("Texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+
+    Window window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
 	gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -55,9 +54,8 @@ int main()
 
     shaderProgram.set_uniform("ourTexture", 0);
 
-    while (!window.closing())
-    {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    while (!window.closing()) {
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         shaderProgram.enable();
@@ -65,7 +63,7 @@ int main()
         texture.bind();
         vao.bind();
 
-        glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window.get_backend());
         glfwPollEvents();

@@ -1,9 +1,10 @@
 #include "opengl_vertex_buffer_object.h"
 
 namespace bebone::gfx::opengl {
+
     GLVertexBufferObject::GLVertexBufferObject(const std::vector<GLfloat>& vertices) : GLBufferObject() {
 	    glBindBuffer(GL_ARRAY_BUFFER, id);
-	    glBufferData(GL_ARRAY_BUFFER, vertices.size(), vertices.data(), GL_STATIC_DRAW);
+	    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
     }
     
     void GLVertexBufferObject::bind() {

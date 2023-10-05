@@ -3,7 +3,7 @@
 namespace bebone::gfx::opengl {
     GLElementBufferObject::GLElementBufferObject(const std::vector<GLuint>& indices) : GLBufferObject() {
 	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-	    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size(), indices.data(), GL_STATIC_DRAW);
+	    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
     }
 
     void GLElementBufferObject::bind() {

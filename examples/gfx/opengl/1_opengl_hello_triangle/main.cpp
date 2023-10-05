@@ -1,6 +1,5 @@
 #include "bebone/bebone.h"
 
-#include <iostream>
 #include <vector>
 
 const unsigned int SCR_WIDTH = 800;
@@ -8,31 +7,21 @@ const unsigned int SCR_HEIGHT = 600;
 
 using namespace bebone::gfx::opengl;
 
-std::vector<GLfloat> vertices = {
+const std::vector<GLfloat> vertices = {
     -0.5f, -0.5f, 0.0f, // left  
     0.5f, -0.5f, 0.0f, // right 
     0.0f,  0.5f, 0.0f  // top   
 };
 
-std::vector<GLuint> indices = {
+const std::vector<GLuint> indices = {
 	0, 1, 2,
 };
 
-int main()
-{
+int main() {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello, triangle!", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
+    Window window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    glfwMakeContextCurrent(window.get_backend());
 
 	gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -56,16 +45,15 @@ int main()
 	vbo.unbind();
 	ebo.unbind();
 
-    while (!glfwWindowShouldClose(window))
-    {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    while (!window.closing()) {
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         shaderProgram.enable();
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(window.get_backend());
         glfwPollEvents();
     }
 
