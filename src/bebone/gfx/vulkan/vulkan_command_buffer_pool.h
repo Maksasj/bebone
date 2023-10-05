@@ -34,7 +34,7 @@ namespace bebone::gfx {
                     VulkanCommandBuffer* commandBuffer = static_cast<VulkanCommandBuffer*>(commandBuffers.alloc(sizeof(VulkanCommandBuffer)));
 
                     if(commandBuffer == nullptr) {
-                        throw std::runtime_error("failed to allocate vulkam command buffer");
+                        throw std::runtime_error("failed to allocate vulkan command buffer");
                     }
 
                     std::ignore = new (commandBuffer) VulkanCommandBuffer(i);

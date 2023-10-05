@@ -46,7 +46,7 @@ namespace bebone::gfx {
         return atrributeDescriptions;
     }
 
-    class VulkanBufferImpl {
+    class VulkanBufferImpl : private core::NonCopyable {
         private:
             VulkanDevice& device;
 

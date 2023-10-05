@@ -10,7 +10,7 @@
 namespace bebone::gfx {
     class VulkanDevice;
 
-    class VulkanInstance {
+    class VulkanInstance : private core::NonCopyable {
         private:
             VkInstance instance;
 

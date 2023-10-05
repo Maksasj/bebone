@@ -25,7 +25,7 @@ namespace bebone::gfx {
         bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
     };
 
-    class VulkanDevice {
+    class VulkanDevice : private core::NonCopyable {
         private:
             VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
             bebone::gfx::Window &window;
@@ -59,11 +59,6 @@ namespace bebone::gfx {
 
             VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance &vulkanInstance);
             ~VulkanDevice();
-
-            VulkanDevice(const VulkanDevice &) = delete;
-            void operator=(const VulkanDevice &) = delete;
-            VulkanDevice(VulkanDevice &&) = delete;
-            VulkanDevice &operator=(VulkanDevice &&) = delete;
 
             VkDevice device() const { return device_; }
             VkSurfaceKHR surface() { return surface_; }
