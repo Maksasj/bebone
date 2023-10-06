@@ -1,4 +1,4 @@
-#include "swap_chain_impl.h"
+#include "vulkan_swap_chain.h"
 
 // std
 #include <array>
@@ -9,8 +9,8 @@
 #include <set>
 #include <stdexcept>
 
-MyEngineSwapChainImpl::MyEngineSwapChainImpl(VulkanDevice &deviceRef, VkExtent2D _windowExtent, const size_t& fif) 
-	: device{deviceRef}, FIF(fif) {
+bebone::gfx::VulkanSwapChain::VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D _windowExtent)
+	: device{deviceRef} {
 	
 	SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
 	extent = chooseSwapExtent(swapChainSupport.capabilities, _windowExtent);
@@ -20,21 +20,21 @@ MyEngineSwapChainImpl::MyEngineSwapChainImpl(VulkanDevice &deviceRef, VkExtent2D
 	createSyncObjects();
 }
 
-MyEngineSwapChainImpl::~MyEngineSwapChainImpl() {
+bebone::gfx::VulkanSwapChain::~VulkanSwapChain() {
 	if (swapChain != nullptr) {
 		vkDestroySwapchainKHR(device.device(), swapChain, nullptr);
 		swapChain = nullptr;
 	}
 
 	// // cleanup synchronization objects
-	for (size_t i = 0; i < FIF; i++) {
+	for (size_t i = 0; i < imageCount; i++) {
 		vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
 		vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
 		vkDestroyFence(device.device(), inFlightFences[i], nullptr);
 	}
 }
 
-void MyEngineSwapChainImpl::recreate(VkExtent2D _windowExtent) {
+void bebone::gfx::VulkanSwapChain::recreate(VkExtent2D _windowExtent) {
 	renderTarget = nullptr;
 
 	SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
@@ -49,7 +49,7 @@ void MyEngineSwapChainImpl::recreate(VkExtent2D _windowExtent) {
 	createRenderTarget();
 }
 
-VkResult MyEngineSwapChainImpl::acquireNextImage(uint32_t *imageIndex) {
+VkResult bebone::gfx::VulkanSwapChain::acquireNextImage(uint32_t *imageIndex) {
 	vkWaitForFences(device.device(), 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 
 	VkResult result = vkAcquireNextImageKHR(
@@ -63,7 +63,7 @@ VkResult MyEngineSwapChainImpl::acquireNextImage(uint32_t *imageIndex) {
   return result;
 }
 
-VkResult MyEngineSwapChainImpl::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex) {
+VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex) {
 	if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
 		vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
 	}
@@ -105,23 +105,24 @@ VkResult MyEngineSwapChainImpl::submitCommandBuffers(const VkCommandBuffer *buff
 
 	VkResult result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
 
-	currentFrame = (currentFrame + 1) % FIF;
+	currentFrame = (currentFrame + 1) % imageCount;
 
 	return result;
 }
 
-void MyEngineSwapChainImpl::createSwapChain() {
+void bebone::gfx::VulkanSwapChain::createSwapChain() {
 	SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
 
 	surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 	presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
 
-	// uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-	uint32_t imageCount = 2; // Todo this is a fif
+    // Todo image count should be configurable
+	imageCount = swapChainSupport.capabilities.minImageCount + 1;
+	if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
+		imageCount = swapChainSupport.capabilities.maxImageCount;
+	}
 
-	// if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
-	// 	imageCount = swapChainSupport.capabilities.maxImageCount;
-	// }
+    std::cout << "Chosen swap chain image count " << imageCount << "\n";
 
 	VkSwapchainCreateInfoKHR createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -160,14 +161,14 @@ void MyEngineSwapChainImpl::createSwapChain() {
 	}
 }
 
-void MyEngineSwapChainImpl::createRenderTarget() {
+void bebone::gfx::VulkanSwapChain::createRenderTarget() {
 	std::vector<VkImage> swapChainImages;
 
 	// we only specified a minimum number of images in the swap chain, so the implementation is
 	// allowed to create a swap chain with more. That's why we'll first query the final number of
 	// images with vkGetSwapchainImagesKHR, then resize the container and finally call it again to
 	// retrieve the handles.
-	uint32_t imageCount = 2; // Todo this is a fif
+	uint32_t imageCount;
 
 	vkGetSwapchainImagesKHR(device.device(), swapChain, &imageCount, nullptr);
 	swapChainImages.resize(imageCount);
@@ -176,10 +177,10 @@ void MyEngineSwapChainImpl::createRenderTarget() {
 	renderTarget = std::make_unique<RenderTarget>(device, swapChainImages, surfaceFormat.format, extent);
 }
 
-void MyEngineSwapChainImpl::createSyncObjects() {
-	imageAvailableSemaphores.resize(FIF);
-	renderFinishedSemaphores.resize(FIF);
-	inFlightFences.resize(FIF);
+void bebone::gfx::VulkanSwapChain::createSyncObjects() {
+	imageAvailableSemaphores.resize(imageCount);
+	renderFinishedSemaphores.resize(imageCount);
+	inFlightFences.resize(imageCount);
 	imagesInFlight.resize(renderTarget->swapChainImages.size(), VK_NULL_HANDLE);
 
 	VkSemaphoreCreateInfo semaphoreInfo = {};
@@ -189,7 +190,7 @@ void MyEngineSwapChainImpl::createSyncObjects() {
 	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-	for (size_t i = 0; i < FIF; i++) {
+	for (size_t i = 0; i < imageCount; i++) {
 		if(vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create synchronization objects for a frame!");
 		}
@@ -204,7 +205,7 @@ void MyEngineSwapChainImpl::createSyncObjects() {
 	}
 }
 
-VkSurfaceFormatKHR MyEngineSwapChainImpl::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats) {
+VkSurfaceFormatKHR bebone::gfx::VulkanSwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats) {
 	for (const auto &availableFormat : availableFormats) {
 		if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
 			return availableFormat;
@@ -214,7 +215,7 @@ VkSurfaceFormatKHR MyEngineSwapChainImpl::chooseSwapSurfaceFormat(const std::vec
 	return availableFormats[0];
 }
 
-VkPresentModeKHR MyEngineSwapChainImpl::chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes) {
+VkPresentModeKHR bebone::gfx::VulkanSwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes) {
 	for (const auto &availablePresentMode : availablePresentModes) {
 		if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
 			std::cout << "Present mode: Mailbox" << std::endl;
@@ -227,7 +228,7 @@ VkPresentModeKHR MyEngineSwapChainImpl::chooseSwapPresentMode(const std::vector<
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D MyEngineSwapChainImpl::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D _windowExtent) {
+VkExtent2D bebone::gfx::VulkanSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D _windowExtent) {
 	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
 		return capabilities.currentExtent;
 	} else {

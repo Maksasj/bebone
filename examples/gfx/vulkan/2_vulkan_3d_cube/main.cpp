@@ -53,7 +53,7 @@ int main() {
 
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
     auto renderer = VulkanRenderer(*std::static_pointer_cast<VulkanWindow>(window));
-    
+
     auto resourceManager = renderer.create_gpu_resource_manager();
     auto resourceSet = resourceManager
         .create_resource_set()
@@ -129,7 +129,7 @@ int main() {
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame.frameIndex);
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd.set_viewport(0, 0, window.get_width(), window->get_height());
 
             cmd.bind_pipeline(pipeline);
             resourceSet.bind(cmd, pipelineLayout);
