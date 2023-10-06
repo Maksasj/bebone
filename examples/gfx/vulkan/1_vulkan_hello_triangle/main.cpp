@@ -22,7 +22,7 @@ int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
-    auto renderer = VulkanRenderer(*std::static_pointer_cast<VulkanWindow>(window));
+    auto renderer = VulkanRenderer(window);
     
     auto resourceManager = renderer.create_gpu_resource_manager();
 

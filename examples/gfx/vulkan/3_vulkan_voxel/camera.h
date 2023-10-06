@@ -41,49 +41,49 @@ class Camera {
             return position;
         }
 
-        void update(Window& window) {
+        void update(std::shared_ptr<Window>& window) {
             float speed = 0.5f;
 
-            if (glfwGetKey(window.get_backend(), 'W') == GLFW_PRESS) {
+            if (glfwGetKey(window->get_backend(), 'W') == GLFW_PRESS) {
                 position += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
             }
 
-            if (glfwGetKey(window.get_backend(), 'S') == GLFW_PRESS) {
+            if (glfwGetKey(window->get_backend(), 'S') == GLFW_PRESS) {
                 position -= Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
             }
 
-            if (glfwGetKey(window.get_backend(), 'A') == GLFW_PRESS) {
+            if (glfwGetKey(window->get_backend(), 'A') == GLFW_PRESS) {
                 position -= Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
             }
 
-            if (glfwGetKey(window.get_backend(), 'D') == GLFW_PRESS) {
+            if (glfwGetKey(window->get_backend(), 'D') == GLFW_PRESS) {
                 position += Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
             }
 
-            if (glfwGetKey(window.get_backend(), GLFW_KEY_SPACE) == GLFW_PRESS)
+            if (glfwGetKey(window->get_backend(), GLFW_KEY_SPACE) == GLFW_PRESS)
                 position.y += speed;
 
-            if (glfwGetKey(window.get_backend(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+            if (glfwGetKey(window->get_backend(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
                 position.y -= speed;
 
             bool oldMouseLockState = mouseLocked;
             static bool buttonPressed = false;
-            const bool isDebugButtonPressed = (glfwGetKey(window.get_backend(), GLFW_KEY_ENTER) == GLFW_RELEASE);
+            const bool isDebugButtonPressed = (glfwGetKey(window->get_backend(), GLFW_KEY_ENTER) == GLFW_RELEASE);
             mouseLocked = (isDebugButtonPressed && !buttonPressed) ? !mouseLocked : mouseLocked;  
             buttonPressed = !isDebugButtonPressed ? false : true;
 
             if(oldMouseLockState != mouseLocked) {
-                glfwSetCursorPos(window.get_backend(), window.get_width() / 2.0f, window.get_height() / 2.0f);   
+                glfwSetCursorPos(window->get_backend(), window->get_width() / 2.0f, window->get_height() / 2.0f);   
             }
 
             if(mouseLocked == true) {
-                glfwSetInputMode(window.get_backend(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+                glfwSetInputMode(window->get_backend(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-                const f64 centerXPos = window.get_width() / 2.0f;
-                const f64 centerYPos = window.get_height() / 2.0f;
+                const f64 centerXPos = window->get_width() / 2.0f;
+                const f64 centerYPos = window->get_height() / 2.0f;
 
                 f64 xPos, yPos;
-                glfwGetCursorPos(window.get_backend(), &xPos, &yPos);
+                glfwGetCursorPos(window->get_backend(), &xPos, &yPos);
                 
                 const f32 deltaX = floor(centerXPos) - xPos;
                 const f32 deltaY = floor(centerYPos) - yPos;
@@ -91,9 +91,9 @@ class Camera {
                 rotation.x += deltaY * 0.005f;
                 rotation.y += deltaX * 0.005f; // If this is confusing just think that we rotate Y axis cause of movement mouse a long X axis, actual this make sence
 
-                glfwSetCursorPos(window.get_backend(), centerXPos, centerYPos);   
+                glfwSetCursorPos(window->get_backend(), centerXPos, centerYPos);   
             } else {
-                glfwSetInputMode(window.get_backend(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                glfwSetInputMode(window->get_backend(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
 
             direction.x = cos(rotation.y) * cos(rotation.x);
@@ -103,7 +103,7 @@ class Camera {
             transform = CameraTransform{
                 // getViewMatrix(position, Vec3f(0.0f, 0.0f, 1.0f) - position, Vec3f(0.0f, -1.0f, 0.0f)),
                 getViewMatrix(position, direction, Vec3f(0.0f, -1.0f, 0.0f)),
-                Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 2000.0f)
+                Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 2000.0f)
             };
         }
 

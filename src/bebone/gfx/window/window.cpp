@@ -1,8 +1,8 @@
 #include "window.h"
 
 namespace bebone::gfx {
-    Window::Window(const std::string& title, const int width, const int height) : width(width), height(height), windowResized(false) {
-        window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+    Window::Window(const std::string& title, const int& width, const int& height) : width(width), height(height), windowResized(false) {
+        window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     }
 
     Window::~Window() {

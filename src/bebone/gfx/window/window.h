@@ -21,7 +21,7 @@ namespace bebone::gfx {
             bool windowResized;
 
         public:
-            Window(const std::string& title, const int width, const int height);
+            Window(const std::string& title, const int& width, const int& height);
             ~Window();
             
             void reset_resize_flag();

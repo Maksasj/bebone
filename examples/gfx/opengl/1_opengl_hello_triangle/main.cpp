@@ -5,6 +5,7 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
 const std::vector<GLfloat> vertices = {

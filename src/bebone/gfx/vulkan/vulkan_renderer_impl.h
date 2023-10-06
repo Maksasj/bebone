@@ -37,7 +37,7 @@
 namespace bebone::gfx {
     class VulkanRenderer {
     public:
-        Window& _window;
+        std::shared_ptr<VulkanWindow> _window;
 
         std::shared_ptr<VulkanInstance> vulkanInstance;
         std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
@@ -51,16 +51,16 @@ namespace bebone::gfx {
         // vulkanPipelineLayout should be saved somewhere
         VulkanPipelineLayoutImpl* vulkanPipelineLayout;
 
-        VulkanRenderer(Window& window)
-                : _window(window),
+        VulkanRenderer(std::shared_ptr<Window>& window)
+                : _window(std::static_pointer_cast<VulkanWindow>(window)),
                   vulkanPipelineLayout(nullptr) {
 
             vulkanInstance = VulkanInstance::create_instance();
 
-            device = vulkanInstance->create_device(_window);
+            device = vulkanInstance->create_device(*_window);
 
             // Todo fif should be moved to swap chain, or no
-            swapChain = device->create_swapchain(_window);
+            swapChain = device->create_swapchain(*_window);
 
             // Todo swapChain->get_image_count() basically same thing as fif
             commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, swapChain->get_image_count());
@@ -133,8 +133,8 @@ namespace bebone::gfx {
         void recreate_pipelines() const {
             vkDeviceWaitIdle(device->device());
 
-            _window.reset_resize_flag();
-            swapChain->recreate(_window.get_extend());
+            _window->reset_resize_flag();
+            swapChain->recreate(_window->get_extend());
 
             for(auto& pipeline : pipelines) {
                 PipelineConfigInfo pipelineConfig;
@@ -152,7 +152,7 @@ namespace bebone::gfx {
 
             auto result = swapChain->submitCommandBuffers(&commnandBuffer, &frame.frameIndex);
 
-            if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window.is_resized()) {
+            if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window->is_resized()) {
                 // This logic needs to be abstracted away
                 recreate_pipelines();
                 return;

@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     class GLWindow : public Window {
         public:
-            GLWindow(const std::string& title, const int width, const int height);
+            GLWindow(const std::string& title, const int& width, const int& height);
     };
 }
 

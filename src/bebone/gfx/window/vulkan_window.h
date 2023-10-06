@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     class VulkanWindow : public Window {
         public:
-            VulkanWindow(const std::string& title, const int width, const int height);
+            VulkanWindow(const std::string& title, const int& width, const int& height);
 
             void create_window_surface(VkInstance instance, VkSurfaceKHR *surface);
             VkExtent2D get_extend() const;

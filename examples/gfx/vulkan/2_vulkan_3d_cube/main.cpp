@@ -52,7 +52,7 @@ int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
-    auto renderer = VulkanRenderer(*std::static_pointer_cast<VulkanWindow>(window));
+    auto renderer = VulkanRenderer(window);
 
     auto resourceManager = renderer.create_gpu_resource_manager();
     auto resourceSet = resourceManager
@@ -117,8 +117,9 @@ int main() {
         if(!frame.valid())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
+        ++t;
 
         auto handles = Handles {
             static_cast<u32>(cameraUBO.get_handle(frame.frameIndex).index),
@@ -129,7 +130,7 @@ int main() {
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame.frameIndex);
-            cmd.set_viewport(0, 0, window.get_width(), window->get_height());
+            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd.bind_pipeline(pipeline);
             resourceSet.bind(cmd, pipelineLayout);

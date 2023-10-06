@@ -10,7 +10,7 @@
 namespace bebone::gfx {
     class WindowFactory : private core::NonCopyable {
         public:
-            static std::shared_ptr<Window> create_window(const std::string& title, const int width, const int height, const GfxAPI& gfxAPI);
+            static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI);
     };
 }
 

@@ -15,44 +15,45 @@ namespace bebone::gfx {
     class VulkanSwapChain;
 
     class VulkanDevice : private core::NonCopyable {
-    private:
-        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-        bebone::gfx::Window &window;
+        private:
+            VulkanWindow &window;
 
-        VkDevice device_;
-        VkSurfaceKHR surface_;
+            VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
-        VkQueue graphicsQueue_;
-        VkQueue presentQueue_;
+            VkDevice device_;
+            VkSurfaceKHR surface_;
 
-        bebone::gfx::VulkanInstance &vulkanInstance;
+            VkQueue graphicsQueue_;
+            VkQueue presentQueue_;
 
-        void createSurface(bebone::gfx::VulkanInstance &vulkanInstance);
-        void pickPhysicalDevice(bebone::gfx::VulkanInstance &vulkanInstance);
-        void createLogicalDevice();
+            VulkanInstance &vulkanInstance;
 
-    public:
-        VkPhysicalDeviceProperties properties;
+            void createSurface(VulkanInstance &vulkanInstance);
+            void pickPhysicalDevice(VulkanInstance &vulkanInstance);
+            void createLogicalDevice();
 
-        VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance &vulkanInstance);
-        ~VulkanDevice();
+        public:
+            VkPhysicalDeviceProperties properties;
 
-        std::shared_ptr<VulkanSwapChain> create_swapchain(Window& window);
+            VulkanDevice(VulkanWindow &window, VulkanInstance &vulkanInstance);
+            ~VulkanDevice();
 
-        VkDevice device() const { return device_; }
-        VkSurfaceKHR surface() { return surface_; }
-        VkQueue graphicsQueue() { return graphicsQueue_; }
-        VkQueue presentQueue() { return presentQueue_; }
+            std::shared_ptr<VulkanSwapChain> create_swapchain(VulkanWindow& window);
 
-        void createImageWithInfo(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory);
+            VkDevice device() const { return device_; }
+            VkSurfaceKHR surface() { return surface_; }
+            VkQueue graphicsQueue() { return graphicsQueue_; }
+            VkQueue presentQueue() { return presentQueue_; }
 
-        uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+            void createImageWithInfo(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory);
 
-        QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::findQueueFamilies(physicalDevice, surface_); }
-        SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::querySwapChainSupport(physicalDevice, surface_); }
+            uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-        VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-    };
+            QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::findQueueFamilies(physicalDevice, surface_); }
+            SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::querySwapChainSupport(physicalDevice, surface_); }
+
+            VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+        };
 }
 
 #endif

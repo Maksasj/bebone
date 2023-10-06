@@ -3,7 +3,7 @@
 #include "vulkan_window.h"
 
 namespace bebone::gfx {
-    std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int width, const int height, const GfxAPI& gfxAPI) {
+    std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI) {
         std::shared_ptr<Window> window;
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -20,7 +20,7 @@ namespace bebone::gfx {
             window = std::make_shared<VulkanWindow>(title, width, height);
         }
 
-        if (window->get_backend() == NULL) {
+        if (window->get_backend() == nullptr) {
             glfwTerminate();
             throw std::runtime_error("Failed to create GLFW window");
         }

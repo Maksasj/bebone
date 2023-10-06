@@ -29,7 +29,7 @@ namespace bebone::gfx::opengl {
         const char* source = contents.c_str();
 
         shader = glCreateShader(shaderType);
-        glShaderSource(shader, 1, &source, NULL);
+        glShaderSource(shader, 1, &source, nullptr);
         glCompileShader(shader);
     }
 
