@@ -9,11 +9,6 @@ namespace bebone::gfx::opengl {
         public:
             GLElementBufferObject(const std::vector<GLuint>& indices);
 
-            GLElementBufferObject(const GLElementBufferObject &) = delete;
-            void operator=(const GLElementBufferObject &) = delete;
-            GLElementBufferObject(GLElementBufferObject &&) = delete;
-            GLElementBufferObject &operator=(GLElementBufferObject &&) = delete;
-
             void bind();
             void unbind();
             void destroy();

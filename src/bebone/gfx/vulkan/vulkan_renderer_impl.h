@@ -33,11 +33,12 @@
 #include "../gpu_resource_manager.h"
 
 #include "../window/window.h"
+#include "../window/vulkan_window.h"
 
 namespace bebone::gfx {
     class VulkanRenderer {
         public:
-            Window& _window;
+            VulkanWindow& _window;
 
             const static constexpr size_t FIF = 2; 
 
@@ -53,7 +54,7 @@ namespace bebone::gfx {
             // vulkanPipelineLayout should be saved somewhere
             VulkanPipelineLayoutImpl* vulkanPipelineLayout;
 
-            VulkanRenderer(Window& window) : _window(window) {
+            VulkanRenderer(VulkanWindow& window) : _window(window) {
                 vulkanInstance = VulkanInstance::create_instance();
 
                 device = vulkanInstance->create_device(_window);

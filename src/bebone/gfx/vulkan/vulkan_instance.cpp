@@ -122,6 +122,6 @@ std::vector<const char *> bebone::gfx::VulkanInstance::getRequiredExtensions() {
     return extensions;
 }
 
-std::shared_ptr<bebone::gfx::VulkanDevice> bebone::gfx::VulkanInstance::create_device(Window& window) {
+std::shared_ptr<bebone::gfx::VulkanDevice> bebone::gfx::VulkanInstance::create_device(VulkanWindow& window) {
     return std::make_shared<VulkanDevice>(window, *this);
 }

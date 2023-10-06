@@ -17,9 +17,8 @@ std::string read_file(const std::string& path);
 int main() {
     RenderingEngine::preinit();
 
-    Window window("2. Vulkan voxel example", 800, 600, GfxAPI::VULKAN);
-
-    auto renderer = VulkanRenderer(window);
+    auto window = WindowFactory::create_window("2. Vulkan voxel example", 800, 600, GfxAPI::VULKAN);
+    auto renderer = VulkanRenderer(*std::static_pointer_cast<VulkanWindow>(window));
     
     auto resourceManager = renderer.create_gpu_resource_manager();
 
@@ -62,10 +61,10 @@ int main() {
     Camera mainCamera(resourceManager, resourceSet);
     World world;
 
-    while (!window.closing()) {
+    while (!window->closing()) {
         glfwPollEvents();
 
-        mainCamera.update(window);
+        mainCamera.update(*window);
         world.update(renderer, resourceManager, resourceSet, mainCamera);
 
         auto frame = renderer.get_frame();
@@ -77,7 +76,7 @@ int main() {
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame.frameIndex);
-            cmd.set_viewport(0, 0, window.get_width(), window.get_height());
+            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd.bind_pipeline(pipeline);
             resourceSet.bind(cmd, pipelineLayout);

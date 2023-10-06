@@ -1,6 +1,6 @@
 #include "vulkan_device.h"
 
-bebone::gfx::VulkanDevice::VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
+bebone::gfx::VulkanDevice::VulkanDevice(bebone::gfx::VulkanWindow &window, bebone::gfx::VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
 	createSurface(_vulkanInstance);
 
 	pickPhysicalDevice(_vulkanInstance);

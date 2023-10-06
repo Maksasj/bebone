@@ -5,9 +5,9 @@ using namespace bebone::gfx;
 int main() {
     RenderingEngine::preinit();
 
-    Window window("0. Vulkan window example", 800, 600, GfxAPI::VULKAN);
+    auto window = WindowFactory::create_window("0. Vulkan window example", 800, 600, GfxAPI::VULKAN);
 
-    while (!window.closing()) {
+    while (!window->closing()) {
         glfwPollEvents();
     }
 

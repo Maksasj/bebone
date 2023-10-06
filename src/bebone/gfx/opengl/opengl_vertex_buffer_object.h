@@ -9,11 +9,6 @@ namespace bebone::gfx::opengl {
         public:
             GLVertexBufferObject(const std::vector<GLfloat>& vertices);
 
-            GLVertexBufferObject(const GLVertexBufferObject &) = delete;
-            void operator=(const GLVertexBufferObject &) = delete;
-            GLVertexBufferObject(GLVertexBufferObject &&) = delete;
-            GLVertexBufferObject &operator=(GLVertexBufferObject &&) = delete;
-
             void bind();
             void unbind();
             void destroy();

@@ -20,8 +20,7 @@ const std::vector<GLuint> indices = {
 int main() {
     glfwInit();
 
-    Window window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
-    glfwMakeContextCurrent(window.get_backend());
+    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
 	gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -45,7 +44,7 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    while (!window.closing()) {
+    while (!window->closing()) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -53,7 +52,7 @@ int main() {
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glfwSwapBuffers(window.get_backend());
+        glfwSwapBuffers(window->get_backend());
         glfwPollEvents();
     }
 

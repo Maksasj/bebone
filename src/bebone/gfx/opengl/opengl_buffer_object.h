@@ -4,17 +4,12 @@
 #include "../gfx_backend.h"
 
 namespace bebone::gfx::opengl {
-    class GLBufferObject {
+    class GLBufferObject : private core::NonCopyable {
         protected:
             GLuint id;
 
         public:
             GLBufferObject();
-
-            GLBufferObject(const GLBufferObject &) = delete;
-            void operator=(const GLBufferObject &) = delete;
-            GLBufferObject(GLBufferObject &&) = delete;
-            GLBufferObject &operator=(GLBufferObject &&) = delete;
 
             virtual void bind() = 0;
             virtual void unbind() = 0;

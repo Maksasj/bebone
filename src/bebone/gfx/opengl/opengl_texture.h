@@ -4,17 +4,12 @@
 #include "../gfx_backend.h"
 
 namespace bebone::gfx::opengl {
-    class GLTexture {
+    class GLTexture : private core::NonCopyable {
         private:
             GLuint id;
 
         public:
             GLTexture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
-
-            GLTexture(const GLTexture &) = delete;
-            void operator=(const GLTexture &) = delete;
-            GLTexture(GLTexture &&) = delete;
-            GLTexture &operator=(GLTexture &&) = delete;
 
             void bind();
             void unbind();

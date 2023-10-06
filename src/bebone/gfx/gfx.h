@@ -17,6 +17,7 @@
 #include "swap_chain_impl.h"
 
 #include "window/window.h"
+#include "window/window_factory.h"
 
 #include "vertex_buffer.h"
 #include "index_buffer.h"

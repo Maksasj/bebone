@@ -3,7 +3,7 @@
 
 #include "../gfx_backend.h"
 
-#include "../window/window.h"
+#include "../window/vulkan_window.h"
 #include "vulkan_instance.h"
 
 #include <iostream>
@@ -28,7 +28,7 @@ namespace bebone::gfx {
     class VulkanDevice : private core::NonCopyable {
         private:
             VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-            bebone::gfx::Window &window;
+            bebone::gfx::VulkanWindow &window;
 
             VkDevice device_;
             VkSurfaceKHR surface_;
@@ -57,7 +57,7 @@ namespace bebone::gfx {
         public:
             VkPhysicalDeviceProperties properties;
 
-            VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance &vulkanInstance);
+            VulkanDevice(bebone::gfx::VulkanWindow &window, bebone::gfx::VulkanInstance &vulkanInstance);
             ~VulkanDevice();
 
             VkDevice device() const { return device_; }

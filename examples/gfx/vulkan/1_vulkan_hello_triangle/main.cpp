@@ -21,9 +21,8 @@ std::string read_file(const std::string& path);
 int main() {
     RenderingEngine::preinit();
 
-    Window window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
-
-    auto renderer = VulkanRenderer(window);
+    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
+    auto renderer = VulkanRenderer(*std::static_pointer_cast<VulkanWindow>(window));
     
     auto resourceManager = renderer.create_gpu_resource_manager();
 
@@ -59,7 +58,7 @@ int main() {
     auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
     auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
 
-    while (!window.closing()) {
+    while (!window->closing()) {
         glfwPollEvents();
 
         auto frame = renderer.get_frame();
@@ -71,7 +70,7 @@ int main() {
 
         cmd.begin_record();
             cmd.begin_render_pass(renderer, frame.frameIndex);
-            cmd.set_viewport(0, 0, window.get_width(), window.get_height());
+            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd.bind_pipeline(pipeline);
 

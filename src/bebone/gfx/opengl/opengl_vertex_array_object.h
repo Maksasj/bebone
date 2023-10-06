@@ -9,11 +9,6 @@ namespace bebone::gfx::opengl {
         public:
             GLVertexArrayObject();
 
-            GLVertexArrayObject(const GLVertexArrayObject &) = delete;
-            void operator=(const GLVertexArrayObject &) = delete;
-            GLVertexArrayObject(GLVertexArrayObject &&) = delete;
-            GLVertexArrayObject &operator=(GLVertexArrayObject &&) = delete;
-
             void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
             
             void bind();

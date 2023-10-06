@@ -23,7 +23,7 @@ const std::vector<GLuint> indices {
 int main() {
     glfwInit();
 
-    Window window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
 	gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -54,7 +54,7 @@ int main() {
 
     shaderProgram.set_uniform("ourTexture", 0);
 
-    while (!window.closing()) {
+    while (!window->closing()) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -65,7 +65,7 @@ int main() {
 
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
-        glfwSwapBuffers(window.get_backend());
+        glfwSwapBuffers(window->get_backend());
         glfwPollEvents();
     }
 
