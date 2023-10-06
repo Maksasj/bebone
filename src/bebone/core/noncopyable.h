@@ -3,7 +3,7 @@
 
 namespace bebone::core {
     struct NonCopyable {
-        NonCopyable() {}
+        NonCopyable() = default;
 
         NonCopyable(const NonCopyable &) = delete;
         void operator=(const NonCopyable &) = delete;

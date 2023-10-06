@@ -28,6 +28,8 @@ namespace bebone::gfx {
 
             VkSwapchainKHR swapChain;
 
+            u32 imageCount;
+
             std::vector<VkSemaphore> imageAvailableSemaphores;
             std::vector<VkSemaphore> renderFinishedSemaphores;
             std::vector<VkFence> inFlightFences;
@@ -37,13 +39,15 @@ namespace bebone::gfx {
 
             std::unique_ptr<RenderTarget> renderTarget;
 
-            const size_t FIF;
-
-            VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent, const size_t& fif);
+            VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent);
             ~VulkanSwapChain();
 
             VkResult acquireNextImage(uint32_t *imageIndex);
             VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
+
+            const u32& get_image_count() const {
+                return imageCount;
+            }
 
             size_t currentFrame = 0;
     };

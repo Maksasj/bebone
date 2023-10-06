@@ -39,15 +39,13 @@ namespace bebone::gfx {
         public:
             Window& _window;
 
-            const static constexpr size_t FIF = 2; 
-
             std::shared_ptr<VulkanInstance> vulkanInstance;
             std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
 
             std::unique_ptr<VulkanSwapChain> swapChain; // ORDER MATTERS FOR DESTRUCTOR
             std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
-            // Linked list since we want to avoid reallocations
+            // Linked list since we want to avoid reallocation's
             std::list<VulkanPipeline*> pipelines;
 
             // vulkanPipelineLayout should be saved somewhere
@@ -58,11 +56,11 @@ namespace bebone::gfx {
 
                 device = vulkanInstance->create_device(_window);
 
-                // swapChain = device->create_swapchain(_window);
-                // commandBuffers = device->create_command_buffer_pool();
+                // Todo fif should be moved to swap chain, or no
+                swapChain = std::make_unique<VulkanSwapChain>(*device, _window.get_extend());
 
-                swapChain = std::make_unique<VulkanSwapChain>(*device, _window.get_extend(), FIF);
-                commandBuffers = std::make_unique<VulkanCommandBufferPool>(*device, FIF);
+                // Todo swapChain->get_image_count() basically same thing as fif
+                commandBuffers = std::make_unique<VulkanCommandBufferPool>(*device, swapChain->get_image_count());
             }
 
             ~VulkanRenderer() {
@@ -121,7 +119,7 @@ namespace bebone::gfx {
             }
 
             GPUResourceManager create_gpu_resource_manager() {
-                return GPUResourceManager(FIF, *device);
+                return GPUResourceManager(swapChain->get_image_count(), *device);
             }
 
             VulkanFrame get_frame() const {
