@@ -122,7 +122,7 @@ void bebone::gfx::VulkanSwapChain::createSwapChain() {
 		imageCount = swapChainSupport.capabilities.maxImageCount;
 	}
 
-    std::cout << "Chosen swap chain image count" << imageCount << "\n";
+    std::cout << "Chosen swap chain image count " << imageCount << "\n";
 
 	VkSwapchainCreateInfoKHR createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;

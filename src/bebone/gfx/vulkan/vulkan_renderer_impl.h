@@ -42,8 +42,8 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanInstance> vulkanInstance;
             std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
 
-            std::unique_ptr<VulkanSwapChain> swapChain; // ORDER MATTERS FOR DESTRUCTOR
-            std::unique_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
+            std::shared_ptr<VulkanSwapChain> swapChain; // ORDER MATTERS FOR df
+            std::shared_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
             // Linked list since we want to avoid reallocation's
             std::list<VulkanPipeline*> pipelines;
@@ -51,16 +51,19 @@ namespace bebone::gfx {
             // vulkanPipelineLayout should be saved somewhere
             VulkanPipelineLayoutImpl* vulkanPipelineLayout;
 
-            VulkanRenderer(Window& window) : _window(window) {
+            VulkanRenderer(Window& window)
+                : _window(window),
+                  vulkanPipelineLayout(nullptr) {
+
                 vulkanInstance = VulkanInstance::create_instance();
 
                 device = vulkanInstance->create_device(_window);
 
                 // Todo fif should be moved to swap chain, or no
-                swapChain = std::make_unique<VulkanSwapChain>(*device, _window.get_extend());
+                swapChain = device->create_swapchain(_window);
 
                 // Todo swapChain->get_image_count() basically same thing as fif
-                commandBuffers = std::make_unique<VulkanCommandBufferPool>(*device, swapChain->get_image_count());
+                commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, swapChain->get_image_count());
             }
 
             ~VulkanRenderer() {
@@ -93,17 +96,9 @@ namespace bebone::gfx {
                 return vertexBufferImpl;
             }
 
-            VertexBuffer create_vertex_buffer(const std::vector<Vertex>& vertices) {
-                return VertexBuffer(create_vertex_buffer_impl(vertices));
-            }
-
             VulkanIndexBufferImpl* create_index_buffer_impl(const std::vector<int>& indices) {
                 VulkanIndexBufferImpl* indexBufferImpl = new VulkanIndexBufferImpl(indices, *device);
                 return indexBufferImpl;
-            }
-
-            IndexBuffer create_index_buffer(const std::vector<int>& indices) {
-                return IndexBuffer(create_index_buffer_impl(indices));
             }
 
             PipelineLayoutBuilder create_pipeline_layout_builder() {
@@ -112,10 +107,6 @@ namespace bebone::gfx {
 
             VulkanSwapChain& get_swap_chain() {
                 return *swapChain;
-            }
-
-            VulkanCommandBufferPool& get_command_buffer_pool() {
-                return *commandBuffers;
             }
 
             GPUResourceManager create_gpu_resource_manager() {
@@ -128,21 +119,8 @@ namespace bebone::gfx {
 
                 if(result == VK_ERROR_OUT_OF_DATE_KHR) {
                     // This logic needs to be abstracted away
-                    vkDeviceWaitIdle(device->device());
-
-                    swapChain->recreate(_window.get_extend());
-
-                    for(auto& pipeline : pipelines) {
-                        PipelineConfigInfo pipelineConfig;
-                        PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
-                        
-                        pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
-                        pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout(); // vulkanPipelineLayout should be saved somewhere
-
-                        pipeline->recreate(pipelineConfig);
-                    }
-
-                    return VulkanFrame::invalid; 
+                    recreate_pipelines();
+                    return VulkanFrame::invalid;
                 }
 
                 if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
@@ -152,34 +130,36 @@ namespace bebone::gfx {
                 return VulkanFrame(imageIndex, &commandBuffers->get_command_buffer(imageIndex));
             }
 
-            void present(VulkanFrame& frame) {
-                VkCommandBuffer& _commnandBuffer = frame.get_command_buffer().commandBuffer;
+            void recreate_pipelines() const {
+                vkDeviceWaitIdle(device->device());
 
-                auto result = swapChain->submitCommandBuffers(&_commnandBuffer, &frame.frameIndex);
+                _window.reset_resize_flag();
+                swapChain->recreate(_window.get_extend());
+
+                for(auto& pipeline : pipelines) {
+                    PipelineConfigInfo pipelineConfig;
+                    PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
+
+                    pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
+                    pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout(); // vulkanPipelineLayout should be saved somewhere
+
+                    pipeline->recreate(pipelineConfig);
+                }
+            }
+
+            void present(VulkanFrame& frame) {
+                VkCommandBuffer& commnandBuffer = frame.get_command_buffer().commandBuffer;
+
+                auto result = swapChain->submitCommandBuffers(&commnandBuffer, &frame.frameIndex);
 
                 if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window.is_resized()) {
                     // This logic needs to be abstracted away
-                    vkDeviceWaitIdle(device->device());
-
-                    _window.reset_resize_flag();
-                    swapChain->recreate(_window.get_extend());
-                    
-                    for(auto& pipeline : pipelines) {
-                        PipelineConfigInfo pipelineConfig;
-                        PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
-                        
-                        pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
-                        pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout(); // vulkanPipelineLayout should be saved somewhere
-
-                        pipeline->recreate(pipelineConfig);
-                    }
-
+                    recreate_pipelines();
                     return;
                 }
 
-                if(result != VK_SUCCESS) {
+                if(result != VK_SUCCESS)
                     throw std::runtime_error("failed to acquire submit command buffers !\n");
-                }
             }
     };
 }

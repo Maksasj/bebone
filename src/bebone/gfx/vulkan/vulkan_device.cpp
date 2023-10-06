@@ -1,4 +1,5 @@
 #include "vulkan_device.h"
+#include "vulkan_swap_chain.h"
 
 bebone::gfx::VulkanDevice::VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
 	createSurface(_vulkanInstance);
@@ -19,6 +20,10 @@ void bebone::gfx::VulkanDevice::pickPhysicalDevice(bebone::gfx::VulkanInstance& 
 
     vkGetPhysicalDeviceProperties(physicalDevice, &properties);
     std::cout << "physical device: " << properties.deviceName << std::endl;
+}
+
+std::shared_ptr<bebone::gfx::VulkanSwapChain> bebone::gfx::VulkanDevice::create_swapchain(bebone::gfx::Window& window) {
+    return std::make_shared<VulkanSwapChain>(*this, window.get_extend());
 }
 
 void bebone::gfx::VulkanDevice::createLogicalDevice() {

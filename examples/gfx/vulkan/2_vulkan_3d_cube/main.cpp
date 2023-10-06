@@ -118,8 +118,9 @@ int main() {
         if(!frame.valid())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window.get_aspect(), 0.1f, 100.0f);
+        ++t;
 
         auto handles = Handles {
             static_cast<u32>(cameraUBO.get_handle(frame.frameIndex).index),

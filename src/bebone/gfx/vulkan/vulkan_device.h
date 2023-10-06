@@ -12,6 +12,8 @@
 #include <unordered_set>
 
 namespace bebone::gfx {
+    class VulkanSwapChain;
+
     class VulkanDevice : private core::NonCopyable {
         private:
             VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
@@ -34,6 +36,8 @@ namespace bebone::gfx {
 
             VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance &vulkanInstance);
             ~VulkanDevice();
+
+            std::shared_ptr<VulkanSwapChain> create_swapchain(Window& window);
 
             VkDevice device() const { return device_; }
             VkSurfaceKHR surface() { return surface_; }
