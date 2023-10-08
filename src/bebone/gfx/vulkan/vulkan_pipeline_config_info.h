@@ -46,7 +46,6 @@ namespace bebone::gfx {
             configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
             configInfo.rasterizationInfo.lineWidth = 1.0f;
             configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT; // Todo
-
             configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; // Todo
             configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
             configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional

@@ -20,8 +20,8 @@ class MeshBuilder {
         int indicesOffset;
 
     public:
-        MeshBuilder() {
-            indicesOffset = 0;
+        MeshBuilder() : indicesOffset(0) {
+
         }
 
         void append(std::vector<Vertex>& _vertices, std::vector<u32>& _indices, const Vec3f& posOffset) {
