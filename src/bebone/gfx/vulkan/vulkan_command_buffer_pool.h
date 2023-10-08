@@ -18,7 +18,10 @@ namespace bebone::gfx {
             core::ArenaContainer commandBuffers;
 
         public:
-            VulkanCommandBufferPool(VulkanDevice& device, const size_t& commandBufferCount) : _device(device), commandBuffers(sizeof(VulkanCommandBuffer) * commandBufferCount) {
+            VulkanCommandBufferPool(VulkanDevice& device, const size_t& commandBufferCount)
+                : _device(device),
+                  commandBuffers(sizeof(VulkanCommandBuffer) * commandBufferCount) {
+
                 QueueFamilyIndices queueFamilyIndices = device.findPhysicalQueueFamilies();
 
                 VkCommandPoolCreateInfo poolInfo = {};
@@ -126,8 +129,6 @@ namespace bebone::gfx {
                     throw std::runtime_error("Failed to retrive command buffer at index " + std::to_string(index));
                 }
 
-                // return static_cast<CommandBuffer&>(*ptr);
-                
                 return *ptr;
             }
     };  

@@ -23,7 +23,7 @@ class World {
     private:
         std::unordered_map<std::pair<int, int>, std::unique_ptr<Chunk>, hash_pair> chunks;
     
-        int renderDistance = 8;
+        int renderDistance = 6;
         std::unique_ptr<ArenaContainer> chunkRenderingQueue;
     public:
         World() {

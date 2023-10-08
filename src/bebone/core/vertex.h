@@ -7,8 +7,6 @@ namespace bebone::core {
     struct Vertex {
         Vec3f pos;
         Vec3f color;
-        Vec2f texCoords;
-        int norm;
     };
 }
 

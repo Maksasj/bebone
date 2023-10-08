@@ -113,23 +113,6 @@ namespace bebone::gfx {
                 return GPUResourceManager(swapChain->get_image_count(), *device);
             }
 
-            VulkanFrame get_frame() const {
-                uint32_t imageIndex;
-                auto result = swapChain->acquireNextImage(&imageIndex);
-
-                if(result == VK_ERROR_OUT_OF_DATE_KHR) {
-                    // This logic needs to be abstracted away
-                    recreate_pipelines();
-                    return VulkanFrame::invalid;
-                }
-
-                if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-                    throw std::runtime_error("failed to acquire swap chain image!");
-                }
-
-                return VulkanFrame(imageIndex, &commandBuffers->get_command_buffer(imageIndex));
-            }
-
             void recreate_pipelines() const {
                 vkDeviceWaitIdle(device->device());
 
@@ -145,6 +128,23 @@ namespace bebone::gfx {
 
                     pipeline->recreate(pipelineConfig);
                 }
+            }
+
+            VulkanFrame get_frame() const {
+                uint32_t imageIndex;
+                auto result = swapChain->acquireNextImage(&imageIndex);
+
+                if(result == VK_ERROR_OUT_OF_DATE_KHR) {
+                    // This logic needs to be abstracted away
+                    recreate_pipelines();
+                    return VulkanFrame::invalid;
+                }
+
+                if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+                    throw std::runtime_error("failed to acquire swap chain image!");
+                }
+
+                return VulkanFrame(imageIndex, &commandBuffers->get_command_buffer(imageIndex));
             }
 
             void present(VulkanFrame& frame) {

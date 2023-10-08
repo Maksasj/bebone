@@ -64,25 +64,24 @@ VkResult bebone::gfx::VulkanSwapChain::acquireNextImage(uint32_t *imageIndex) {
 }
 
 VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex) {
-	if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
+	// Submitting and synchronization
+    if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
 		vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
 	}
 	
 	imagesInFlight[*imageIndex] = inFlightFences[currentFrame];
 
-	VkSubmitInfo submitInfo = {};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
 	VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]};
 	VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
+
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = waitSemaphores;
 	submitInfo.pWaitDstStageMask = waitStages;
-
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = buffers;
-
-	VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -91,16 +90,15 @@ VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffe
 		throw std::runtime_error("failed to submit draw command buffer!");
 	}
 
+    // Presenting part
+    VkSwapchainKHR swapChains[] = {swapChain};
+
 	VkPresentInfoKHR presentInfo = {};
 	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
 	presentInfo.waitSemaphoreCount = 1;
 	presentInfo.pWaitSemaphores = signalSemaphores;
-
-	VkSwapchainKHR swapChains[] = {swapChain};
 	presentInfo.swapchainCount = 1;
 	presentInfo.pSwapchains = swapChains;
-
 	presentInfo.pImageIndices = imageIndex;
 
 	VkResult result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
