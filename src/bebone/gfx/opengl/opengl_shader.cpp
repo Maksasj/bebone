@@ -63,6 +63,11 @@ namespace bebone::gfx::opengl {
         glUniform1f(uniform, value);
     }
 
+    void GLShaderProgram::set_uniform(const char* uniformName, bebone::core::Mat4f value) {
+        GLfloat uniform = glGetUniformLocation(id, uniformName);
+        glUniformMatrix4fv(uniform, 1, GL_FALSE, value.e);
+    }
+
     void GLShaderProgram::enable() {
         glUseProgram(id);
     }

@@ -24,6 +24,7 @@ namespace bebone::gfx::opengl {
             void set_uniform(const char* uniformName, GLint value);
             void set_uniform(const char* uniformName, GLuint value);
             void set_uniform(const char* uniformName, GLfloat value);
+            void set_uniform(const char* uniformName, bebone::core::Mat4f value);
 
             void enable();
             void destroy();

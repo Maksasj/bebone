@@ -14,5 +14,6 @@
 
 // Bebone things
 #include "../core/noncopyable.h"
+#include "../core/types.h"
 
 #endif

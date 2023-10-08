@@ -1,3 +1,4 @@
 add_subdirectory(0_opengl_window)
 add_subdirectory(1_opengl_hello_triangle)
 add_subdirectory(2_opengl_texture)
+add_subdirectory(3_opengl_3d_cube)
