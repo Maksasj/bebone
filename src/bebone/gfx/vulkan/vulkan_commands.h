@@ -18,10 +18,10 @@ namespace bebone::gfx {
 
     class VulkanBeginRecordCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
 
         public:
-            VulkanBeginRecordCommand(VulkanCommandBuffer& commandBuffer) : _commandBuffer(commandBuffer) {
+            VulkanBeginRecordCommand(VkCommandBuffer& commandBuffer) : _commandBuffer(commandBuffer) {
                 
             }
 
@@ -29,7 +29,7 @@ namespace bebone::gfx {
                 VkCommandBufferBeginInfo beginInfo{};
                 beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-                if(vkBeginCommandBuffer(_commandBuffer.commandBuffer, &beginInfo) != VK_SUCCESS) {
+                if(vkBeginCommandBuffer(_commandBuffer, &beginInfo) != VK_SUCCESS) {
                     throw std::runtime_error("failed to being recording command buffer");
                 }
             }
@@ -37,15 +37,15 @@ namespace bebone::gfx {
 
     class VulkanEndRecordCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
 
         public:
-            VulkanEndRecordCommand(VulkanCommandBuffer& commandBuffer) : _commandBuffer(commandBuffer) {
+            VulkanEndRecordCommand(VkCommandBuffer& commandBuffer) : _commandBuffer(commandBuffer) {
 
             }
 
             void execute() override {
-                if (vkEndCommandBuffer(_commandBuffer.commandBuffer) != VK_SUCCESS) {
+                if (vkEndCommandBuffer(_commandBuffer) != VK_SUCCESS) {
                     throw std::runtime_error("failed to end command buffer");
                 }
             }
@@ -53,12 +53,13 @@ namespace bebone::gfx {
 
     class VulkanBeginRenderPassCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
+
             VulkanSwapChain& _swapChain;
             u32 _frameBuffer;
 
         public:
-            VulkanBeginRenderPassCommand(VulkanCommandBuffer& commandBuffer, VulkanSwapChain& swapChain, const u32& frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
+            VulkanBeginRenderPassCommand(VkCommandBuffer& commandBuffer, VulkanSwapChain& swapChain, const u32& frameBuffer) : _commandBuffer(commandBuffer), _swapChain(swapChain) {
                 _frameBuffer = frameBuffer;
             }
 
@@ -78,13 +79,13 @@ namespace bebone::gfx {
                 renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
                 renderPassInfo.pClearValues = clearValues.data();
         
-                vkCmdBeginRenderPass(_commandBuffer.commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+                vkCmdBeginRenderPass(_commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
             }
     };
 
     class VulkanSetViewportCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
 
             const i32 _x;
             const i32 _y;
@@ -92,7 +93,7 @@ namespace bebone::gfx {
             const u32 _height;
 
         public:
-            VulkanSetViewportCommand(VulkanCommandBuffer& commandBuffer, const i32& x, const i32& y, const u32& width, const u32& height) 
+            VulkanSetViewportCommand(VkCommandBuffer& commandBuffer, const i32& x, const i32& y, const u32& width, const u32& height) 
                 : _commandBuffer(commandBuffer), _x(x), _y(y), _width(width), _height(height) {
 
             }
@@ -110,111 +111,111 @@ namespace bebone::gfx {
 
                 VkRect2D scissor = {{_x, _y}, {_width, _height}};
 
-                vkCmdSetViewport(_commandBuffer.commandBuffer, 0, 1, &viewport);
-                vkCmdSetScissor(_commandBuffer.commandBuffer, 0, 1, &scissor);
+                vkCmdSetViewport(_commandBuffer, 0, 1, &viewport);
+                vkCmdSetScissor(_commandBuffer, 0, 1, &scissor);
             }
     };
 
     class VulkanEndRenderPassCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
 
         public:
-            VulkanEndRenderPassCommand(VulkanCommandBuffer& commandBuffer) : _commandBuffer(commandBuffer) {
+            VulkanEndRenderPassCommand(VkCommandBuffer& commandBuffer) : _commandBuffer(commandBuffer) {
 
             }
 
             void execute() override {
-                vkCmdEndRenderPass(_commandBuffer.commandBuffer);
+                vkCmdEndRenderPass(_commandBuffer);
             }
     };
 
     class VulkanBindPipelineCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
             VulkanPipeline& _pipeline;
 
         public:
-            VulkanBindPipelineCommand(VulkanCommandBuffer& commandBuffer, VulkanPipeline& pipeline) : _commandBuffer(commandBuffer), _pipeline(pipeline) {
+            VulkanBindPipelineCommand(VkCommandBuffer& commandBuffer, VulkanPipeline& pipeline) : _commandBuffer(commandBuffer), _pipeline(pipeline) {
 
             }
 
             void execute() override {
-                vkCmdBindPipeline(_commandBuffer.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline.grapgicsPipeline);
+                vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline.grapgicsPipeline);
             }
     };
 
     class VulkanBindVertexBufferCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
             VulkanVertexBufferImpl& _vertexBuffer;
 
         public:
-            VulkanBindVertexBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanVertexBufferImpl& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
+            VulkanBindVertexBufferCommand(VkCommandBuffer& commandBuffer, VulkanVertexBufferImpl& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
 
             }
 
             void execute() override {
                 VkBuffer buffers[] = {_vertexBuffer.get_buffer()};
                 VkDeviceSize offset[] = {0};
-                vkCmdBindVertexBuffers(_commandBuffer.commandBuffer, 0, 1, buffers, offset);
+                vkCmdBindVertexBuffers(_commandBuffer, 0, 1, buffers, offset);
             }
     };
 
     class VulkanBindIndexBufferCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
             VulkanIndexBufferImpl& _indexBuffer;
 
         public:
-            VulkanBindIndexBufferCommand(VulkanCommandBuffer& commandBuffer, VulkanIndexBufferImpl& indexBuffer) : _commandBuffer(commandBuffer), _indexBuffer(indexBuffer) {
+            VulkanBindIndexBufferCommand(VkCommandBuffer& commandBuffer, VulkanIndexBufferImpl& indexBuffer) : _commandBuffer(commandBuffer), _indexBuffer(indexBuffer) {
 
             }
 
             void execute() override {
                 // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
-                vkCmdBindIndexBuffer(_commandBuffer.commandBuffer, _indexBuffer.get_buffer(), 0, VK_INDEX_TYPE_UINT32);
+                vkCmdBindIndexBuffer(_commandBuffer, _indexBuffer.get_buffer(), 0, VK_INDEX_TYPE_UINT32);
             }
     };
 
     class VulkanDrawCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
             const size_t _vertexCount;
 
         public:
-            VulkanDrawCommand(VulkanCommandBuffer& commandBuffer, const size_t& vertexCount) : _commandBuffer(commandBuffer), _vertexCount(vertexCount) {
+            VulkanDrawCommand(VkCommandBuffer& commandBuffer, const size_t& vertexCount) : _commandBuffer(commandBuffer), _vertexCount(vertexCount) {
 
             }
 
             void execute() override {
-                vkCmdDraw(_commandBuffer.commandBuffer, _vertexCount, 1, 0, 0);
+                vkCmdDraw(_commandBuffer, _vertexCount, 1, 0, 0);
             }
     };
 
     class VulkanDrawIndexedCommand : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
             const size_t _indicesCount;
 
         public:
-            VulkanDrawIndexedCommand(VulkanCommandBuffer& commandBuffer, const size_t& indicesCount) : _commandBuffer(commandBuffer), _indicesCount(indicesCount) {
+            VulkanDrawIndexedCommand(VkCommandBuffer& commandBuffer, const size_t& indicesCount) : _commandBuffer(commandBuffer), _indicesCount(indicesCount) {
 
             }
 
             void execute() override {
-                vkCmdDrawIndexed(_commandBuffer.commandBuffer, static_cast<uint32_t>(_indicesCount), 1, 0, 0, 0);
+                vkCmdDrawIndexed(_commandBuffer, static_cast<uint32_t>(_indicesCount), 1, 0, 0, 0);
             }
     };
 
     class VulkanBindDescriptorSet : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
             VkDescriptorSet* _descriptorSet;
             VulkanPipelineLayoutImpl* _pipelineLayout;
 
         public:
-            VulkanBindDescriptorSet(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, VkDescriptorSet* descriptorSet) 
+            VulkanBindDescriptorSet(VkCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, VkDescriptorSet* descriptorSet) 
                 :   _commandBuffer(commandBuffer), 
                     _descriptorSet(descriptorSet),
                     _pipelineLayout(pipelineLayout) {
@@ -222,13 +223,13 @@ namespace bebone::gfx {
             }
 
             void execute() override {
-                vkCmdBindDescriptorSets(_commandBuffer.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayout->get_layout(), 0, 1, _descriptorSet, 0, nullptr);
+                vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayout->get_layout(), 0, 1, _descriptorSet, 0, nullptr);
             }
     };
 
     class VulkanPushConstant : public Command {
         private:
-            VulkanCommandBuffer& _commandBuffer;
+            VkCommandBuffer& _commandBuffer;
             VulkanPipelineLayoutImpl* _pipelineLayout;
 
             const uint32_t _size;
@@ -236,7 +237,7 @@ namespace bebone::gfx {
             const void* _ptr;
 
         public:
-            VulkanPushConstant(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, const uint32_t& size, const uint32_t& offset, const void* ptr) 
+            VulkanPushConstant(VkCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl* pipelineLayout, const uint32_t& size, const uint32_t& offset, const void* ptr) 
                 :   _commandBuffer(commandBuffer), 
                     _pipelineLayout(pipelineLayout),
                     _size(size),
@@ -246,7 +247,7 @@ namespace bebone::gfx {
             }
 
             void execute() override {
-                vkCmdPushConstants(_commandBuffer.commandBuffer, _pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, _offset, _size, _ptr);
+                vkCmdPushConstants(_commandBuffer, _pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, _offset, _size, _ptr);
             }
     };
 }

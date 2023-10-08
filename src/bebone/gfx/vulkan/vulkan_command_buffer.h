@@ -15,6 +15,8 @@
 
 #include "../pipeline.h"
 
+#include "vulkan_commands.h"
+
 namespace bebone::gfx {
     using namespace bebone::core;
 
@@ -27,6 +29,8 @@ namespace bebone::gfx {
         public:
             const size_t _frameIndex;
 
+            VkCommandBuffer commandBuffer;
+
             VulkanCommandBuffer(const size_t& frameIndex);
 
             void begin_record();
@@ -38,8 +42,12 @@ namespace bebone::gfx {
             void set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);
 
             void bind_pipeline(Pipeline& pipeline);
-            
-            void bind_vertex_buffer(VertexBuffer& vertexBuffer);
+
+            void bind_vertex_buffer(VertexBuffer& vertexBuffer) {
+                VulkanBindVertexBufferCommand* ptrTarget = static_cast<VulkanBindVertexBufferCommand*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand)));
+                std::ignore = new (ptrTarget) VulkanBindVertexBufferCommand(commandBuffer, *static_cast<VulkanVertexBufferImpl*>(vertexBuffer.get_impl()));
+            }
+
             void bind_index_buffer(IndexBuffer& indexBuffer);
             void bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet);
 
@@ -51,9 +59,7 @@ namespace bebone::gfx {
 
             void preprocess();
             void submit();
-
-            VkCommandBuffer commandBuffer;
-    };  
+    };
 }
 
 #endif
