@@ -1,22 +1,16 @@
-file(GLOB_RECURSE SRC_FILES "*.cpp")
+add_subdirectory(core)
+add_subdirectory(gfx)
+add_subdirectory(input)
+add_subdirectory(net)
+add_subdirectory(physics)
+add_subdirectory(sound)
 
-find_package(Vulkan REQUIRED)
+file(GLOB BEBONE_SRC_FILE bebone.cpp)
+add_library(bebone STATIC ${BEBONE_SRC_FILE})
 
-include_directories("../../3dparty/glad/include")
-include_directories("../../3dparty/glfw/include")
-include_directories("../../3dparty/Vulkan-Headers/include")
-include_directories("../../3dparty/omni_types/src")
-
-include_directories("./")
-
-add_library(bebone STATIC ${SRC_FILES}
-        gfx/vulkan/vulkan_debug_messenger.cpp
-        gfx/vulkan/vulkan_debug_messenger.h)
-
-target_link_libraries(bebone glfw)
-target_link_libraries(bebone glad)
-target_link_libraries(bebone glslang)
-target_link_libraries(bebone SPIRV)
-target_link_libraries(bebone glslang-default-resource-limits)
-
-target_link_libraries(bebone ${Vulkan_LIBRARIES})
+target_link_libraries(bebone bebone_core)
+target_link_libraries(bebone bebone_gfx)
+target_link_libraries(bebone bebone_input)
+target_link_libraries(bebone bebone_net)
+target_link_libraries(bebone bebone_physics)
+target_link_libraries(bebone bebone_sound)

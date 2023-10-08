@@ -1,3 +1,4 @@
+#include "bebone/core/core.h"
 #include "test_shared.h"
 
 int main() {
