@@ -91,8 +91,9 @@ namespace bebone::gfx {
                 return Pipeline(&pipelines.back());
             }
 
-            VulkanVertexBufferImpl* create_vertex_buffer_impl(const std::vector<Vertex>& vertices) {
-                VulkanVertexBufferImpl* vertexBufferImpl = new VulkanVertexBufferImpl(vertices, *device);
+            template<class VertexType>
+            VulkanVertexBufferImpl<VertexType>* create_vertex_buffer_impl(const std::vector<VertexType>& vertices) {
+                VulkanVertexBufferImpl<VertexType>* vertexBufferImpl = new VulkanVertexBufferImpl<VertexType>(vertices, *device);
                 return vertexBufferImpl;
             }
 

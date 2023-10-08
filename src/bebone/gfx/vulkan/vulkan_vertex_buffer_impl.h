@@ -10,21 +10,22 @@
 
 namespace bebone::gfx {
     using namespace bebone::core;
-    
+
+    template<class VertexType>
     class VulkanVertexBufferImpl : public VulkanBufferImpl {
         private:
             uint32_t vertexCount;
 
         public:
-            VulkanVertexBufferImpl(const std::vector<Vertex> &vertices, VulkanDevice& device) 
+            VulkanVertexBufferImpl(const std::vector<VertexType> &vertices, VulkanDevice& device)
                 : VulkanBufferImpl(
-                    sizeof(Vertex) * vertices.size(), 
-                    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
+                    sizeof(VertexType) * vertices.size(),
+                    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, // Todo actual this can be set to an any buffer type
                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, device
                 ) {
                 
                 vertexCount = static_cast<uint32_t>(vertices.size());
-                VkDeviceSize bufferSize = sizeof(Vertex) * vertexCount;
+                VkDeviceSize bufferSize = sizeof(VertexType) * vertexCount;
 
                 void* data;
                 vkMapMemory(device.device(), get_buffer_memory(), 0, bufferSize, 0, &data);

@@ -145,13 +145,14 @@ namespace bebone::gfx {
             }
     };
 
+    template<class VertexType>
     class VulkanBindVertexBufferCommand : public Command {
         private:
             VkCommandBuffer& _commandBuffer;
-            VulkanVertexBufferImpl& _vertexBuffer;
+            VulkanVertexBufferImpl<VertexType>& _vertexBuffer;
 
         public:
-            VulkanBindVertexBufferCommand(VkCommandBuffer& commandBuffer, VulkanVertexBufferImpl& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
+            VulkanBindVertexBufferCommand(VkCommandBuffer& commandBuffer, VulkanVertexBufferImpl<VertexType>& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
 
             }
 

@@ -8,6 +8,8 @@
 #include "handles.h"
 #include "transform.h"
 
+#include "vertex.h"
+
 using namespace bebone::gfx;
 using namespace bebone::core;
 
@@ -15,13 +17,13 @@ class Mesh {
     private:
         size_t indexCount;
 
-        std::unique_ptr<VertexBuffer> vertexBuffer;
+        std::unique_ptr<VertexBuffer<Vertex>> vertexBuffer;
         std::unique_ptr<IndexBuffer> indexBuffer;
     public:
         Mesh(VulkanRenderer& renderer, const std::vector<Vertex>& vertices, const std::vector<int>& indices) {
             indexCount = indices.size();
 
-            vertexBuffer = std::make_unique<VertexBuffer>(renderer.create_vertex_buffer_impl(vertices));
+            vertexBuffer = std::make_unique<VertexBuffer<Vertex>>(renderer.create_vertex_buffer_impl(vertices));
             indexBuffer = std::make_unique<IndexBuffer>(renderer.create_index_buffer_impl(indices));
         }
 

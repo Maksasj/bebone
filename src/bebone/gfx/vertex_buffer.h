@@ -6,12 +6,13 @@
 #include "vulkan/vulkan_vertex_buffer_impl.h"
 
 namespace bebone::gfx {
+    template<class VertexType>
     class VertexBuffer {
         private:
-            VulkanVertexBufferImpl* _impl;
+            VulkanVertexBufferImpl<VertexType>* _impl;
 
         public:
-            VertexBuffer(VulkanVertexBufferImpl* impl) : _impl(impl) {
+            VertexBuffer(VulkanVertexBufferImpl<VertexType>* impl) : _impl(impl) {
 
             }
 
@@ -21,7 +22,7 @@ namespace bebone::gfx {
                 }
             }
 
-            VulkanVertexBufferImpl* get_impl() {
+            VulkanVertexBufferImpl<VertexType>* get_impl() {
                 return _impl;
             }
     };
