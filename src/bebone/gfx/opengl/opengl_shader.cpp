@@ -4,11 +4,17 @@ namespace bebone::gfx::opengl {
     GLShader::GLShader(const ShaderCode& code, const ShaderType& shaderType) {
         shader = glCreateShader(shaderType.to_opengl());
 
-        const auto& source = code.get_byte_code();
+        const std::string& contents = code.get_shader_source_code().get_shader_source();
+        const char* source = contents.c_str();
 
-        // **_ARB things can be used only with specific glad extensions, see all-extensions glad branch
-        glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, source.data(), source.size() * sizeof(unsigned int));
-        glSpecializeShaderARB(shader, "main", 0, nullptr, nullptr);
+        glShaderSource(shader, 1, &source, nullptr);
+        glCompileShader(shader);
+
+        // const auto& source = code.get_byte_code();
+
+        // // **_ARB things can be used only with specific glad extensions, see all-extensions glad branch
+        // glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, source.data(), source.size() * sizeof(unsigned int));
+        // glSpecializeShaderARB(shader, "main", 0, nullptr, nullptr);
     }
 
     GLuint GLShader::get_shader() const {

@@ -14,6 +14,8 @@ namespace bebone::gfx {
             ShaderType m_shaderType;
 
         public:
+            ShaderSource() : m_shaderType(ShaderTypes::VERTEX_SHADER) {}
+
             ShaderSource(const std::string& p_shaderSource, const ShaderType& p_shaderType) 
                 : m_shaderSource(p_shaderSource),
                   m_shaderType(p_shaderType) {

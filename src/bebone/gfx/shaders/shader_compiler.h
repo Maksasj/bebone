@@ -103,7 +103,7 @@ namespace bebone::gfx {
 
                 glslang::FinalizeProcess();
 
-                return ShaderCode(spirVCode, p_shaderType);
+                return ShaderCode(spirVCode, p_shaderType, m_shaderSources[0]);
             }
     };
 }
