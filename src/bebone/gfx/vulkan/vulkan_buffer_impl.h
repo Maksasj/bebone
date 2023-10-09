@@ -10,31 +10,23 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    static std::vector<VkVertexInputBindingDescription> getBindingDescriptions() {
-        std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
-        
-        bindingDescriptions[0].binding = 0;
-        bindingDescriptions[0].stride = sizeof(Vec3f) * 2;
-        bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-        return bindingDescriptions;
-    }
-
-    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() {
-        std::vector<VkVertexInputAttributeDescription> atrributeDescriptions(2);
-        
-        atrributeDescriptions[0].binding = 0;
-        atrributeDescriptions[0].location = 0;
-        atrributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-        atrributeDescriptions[0].offset = 0;
-
-        atrributeDescriptions[1].binding = 0;
-        atrributeDescriptions[1].location = 1;
-        atrributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-        atrributeDescriptions[1].offset = sizeof(Vec3f);
-
-        return atrributeDescriptions;
-    }
+    const static VkBufferUsageFlags VULKAN_BUFFER_ANY_USE_FLAG =
+        VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT |
+        VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+        VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT |
+        VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT |
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT |
+        VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT |
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
+        VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT |
+        VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT |
+        VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT |
+        VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT |
+        VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR |
+        VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR |
+        VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR;
 
     class VulkanBufferImpl : private core::NonCopyable {
         private:
@@ -45,8 +37,7 @@ namespace bebone::gfx {
 
             const size_t _size;
 
-        public:
-            VulkanBufferImpl(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VulkanDevice& device) : device(device), _size(static_cast<size_t>(size)) {
+            void create_buffer(VkDeviceSize size, VkBufferUsageFlags usage) {
                 VkBufferCreateInfo bufferInfo{};
                 bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 bufferInfo.size = size;
@@ -56,7 +47,9 @@ namespace bebone::gfx {
                 if (vkCreateBuffer(device.device(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
                     throw std::runtime_error("failed to create vulkan buffer!");
                 }
+            }
 
+            void allocate_memory(VkMemoryPropertyFlags properties) {
                 VkMemoryRequirements memRequirements;
                 vkGetBufferMemoryRequirements(device.device(), buffer, &memRequirements);
 
@@ -68,6 +61,12 @@ namespace bebone::gfx {
                 if (vkAllocateMemory(device.device(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
                     throw std::runtime_error("failed to allocate vulkan buffer memory!");
                 }
+            }
+
+        public:
+            VulkanBufferImpl(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device) : device(device), _size(static_cast<size_t>(size)) {
+                create_buffer(size, VULKAN_BUFFER_ANY_USE_FLAG);
+                allocate_memory(properties);
 
                 vkBindBufferMemory(device.device(), buffer, bufferMemory, 0);
             }
@@ -83,10 +82,6 @@ namespace bebone::gfx {
 
             size_t get_size() {
                 return _size;
-            }
-
-            VulkanDevice& get_device() {
-                return device;
             }
 
             VkDeviceMemory get_buffer_memory() const {

@@ -5,7 +5,7 @@
 
 #include "vulkan_vertex_buffer_impl.h"
 #include "vulkan_index_buffer_impl.h"
-#include "../vulkan_uniform_buffer_impl.h"
+#include "vulkan_uniform_buffer_impl.h"
 
 #include "vulkan_pipeline_impl.h"
 #include "vulkan_pipeline_layout_impl.h"
@@ -145,19 +145,18 @@ namespace bebone::gfx {
             }
     };
 
-    template<class VertexType>
     class VulkanBindVertexBufferCommand : public Command {
         private:
             VkCommandBuffer& _commandBuffer;
-            VulkanVertexBufferImpl<VertexType>& _vertexBuffer;
+            VulkanBufferImpl& _buffer;
 
         public:
-            VulkanBindVertexBufferCommand(VkCommandBuffer& commandBuffer, VulkanVertexBufferImpl<VertexType>& vertexBuffer) : _commandBuffer(commandBuffer), _vertexBuffer(vertexBuffer) {
+            VulkanBindVertexBufferCommand(VkCommandBuffer& commandBuffer, VulkanBufferImpl& buffer) : _commandBuffer(commandBuffer), _buffer(buffer) {
 
             }
 
             void execute() override {
-                VkBuffer buffers[] = {_vertexBuffer.get_buffer()};
+                VkBuffer buffers[] = {_buffer.get_buffer()};
                 VkDeviceSize offset[] = {0};
                 vkCmdBindVertexBuffers(_commandBuffer, 0, 1, buffers, offset);
             }

@@ -21,7 +21,7 @@
 
 #include "vulkan_frame.h"
 
-#include "../vulkan_uniform_buffer_impl.h"
+#include "vulkan_uniform_buffer_impl.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
 #include "vulkan_pipeline_layout_builder_impl.h"

@@ -97,6 +97,8 @@ int main() {
 
     auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
 
+    // auto vertexBuffer = device.create_buffer(sizeof(Vertex) * vertices.size());
+
     auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
     auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
 

@@ -6,7 +6,7 @@
 #include "uniform_buffer_handle.h"
 
 #include "vulkan/vulkan_command_buffer.h"
-#include "vulkan_uniform_buffer_impl.h"
+#include "vulkan/vulkan_uniform_buffer_impl.h"
 
 namespace bebone::gfx {
     template<class DataType>

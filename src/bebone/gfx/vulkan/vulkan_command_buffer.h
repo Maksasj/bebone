@@ -45,8 +45,8 @@ namespace bebone::gfx {
 
             template<class VertexType>
             void bind_vertex_buffer(VertexBuffer<VertexType>& vertexBuffer) {
-                VulkanBindVertexBufferCommand<Vertex>* ptrTarget = static_cast<VulkanBindVertexBufferCommand<Vertex>*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand<Vertex>)));
-                std::ignore = new (ptrTarget) VulkanBindVertexBufferCommand(commandBuffer, *static_cast<VulkanVertexBufferImpl<VertexType>*>(vertexBuffer.get_impl()));
+                VulkanBindVertexBufferCommand* ptrTarget = static_cast<VulkanBindVertexBufferCommand*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand)));
+                std::ignore = new (ptrTarget) VulkanBindVertexBufferCommand(commandBuffer, *static_cast<VulkanBufferImpl*>(vertexBuffer.get_impl()));
             }
 
             void bind_index_buffer(IndexBuffer& indexBuffer);
