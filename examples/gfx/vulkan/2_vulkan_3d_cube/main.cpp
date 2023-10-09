@@ -8,15 +8,20 @@
 using namespace bebone::gfx;
 using namespace bebone::core;
 
+struct Vertex {
+    Vec3f pos;
+    Vec3f color;
+};
+
 const std::vector<Vertex> vertices = {
-    {{-1.0, -1.0,  1.0}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}, 0},
-    {{ 1.0, -1.0,  1.0}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f}, 0},
-    {{ 1.0,  1.0,  1.0}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, 0},
-    {{-1.0,  1.0,  1.0}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}, 0},
-    {{-1.0, -1.0, -1.0}, {0.0f, 1.0f, 1.0f}, {0.0f, 1.0f}, 0},
-    {{ 1.0, -1.0, -1.0}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}, 0},
-    {{ 1.0,  1.0, -1.0}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, 0},
-    {{-1.0,  1.0, -1.0}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f}, 0},
+    {{-1.0, -1.0, -1.0}, {0.0f, 1.0f, 1.0f}},
+    {{ 1.0, -1.0, -1.0}, {0.0f, 1.0f, 0.0f}},
+    {{ 1.0,  1.0, -1.0}, {0.0f, 0.0f, 1.0f}},
+    {{-1.0,  1.0, -1.0}, {0.0f, 0.0f, 0.0f}},
+    {{-1.0, -1.0,  1.0}, {1.0f, 1.0f, 1.0f}},
+    {{ 1.0, -1.0,  1.0}, {1.0f, 1.0f, 0.0f}},
+    {{ 1.0,  1.0,  1.0}, {1.0f, 0.0f, 1.0f}},
+    {{-1.0,  1.0,  1.0}, {1.0f, 0.0f, 0.0f}},
 };
 
 const std::vector<int> indices = {
@@ -90,6 +95,8 @@ int main() {
     }
 
     auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
+
+    // auto vertexBuffer = device.create_buffer(sizeof(Vertex) * vertices.size());
 
     auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
     auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));

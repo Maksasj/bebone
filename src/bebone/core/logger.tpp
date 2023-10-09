@@ -4,6 +4,8 @@
 #include <iostream>
 #include <ostream>
 
+#include "noncopyable.h"
+
 #define BEBONE_LOGGER_DEFAULT_INSTANCE DEFAULT
 #define BEBONE_LOGGER_ENABLE_LINE_BREAKS true
 #define BEBONE_LOGGER_ENABLE_MESSAGE_TYPE true
@@ -21,7 +23,7 @@ namespace bebone::core {
     };
 
     template<LOGGER_INSTANCE __loggerInstance = DEFAULT>
-    class Logger {
+    class Logger : private NonCopyable {
         private:
             std::ostream& stream;
 
@@ -29,6 +31,7 @@ namespace bebone::core {
 
             static Logger& get_instance() {
                 static Logger logger;
+
                 return logger;
             }
 

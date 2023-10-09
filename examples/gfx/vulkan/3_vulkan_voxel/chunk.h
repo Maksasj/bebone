@@ -24,7 +24,6 @@ class Chunk {
         std::unique_ptr<UniformBuffer<Transform>> transformUBO;
 
     public:
-
         Chunk(GPUResourceManager& resourceManager, GPUResourceSet& resourceSet, const Vec3f& pos) {
             transformUBO = std::make_unique<UniformBuffer<Transform>>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
         
@@ -38,9 +37,10 @@ class Chunk {
         }
 
         static bool get_block_at(float x, float y, float z) {
-            // float v = sin(x * 0.5f) * 0.5f + 0.5f;
-            float v = perlin(x * 0.05f, z * 0.05f) * 0.5f + 0.5f;
-            v *= 16;
+            const float v0 = (perlin(x * 0.05f, z * 0.05f) * 0.5f + 0.5f);
+            const float v1 = (perlin(x * 0.02f, z * 0.02f) * 0.5f + 0.5f);
+
+            float v = v0 * 16 + v1 * 24;
 
             if(y < v)
                 return false;
@@ -51,22 +51,26 @@ class Chunk {
         void generate(VulkanRenderer& renderer) {
             MeshBuilder builder;
 
-            for(int x = 0; x < 16; ++x) {
-                for(int z = 0; z < 16; ++z) {
-                    for(int y = 0; y < 16; ++y) {
-                        bool block = get_block_at(x + position.x, y + position.y, z + position.z);
+            for(int xCord = 0; xCord < 16; ++xCord) {
+                for(int zCord = 0; zCord < 16; ++zCord) {
+                    for(int yCord = 0; yCord < 32; ++yCord) {
+                        const auto x = static_cast<float>(xCord);
+                        const auto y = static_cast<float>(yCord);
+                        const auto z = static_cast<float>(zCord);
 
-                        if(block == false)
+                        const auto block = get_block_at(x + position.x, y + position.y, z + position.z);
+
+                        if(!block)
                             continue;
 
-                        bool upBlock =      get_block_at(x + position.x, y + 1 + position.y, z + position.z);
-                        bool downBlock =    get_block_at(x + position.x, y - 1 + position.y, z + position.z);
+                        const auto upBlock =      get_block_at(x + position.x, y + 1 + position.y, z + position.z);
+                        const auto downBlock =    get_block_at(x + position.x, y - 1 + position.y, z + position.z);
 
-                        bool leftBlock =    get_block_at(x + position.x + 1, y + position.y, z + position.z);
-                        bool rightBlock =   get_block_at(x + position.x - 1, y + position.y, z + position.z);
+                        const auto leftBlock =    get_block_at(x + position.x + 1, y + position.y, z + position.z);
+                        const auto rightBlock =   get_block_at(x + position.x - 1, y + position.y, z + position.z);
                         
-                        bool forwardBlock = get_block_at(x + position.x, y + position.y, z + 1 + position.z);
-                        bool backBlock =    get_block_at(x + position.x, y + position.y, z - 1 + position.z);
+                        const auto forwardBlock = get_block_at(x + position.x, y + position.y, z + 1 + position.z);
+                        const auto backBlock =    get_block_at(x + position.x, y + position.y, z - 1 + position.z);
 
                         if(!upBlock)        builder.append(QUAD_MESH_UP_VERTEX_DATA, QUAD_MESH_INDICES_DATA, Vec3f(x, y, z));
                         if(!downBlock)      builder.append(QUAD_MESH_DOWN_VERTEX_DATA, QUAD_MESH_INDICES_DATA, Vec3f(x, y, z));

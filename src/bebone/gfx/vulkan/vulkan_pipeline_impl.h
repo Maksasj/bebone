@@ -7,6 +7,32 @@
 #include "vulkan_pipeline_config_info.h"
 
 namespace bebone::gfx {
+    static std::vector<VkVertexInputBindingDescription> getBindingDescriptions() {
+        std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
+
+        bindingDescriptions[0].binding = 0;
+        bindingDescriptions[0].stride = sizeof(Vec3f) * 2;
+        bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+        return bindingDescriptions;
+    }
+
+    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() {
+        std::vector<VkVertexInputAttributeDescription> atrributeDescriptions(2);
+
+        atrributeDescriptions[0].binding = 0;
+        atrributeDescriptions[0].location = 0;
+        atrributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+        atrributeDescriptions[0].offset = 0;
+
+        atrributeDescriptions[1].binding = 0;
+        atrributeDescriptions[1].location = 1;
+        atrributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        atrributeDescriptions[1].offset = sizeof(Vec3f);
+
+        return atrributeDescriptions;
+    }
+
     class VulkanPipeline : public PipelineImpl {
         private:
             void create_graphics_pipeline(const PipelineConfigInfo& configInfo) {

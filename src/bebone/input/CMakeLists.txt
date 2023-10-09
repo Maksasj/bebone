@@ -1,0 +1,3 @@
+file(GLOB_RECURSE BEBONE_INPUT_SRC_FILES "*.cpp")
+
+add_library(bebone_input STATIC ${BEBONE_INPUT_SRC_FILES})
