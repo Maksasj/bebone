@@ -18,37 +18,25 @@ const std::vector<GLuint> indices = {
 	0, 1, 2,
 };
 
+std::string read_file(const std::string& path) {
+    std::ifstream file(path);
+    std::stringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
+}
+
 int main() {
     glfwInit();
 
     auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
-	gladLoadGL();
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        return 1;
+
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
-    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
-
-    {   // Compiling glsl vertex shader code;
-        ShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(read_file("examples/assets/gfx/opengl/1_opengl_hello_triangle/vertex.shader"), ShaderTypes::VERTEX_SHADER));
-        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
-    }
-
-    std::cout << "poggers !\n";
-
-    {   // Compiling glsl fragment shader code;
-        ShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(read_file("examples/assets/gfx/opengl/1_opengl_hello_triangle/fragment.shader"), ShaderTypes::FRAGMENT_SHADER));
-        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
-    }
-
-    std::cout << "poggers !\n";
-
-    GLShader vertexShader(vertexShaderCode, GL_VERTEX_SHADER);
-    GLShader fragmentShader(fragmentShaderCode, GL_FRAGMENT_SHADER);
+    GLShader vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/1_opengl_hello_triangle/vertex.shader", ShaderTypes::VERTEX_SHADER);
+    GLShader fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/1_opengl_hello_triangle/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();
@@ -86,3 +74,4 @@ int main() {
     glfwTerminate();
     return 0;
 }
+

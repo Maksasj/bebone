@@ -31,6 +31,17 @@ const std::vector<GLuint> indices {
     3, 2, 6, 6, 7, 3
 };
 
+struct Transform {
+    Mat4f translation;
+    Mat4f scale;
+    Mat4f rotation;
+};
+
+struct Camera {
+    Mat4f proj;
+    Mat4f view;
+};
+
 int main() {
     glfwInit();
 
@@ -38,9 +49,10 @@ int main() {
 
 	gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glfwSwapInterval(0);
 
-    GLShader vertexShader("examples/assets/gfx/opengl/3_opengl_3d_cube/vertex.shader", GL_VERTEX_SHADER);
-    GLShader fragmentShader("examples/assets/gfx/opengl/3_opengl_3d_cube/fragment.shader", GL_FRAGMENT_SHADER);
+    GLShader vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/vertex.shader", ShaderTypes::VERTEX_SHADER);
+    GLShader fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();
@@ -59,32 +71,36 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    Mat4f transform = Mat4f::translation(Vec3f(0, 0, 0));
-    Mat4f scale = Mat4f::identity();
-    
-    Mat4f view = Mat4f::translation(Vec3f(0, 0, 5));
-    Mat4f proj = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
+    GLUniformBufferObject transformUbo(sizeof(Transform));
+    GLUniformBufferObject cameraUbo(sizeof(Camera));
+
+    transformUbo.bind();
+    shaderProgram.bind_buffer("Transform", 0, transformUbo);
+    auto transformPtr = static_cast<Transform*>(transformUbo.map());
+        transformPtr->translation = Mat4f::translation(Vec3f(0, 0, 0));
+        transformPtr->scale = Mat4f::identity();
+
+    cameraUbo.bind();
+    shaderProgram.bind_buffer("Camera", 1, cameraUbo);
+    auto cameraPtr = static_cast<Camera*>(cameraUbo.map());
+        cameraPtr->proj = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
+        cameraPtr->view = Mat4f::translation(Vec3f(0, 0, 5));
+    cameraUbo.unmap();
+    cameraUbo.unbind();
 
     float t = 0;
 
     glEnable(GL_DEPTH_TEST);
 
     while (!window->closing()) {
-        
+        ++t;
+
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        transformPtr->rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+
         shaderProgram.enable();
-
-        ++t;
-        Mat4f rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
-
-        shaderProgram.set_uniform("transform", transform);
-        shaderProgram.set_uniform("scale", scale);
-        shaderProgram.set_uniform("rotation", rotation);
-
-        shaderProgram.set_uniform("view", view);
-        shaderProgram.set_uniform("proj", proj);
 
         vao.bind();
 
@@ -93,6 +109,9 @@ int main() {
         glfwSwapBuffers(window->get_backend());
         glfwPollEvents();
     }
+
+    transformUbo.unmap();
+    transformUbo.unbind();
 
     vao.destroy();
     vbo.destroy();

@@ -1,46 +1,14 @@
 #include "opengl_shader.h"
 
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
-std::string get_file_contents(const char* fileName) {
-	std::ifstream in(fileName, std::ios::binary);
-
-	if (in) {
-		std::string contents;
-
-		in.seekg(0, std::ios::end);
-		contents.resize(in.tellg());
-		in.seekg(0, std::ios::beg);
-		in.read(&contents[0], contents.size());
-
-		in.close();
-		return(contents);
-	}
-
-	throw(errno);
-}
-
 namespace bebone::gfx::opengl {
-    GLShader::GLShader(ShaderCode& code, GLenum shaderType) {
-        /*
-        std::string contents = get_file_contents(fileName);
-        const char* source = contents.c_str();
-        */
-
-        shader = glCreateShader(shaderType);
+    GLShader::GLShader(const ShaderCode& code, const ShaderType& shaderType) {
+        shader = glCreateShader(shaderType.to_opengl());
 
         const auto& source = code.get_byte_code();
 
-        glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, source.data(), source.size() * sizeof(unsigned int));
-        glSpecializeShader(shader, "main", 0, nullptr, nullptr);
-
-        /*
-        glShaderSource(shader, 1, &source, nullptr);
-        glCompileShader(shader);
-        */
+        // **_ARB things can be used only with specific glad extensions, see all-extensions glad branch
+        glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, source.data(), source.size() * sizeof(unsigned int));
+        glSpecializeShaderARB(shader, "main", 0, nullptr, nullptr);
     }
 
     GLuint GLShader::get_shader() const {
@@ -58,24 +26,31 @@ namespace bebone::gfx::opengl {
         glLinkProgram(id);
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, GLint value) {
-        GLint uniform = glGetUniformLocation(id, uniformName);
+    void GLShaderProgram::set_uniform(const char* uniformName, const i32& value) const {
+        const auto uniform = glGetUniformLocation(id, uniformName);
         glUniform1i(uniform, value);
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, GLuint value) {
-        GLuint uniform = glGetUniformLocation(id, uniformName);
+    void GLShaderProgram::set_uniform(const char* uniformName, const u32& value) const {
+        const auto uniform = glGetUniformLocation(id, uniformName);
         glUniform1ui(uniform, value);
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, GLfloat value) {
-        GLfloat uniform = glGetUniformLocation(id, uniformName);
-        glUniform1f(uniform, value);
+    void GLShaderProgram::set_uniform(const char* uniformName, const f32& value) const {
+        const auto location = glGetUniformBlockIndex(id, uniformName);
+        glUniform1f(location, value);
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, bebone::core::Mat4f value) {
-        GLfloat uniform = glGetUniformLocation(id, uniformName);
+    void GLShaderProgram::set_uniform(const char* uniformName, const Mat4f& value) const {
+        const auto uniform = glGetUniformLocation(id, uniformName);
         glUniformMatrix4fv(uniform, 1, GL_FALSE, value.e);
+    }
+
+    void GLShaderProgram::bind_buffer(const char* uniformBufferName, const i32& binding, const GLUniformBufferObject& buffer) const {
+        buffer.bind_buffer_base(binding);
+
+        const auto uboIndex = glGetUniformBlockIndex(id, uniformBufferName);
+        glUniformBlockBinding(id, uboIndex, binding);
     }
 
     void GLShaderProgram::enable() {

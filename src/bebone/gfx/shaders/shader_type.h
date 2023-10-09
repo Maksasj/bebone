@@ -50,6 +50,16 @@ namespace bebone::gfx {
                 // Just do not want to have any warnings
                 return EShLanguage::EShLangVertex;
             }
+
+            GLuint to_opengl() const {
+                switch (m_value) {
+                    case 0: return GL_FRAGMENT_SHADER;
+                    case 1: return GL_VERTEX_SHADER;
+                    default: throw std::runtime_error("undefined shader type, cannot be converted to opengl gluint");
+                }
+
+                return GL_VERTEX_SHADER;
+            }
     };
 
     struct ShaderTypes {

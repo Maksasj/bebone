@@ -7,13 +7,6 @@
 #include "shader_code.h"
 #include "shader_source.h"
 
-std::string read_file(const std::string& path) {
-    std::ifstream file(path);
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
-}
-
 namespace bebone::gfx {
     class ShaderCompiler {
         private:
@@ -39,7 +32,7 @@ namespace bebone::gfx {
             }
 
             ShaderCode compile(const ShaderType& p_shaderType) {
-                const EShLanguage targetShaderType = p_shaderType.to_glslang();
+                const auto targetShaderType = p_shaderType.to_glslang();
 
                 // First we check if all shader source type match
                 for(auto& shaderSource : m_shaderSources) {
@@ -47,21 +40,15 @@ namespace bebone::gfx {
                         throw std::runtime_error("shader source type do not match with desired shader code target type");
                 }
 
-                const size_t shaderSourcesSize = m_shaderSources.size();
-                std::vector<char*> rawShaderSources(shaderSourcesSize);
+                std::vector<const char*> rawShaderSources;
 
-                for(size_t i = 0; i < shaderSourcesSize; ++i) {
-                    auto& shaderSource = m_shaderSources[i];
-                    auto& shaderSourceStr = shaderSource.get_shader_source();
-
-                    rawShaderSources[i] = new char[sizeof(u8) * shaderSourceStr.size()];
-
-                    shaderSourceStr.copy(rawShaderSources[i], shaderSourceStr.size());
-                }
+                for(const auto& source : m_shaderSources)
+                    rawShaderSources.push_back(source.get_shader_source().c_str());
 
                 glslang::InitializeProcess();
                 glslang::TShader shader(targetShaderType);
-                shader.setStrings(rawShaderSources.data(), 1);
+
+                shader.setStrings(rawShaderSources.data(), rawShaderSources.size());
                 shader.setEntryPoint(m_defaultEntryPoint.c_str());
                 
                 #if 0
@@ -80,6 +67,7 @@ namespace bebone::gfx {
 
                 const int defaultVersion = 100;
                 EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
+                // EShMessages messages = (EShMessages)(EShMsgSpvRules);
                 if (!shader.parse(GetDefaultResources(), defaultVersion, false, messages)) {
                     std::cerr << "Error in shader compilation:\n" << shader.getInfoLog() << std::endl;
                     // std::cerr << "Error in shader source:\n" << shaderSource << std::endl;
@@ -114,11 +102,6 @@ namespace bebone::gfx {
                 glslang::GlslangToSpv(*intermediate, spirVCode, &logger, &spvOptions);
 
                 glslang::FinalizeProcess();
-
-                // Cleanup
-                for(size_t i = 0; i < shaderSourcesSize; ++i) {
-                    delete [] rawShaderSources[i];
-                }
 
                 return ShaderCode(spirVCode, p_shaderType);
             }
