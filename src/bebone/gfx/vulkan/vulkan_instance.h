@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "../gfx_backend.h"
-#include "../window/window.h"
+#include "../window/vulkan_window.h"
 #include "vulkan_debug_messenger.h"
 
 namespace bebone::gfx {
@@ -30,7 +30,7 @@ namespace bebone::gfx {
             VulkanInstance();
             ~VulkanInstance();
 
-            std::shared_ptr<VulkanDevice> create_device(Window &window);
+            std::shared_ptr<VulkanDevice> create_device(VulkanWindow &window);
 
             const std::vector<const char *> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 

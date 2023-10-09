@@ -36,60 +36,60 @@
 
 namespace bebone::gfx {
     class VulkanRenderer {
-        public:
-            Window& _window;
+    public:
+        std::shared_ptr<VulkanWindow> _window;
 
-            std::shared_ptr<VulkanInstance> vulkanInstance;
-            std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
+        std::shared_ptr<VulkanInstance> vulkanInstance;
+        std::shared_ptr<VulkanDevice> device; // ORDER MATTERS FOR DESTRUCTOR
 
-            std::shared_ptr<VulkanSwapChain> swapChain; // ORDER MATTERS FOR df
-            std::shared_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
+        std::shared_ptr<VulkanSwapChain> swapChain; // ORDER MATTERS FOR df
+        std::shared_ptr<VulkanCommandBufferPool> commandBuffers; // ORDER MATTERS FOR DESTRUCTOR
 
-            // Linked list since we want to avoid reallocation's
-            std::list<VulkanPipeline*> pipelines;
+        // Linked list since we want to avoid reallocation's
+        std::list<VulkanPipeline*> pipelines;
 
-            // vulkanPipelineLayout should be saved somewhere
-            VulkanPipelineLayoutImpl* vulkanPipelineLayout;
+        // vulkanPipelineLayout should be saved somewhere
+        VulkanPipelineLayoutImpl* vulkanPipelineLayout;
 
-            VulkanRenderer(Window& window)
-                : _window(window),
+        VulkanRenderer(std::shared_ptr<Window>& window)
+                : _window(std::static_pointer_cast<VulkanWindow>(window)),
                   vulkanPipelineLayout(nullptr) {
 
-                vulkanInstance = VulkanInstance::create_instance();
+            vulkanInstance = VulkanInstance::create_instance();
 
-                device = vulkanInstance->create_device(_window);
+            device = vulkanInstance->create_device(*_window);
 
-                // Todo fif should be moved to swap chain, or no
-                swapChain = device->create_swapchain(_window);
+            // Todo fif should be moved to swap chain, or no
+            swapChain = device->create_swapchain(*_window);
 
-                // Todo swapChain->get_image_count() basically same thing as fif
-                commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, swapChain->get_image_count());
-            }
+            // Todo swapChain->get_image_count() basically same thing as fif
+            commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, swapChain->get_image_count());
+        }
 
-            ~VulkanRenderer() {
-                for(auto& pipeline : pipelines)
-                    delete pipeline;
+        ~VulkanRenderer() {
+            for(auto& pipeline : pipelines)
+                delete pipeline;
 
-                commandBuffers = nullptr;
-                swapChain = nullptr;
-                device = nullptr;
-                vulkanInstance = nullptr;
-            }
+            commandBuffers = nullptr;
+            swapChain = nullptr;
+            device = nullptr;
+            vulkanInstance = nullptr;
+        }
 
-            Pipeline create_pipeline(PipelineLayout& pipelineLayout, const ShaderCode& vertexSpirvCode, const ShaderCode& fragmentSpirvCode) {
-                vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl()); // vulkanPipelineLayout should be saved somewhere
+        Pipeline create_pipeline(PipelineLayout& pipelineLayout, const ShaderCode& vertexSpirvCode, const ShaderCode& fragmentSpirvCode) {
+            vulkanPipelineLayout = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl()); // vulkanPipelineLayout should be saved somewhere
 
-                PipelineConfigInfo pipelineConfig;
-                PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
-                
-                pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
-                pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
+            PipelineConfigInfo pipelineConfig;
+            PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
 
-                VulkanPipeline* pipeline = new VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
-                pipelines.push_back(pipeline);
+            pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
+            pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
 
-                return Pipeline(&pipelines.back());
-            }
+            VulkanPipeline* pipeline = new VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
+            pipelines.push_back(pipeline);
+
+            return Pipeline(&pipelines.back());
+        }
 
             template<class VertexType>
             VulkanVertexBufferImpl<VertexType>* create_vertex_buffer_impl(const std::vector<VertexType>& vertices) {
@@ -97,18 +97,18 @@ namespace bebone::gfx {
                 return vertexBufferImpl;
             }
 
-            VulkanIndexBufferImpl* create_index_buffer_impl(const std::vector<int>& indices) {
-                VulkanIndexBufferImpl* indexBufferImpl = new VulkanIndexBufferImpl(indices, *device);
-                return indexBufferImpl;
-            }
+        VulkanIndexBufferImpl* create_index_buffer_impl(const std::vector<int>& indices) {
+            VulkanIndexBufferImpl* indexBufferImpl = new VulkanIndexBufferImpl(indices, *device);
+            return indexBufferImpl;
+        }
 
-            PipelineLayoutBuilder create_pipeline_layout_builder() {
-                return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(*device);
-            }
+        PipelineLayoutBuilder create_pipeline_layout_builder() {
+            return PipelineLayoutBuilder::create_from_impl<VulkanPipelineLayoutBuilderImpl>(*device);
+        }
 
-            VulkanSwapChain& get_swap_chain() {
-                return *swapChain;
-            }
+        VulkanSwapChain& get_swap_chain() {
+            return *swapChain;
+        }
 
             GPUResourceManager create_gpu_resource_manager() {
                 return GPUResourceManager(swapChain->get_image_count(), *device);
@@ -117,8 +117,8 @@ namespace bebone::gfx {
             void recreate_pipelines() const {
                 vkDeviceWaitIdle(device->device());
 
-                _window.reset_resize_flag();
-                swapChain->recreate(_window.get_extend());
+                _window->reset_resize_flag();
+                swapChain->recreate(_window->get_extend());
 
                 for(auto& pipeline : pipelines) {
                     PipelineConfigInfo pipelineConfig;
@@ -131,37 +131,37 @@ namespace bebone::gfx {
                 }
             }
 
-            VulkanFrame get_frame() const {
-                uint32_t imageIndex;
-                auto result = swapChain->acquireNextImage(&imageIndex);
+        VulkanFrame get_frame() const {
+            uint32_t imageIndex;
+            auto result = swapChain->acquireNextImage(&imageIndex);
 
-                if(result == VK_ERROR_OUT_OF_DATE_KHR) {
-                    // This logic needs to be abstracted away
-                    recreate_pipelines();
-                    return VulkanFrame::invalid;
-                }
+            if(result == VK_ERROR_OUT_OF_DATE_KHR) {
+                // This logic needs to be abstracted away
+                recreate_pipelines();
+                return VulkanFrame::invalid;
+            }
 
-                if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-                    throw std::runtime_error("failed to acquire swap chain image!");
-                }
+            if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+                throw std::runtime_error("failed to acquire swap chain image!");
+            }
 
                 return VulkanFrame(imageIndex, &commandBuffers->get_command_buffer(imageIndex));
             }
 
-            void present(VulkanFrame& frame) {
-                VkCommandBuffer& commnandBuffer = frame.get_command_buffer().commandBuffer;
+        void present(VulkanFrame& frame) {
+            VkCommandBuffer& commnandBuffer = frame.get_command_buffer().commandBuffer;
 
-                auto result = swapChain->submitCommandBuffers(&commnandBuffer, &frame.frameIndex);
+            auto result = swapChain->submitCommandBuffers(&commnandBuffer, &frame.frameIndex);
 
-                if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window.is_resized()) {
-                    // This logic needs to be abstracted away
-                    recreate_pipelines();
-                    return;
-                }
-
-                if(result != VK_SUCCESS)
-                    throw std::runtime_error("failed to acquire submit command buffers !\n");
+            if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window->is_resized()) {
+                // This logic needs to be abstracted away
+                recreate_pipelines();
+                return;
             }
+
+            if(result != VK_SUCCESS)
+                throw std::runtime_error("failed to acquire submit command buffers !\n");
+        }
     };
 }
 #endif

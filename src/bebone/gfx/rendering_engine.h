@@ -1,8 +1,10 @@
 #ifndef _BEBONE_GFX_RENDERING_ENGINE_H_
 #define _BEBONE_GFX_RENDERING_ENGINE_H_
 
-#include "gfx_backend.h"
 #include <iostream>
+
+#include "gfx_backend.h"
+#include "window/window.h"
 
 namespace bebone::gfx {
     class RenderingEngine {

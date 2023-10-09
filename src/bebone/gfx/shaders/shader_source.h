@@ -24,7 +24,7 @@ namespace bebone::gfx {
                 return m_shaderType;
             }
 
-            std::string& get_shader_source() {
+            const std::string& get_shader_source() const {
                 return m_shaderSource;
             } 
     };

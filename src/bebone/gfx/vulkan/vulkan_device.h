@@ -16,8 +16,9 @@ namespace bebone::gfx {
 
     class VulkanDevice : private core::NonCopyable {
         private:
+            VulkanWindow &window;
+
             VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-            bebone::gfx::Window &window;
 
             VkDevice device_;
             VkSurfaceKHR surface_;
@@ -25,19 +26,19 @@ namespace bebone::gfx {
             VkQueue graphicsQueue_;
             VkQueue presentQueue_;
 
-            bebone::gfx::VulkanInstance &vulkanInstance;
+            VulkanInstance &vulkanInstance;
 
-            void createSurface(bebone::gfx::VulkanInstance &vulkanInstance);
-            void pickPhysicalDevice(bebone::gfx::VulkanInstance &vulkanInstance);
+            void createSurface(VulkanInstance &vulkanInstance);
+            void pickPhysicalDevice(VulkanInstance &vulkanInstance);
             void createLogicalDevice();
 
         public:
             VkPhysicalDeviceProperties properties;
 
-            VulkanDevice(bebone::gfx::Window &window, bebone::gfx::VulkanInstance &vulkanInstance);
+            VulkanDevice(VulkanWindow &window, VulkanInstance &vulkanInstance);
             ~VulkanDevice();
 
-            std::shared_ptr<VulkanSwapChain> create_swapchain(Window& window);
+            std::shared_ptr<VulkanSwapChain> create_swapchain(VulkanWindow& window);
 
             VkDevice device() const { return device_; }
             VkSurfaceKHR surface() { return surface_; }
@@ -52,7 +53,7 @@ namespace bebone::gfx {
             SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::querySwapChainSupport(physicalDevice, surface_); }
 
             VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-    };
+        };
 }
 
 #endif
