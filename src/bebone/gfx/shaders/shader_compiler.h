@@ -2,9 +2,17 @@
 #define _BEBONE_GFX_SHADER_COMPILER_H_
 
 #include <cstring>
+#include <fstream>
 
 #include "shader_code.h"
 #include "shader_source.h"
+
+std::string read_file(const std::string& path) {
+    std::ifstream file(path);
+    std::stringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
+}
 
 namespace bebone::gfx {
     class ShaderCompiler {
@@ -56,7 +64,7 @@ namespace bebone::gfx {
                 shader.setStrings(rawShaderSources.data(), 1);
                 shader.setEntryPoint(m_defaultEntryPoint.c_str());
                 
-                #if 1
+                #if 0
                     // Set environment input for Vulkan
                     shader.setEnvInput(glslang::EShSource::EShSourceGlsl, targetShaderType, glslang::EShClient::EShClientVulkan, 100);
 
@@ -64,7 +72,7 @@ namespace bebone::gfx {
                     shader.setEnvClient(glslang::EShClient::EShClientVulkan, glslang::EShTargetClientVersion::EShTargetVulkan_1_2);
                     shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
                 #else
-                    shader.setEnvInput(glslang::EShSource::EShSourceGlsl, shaderType, glslang::EShClient::EShClientOpenGL, 450);
+                    shader.setEnvInput(glslang::EShSource::EShSourceGlsl, targetShaderType, glslang::EShClient::EShClientOpenGL, 450);
                     
                     shader.setEnvClient(glslang::EShClient::EShClientOpenGL, glslang::EShTargetClientVersion::EShTargetOpenGL_450);
                     shader.setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);

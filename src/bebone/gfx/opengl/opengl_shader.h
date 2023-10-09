@@ -2,6 +2,7 @@
 #define _OPENGL_SHADER_H_
 
 #include "../gfx_backend.h"
+#include "../shaders/shader_code.h"
 
 namespace bebone::gfx::opengl {
     class GLShader : private core::NonCopyable {
@@ -9,7 +10,7 @@ namespace bebone::gfx::opengl {
             GLuint shader;
 
         public:
-            GLShader(const char* fileName, GLenum shaderType);
+            GLShader(ShaderCode& code, GLenum shaderType);
             GLuint get_shader() const;
             void destroy();
     };

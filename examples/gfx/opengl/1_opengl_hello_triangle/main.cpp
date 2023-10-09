@@ -26,8 +26,29 @@ int main() {
 	gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    GLShader vertexShader("examples/assets/gfx/opengl/1_opengl_hello_triangle/vertex.shader", GL_VERTEX_SHADER);
-    GLShader fragmentShader("examples/assets/gfx/opengl/1_opengl_hello_triangle/fragment.shader", GL_FRAGMENT_SHADER);
+    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
+    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
+
+    {   // Compiling glsl vertex shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(read_file("examples/assets/gfx/opengl/1_opengl_hello_triangle/vertex.shader"), ShaderTypes::VERTEX_SHADER));
+        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
+    }
+
+    std::cout << "poggers !\n";
+
+    {   // Compiling glsl fragment shader code;
+        ShaderCompiler shaderCompiler;
+        
+        shaderCompiler.add_shader_source(ShaderSource(read_file("examples/assets/gfx/opengl/1_opengl_hello_triangle/fragment.shader"), ShaderTypes::FRAGMENT_SHADER));
+        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
+    }
+
+    std::cout << "poggers !\n";
+
+    GLShader vertexShader(vertexShaderCode, GL_VERTEX_SHADER);
+    GLShader fragmentShader(fragmentShaderCode, GL_FRAGMENT_SHADER);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();

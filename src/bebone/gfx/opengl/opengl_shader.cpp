@@ -24,13 +24,23 @@ std::string get_file_contents(const char* fileName) {
 }
 
 namespace bebone::gfx::opengl {
-    GLShader::GLShader(const char* fileName, GLenum shaderType) {
+    GLShader::GLShader(ShaderCode& code, GLenum shaderType) {
+        /*
         std::string contents = get_file_contents(fileName);
         const char* source = contents.c_str();
+        */
 
         shader = glCreateShader(shaderType);
+
+        const auto& source = code.get_byte_code();
+
+        glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, source.data(), source.size() * sizeof(unsigned int));
+        glSpecializeShader(shader, "main", 0, nullptr, nullptr);
+
+        /*
         glShaderSource(shader, 1, &source, nullptr);
         glCompileShader(shader);
+        */
     }
 
     GLuint GLShader::get_shader() const {
