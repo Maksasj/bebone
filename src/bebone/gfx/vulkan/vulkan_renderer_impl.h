@@ -117,8 +117,8 @@ namespace bebone::gfx {
             void recreate_pipelines() const {
                 vkDeviceWaitIdle(device->device());
 
-                _window.reset_resize_flag();
-                swapChain->recreate(_window.get_extend());
+                _window->reset_resize_flag();
+                swapChain->recreate(_window->get_extend());
 
                 for(auto& pipeline : pipelines) {
                     PipelineConfigInfo pipelineConfig;

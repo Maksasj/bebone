@@ -44,16 +44,16 @@ class Camera {
         void update(std::shared_ptr<Window>& window) {
             float speed = 0.5f;
 
-            if (glfwGetKey(window.get_backend(), 'W') == GLFW_PRESS)
+            if (glfwGetKey(window->get_backend(), 'W') == GLFW_PRESS)
                 position += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
 
-            if (glfwGetKey(window.get_backend(), 'S') == GLFW_PRESS)
+            if (glfwGetKey(window->get_backend(), 'S') == GLFW_PRESS)
                 position -= Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
 
-            if (glfwGetKey(window.get_backend(), 'A') == GLFW_PRESS)
+            if (glfwGetKey(window->get_backend(), 'A') == GLFW_PRESS)
                 position -= Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
 
-            if (glfwGetKey(window.get_backend(), 'D') == GLFW_PRESS)
+            if (glfwGetKey(window->get_backend(), 'D') == GLFW_PRESS)
                 position += Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
 
             if (glfwGetKey(window->get_backend(), GLFW_KEY_SPACE) == GLFW_PRESS)
@@ -87,9 +87,9 @@ class Camera {
                 rotation.x += deltaY * 0.005f;
                 rotation.y += deltaX * 0.005f; // If this is confusing just think that we rotate Y axis cause of movement mouse a long X axis, actual this make sence
 
-                glfwSetCursorPos(window.get_backend(), centerXPos, centerYPos);   
+                glfwSetCursorPos(window->get_backend(), centerXPos, centerYPos);   
             } else
-                glfwSetInputMode(window.get_backend(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                glfwSetInputMode(window->get_backend(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
             direction.x = cos(rotation.y) * cos(rotation.x);
             direction.y = sin(rotation.x);
