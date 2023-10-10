@@ -18,7 +18,6 @@ namespace bebone::gfx {
         private:
             RawSpirVByteCode m_spirVCode;
             ShaderType m_shaderType;
-            ShaderSource m_shaderSourceCode;
 
         public:
             ShaderCode(const ShaderType& p_shaderType);

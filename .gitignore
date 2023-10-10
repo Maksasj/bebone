@@ -1,5 +1,5 @@
 build
-.vscode
-.idea
+/.vscode/
+/.idea/
 make.bat
 test.bat
