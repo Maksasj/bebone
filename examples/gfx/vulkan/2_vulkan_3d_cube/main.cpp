@@ -75,7 +75,7 @@ int main() {
     ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
 
     {   // Compiling glsl vertex shader code;
-        ShaderCompiler shaderCompiler;
+        SpirVShaderCompiler shaderCompiler;
         
         shaderCompiler.add_shader_source(ShaderSource(
             read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl"),
@@ -85,7 +85,7 @@ int main() {
     }
 
     {   // Compiling glsl fragment shader code;
-        ShaderCompiler shaderCompiler;
+        SpirVShaderCompiler shaderCompiler;
         
         shaderCompiler.add_shader_source(ShaderSource(
             read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl"),

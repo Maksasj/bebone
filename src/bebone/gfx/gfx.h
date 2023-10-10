@@ -6,7 +6,7 @@
 #include "vulkan/vulkan_api.h"
 #include "opengl/opengl_api.h"
 
-#include "shaders/shader_compiler.h"
+#include "shaders/spirv_shader_compiler.h"
 
 #include "rendering_engine.h"
 

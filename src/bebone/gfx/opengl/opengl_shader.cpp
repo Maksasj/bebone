@@ -11,6 +11,15 @@ namespace bebone::gfx::opengl {
         glSpecializeShaderARB(shader, "main", 0, nullptr, nullptr);
     }
 
+    GLShader::GLShader(const std::string& code, const ShaderType& shaderType) {
+        shader = glCreateShader(shaderType.to_opengl());
+
+        const auto str = code.c_str();
+
+        glShaderSource(shader, 1, &str, NULL);
+        glCompileShader(shader);
+    }
+
     GLuint GLShader::get_shader() const {
         return shader;
     }
