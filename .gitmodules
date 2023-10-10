@@ -13,6 +13,4 @@
 [submodule "3dparty/omni_types"]
 	path = 3dparty/omni_types
 	url = https://github.com/Maksasj/omni_types
-[submodule "3dparty/stb"]
-	path = 3dparty/stb
-	url = https://github.com/nothings/stb.git
+
