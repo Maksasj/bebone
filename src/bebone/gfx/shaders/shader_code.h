@@ -21,30 +21,10 @@ namespace bebone::gfx {
             ShaderSource m_shaderSourceCode;
 
         public:
-            ShaderCode(const ShaderType& p_shaderType) 
-                : m_shaderType(p_shaderType) {
+            ShaderCode(const ShaderType& p_shaderType);
+            ShaderCode(const RawSpirVByteCode& p_spirVByteCode, const ShaderType& p_shaderType) ;
 
-            }
-
-            ShaderCode(const RawSpirVByteCode& p_spirVByteCode, const ShaderType& p_shaderType) 
-                : m_spirVCode(p_spirVByteCode), 
-                  m_shaderType(p_shaderType) {
-
-            }
-
-            ShaderCode(const RawSpirVByteCode& p_spirVByteCode, const ShaderType& p_shaderType, const ShaderSource& p_shaderSource) 
-                : m_spirVCode(p_spirVByteCode), 
-                  m_shaderType(p_shaderType), m_shaderSourceCode(p_shaderSource) {
-
-            }
-
-            const RawSpirVByteCode& get_byte_code() const {
-                return m_spirVCode;
-            }
-
-            const ShaderSource& get_shader_source_code() const {
-                return m_shaderSourceCode;
-            }
+            const RawSpirVByteCode& get_byte_code() const;
     };
 }
 

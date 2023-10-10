@@ -2,8 +2,10 @@
 #define _BEBONE_OPENGL_SHADER_FACTORY_H_
 
 #include "../shaders/shader_type.h"
-#include "../shaders/shader_compiler.h"
 
+#include "../shaders/spirv_shader_compiler.h"
+
+#include "opengl_extension_checker.h"
 #include "opengl_shader.h"
 
 namespace bebone::gfx::opengl {

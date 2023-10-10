@@ -9,11 +9,17 @@ namespace bebone::gfx::opengl {
     }
 
     GLShader GLShaderFactory::create_shader(const std::string& path, const ShaderType& shaderType) {
-        ShaderCompiler shaderCompiler;
+        const auto source = read_file(path);
 
-        shaderCompiler.add_shader_source(ShaderSource(read_file(path), shaderType));
-        const auto code = shaderCompiler.compile(shaderType);
+        if(GLExtensionChecker::available("GL_ARB_gl_spirv")) {
+            SpirVShaderCompiler shaderCompiler;
 
-        return GLShader(code, shaderType);
+            shaderCompiler.add_shader_source(ShaderSource(source, shaderType));
+            const auto code = shaderCompiler.compile(shaderType);
+
+            return GLShader(code, shaderType);
+        }
+
+        return GLShader(source, shaderType);
     }
 }

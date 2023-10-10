@@ -39,7 +39,7 @@ int main() {
     ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
 
     {   // Compiling glsl vertex shader code;
-        ShaderCompiler shaderCompiler;
+        SpirVShaderCompiler shaderCompiler;
         
         shaderCompiler.add_shader_source(ShaderSource(
             read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl"),
@@ -49,7 +49,7 @@ int main() {
     }
 
     {   // Compiling glsl fragment shader code;
-        ShaderCompiler shaderCompiler;
+        SpirVShaderCompiler shaderCompiler;
         
         shaderCompiler.add_shader_source(ShaderSource(
             read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl"),

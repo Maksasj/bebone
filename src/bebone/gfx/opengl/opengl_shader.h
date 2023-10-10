@@ -3,6 +3,7 @@
 
 #include "../gfx_backend.h"
 #include "../shaders/shader_code.h"
+
 #include "opengl_uniform_buffer_object.h"
 
 namespace bebone::gfx::opengl {
@@ -14,6 +15,8 @@ namespace bebone::gfx::opengl {
 
         public:
             GLShader(const ShaderCode& code, const ShaderType& shaderType);
+            GLShader(const std::string& code, const ShaderType& shaderType);
+
             GLuint get_shader() const;
             void destroy();
     };
