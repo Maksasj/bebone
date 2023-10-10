@@ -29,8 +29,8 @@ int main() {
 	gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    GLShader vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/2_opengl_texture/vertex.shader", ShaderTypes::VERTEX_SHADER);
-    GLShader fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/2_opengl_texture/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
+    auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/2_opengl_texture/vertex.shader", ShaderTypes::VERTEX_SHADER);
+    auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/2_opengl_texture/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();

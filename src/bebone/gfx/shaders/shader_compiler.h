@@ -14,22 +14,13 @@ namespace bebone::gfx {
             std::vector<ShaderSource> m_shaderSources;
 
         public:
-            ShaderCompiler()
-                : m_defaultEntryPoint("main") {
+            ShaderCompiler();
 
-            }
+            void set_entry_point(const std::string& p_entryPoint);
 
-            void set_entry_point(const std::string& p_entryPoint) {
-                m_defaultEntryPoint = p_entryPoint;
-            }
+            void add_shader_source(const ShaderSource& p_shaderSource);
 
-            void add_shader_source(const ShaderSource& p_shaderSource) {
-                m_shaderSources.push_back(p_shaderSource);
-            }
-
-            void clear_shader_source() {
-                m_shaderSources.clear();
-            }
+            void clear_shader_source();
 
             virtual ShaderCode compile(const ShaderType& p_shaderType) = 0;
         };
