@@ -1,0 +1,7 @@
+file(GLOB_RECURSE BEBONE_EXAMPLE_GFX_OPENGL_4_OPENGL_2D_GAME *.cpp)
+
+include_directories("../../src")
+include_directories("./")
+
+add_executable(Bebone_Example_Gfx_4_Opengl_2d_Game ${BEBONE_EXAMPLE_GFX_OPENGL_4_OPENGL_2D_GAME})
+target_link_libraries(Bebone_Example_Gfx_4_Opengl_2d_Game bebone)
