@@ -3,8 +3,8 @@
 
 #include "bebone/bebone.h"
 
-namespace game::core {
-    class IComponent : bebone::core::NonCopyable {
+namespace game::core::ecs {
+    class IComponent : private bebone::core::NonCopyable {
     public:
         virtual void update() = 0;
     };

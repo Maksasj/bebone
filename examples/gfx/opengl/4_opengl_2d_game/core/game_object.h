@@ -5,7 +5,7 @@
 #include "transform.h"
 
 namespace game::core {
-    class GameObject : public Object {
+    class GameObject : public ecs::Object {
         private:
             Transform transform;
 

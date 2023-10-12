@@ -1,7 +1,7 @@
 #include "object.h"
 #include <algorithm>
 
-namespace game::core {
+namespace game::core::ecs {
     void Object::add_component(std::shared_ptr<IComponent>& component) {
         components.push_back(component);
     }

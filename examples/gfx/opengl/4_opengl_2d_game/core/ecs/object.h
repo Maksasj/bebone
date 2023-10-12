@@ -5,8 +5,8 @@
 #include <memory>
 #include "i_component.h"
 
-namespace game::core {
-    class Object : bebone::core::NonCopyable {
+namespace game::core::ecs {
+    class Object : private bebone::core::NonCopyable {
         private:
             std::vector<std::shared_ptr<IComponent>> components;
         
