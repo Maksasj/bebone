@@ -4,15 +4,17 @@
 #include "bebone/bebone.h"
 #include "renderer.h"
 
+#include <memory>
+
 namespace game::core {
     class Game : private bebone::core::NonCopyable {
         private:
-            Renderer renderer;
+            std::shared_ptr<Renderer> renderer;
             OrthographicCamera camera;
 
         public:
             Game(const unsigned int& width, const unsigned int& height);
-            void update();
+            void update(GLTexture& texture);
     };
 }
 

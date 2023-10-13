@@ -6,12 +6,11 @@ namespace game::core {
 
         auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/vertex.shader", ShaderTypes::VERTEX_SHADER);
         auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
-        GLShaderProgram shaderProgram(vertexShader, fragmentShader);
-
-        renderer = Renderer(shaderProgram, camera);
+        std::shared_ptr<GLShaderProgram> shaderProgram = std::make_shared<GLShaderProgram>(vertexShader, fragmentShader);
+        renderer = std::make_shared<Renderer>(shaderProgram, camera);
     }
 
-    void Game::update() {
-
+    void Game::update(GLTexture& texture) {
+        renderer->render(texture, Transform());
     }
 }

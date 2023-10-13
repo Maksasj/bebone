@@ -1,7 +1,7 @@
 #include "renderer.h"
 
 namespace game::core {
-    Renderer::Renderer(GLShaderProgram& shaderProgram, OrthographicCamera& camera) : shaderProgram(shaderProgram), matricesUbo(sizeof(ShaderMatrices)), camera(camera) {
+    Renderer::Renderer(std::shared_ptr<GLShaderProgram>& shaderProgram, OrthographicCamera& camera) : shaderProgram(shaderProgram), matricesUbo(sizeof(ShaderMatrices)), camera(camera) {
         GLVertexBufferObject vbo({
         0.0f, 1.0f, 0.0f, 1.0f,
         1.0f, 0.0f, 1.0f, 0.0f,
@@ -13,11 +13,17 @@ namespace game::core {
 
         vao.link_attributes(vbo, 0, 4, GL_FLOAT, 4 * sizeof(float), (void*)0);
 
-        shaderProgram.bind_buffer("Matrices", 0, matricesUbo);
+        shaderProgram->bind_buffer("Matrices", 0, matricesUbo);
+    }
+
+    Renderer::~Renderer() {
+        vao.destroy();
+        matricesUbo.destroy();
+        shaderProgram->destroy();
     }
 
     void Renderer::render(GLTexture& texture, const Transform& transform) {
-        shaderProgram.enable();
+        shaderProgram->enable();
 
         const Vec3f& position = transform.get_position();
         const f32& scale = transform.get_scale();
@@ -36,10 +42,10 @@ namespace game::core {
         matricesPtr->projection = camera.get_projection_matrix();
         matricesUbo.unbind();
 
-        texture.bind();
+        //texture.bind();
 
-        vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        vao.unbind();
+        // vao.bind();
+        // glDrawArrays(GL_TRIANGLES, 0, 6);
+        // vao.unbind();
     }
 }
