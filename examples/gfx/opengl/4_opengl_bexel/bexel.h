@@ -15,7 +15,7 @@ namespace bexel {
             unique_ptr<World> m_world;
 
         public:
-            Bexel() : m_window(nullptr) {
+            Bexel() : m_window(nullptr), m_shader(nullptr), m_world(nullptr) {
 
             }
 

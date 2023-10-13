@@ -8,7 +8,9 @@ namespace bexel {
         private:
 
         public:
+            void render(unique_ptr<GLShaderProgram>& shader) {
 
+            }
     };
 }
 
