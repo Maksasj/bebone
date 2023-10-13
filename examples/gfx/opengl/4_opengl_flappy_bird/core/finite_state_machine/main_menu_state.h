@@ -6,9 +6,9 @@
 namespace game::core::finite_state_machine {
     class MainMenuState : public State {
         public:
-            void enter();
-            void update();
-            void exit();
+            void enter() {};
+            void update() {};
+            void exit() {};
     };
 }
 

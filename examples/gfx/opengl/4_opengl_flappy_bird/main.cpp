@@ -20,7 +20,7 @@ int main() {
     gladLoadGL();
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    Game game;
+    Game game(SCR_WIDTH, SCR_HEIGHT);
 
     while (!window->closing()) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);

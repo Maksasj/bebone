@@ -1,8 +1,7 @@
 #include "game_object.h"
 
 namespace game::core {
-    GameObject::GameObject() : transform(Transform()) {}
-    GameObject::GameObject(const Vec2f& position) : transform(Transform(position)) {}
+    GameObject::GameObject(const Transform& transform) : transform(transform) {}
 
     const Transform& GameObject::get_transform() const {
         return transform;

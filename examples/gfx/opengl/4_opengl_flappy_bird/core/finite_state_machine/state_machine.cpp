@@ -7,7 +7,10 @@ namespace game::core::finite_state_machine {
     }
 
     void StateMachine::set_state(State& state) {
-        currentState->exit();
+        if (currentState != nullptr) {
+            currentState->exit();
+        }
+        
         state.enter();
 
         currentState = &state;
