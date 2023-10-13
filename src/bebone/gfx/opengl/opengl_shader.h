@@ -21,7 +21,7 @@ namespace bebone::gfx::opengl {
             void destroy();
     };
 
-    class GLShaderProgram : private core::NonCopyable {
+    class GLShaderProgram {
         private:
             GLuint id;
 
