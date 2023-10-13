@@ -9,6 +9,7 @@ namespace game::core {
     class OrthographicCamera {
         private:
             Mat4f projection;
+
         public:
             OrthographicCamera(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
 

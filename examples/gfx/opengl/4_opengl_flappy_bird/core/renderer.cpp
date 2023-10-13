@@ -1,24 +1,34 @@
 #include "renderer.h"
 
 namespace game::core {
-    Renderer::Renderer(std::shared_ptr<GLShaderProgram>& shaderProgram, OrthographicCamera& camera) : shaderProgram(shaderProgram), matricesUbo(sizeof(ShaderMatrices)), camera(camera) {
-        GLVertexBufferObject vbo({
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 
-    
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f});
+    Renderer::Renderer(std::shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera) : camera(camera) {
+        this->shaderProgram = shaderProgram;
 
-        vao.link_attributes(vbo, 0, 4, GL_FLOAT, 4 * sizeof(float), (void*)0);
+        vao = make_shared<GLVertexArrayObject>();
 
-        shaderProgram->bind_buffer("Matrices", 0, matricesUbo);
+        vector<f32> vertices = {
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, -1.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f,
+
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, -1.0f, 1.0f, 0.0f
+        };
+
+        vao->bind();
+            vba = make_shared<GLVertexBufferObject>(vertices);
+            vao->link_attributes(*vba, 0, 4, GL_FLOAT, 4 * sizeof(float), (void*)0);
+        vba->unbind();
+
+        matricesUbo = make_shared<GLUniformBufferObject>(sizeof(ShaderMatrices));
     }
 
     Renderer::~Renderer() {
-        vao.destroy();
-        matricesUbo.destroy();
+        vao->destroy();
+        vao = nullptr;
+
+        matricesUbo->destroy();
         shaderProgram->destroy();
     }
 
@@ -28,24 +38,27 @@ namespace game::core {
         const Vec3f& position = transform.get_position();
         const f32& scale = transform.get_scale();
 
-        Mat4f model = Mat4f::translation(position);
+        static float f = 0.0f;
 
-        model.translation(Vec3f(0.5f * scale, 0.5f * scale, 0));
-        model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 1.0f));
-        model.translation(Vec3f(-0.5f * scale, -0.5f * scale, 0));
+        Mat4f model = Mat4f::identity();
+        model = model * model.scale(0.25);
+        model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, f));
+        model = model * model.translation(position);
 
-        model.scale(scale);
+        f += 0.01f;
 
-        matricesUbo.bind();
-        auto matricesPtr = static_cast<ShaderMatrices*>(matricesUbo.map());
+        matricesUbo->bind();
+        shaderProgram->bind_buffer("Matrices", 0, *matricesUbo);
+        auto matricesPtr = static_cast<ShaderMatrices*>(matricesUbo->map());
         matricesPtr->model = model;
-        matricesPtr->projection = camera.get_projection_matrix();
-        matricesUbo.unbind();
+        matricesPtr->projection = camera->get_projection_matrix();
+        matricesUbo->unmap();
+        matricesUbo->unbind();
 
-        //texture.bind();
+        texture.bind();
 
-        // vao.bind();
-        // glDrawArrays(GL_TRIANGLES, 0, 6);
-        // vao.unbind();
+        vao->bind();
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        vao->unbind();
     }
 }

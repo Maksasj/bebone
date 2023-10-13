@@ -12,6 +12,8 @@
 using namespace bebone::gfx::opengl;
 
 namespace game::core {
+    using namespace std;
+
     class Renderer : private NonCopyable {
         private:
             struct ShaderMatrices {
@@ -19,13 +21,17 @@ namespace game::core {
                 Mat4f projection;
             };
 
-            std::shared_ptr<GLShaderProgram> shaderProgram;
-            GLVertexArrayObject vao;
-            GLUniformBufferObject matricesUbo;
+            shared_ptr<OrthographicCamera> camera;
 
-            OrthographicCamera camera;
+            shared_ptr<GLShaderProgram> shaderProgram;
+
+            shared_ptr<GLVertexArrayObject> vao;
+            shared_ptr<GLVertexBufferObject> vba;
+
+            shared_ptr<GLUniformBufferObject> matricesUbo;
+
         public:
-            Renderer(std::shared_ptr<GLShaderProgram>& shaderProgram, OrthographicCamera& camera);
+            Renderer(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera);
             ~Renderer();
 
             void render(GLTexture& texture, const Transform& transform);

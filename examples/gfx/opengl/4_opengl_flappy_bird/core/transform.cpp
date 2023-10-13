@@ -1,7 +1,12 @@
 #include "transform.h"
 
 namespace game::core {
-    Transform::Transform() : scale(1.0f) {}
+    Transform::Transform()
+        : position(Vec3f::splat(0.0f)),
+          rotation(Vec3f::splat(0.0f)),
+          scale(1.0f) {
+
+    }
 
     Transform::Transform(const Vec3f& position, const Vec3f& rotation, const f32& scale) : 
         position(position), rotation(rotation), scale(scale) { }

@@ -1,10 +1,10 @@
 #version 450 core
-in vec2 TexCoords;
-out vec4 color;
 
-uniform sampler2D image;
-uniform vec3 spriteColor;
+layout (location = 0) in vec2 texCoords;
+layout (location = 0) out vec3 outColor;
+
+layout (binding = 0) uniform sampler2D image;
 
 void main() {
-	color = vec4(spriteColor, 1.0) * texture(image, TexCoords);
+	outColor = texture(image, texCoords).rgb;
 }
