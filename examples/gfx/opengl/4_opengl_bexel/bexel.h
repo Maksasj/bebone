@@ -44,12 +44,11 @@ namespace bexel {
                     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                    m_world->render();
+                    m_world->render(m_shader);
 
                     glfwSwapBuffers(m_window->get_backend());
                     glfwPollEvents();
                 }
-
             }
 
             void unload() {
