@@ -6,6 +6,7 @@
 #include "bebone/bebone.h"
 #include "transform.h"
 #include "orthographic_camera.h"
+#include "sprite.h"
 
 #include <memory>
 
@@ -26,15 +27,14 @@ namespace game::core {
             shared_ptr<GLShaderProgram> shaderProgram;
 
             shared_ptr<GLVertexArrayObject> vao;
-            shared_ptr<GLVertexBufferObject> vba;
-
+            shared_ptr<GLVertexBufferObject> vbo;
             shared_ptr<GLUniformBufferObject> matricesUbo;
 
         public:
             Renderer(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera);
             ~Renderer();
 
-            void render(GLTexture& texture, const Transform& transform);
+            void render(const Sprite& sprite, const Transform& transform);
     };
 }
 

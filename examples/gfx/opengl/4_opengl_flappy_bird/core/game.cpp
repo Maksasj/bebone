@@ -17,7 +17,7 @@ namespace game::core {
         renderer = make_shared<Renderer>(shaderProgram, camera);
     }
 
-    void Game::update(GLTexture& texture) {
-        renderer->render(texture, Transform());
+    void Game::update(Sprite& sprite) {
+        renderer->render(sprite, Transform());
     }
 }

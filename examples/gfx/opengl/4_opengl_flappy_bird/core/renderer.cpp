@@ -17,9 +17,9 @@ namespace game::core {
         };
 
         vao->bind();
-            vba = make_shared<GLVertexBufferObject>(vertices);
-            vao->link_attributes(*vba, 0, 4, GL_FLOAT, 4 * sizeof(float), (void*)0);
-        vba->unbind();
+            vbo = make_shared<GLVertexBufferObject>(vertices);
+            vao->link_attributes(*vbo, 0, 4, GL_FLOAT, 4 * sizeof(float), (void*)0);
+        vao->unbind();
 
         matricesUbo = make_shared<GLUniformBufferObject>(sizeof(ShaderMatrices));
     }
@@ -32,7 +32,7 @@ namespace game::core {
         shaderProgram->destroy();
     }
 
-    void Renderer::render(GLTexture& texture, const Transform& transform) {
+    void Renderer::render(const Sprite& sprite, const Transform& transform) {
         shaderProgram->enable();
 
         const Vec3f& position = transform.get_position();
@@ -54,8 +54,9 @@ namespace game::core {
         matricesPtr->projection = camera->get_projection_matrix();
         matricesUbo->unmap();
         matricesUbo->unbind();
-
-        texture.bind();
+        
+        auto texture = sprite.get_texture();
+        texture->bind();
 
         vao->bind();
         glDrawArrays(GL_TRIANGLES, 0, 6);

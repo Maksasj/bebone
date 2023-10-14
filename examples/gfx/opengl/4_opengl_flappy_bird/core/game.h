@@ -16,7 +16,7 @@ namespace game::core {
 
         public:
             Game(const unsigned int& width, const unsigned int& height);
-            void update(GLTexture& texture);
+            void update(Sprite& texture);
     };
 }
 
