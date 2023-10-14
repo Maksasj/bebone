@@ -4,9 +4,21 @@ namespace bexel {
     Chunk::Chunk(const Vec3f& pos) : m_mesh(nullptr) {
         m_ubo = make_unique<GLUniformBufferObject>(sizeof(Transform));
 
-        m_transform.translation = Mat4f::translation(pos);
+        m_transform.translation = pos;
 
         generate_mesh();
+    }
+
+    void Chunk::generate_chunk(unique_ptr<WorldGenerator>& worldGenerator) {
+        for(int x = 0; x < m_voxels.size(); ++x) {
+            for(int z = 0; z < m_voxels[z].size(); ++z) {
+                for(int y = 0; y = m_voxels[x][z].size(); ++y) {
+                    Vec3f voxelTransform = m_transform.translation + Vec3f(x, y, z);
+
+                    m_voxels[x][z][y] = worldGenerator->get_voxel_at(voxelTransform);
+                }
+            }
+        }
     }
 
     void Chunk::generate_mesh() {

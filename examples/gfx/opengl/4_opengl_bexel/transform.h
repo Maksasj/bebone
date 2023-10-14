@@ -5,7 +5,11 @@
 
 namespace bexel {
     struct Transform {
-        Mat4f translation;
+        Vec3f translation;
+
+        Mat4f calc_matrix() const {
+            return Mat4f::translation(translation);
+        }
     };
 }
 

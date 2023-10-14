@@ -26,7 +26,7 @@ namespace bexel {
     void Bexel::run() {
         glEnable(GL_DEPTH_TEST);
 
-        Chunk chunk(Vec3f::splat(0.0f));
+        m_world->update();
 
         while (!m_window->closing()) {
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -34,9 +34,7 @@ namespace bexel {
 
             m_shader->enable();
 
-            chunk.render(m_shader);
-
-            // m_world->render(m_shader);
+            m_world->render(m_shader);
 
             glfwSwapBuffers(m_window->get_backend());
             glfwPollEvents();

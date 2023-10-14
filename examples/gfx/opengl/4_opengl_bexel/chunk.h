@@ -5,15 +5,12 @@
 #include "renderable.h"
 #include "voxel.h"
 #include "transform.h"
-
-#define BEXEL_CHUNK_WIDTH 16
-#define BEXEL_CHUNK_LENGTH 16
-#define BEXEL_CHUNK_HEIGHT 16
+#include "world_generator.h"
 
 namespace bexel {
     class Chunk : public Renderable {
         private:
-            Voxel m_voxels[BEXEL_CHUNK_WIDTH][BEXEL_CHUNK_LENGTH][BEXEL_CHUNK_HEIGHT];
+            array<array<array<Voxel, 16>, 16>, 16> m_voxels;
             Transform m_transform;
 
             unique_ptr<Mesh> m_mesh;
@@ -21,6 +18,8 @@ namespace bexel {
 
         public:
             Chunk(const Vec3f& pos);
+
+            void generate_chunk(unique_ptr<WorldGenerator>& worldGenerator);
 
             void generate_mesh();
 

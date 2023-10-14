@@ -7,8 +7,12 @@
 namespace bexel {
     class World : public Renderable {
         private:
+            unique_ptr<WorldGenerator> m_worldGenerator;
 
         public:
+            World();
+
+            void update();
             void render(unique_ptr<GLShaderProgram>& shader) override;
     };
 }

@@ -4,10 +4,8 @@
 #include "vertex.h"
 
 namespace bexel {
-    class Voxel {
-        private:
-
-        public:
+    struct Voxel {
+        bool m_empty;
     };
 }
 
