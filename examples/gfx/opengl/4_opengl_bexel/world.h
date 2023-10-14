@@ -9,9 +9,7 @@ namespace bexel {
         private:
 
         public:
-            void render(unique_ptr<GLShaderProgram>& shader) override {
-
-            }
+            void render(unique_ptr<GLShaderProgram>& shader) override;
     };
 }
 

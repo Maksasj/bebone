@@ -5,8 +5,6 @@
 
 namespace bexel {
     class Renderable {
-        private:
-
         public:
             virtual void render(unique_ptr<GLShaderProgram>& shader) = 0;
     };
