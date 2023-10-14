@@ -2,17 +2,15 @@
 
 namespace bexel {
     Chunk::Chunk(const Vec3f& pos) : m_mesh(nullptr) {
-        m_ubo = make_unique<GLUniformBufferObject>(sizeof(Transform));
+        m_ubo = make_unique<GLUniformBufferObject>(sizeof(Mat4f));
 
         m_transform.translation = pos;
-
-        generate_mesh();
     }
 
     void Chunk::generate_chunk(unique_ptr<WorldGenerator>& worldGenerator) {
-        for(int x = 0; x < m_voxels.size(); ++x) {
-            for(int z = 0; z < m_voxels[z].size(); ++z) {
-                for(int y = 0; y = m_voxels[x][z].size(); ++y) {
+        for(size_t x = 0; x < m_voxels.size(); ++x) {
+            for(size_t z = 0; z < m_voxels[z].size(); ++z) {
+                for(size_t y = 0; y < m_voxels[x][z].size(); ++y) {
                     Vec3f voxelTransform = m_transform.translation + Vec3f(x, y, z);
 
                     m_voxels[x][z][y] = worldGenerator->get_voxel_at(voxelTransform);
@@ -49,8 +47,8 @@ namespace bexel {
     void Chunk::render(unique_ptr<GLShaderProgram>& shader) {
         m_ubo->bind();
         shader->bind_buffer("Transform", 0, *m_ubo);
-        auto transform = static_cast<Transform*>(m_ubo->map());
-        *transform = m_transform;
+        auto transform = static_cast<Mat4f*>(m_ubo->map());
+        *transform = m_transform.calc_matrix();
         m_ubo->unmap();
         m_ubo->unbind();
 

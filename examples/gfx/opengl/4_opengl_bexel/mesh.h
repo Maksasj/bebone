@@ -7,7 +7,7 @@
 #include "vertex.h"
 
 namespace bexel {
-    class Mesh : private core::NonCopyable {
+    class Mesh final : private core::NonCopyable {
         private:
             vector<Vertex> m_vertices;
             vector<u32> m_indices;

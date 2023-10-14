@@ -8,7 +8,7 @@
 #include "world_generator.h"
 
 namespace bexel {
-    class Chunk : public Renderable {
+    class Chunk final : public Renderable, private core::NonCopyable {
         private:
             array<array<array<Voxel, 16>, 16>, 16> m_voxels;
             Transform m_transform;

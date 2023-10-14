@@ -20,13 +20,13 @@ namespace bexel {
         auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/4_opengl_bexel/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
 
         m_shader = make_unique<GLShaderProgram>(vertexShader, fragmentShader);
+
+        m_camera = make_unique<Camera>(8);
         m_world = make_unique<World>();
     }
 
     void Bexel::run() {
         glEnable(GL_DEPTH_TEST);
-
-        m_world->update();
 
         while (!m_window->closing()) {
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -34,6 +34,10 @@ namespace bexel {
 
             m_shader->enable();
 
+            m_camera->update(m_window);
+            m_world->update(m_camera);
+
+            m_camera->bind(m_shader);
             m_world->render(m_shader);
 
             glfwSwapBuffers(m_window->get_backend());
@@ -42,6 +46,7 @@ namespace bexel {
     }
 
     void Bexel::unload() {
+        m_camera = nullptr;
         m_world = nullptr;
 
         m_shader->destroy();
