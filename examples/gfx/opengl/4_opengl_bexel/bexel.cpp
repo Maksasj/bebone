@@ -8,7 +8,7 @@ namespace bexel {
     void Bexel::init() {
         glfwInit();
 
-        m_window = WindowFactory::create_window("4. Bexel example", GAME_WIDTH, GAME_HEIGHT, GfxAPI::OPENGL);
+        m_window = WindowFactory::create_window("4. Opengl Bexel example", GAME_WIDTH, GAME_HEIGHT, GfxAPI::OPENGL);
 
         gladLoadGL();
         glViewport(0, 0, GAME_WIDTH, GAME_HEIGHT);

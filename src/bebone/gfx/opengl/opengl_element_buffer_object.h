@@ -10,7 +10,7 @@ namespace bebone::gfx::opengl {
             GLElementBufferObject(const std::vector<GLuint>& indices);
 
             // Todo lets write destructor
-            
+
             void bind();
             void unbind();
             void destroy();

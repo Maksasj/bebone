@@ -24,6 +24,8 @@ namespace bexel {
         public:
             World();
 
+            BlockID get_voxel_at(const Vec3f& voxelPos) const;
+
             void update(unique_ptr<Camera>& camera);
             void render(unique_ptr<GLShaderProgram>& shader) override;
     };

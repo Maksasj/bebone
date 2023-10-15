@@ -1,7 +1,7 @@
 #ifndef BEXEL_RENDERABLE_H
 #define BEXEL_RENDERABLE_H
 
-#include "vertex.h"
+#include "gfx/opengl/4_opengl_bexel/mesh/vertex.h"
 
 namespace bexel {
     class Renderable {

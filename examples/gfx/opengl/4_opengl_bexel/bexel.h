@@ -1,7 +1,7 @@
 #ifndef BEXEL_BEXEL_H
 #define BEXEL_BEXEL_H
 
-#include "world.h"
+#include "gfx/opengl/4_opengl_bexel/world/world.h"
 #include "camera.h"
 
 namespace bexel {
