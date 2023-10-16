@@ -12,7 +12,7 @@ namespace bexel {
 
     struct Vertex {
         Vec3f pos;
-        Vec3f color;
+        Vec2f tex;
 
         void translate(const Vec3f& value) {
             pos += value;

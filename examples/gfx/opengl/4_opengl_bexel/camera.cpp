@@ -1,12 +1,12 @@
 #include "camera.h"
 
 namespace bexel {
-    Camera::Camera(const i32& renderDistance) : m_ubo(nullptr) {
+    Camera::Camera(const Vec3f& position, const i32& renderDistance) : m_ubo(nullptr) {
         m_ubo = make_unique<GLUniformBufferObject>(sizeof(CameraMatrices));
 
         m_renderDistance = renderDistance;
 
-        m_position = Vec3f::splat(0.0f);
+        m_position = position;
         m_rotation = Vec3f(0.0f, 0.0f, 0.0f);
         m_direction = Vec3f::splat(0.0f);
 

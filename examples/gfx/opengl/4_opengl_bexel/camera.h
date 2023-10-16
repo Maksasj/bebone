@@ -27,7 +27,7 @@ namespace bexel {
             Mat4f calculate_view_matrix() const;
 
     public:
-            Camera(const i32& renderDistance);
+            Camera(const Vec3f& position, const i32& renderDistance);
 
             void update(shared_ptr<Window>& window);
             void bind(unique_ptr<GLShaderProgram>& shader);

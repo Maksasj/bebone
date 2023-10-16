@@ -55,6 +55,10 @@ int main() {
 
     shaderProgram.set_uniform("ourTexture", 0);
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
+
     while (!window->closing()) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

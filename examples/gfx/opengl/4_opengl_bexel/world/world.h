@@ -1,6 +1,10 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include <thread>
+#include <execution>
+#include <ranges>
+
 #include "chunk.h"
 #include "renderable.h"
 #include "camera.h"

@@ -1,9 +1,9 @@
 #version 450 core
 
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
+layout (location = 0) in vec3 inPos;
+layout (location = 1) in vec2 inTexCoord;
 
-layout (location = 0) out vec3 outColor;
+layout (location = 0) out vec2 aTexCoord;
 
 layout(binding = 0) uniform Transform {
     mat4 transform;
@@ -15,6 +15,6 @@ layout(binding = 1) uniform Camera {
 };
 
 void main() {
-	gl_Position = proj * view * transform * vec4(aPos, 1.0);
-	outColor = aColor;
+	gl_Position = proj * view * transform * vec4(inPos, 1.0);
+	aTexCoord = inTexCoord;
 }

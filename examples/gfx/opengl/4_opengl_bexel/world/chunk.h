@@ -9,14 +9,18 @@
 #include "../transform.h"
 
 #include "world_generator.h"
-#include "tile_block.h"
+#include "gfx/opengl/4_opengl_bexel/world/tiles/tile_block.h"
+
+#define CHUNK_SIZE_X 16
+#define CHUNK_SIZE_Y 128
+#define CHUNK_SIZE_Z 16
 
 namespace bexel {
     class World;
 
     class Chunk final : public Renderable, private core::NonCopyable {
         private:
-            array<array<array<TileBlock*, 16>, 16>, 16> m_voxels;
+            array<array<array<TileBlock*, CHUNK_SIZE_Z>, CHUNK_SIZE_Y>, CHUNK_SIZE_X> m_voxels;
             Transform m_transform;
 
             unique_ptr<Mesh> m_mesh;

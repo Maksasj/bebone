@@ -1,12 +1,10 @@
 #ifndef BEXEL_WORLD_GENERATOR_H
 #define BEXEL_WORLD_GENERATOR_H
 
-#include "stb_perlin.h"
+#include <stb_perlin.h>
 
-#include "tile_block.h"
-
-#include "block.h"
 #include "block_id.h"
+#include "tiles/blocks.h"
 
 namespace bexel {
     class Chunk;

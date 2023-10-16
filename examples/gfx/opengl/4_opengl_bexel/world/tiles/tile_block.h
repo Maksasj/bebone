@@ -1,8 +1,8 @@
 #ifndef BEXEL_TILE_BLOCK_H
 #define BEXEL_TILE_BLOCK_H
 
-#include "../mesh/vertex.h"
-#include "../mesh/mesh_builder.h"
+#include "gfx/opengl/4_opengl_bexel/mesh/vertex.h"
+#include "gfx/opengl/4_opengl_bexel/mesh/mesh_builder.h"
 
 namespace bexel {
     class Chunk;

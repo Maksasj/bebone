@@ -9,7 +9,7 @@ namespace bexel {
         m_ebo = make_unique<GLElementBufferObject>(m_indices);
 
         m_vao->link_attributes(*m_vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, pos));
-        m_vao->link_attributes(*m_vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, color));
+        m_vao->link_attributes(*m_vbo, 1, 2, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, tex));
 
         m_vao->unbind();
         m_vbo->unbind();

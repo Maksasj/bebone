@@ -6,6 +6,8 @@
 namespace bexel {
     class Block : public TileBlock {
         private:
+
+        protected:
             Vec3f m_chunkPosition;
 
         public:

@@ -11,9 +11,9 @@ namespace bexel {
     }
 
     Chunk::~Chunk() {
-        for(i32 x = 0; x < 16; ++x) {
-            for(i32 z = 0; z < 16; ++z) {
-                for(i32 y = 0; y < 16; ++y) {
+        for(i32 x = 0; x < CHUNK_SIZE_X; ++x) {
+            for(i32 z = 0; z < CHUNK_SIZE_Z; ++z) {
+                for(i32 y = 0; y < CHUNK_SIZE_Y; ++y) {
                     delete m_voxels[x][y][z];
                 }
             }
@@ -21,9 +21,9 @@ namespace bexel {
     }
 
     void Chunk::generate_chunk(unique_ptr<WorldGenerator>& worldGenerator) {
-        for(i32 x = 0; x < 16; ++x) {
-            for(i32 z = 0; z < 16; ++z) {
-                for(i32 y = 0; y < 16; ++y) {
+        for(i32 x = 0; x < CHUNK_SIZE_X; ++x) {
+            for(i32 z = 0; z < CHUNK_SIZE_Z; ++z) {
+                for(i32 y = 0; y < CHUNK_SIZE_Y; ++y) {
                     m_voxels[x][y][z] = worldGenerator->create_voxel_at(*this, Vec3i(x, y, z));
                 }
             }
@@ -31,9 +31,9 @@ namespace bexel {
     }
 
     TileBlock* Chunk::get_voxel(const i32& x, const i32& y, const i32& z) {
-        if(x < 0 || x >= 16) return nullptr;
-        if(y < 0 || y >= 16) return nullptr;
-        if(z < 0 || z >= 16) return nullptr;
+        if(x < 0 || x >= CHUNK_SIZE_X) return nullptr;
+        if(y < 0 || y >= CHUNK_SIZE_Y) return nullptr;
+        if(z < 0 || z >= CHUNK_SIZE_Z) return nullptr;
 
         return m_voxels[x][y][z];
     }
@@ -45,9 +45,9 @@ namespace bexel {
     void Chunk::generate_mesh(World& world) {
         MeshBuilder meshBuilder;
 
-        for(i32 x = 0; x < 16; ++x) {
-            for(i32 z = 0; z < 16; ++z) {
-                for(i32 y = 0; y < 16; ++y) {
+        for(i32 x = 0; x < CHUNK_SIZE_X; ++x) {
+            for(i32 z = 0; z < CHUNK_SIZE_Z; ++z) {
+                for(i32 y = 0; y < CHUNK_SIZE_Y; ++y) {
                     auto voxel = get_voxel(x, y, z);
 
                     if(voxel != nullptr)

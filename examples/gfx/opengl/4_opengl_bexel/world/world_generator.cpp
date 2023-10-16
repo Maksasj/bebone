@@ -11,12 +11,12 @@ namespace bexel {
         const auto& y = voxelPosF.y;
         const auto& z = voxelPosF.z;
 
-        auto v0 = stb_perlin_noise3_seed(x * 0.05f, 0, z * 0.05f,0, 0, 0, m_seed);
-        auto v1 = stb_perlin_noise3_seed(x * 0.05f, 0, z * 0.05f,0, 0, 0, m_seed);
+        auto v0 = stb_perlin_noise3_seed(x * 0.05f, 0, z * 0.05f,0, 0, 0, m_seed) * 0.5f + 0.5f;
+        auto v1 = stb_perlin_noise3_seed(x * 0.01f, 0, z * 0.01f,0, 0, 0, m_seed) * 0.5f + 0.5f;
 
-        float v = v0 * 12 + v1 * 4;
+        const auto v = v0 * 9.0f + v1 * 96.0f;
 
-        if(y < v)
+        if(y > v)
             return AIR;
 
         return SOLID;
@@ -35,7 +35,7 @@ namespace bexel {
         const auto blockID = get_voxel_at(globalPos);
 
         switch (blockID) {
-            case SOLID: return new Block(voxelPosF);
+            case SOLID: return new GrassBlock(voxelPosF);
             default: return nullptr;
         }
     }
