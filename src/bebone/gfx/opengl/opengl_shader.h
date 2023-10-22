@@ -4,6 +4,7 @@
 #include "../gfx_backend.h"
 #include "../shaders/shader_code.h"
 
+#include "opengl_shader_properties.h"
 #include "opengl_uniform_buffer_object.h"
 
 namespace bebone::gfx::opengl {
@@ -11,19 +12,25 @@ namespace bebone::gfx::opengl {
 
     class GLShader : private core::NonCopyable {
         private:
-            GLuint shader;
+            GLuint m_shader;
+            GLShaderProperties m_properties;
 
         public:
-            GLShader(const ShaderCode& code, const ShaderType& shaderType);
-            GLShader(const std::string& code, const ShaderType& shaderType);
+            GLShader(const ShaderCode& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+            GLShader(const std::string& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
 
             GLuint get_shader() const;
+            const GLShaderProperties& get_properties() const;
+
             void destroy();
     };
 
     class GLShaderProgram : private core::NonCopyable {
         private:
             GLuint id;
+            GLShaderProperties m_properties;
+
+            void create_shader_program(const GLShader& vertex, const GLShader& fragment);
 
         public:
             GLShaderProgram(const GLShader& vertex, const GLShader& fragment);

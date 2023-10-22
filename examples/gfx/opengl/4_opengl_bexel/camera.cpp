@@ -1,9 +1,7 @@
 #include "camera.h"
 
 namespace bexel {
-    Camera::Camera(const Vec3f& position, const i32& renderDistance) : m_ubo(nullptr) {
-        m_ubo = make_unique<GLUniformBufferObject>(sizeof(CameraMatrices));
-
+    Camera::Camera(const Vec3f& position, const i32& renderDistance) {
         m_renderDistance = renderDistance;
 
         m_position = position;
@@ -41,7 +39,7 @@ namespace bexel {
     }
 
     void Camera::update(shared_ptr<Window>& window) {
-        float speed = 0.5f;
+        const f32 speed = 0.5f;
 
         if (glfwGetKey(window->get_backend(), 'W') == GLFW_PRESS)
             m_position += Vec3f(1.0f, 0.0f, 1.0f) * m_direction.normalize() * speed;
@@ -98,15 +96,8 @@ namespace bexel {
     }
 
     void Camera::bind(unique_ptr<GLShaderProgram>& shader) {
-        m_ubo->bind();
-        shader->bind_buffer("Camera", 1, *m_ubo);
-        auto cam = static_cast<CameraMatrices*>(m_ubo->map());
-
-        cam->proj = m_projMatrix;
-        cam->view = m_viewMatrix;
-
-        m_ubo->unmap();
-        m_ubo->unbind();
+        shader->set_uniform("proj", m_projMatrix);
+        shader->set_uniform("view", m_viewMatrix);
     }
 
     const Vec3f& Camera::get_position() const {

@@ -62,7 +62,7 @@ namespace bexel {
     }
 
     void Chunk::render(unique_ptr<GLShaderProgram>& shader) {
-        std::ignore = shader;
+        shader->set_uniform("transform", m_transform.calc_matrix());
 
         if(m_mesh != nullptr)
             m_mesh->render();

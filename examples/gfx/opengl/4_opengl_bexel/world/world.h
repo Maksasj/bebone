@@ -24,8 +24,6 @@ namespace bexel {
             unique_ptr<WorldGenerator> m_worldGenerator;
             unordered_map<Vec2i, unique_ptr<Chunk>> m_chunks;
 
-            unique_ptr<GLUniformBufferObject> m_chunkUbo;
-
             bool chunk_exist(const Vec2i& pos) const;
 
         public:

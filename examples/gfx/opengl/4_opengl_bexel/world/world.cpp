@@ -1,10 +1,8 @@
 #include "world.h"
 
 namespace bexel {
-    World::World() : m_worldGenerator(nullptr), m_chunkUbo(nullptr) {
+    World::World() : m_worldGenerator(nullptr) {
         m_worldGenerator = make_unique<WorldGenerator>(123);
-
-        m_chunkUbo = make_unique<GLUniformBufferObject>(sizeof(Mat4f));
     }
 
     BlockID World::get_voxel_at(const Vec3f& voxelPos) const {
@@ -50,17 +48,8 @@ namespace bexel {
     }
 
     void World::render(unique_ptr<GLShaderProgram>& shader) {
-        for_each(m_chunks.begin(), m_chunks.end(), [&](auto& tuple) {
-            unique_ptr<Chunk>& chunk = tuple.second;
-
-            // Need to check if we really need to have this there
-            m_chunkUbo->bind();
-            shader->bind_buffer("Transform", 0, *m_chunkUbo);
-            auto transform = static_cast<Mat4f*>(m_chunkUbo->map());
-            *transform = chunk->get_transform().calc_matrix();
-            m_chunkUbo->unmap();
-            m_chunkUbo->unbind();
-
+        for_each(m_chunks.begin(), m_chunks.end(), [&](const auto& tuple) {
+            const auto& chunk = tuple.second;
             chunk->render(shader);
         });
     };

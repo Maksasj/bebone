@@ -6,13 +6,6 @@
 namespace bexel {
     class Camera : private core::NonCopyable {
         private:
-            struct CameraMatrices {
-                Mat4f view;
-                Mat4f proj;
-            };
-
-            unique_ptr<GLUniformBufferObject> m_ubo;
-
             i32 m_renderDistance;
 
             Vec3f m_position;
