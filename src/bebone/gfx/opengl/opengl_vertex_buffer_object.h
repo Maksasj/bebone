@@ -5,9 +5,11 @@
 #include <vector>
 
 namespace bebone::gfx::opengl {
-    class GLVertexBufferObject : public GLBufferObject {
+    class GLVertexBufferObject final : public GLBufferObject {
         public:
-            GLVertexBufferObject(const std::vector<GLfloat>& vertices);
+            GLVertexBufferObject(const void* vertices, const size_t& size);
+
+            // Todo lets write destructor
 
             void bind();
             void unbind();

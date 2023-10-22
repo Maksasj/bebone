@@ -61,7 +61,7 @@ int main() {
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices);
+    GLVertexBufferObject vbo(vertices.data(), sizeof(float) * vertices.size());
     GLElementBufferObject ebo(indices);
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, 6 * (sizeof(float)), (void*)0);
@@ -119,5 +119,6 @@ int main() {
     shaderProgram.destroy();
 
     glfwTerminate();
+
     return 0;
 }

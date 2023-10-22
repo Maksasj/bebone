@@ -39,7 +39,7 @@ int main() {
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices);
+    GLVertexBufferObject vbo(vertices.data(), sizeof(float) * vertices.size());
     GLElementBufferObject ebo(indices);
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, 8 * (sizeof(float)), (void*)0);
@@ -54,6 +54,10 @@ int main() {
         GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 
     shaderProgram.set_uniform("ourTexture", 0);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
 
     while (!window->closing()) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
