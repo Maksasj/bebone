@@ -14,7 +14,7 @@ namespace bexel {
         auto v0 = stb_perlin_noise3_seed(x * 0.05f, 0, z * 0.05f,0, 0, 0, m_seed) * 0.5f + 0.5f;
         auto v1 = stb_perlin_noise3_seed(x * 0.01f, 0, z * 0.01f,0, 0, 0, m_seed) * 0.5f + 0.5f;
 
-        const auto v = v0 * 9.0f + v1 * 96.0f;
+        const auto v = v0 * 8.0f + v1 * 24.0f;
 
         if(y > v)
             return AIR;

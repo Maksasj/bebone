@@ -3,8 +3,6 @@
 
 namespace bexel {
     Chunk::Chunk(const Vec3f& pos) : m_mesh(nullptr) {
-        m_ubo = make_unique<GLUniformBufferObject>(sizeof(Mat4f));
-
         m_transform.translation = pos;
         m_transform.rotation = Mat4f::identity();
         m_transform.scale = Vec3f::splat(1.0f);
@@ -59,13 +57,12 @@ namespace bexel {
         m_mesh = meshBuilder.build();
     }
 
+    const Transform& Chunk::get_transform() const {
+        return m_transform;
+    }
+
     void Chunk::render(unique_ptr<GLShaderProgram>& shader) {
-        m_ubo->bind();
-            shader->bind_buffer("Transform", 0, *m_ubo);
-            auto transform = static_cast<Mat4f*>(m_ubo->map());
-            *transform = m_transform.calc_matrix();
-            m_ubo->unmap();
-        m_ubo->unbind();
+        std::ignore = shader;
 
         if(m_mesh != nullptr)
             m_mesh->render();

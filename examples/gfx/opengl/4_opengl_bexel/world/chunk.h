@@ -12,7 +12,7 @@
 #include "gfx/opengl/4_opengl_bexel/world/tiles/tile_block.h"
 
 #define CHUNK_SIZE_X 16
-#define CHUNK_SIZE_Y 128
+#define CHUNK_SIZE_Y 32
 #define CHUNK_SIZE_Z 16
 
 namespace bexel {
@@ -24,7 +24,6 @@ namespace bexel {
             Transform m_transform;
 
             unique_ptr<Mesh> m_mesh;
-            unique_ptr<GLUniformBufferObject> m_ubo;
 
         public:
             Chunk(const Vec3f& pos);
@@ -36,6 +35,7 @@ namespace bexel {
             TileBlock* get_voxel(const i32& x, const i32& y, const i32& z);
             const Vec3f& get_pos() const;
 
+            const Transform& get_transform() const;
             void render(unique_ptr<GLShaderProgram>& shader) override;
     };
 }
