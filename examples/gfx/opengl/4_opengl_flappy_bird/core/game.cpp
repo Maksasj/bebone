@@ -14,10 +14,13 @@ namespace game::core {
 
         std::shared_ptr<GLShaderProgram> shaderProgram = std::make_shared<GLShaderProgram>(vertexShader, fragmentShader);
 
-        renderer = make_shared<Renderer>(shaderProgram, camera);
+        //renderer = make_shared<Renderer>(shaderProgram, camera);
+        batch = make_shared<Batch>(shaderProgram, camera, 1024);
     }
 
     void Game::update(Sprite& sprite) {
-        renderer->render(sprite, Transform());
+        //renderer->render(sprite, Transform());
+        batch->add(Transform());
+        batch->render();
     }
 }

@@ -1,14 +1,16 @@
 #include "sprite.h"
 
 namespace game::core {
-    Sprite::Sprite() : texture(nullptr) {}
-    Sprite::Sprite(std::shared_ptr<GLTexture>& texture) : texture(texture) {}
+    using namespace std;
 
-    const std::shared_ptr<GLTexture>& Sprite::get_texture() const {
+    Sprite::Sprite() : texture(nullptr) {}
+    Sprite::Sprite(shared_ptr<GLTexture>& texture) : texture(texture) {}
+
+    const shared_ptr<GLTexture>& Sprite::get_texture() const {
         return texture;
     }
 
-    void Sprite::set_texture(std::shared_ptr<GLTexture>& texture) {
+    void Sprite::set_texture(shared_ptr<GLTexture>& texture) {
         this->texture = texture;
     }
 }

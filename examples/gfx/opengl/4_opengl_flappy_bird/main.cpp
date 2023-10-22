@@ -3,6 +3,7 @@
 #include "bebone/bebone.h"
 
 #include "core/game.h"
+#include "core/sprite.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -24,6 +25,9 @@ int main() {
 
     std::shared_ptr<GLTexture> texture = std::make_shared<GLTexture>("examples\\assets\\gfx\\opengl\\4_opengl_flappy_bird\\awesomeface.png",
         GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+
+    texture->bind();
+
     Sprite sprite(texture);
 
     while (!window->closing()) {
@@ -35,6 +39,9 @@ int main() {
         glfwSwapBuffers(window->get_backend());
         glfwPollEvents();
     }
+
+    texture->unbind();
+    texture->destroy();
 
     glfwTerminate();
 

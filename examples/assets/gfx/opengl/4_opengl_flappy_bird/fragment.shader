@@ -1,10 +1,11 @@
 #version 450 core
 
-layout (location = 0) in vec2 texCoords;
-layout (location = 0) out vec3 outColor;
+layout (location = 0) in vec2 a_TexCoords;
+
+layout (location = 0) out vec3 v_Color;
 
 layout (binding = 0) uniform sampler2D image;
 
 void main() {
-	outColor = texture(image, texCoords).rgb;
+	v_Color = texture(image, a_TexCoords).rgb;
 }

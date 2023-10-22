@@ -7,15 +7,17 @@
 using namespace bebone::gfx::opengl;
 
 namespace game::core {
+    using namespace std;
+
     class Sprite {
         private:
-            std::shared_ptr<GLTexture> texture;
+            shared_ptr<GLTexture> texture;
         public:
             Sprite();
-            Sprite(std::shared_ptr<GLTexture>& texture);
+            Sprite(shared_ptr<GLTexture>& texture);
 
-            const std::shared_ptr<GLTexture>& get_texture() const;
-            void set_texture(std::shared_ptr<GLTexture>& texture);
+            const shared_ptr<GLTexture>& get_texture() const;
+            void set_texture(shared_ptr<GLTexture>& texture);
     };
 }
 

@@ -45,8 +45,8 @@ int main() {
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices);
-    GLElementBufferObject ebo(indices);
+    GLVertexBufferObject vbo(vertices.data(), vertices.size(), GL_STATIC_DRAW);
+    GLElementBufferObject ebo(indices, GL_STATIC_DRAW);
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, 3 * (sizeof(float)), (void*)0);
 

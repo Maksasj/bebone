@@ -17,7 +17,7 @@ namespace game::core {
         };
 
         vao->bind();
-            vbo = make_shared<GLVertexBufferObject>(vertices);
+            vbo = make_shared<GLVertexBufferObject>(vertices.data(), vertices.size(), GL_STATIC_DRAW);
             vao->link_attributes(*vbo, 0, 4, GL_FLOAT, 4 * sizeof(float), (void*)0);
         vao->unbind();
 
@@ -41,7 +41,7 @@ namespace game::core {
         static float f = 0.0f;
 
         Mat4f model = Mat4f::identity();
-        model = model * model.scale(0.25);
+        model = model * model.scale(scale);
         model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, f));
         model = model * model.translation(position);
 

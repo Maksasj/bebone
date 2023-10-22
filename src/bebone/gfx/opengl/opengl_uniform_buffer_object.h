@@ -9,10 +9,10 @@ namespace bebone::gfx::opengl {
 
     class GLUniformBufferObject : public GLBufferObject {
         private:
-            i64 size;
+            u64 size;
 
         public:
-            GLUniformBufferObject(const i64& _size);
+            GLUniformBufferObject(const u64& _size);
 
             void bind_buffer_base(const i32& binding) const;
 

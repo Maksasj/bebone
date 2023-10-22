@@ -7,7 +7,9 @@
 namespace bebone::gfx::opengl {
     class GLVertexBufferObject : public GLBufferObject {
         public:
-            GLVertexBufferObject(const std::vector<GLfloat>& vertices);
+            GLVertexBufferObject(const void* vertices, const size_t& size, const GLenum& usage);
+
+            void buffer_sub_data(GLintptr offset, GLsizeiptr size, const void* data);
 
             void bind();
             void unbind();
