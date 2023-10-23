@@ -16,6 +16,18 @@
   <br>
 </div>
 
+## Roadmap
+
+### 0.1v Release (This year)
+1. **Graphics abstraction layer**. General OpenGL and Vulkan abstractions. Window, Monitor apis.
+2. **Asset management system**. Basic abstractions for creating/editing image/mesh/*sound* data.
+3. **Input system**.
+
+### 0.2v ...
+1. *Scripting*.
+2. *Sound system*.
+3. *Physics engine*.
+
 ## Features
 *Todo*
 

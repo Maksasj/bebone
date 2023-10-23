@@ -2,10 +2,10 @@
 
 namespace bebone::gfx::opengl {
     GLTexture::GLTexture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType) {
-        int imageWidth;
-        int imageHeight;
-        int colorChannelNumber;
+        int imageWidth, imageHeight, colorChannelNumber;
+
         stbi_set_flip_vertically_on_load(true);
+
         unsigned char* bytes = stbi_load(image, &imageWidth, &imageHeight, &colorChannelNumber, 0);
 
         glGenTextures(1, &id);

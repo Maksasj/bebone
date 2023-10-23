@@ -119,5 +119,6 @@ int main() {
     shaderProgram.destroy();
 
     glfwTerminate();
+
     return 0;
 }

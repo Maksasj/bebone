@@ -5,11 +5,13 @@
 #include <vector>
 
 namespace bebone::gfx::opengl {
-    class GLElementBufferObject : public GLBufferObject {
+    class GLElementBufferObject final : public GLBufferObject {
         public:
             GLElementBufferObject(const std::vector<GLuint>& indices, const GLenum& usage);
 
             void buffer_sub_data(GLintptr offset, GLsizeiptr size, const void* data);
+
+            // Todo lets write destructor
 
             void bind();
             void unbind();

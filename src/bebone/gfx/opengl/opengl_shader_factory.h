@@ -5,6 +5,7 @@
 
 #include "../shaders/spirv_shader_compiler.h"
 
+#include "opengl_shader_properties.h"
 #include "opengl_extension_checker.h"
 #include "opengl_shader.h"
 
@@ -16,7 +17,7 @@ namespace bebone::gfx::opengl {
         public:
             GLShaderFactory() = delete;
 
-            static GLShader create_shader(const std::string& path, const ShaderType& shaderType);
+            static GLShader create_shader(const std::string& path, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
     };
 }
 
