@@ -2,7 +2,7 @@
 
 namespace bebone::gfx::opengl {
     GLVertexBufferObject::GLVertexBufferObject(const void* vertices, const size_t& size, const GLenum& usage) : GLBufferObject() {
-        glBindBuffer(GL_ARRAY_BUFFER, id);
+        bind();
         glBufferData(GL_ARRAY_BUFFER, size, vertices, usage);
     }
 

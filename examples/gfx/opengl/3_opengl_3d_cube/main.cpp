@@ -51,8 +51,8 @@ int main() {
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glfwSwapInterval(0);
 
-    auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/vertex.shader", ShaderTypes::VERTEX_SHADER);
-    auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
+    auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/vertex.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();
@@ -61,8 +61,8 @@ int main() {
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices.data(), vertices.size(), GL_STATIC_DRAW);
-    GLElementBufferObject ebo(indices, GL_STATIC_DRAW);
+    GLVertexBufferObject vbo(vertices.data(), vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
+    GLElementBufferObject ebo(indices.data(), indices.size(), GL_STATIC_DRAW);
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, 6 * (sizeof(float)), (void*)0);
     vao.link_attributes(vbo, 1, 3, GL_FLOAT, 6 * (sizeof(float)), (void*)(3 * sizeof(float)));

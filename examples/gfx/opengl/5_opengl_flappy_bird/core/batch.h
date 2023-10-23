@@ -17,11 +17,6 @@ namespace game::core {
     
     class Batch : private NonCopyable {
         private:
-            struct ShaderMatrices {
-                Mat4f model;
-                Mat4f projection;
-            };
-
             shared_ptr<OrthographicCamera> camera;
 
             shared_ptr<GLShaderProgram> shaderProgram;
@@ -29,15 +24,17 @@ namespace game::core {
             shared_ptr<GLVertexArrayObject> vao;
             shared_ptr<GLVertexBufferObject> vbo;
             shared_ptr<GLElementBufferObject> ebo;
-            shared_ptr<GLUniformBufferObject> matricesUbo;
 
-            const int CAPACITY;
             size_t size;
+            size_t quadLimit;
+            size_t indexLimit;
+
+            shared_ptr<GLTexture> texture;
 
             array<ShaderVertex, 4> create_quad(const Vec2f& position);
             void add_indices();
         public:
-            Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& capacity);
+            Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit, shared_ptr<GLTexture>& texture);
             ~Batch();
 
             void add(const Transform& transform);

@@ -1,20 +1,20 @@
 #include "batch.h"
 
 namespace game::core {
-    Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& capacity) : camera(camera), CAPACITY(capacity), size(0) {
-        this->shaderProgram = shaderProgram;
+    Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit, shared_ptr<GLTexture>& texture) : camera(camera), shaderProgram(shaderProgram), size(0), quadLimit(quadLimit), texture(texture) {
+        indexLimit = quadLimit * 6;
 
         vao = make_shared<GLVertexArrayObject>();
 
         vao->bind();
-            vbo = make_shared<GLVertexBufferObject>(nullptr, capacity * sizeof(ShaderVertex), GL_DYNAMIC_DRAW);
-            ebo = make_shared<GLElementBufferObject>(NULL, GL_DYNAMIC_DRAW);
+            vbo = make_shared<GLVertexBufferObject>(nullptr, quadLimit * sizeof(ShaderVertex), GL_DYNAMIC_DRAW);
+            ebo = make_shared<GLElementBufferObject>(nullptr, indexLimit * sizeof(unsigned int), GL_DYNAMIC_DRAW);
 
             vao->link_attributes(*vbo, 0, 2, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, position));
             vao->link_attributes(*vbo, 1, 2, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, textureCoordinates));
         vao->unbind();
-
-        matricesUbo = make_shared<GLUniformBufferObject>(sizeof(ShaderMatrices));
+        vbo->unbind();
+        ebo->unbind();
     }
 
     Batch::~Batch() {
@@ -27,41 +27,62 @@ namespace game::core {
         ebo->destroy();
         ebo = nullptr;
 
-        matricesUbo->destroy();
-        matricesUbo = nullptr;
-
         shaderProgram->destroy();
         shaderProgram = nullptr;
+
+        texture->destroy();
+        texture = nullptr;
     }
 
     void Batch::add(const Transform& transform) {
-        auto quad = create_quad(transform.get_position());
-        vbo->buffer_sub_data(size, quad.size(), quad.data());
-        size += quad.size();
+        //auto quad = create_quad(transform.get_position());
+
+        std::vector<GLfloat> quad = {
+            0.5f, 0.5f,     1.0f, 1.0f,
+            0.5f, -0.5f,    1.0f, 0.0f,
+            -0.5f, -0.5f,   0.0f, 0.0f,
+            -0.5f, 0.5f,    0.0f, 1.0f
+        };
+        
+        vbo->buffer_sub_data(size, quad.size() * sizeof(GLfloat), quad.data());
+        //size += quad.size();
 
         add_indices();
     }
 
     void Batch::add_indices() {
-        uint32_t indices[6];
+        unsigned int indices[6];
 
-        indices[0] = size - 4;
-        indices[1] = size - 3;
-        indices[2] = size - 2;
+        indices[0] = 0;
+        indices[1] = 1;
+        indices[2] = 3;
 
-        indices[3] = size - 2;
-        indices[4] = size - 1;
-        indices[4] = size - 4;
+        indices[3] = 1;
+        indices[4] = 2;
+        indices[5] = 3;
 
-        ebo->buffer_sub_data(size - 4, 6, indices);
+        ebo->buffer_sub_data(0, sizeof(indices), indices);
     }
 
     void Batch::render() {
-        vao->bind();
-        glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
-        vao->unbind();
+        shaderProgram->enable();
 
-        size = 0;
+        //TODO: set uniforms
+
+        // Mat4f model = Mat4f::identity();
+        // model = model * model.scale(1.0f);
+        // model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
+        // model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
+        
+        texture->bind();
+        vao->bind();
+            // shaderProgram->set_uniform("model", model);
+            // shaderProgram->set_uniform("projection", camera->get_projection_matrix());
+            shaderProgram->set_uniform("image", 0);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        vao->unbind();
+        texture->unbind();
+        //size = 0;
     }
 
     std::array<ShaderVertex, 4> Batch::create_quad(const Vec2f& position) {

@@ -23,26 +23,16 @@ int main() {
 
     Game game(SCR_WIDTH, SCR_HEIGHT);
 
-    std::shared_ptr<GLTexture> texture = std::make_shared<GLTexture>("examples\\assets\\gfx\\opengl\\4_opengl_flappy_bird\\awesomeface.png",
-        GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-
-    texture->bind();
-
-    Sprite sprite(texture);
-
     while (!window->closing()) {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        game.update(sprite);
+        game.update();
 
         glfwSwapBuffers(window->get_backend());
         glfwPollEvents();
     }
-
-    texture->unbind();
-    texture->destroy();
-
+    
     glfwTerminate();
 
     return 0;
