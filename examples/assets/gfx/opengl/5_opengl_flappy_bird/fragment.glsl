@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec2 a_TexCoords;
 
-out vec4 v_Color;
+layout (location = 0) out vec4 v_Color;
 
 uniform sampler2D image;
 

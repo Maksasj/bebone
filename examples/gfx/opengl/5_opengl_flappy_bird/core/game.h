@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "bebone/bebone.h"
-#include "renderer.h"
 #include "batch.h"
 #include "sprite.h"
 
@@ -13,7 +12,6 @@ namespace game::core {
 
     class Game : private bebone::core::NonCopyable {
         private:
-            //shared_ptr<Renderer> renderer;
             shared_ptr<Batch> batch;
             shared_ptr<OrthographicCamera> camera;
 
