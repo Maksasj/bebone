@@ -13,6 +13,7 @@ namespace game::core {
         
         public:
             Transform();
+            Transform(const Vec3f& position);
             Transform(const Vec3f& position, const Vec3f& rotation, const f32& scale);
 
             const Vec3f& get_position() const;

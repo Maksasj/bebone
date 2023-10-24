@@ -1,8 +1,10 @@
 #include "batch.h"
 
 namespace game::core {
-    Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit, shared_ptr<GLTexture>& texture) : camera(camera), shaderProgram(shaderProgram), size(0), quadLimit(quadLimit), texture(texture) {
-        indexLimit = quadLimit * 6;
+    Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit, shared_ptr<GLTexture>& texture) :
+        camera(camera), shaderProgram(shaderProgram), indicesSize(0), quadSize(0), quadLimit(quadLimit), texture(texture) {
+        
+        size_t indexLimit = quadLimit * 6;
 
         vao = make_shared<GLVertexArrayObject>();
 
@@ -35,17 +37,14 @@ namespace game::core {
     }
 
     void Batch::add(const Transform& transform) {
-        //auto quad = create_quad(transform.get_position());
+        if (quadSize + 1 >= quadLimit) {
+            return;
+        }
 
-        std::vector<GLfloat> quad = {
-            0.5f, 0.5f,     1.0f, 1.0f,
-            0.5f, -0.5f,    1.0f, 0.0f,
-            -0.5f, -0.5f,   0.0f, 0.0f,
-            -0.5f, 0.5f,    0.0f, 1.0f
-        };
+        auto quad = create_quad(transform.get_position());
         
-        vbo->buffer_sub_data(size, quad.size() * sizeof(GLfloat), quad.data());
-        //size += quad.size();
+        vbo->buffer_sub_data(vertexSize * sizeof(ShaderVertex), quad.size() * sizeof(ShaderVertex), quad.data());
+        vertexSize += quad.size();
 
         add_indices();
     }
@@ -53,15 +52,17 @@ namespace game::core {
     void Batch::add_indices() {
         unsigned int indices[6];
 
-        indices[0] = 0;
-        indices[1] = 1;
-        indices[2] = 3;
+        indices[0] = vertexSize - 4;
+        indices[1] = vertexSize - 3;
+        indices[2] = vertexSize - 1;
 
-        indices[3] = 1;
-        indices[4] = 2;
-        indices[5] = 3;
+        indices[3] = vertexSize - 3;
+        indices[4] = vertexSize - 2;
+        indices[5] = vertexSize - 1;
 
-        ebo->buffer_sub_data(0, sizeof(indices), indices);
+        ebo->buffer_sub_data(indicesSize * sizeof(unsigned int), sizeof(indices), indices);
+
+        indicesSize += 6;
     }
 
     void Batch::render() {
@@ -79,10 +80,13 @@ namespace game::core {
             // shaderProgram->set_uniform("model", model);
             // shaderProgram->set_uniform("projection", camera->get_projection_matrix());
             shaderProgram->set_uniform("image", 0);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
         vao->unbind();
         texture->unbind();
-        //size = 0;
+        
+        vertexSize = 0;
+        quadSize = 0;
+        indicesSize = 0;
     }
 
     std::array<ShaderVertex, 4> Batch::create_quad(const Vec2f& position) {

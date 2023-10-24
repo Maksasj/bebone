@@ -14,13 +14,12 @@ namespace game::core {
         auto texture = std::make_shared<GLTexture>("examples/assets/gfx/opengl/5_opengl_flappy_bird/awesomeface.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
         std::shared_ptr<GLShaderProgram> shaderProgram = std::make_shared<GLShaderProgram>(vertexShader, fragmentShader);
 
-        //renderer = make_shared<Renderer>(shaderProgram, camera);
         batch = make_shared<Batch>(shaderProgram, camera, 1024, texture);
     }
 
     void Game::update() {
-        //renderer->render(sprite, Transform());
         batch->add(Transform());
+        batch->add(Transform(Vec3f(-0.5f, -0.5f, 0.0f)));
         batch->render();
     }
 }
