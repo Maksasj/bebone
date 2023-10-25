@@ -80,7 +80,7 @@ namespace game::core {
             // shaderProgram->set_uniform("model", model);
             // shaderProgram->set_uniform("projection", camera->get_projection_matrix());
             shaderProgram->set_uniform("image", 0);
-            glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
+            GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indicesSize), GL_UNSIGNED_INT, nullptr);
         vao->unbind();
         texture->unbind();
         

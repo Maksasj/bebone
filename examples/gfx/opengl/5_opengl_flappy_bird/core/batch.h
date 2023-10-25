@@ -34,6 +34,7 @@ namespace game::core {
 
             array<ShaderVertex, 4> create_quad(const Vec2f& position);
             void add_indices();
+
         public:
             Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit, shared_ptr<GLTexture>& texture);
             ~Batch();

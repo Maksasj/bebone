@@ -18,14 +18,14 @@ int main() {
 
     auto window = WindowFactory::create_window("4. 2d game example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
-    gladLoadGL();
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::load_opengl();
+    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     Game game(SCR_WIDTH, SCR_HEIGHT);
 
     while (!window->closing()) {
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
+        GLContext::clear(GL_COLOR_BUFFER_BIT);
 
         game.update();
 
