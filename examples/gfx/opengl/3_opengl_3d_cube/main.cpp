@@ -47,8 +47,8 @@ int main() {
 
     auto window = WindowFactory::create_window("3. OpenGL 3D cube example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
-	gladLoadGL();
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::load_opengl();
+    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glfwSwapInterval(0);
 
     auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/vertex.glsl", ShaderTypes::VERTEX_SHADER);
@@ -90,13 +90,13 @@ int main() {
 
     float t = 0;
 
-    glEnable(GL_DEPTH_TEST);
+    GLContext::enable(GL_DEPTH_TEST);
 
     while (!window->closing()) {
         ++t;
 
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
+        GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         transformPtr->rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
 
@@ -104,7 +104,7 @@ int main() {
 
         vao.bind();
 
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window->get_backend());
         glfwPollEvents();

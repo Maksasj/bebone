@@ -30,10 +30,8 @@ int main() {
 
     auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        return 1;
-
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::load_opengl();
+    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/1_opengl_hello_triangle/vertex.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/1_opengl_hello_triangle/fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
@@ -55,12 +53,12 @@ int main() {
 	ebo.unbind();
 
     while (!window->closing()) {
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
+        GLContext::clear(GL_COLOR_BUFFER_BIT);
 
         shaderProgram.enable();
         vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        GLContext::draw_arrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window->get_backend());
         glfwPollEvents();

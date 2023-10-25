@@ -8,26 +8,28 @@ namespace bebone::gfx::opengl {
         return ss.str();
     }
 
-    GLShader GLShaderFactory::create_shader(const std::string& path, const ShaderType& shaderType, const GLShaderProperties& propeties) {
+    bool GLShaderFactory::is_use_legacy_compiler(const GLShaderProperties& properties) {
+        if(properties & GLShaderProperties::ENABLE_UNIFORMS)
+            return true;
+
+        // There we check if device supports SPIR-V binary shaders
+        if(!GLExtensionChecker::available("GL_ARB_gl_spirv"))
+            return true;
+
+        return false;
+    }
+
+    GLShader GLShaderFactory::create_shader(const std::string& path, const ShaderType& shaderType, const GLShaderProperties& properties) {
         const auto source = read_file(path);
 
-        auto useLegacyCompiler = false;
-
-        if(propeties & GLShaderProperties::ENABLE_UNIFORMS)
-            useLegacyCompiler = true;
-
-        // There we check if device supports spirv binary shaders
-        if(!GLExtensionChecker::available("GL_ARB_gl_spirv"))
-            useLegacyCompiler = true;
-
-        if(useLegacyCompiler)
-            return GLShader(source, shaderType, propeties);
+        if(is_use_legacy_compiler(properties))
+            return GLShader(source, shaderType, properties);
 
         SpirVShaderCompiler shaderCompiler;
 
         shaderCompiler.add_shader_source(ShaderSource(source, shaderType));
         const auto code = shaderCompiler.compile(shaderType);
 
-        return GLShader(code, shaderType, propeties);
+        return GLShader(code, shaderType, properties);
     }
 }

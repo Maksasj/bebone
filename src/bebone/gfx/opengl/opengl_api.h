@@ -1,6 +1,8 @@
 #ifndef _OPENGL_API_H_
 #define _OPENGL_API_H_
 
+#include "opengl_context.h"
+
 #include "opengl_buffer_object.h"
 #include "opengl_vertex_array_object.h"
 #include "opengl_vertex_buffer_object.h"

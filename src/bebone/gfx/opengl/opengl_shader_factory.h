@@ -13,6 +13,7 @@ namespace bebone::gfx::opengl {
     class GLShaderFactory {
         private:
             static std::string read_file(const std::string& path);
+            static bool is_use_legacy_compiler(const GLShaderProperties& properties);
 
         public:
             GLShaderFactory() = delete;
