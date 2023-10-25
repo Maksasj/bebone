@@ -38,9 +38,9 @@ namespace bexel {
         m_shader->set_uniform("inTexture", 0);
 
         while (!m_window->closing()) {
-            glClearColor(0.47f, 0.65f, 1.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glViewport(0, 0, m_window->get_width(), m_window->get_height());
+            GLContext::set_viewport(0, 0, m_window->get_width(), m_window->get_height());
+            GLContext::clear_color(0.47f, 0.65f, 1.0f, 1.0f);
+            GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             m_camera->update(m_window);
             m_world->update(m_camera);

@@ -18,6 +18,7 @@ namespace bexel {
 
     void Mesh::render() const {
         m_vao->bind();
-        glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+
+        GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(m_indices.size()), GL_UNSIGNED_INT, nullptr);
     }
 }
