@@ -30,9 +30,7 @@ int main() {
 
     auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        return 1;
-
+    GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/1_opengl_hello_triangle/vertex.shader", ShaderTypes::VERTEX_SHADER);

@@ -10,7 +10,7 @@ namespace bexel {
 
         m_window = WindowFactory::create_window("4. Opengl Bexel example", GAME_WIDTH, GAME_HEIGHT, GfxAPI::OPENGL);
 
-        gladLoadGL();
+        GLContext::load_opengl();
         glfwSwapInterval(0);
     }
 
@@ -29,11 +29,10 @@ namespace bexel {
     }
 
     void Bexel::run() {
-        glEnable(GL_DEPTH_TEST);
-
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glFrontFace(GL_CW);
+        GLContext::enable(GL_DEPTH_TEST);
+        GLContext::enable(GL_CULL_FACE);
+        GLContext::cull_face(GL_BACK);
+        GLContext::front_face(GL_CW);
 
         m_shader->set_uniform("inTexture", 0);
 

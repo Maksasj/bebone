@@ -7,6 +7,27 @@ namespace bebone::gfx::opengl {
     using namespace bebone::core;
 
     struct GLContext {
+        static void inline load_opengl() {
+            // Todo, we need to check if load successful
+            gladLoadGL();
+        }
+
+        static void inline enable(const GLenum& cap) {
+            glEnable(cap);
+        }
+
+        static void inline disable(const GLenum& cap) {
+            glDisable(cap);
+        }
+
+        static void inline cull_face(const GLenum& mode) {
+            glCullFace(mode);
+        }
+
+        static void inline front_face(const GLenum& mode) {
+            glFrontFace(mode);
+        }
+
         static void inline set_viewport(const i32& x, const i32& y, const i32& width, const i32& height) {
             glViewport(x, y, width, height);
         }

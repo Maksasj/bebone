@@ -47,7 +47,7 @@ int main() {
 
     auto window = WindowFactory::create_window("3. OpenGL 3D cube example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
-	gladLoadGL();
+    GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glfwSwapInterval(0);
 
@@ -90,7 +90,7 @@ int main() {
 
     float t = 0;
 
-    glEnable(GL_DEPTH_TEST);
+    GLContext::enable(GL_DEPTH_TEST);
 
     while (!window->closing()) {
         ++t;

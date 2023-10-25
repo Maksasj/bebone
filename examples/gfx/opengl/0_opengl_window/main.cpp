@@ -11,8 +11,7 @@ int main() {
     
     auto window = WindowFactory::create_window("0. OpenGL window example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
-    gladLoadGL();
-
+    GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     while (!window->closing()) {
