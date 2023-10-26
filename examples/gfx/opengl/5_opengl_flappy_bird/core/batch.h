@@ -25,7 +25,6 @@ namespace game::core {
             shared_ptr<GLVertexBufferObject> vbo;
             shared_ptr<GLElementBufferObject> ebo;
 
-            size_t vertexSize;
             size_t indicesSize;
             size_t quadSize;
             size_t quadLimit;

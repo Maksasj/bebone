@@ -7,7 +7,7 @@ namespace game::core {
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
-        camera = make_shared<OrthographicCamera>(aspect * -1.0f, aspect * 1.0f, -1.0, 1.0, -1.0f, 1.0f);
+        camera = make_shared<OrthographicCamera>(aspect * -1.0f, aspect * 1.0f, 1.0, -1.0, -1.0f, 1.0f);
 
         const auto shaderFlags = ENABLE_UNIFORMS;
 

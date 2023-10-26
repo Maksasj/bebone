@@ -43,8 +43,8 @@ namespace game::core {
 
         auto quad = create_quad(transform.get_position());
         
-        vbo->buffer_sub_data(vertexSize * sizeof(ShaderVertex), quad.size() * sizeof(ShaderVertex), quad.data());
-        vertexSize += quad.size();
+        vbo->buffer_sub_data(quadSize * sizeof(ShaderVertex), quad.size() * sizeof(ShaderVertex), quad.data());
+        quadSize += quad.size();
 
         add_indices();
     }
@@ -52,13 +52,13 @@ namespace game::core {
     void Batch::add_indices() {
         unsigned int indices[6];
 
-        indices[0] = vertexSize - 4;
-        indices[1] = vertexSize - 3;
-        indices[2] = vertexSize - 1;
+        indices[0] = quadSize - 4;
+        indices[1] = quadSize - 3;
+        indices[2] = quadSize - 1;
 
-        indices[3] = vertexSize - 3;
-        indices[4] = vertexSize - 2;
-        indices[5] = vertexSize - 1;
+        indices[3] = quadSize - 3;
+        indices[4] = quadSize - 2;
+        indices[5] = quadSize - 1;
 
         ebo->buffer_sub_data(indicesSize * sizeof(unsigned int), sizeof(indices), indices);
 
@@ -68,23 +68,20 @@ namespace game::core {
     void Batch::render() {
         shaderProgram->enable();
 
-        //TODO: set uniforms
-
-        // Mat4f model = Mat4f::identity();
-        // model = model * model.scale(1.0f);
-        // model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
-        // model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
+        Mat4f model = Mat4f::identity();
+        model = model * model.scale(1.0f);
+        model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
+        model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
         
         texture->bind();
         vao->bind();
-            // shaderProgram->set_uniform("model", model);
-            // shaderProgram->set_uniform("projection", camera->get_projection_matrix());
+            shaderProgram->set_uniform("model", model);
+            shaderProgram->set_uniform("projection", camera->get_projection_matrix());
             shaderProgram->set_uniform("image", 0);
             GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indicesSize), GL_UNSIGNED_INT, nullptr);
         vao->unbind();
         texture->unbind();
         
-        vertexSize = 0;
         quadSize = 0;
         indicesSize = 0;
     }
