@@ -3,16 +3,26 @@
 
 #include "bebone/bebone.h"
 
-#include <string>
+#include <filesystem>
+#include <iostream>
 #include <memory>
+#include <vector>
+#include <string>
+#include <map>
 
 namespace game::core {
     using namespace bebone::gfx::opengl;
     using namespace bebone::core;
 
     class TextureLoader : NonCopyable {
-        public:
+        private:
+            static std::map<const std::string, std::shared_ptr<GLTexture>> loadedTextures;
+            static std::string assetsPath;
+
             static std::shared_ptr<GLTexture> load_texture(const std::string& path);
+        public:
+            static void load_textures(const std::string& assetsDirectory);
+            static std::shared_ptr<GLTexture> get_texture(const std::string& fileName);
     };
 }
 

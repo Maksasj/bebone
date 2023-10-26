@@ -1,4 +1,5 @@
 #include "game.h"
+#include "texture_loader.h"
 
 namespace game::core {
     using namespace bebone::gfx;
@@ -15,9 +16,10 @@ namespace game::core {
         auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/5_opengl_flappy_bird/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shaderFlags);
         auto shaderProgram = std::make_shared<GLShaderProgram>(vertexShader, fragmentShader);
         
-        auto texture = std::make_shared<GLTexture>("examples/assets/gfx/opengl/5_opengl_flappy_bird/awesome_face.png", GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+        //auto texture = TextureLoader::load_texture("examples/assets/gfx/opengl/5_opengl_flappy_bird/awesome_face.png");
+        TextureLoader::load_textures("examples\\assets\\gfx\\opengl\\5_opengl_flappy_bird\\gfx\\");
 
-        batch = make_shared<Batch>(shaderProgram, camera, 1024, texture);
+        batch = make_shared<Batch>(shaderProgram, camera, 1024);
     }
 
     void Game::update() {

@@ -1,8 +1,8 @@
 #include "batch.h"
 
 namespace game::core {
-    Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit, shared_ptr<GLTexture>& texture) :
-        camera(camera), shaderProgram(shaderProgram), indicesSize(0), quadSize(0), quadLimit(quadLimit), texture(texture) {
+    Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit) :
+        camera(camera), shaderProgram(shaderProgram), indicesSize(0), quadSize(0), quadLimit(quadLimit) {
         
         size_t indexLimit = quadLimit * 6;
 
@@ -31,9 +31,6 @@ namespace game::core {
 
         shaderProgram->destroy();
         shaderProgram = nullptr;
-
-        texture->destroy();
-        texture = nullptr;
     }
 
     void Batch::add(const Transform& transform) {
@@ -73,14 +70,12 @@ namespace game::core {
         model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
         model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
         
-        texture->bind();
         vao->bind();
             shaderProgram->set_uniform("model", model);
             shaderProgram->set_uniform("projection", camera->get_projection_matrix());
             shaderProgram->set_uniform("image", 0);
             GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indicesSize), GL_UNSIGNED_INT, nullptr);
         vao->unbind();
-        texture->unbind();
         
         quadSize = 0;
         indicesSize = 0;

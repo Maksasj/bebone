@@ -29,13 +29,11 @@ namespace game::core {
             size_t quadSize;
             size_t quadLimit;
 
-            shared_ptr<GLTexture> texture;
-
             array<ShaderVertex, 4> create_quad(const Vec2f& position);
             void add_indices();
 
         public:
-            Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit, shared_ptr<GLTexture>& texture);
+            Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit);
             ~Batch();
 
             void add(const Transform& transform);
