@@ -15,7 +15,7 @@ namespace game::core {
         auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/5_opengl_flappy_bird/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shaderFlags);
         auto shaderProgram = std::make_shared<GLShaderProgram>(vertexShader, fragmentShader);
         
-        auto texture = std::make_shared<GLTexture>("examples/assets/gfx/opengl/5_opengl_flappy_bird/awesomeface.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+        auto texture = std::make_shared<GLTexture>("examples/assets/gfx/opengl/5_opengl_flappy_bird/awesome_face.png", GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
 
         batch = make_shared<Batch>(shaderProgram, camera, 1024, texture);
     }
