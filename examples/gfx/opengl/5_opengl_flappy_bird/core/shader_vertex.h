@@ -9,6 +9,7 @@ namespace game::core {
     struct ShaderVertex {
         Vec2f position;
         Vec2f textureCoordinates;
+        int textureUnit;
     };
 }
 

@@ -24,6 +24,10 @@ namespace bebone::gfx::opengl {
         glBindTexture(textureType, 0);
     }
 
+    void GLTexture::bind_texture_unit(const GLuint& textureUnit) {
+        glBindTextureUnit(textureUnit, id);
+    }
+
     void GLTexture::bind() {
         glBindTexture(textureType, id);
     }

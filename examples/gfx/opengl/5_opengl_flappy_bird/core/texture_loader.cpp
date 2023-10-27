@@ -1,14 +1,25 @@
 #include "texture_loader.h"
 
 namespace game::core {
-    void TextureLoader::load_textures(const std::string& assetsDirectory) {
-        // assetsPath = assetsDirectory;
+    std::string TextureLoader::assetsPath;
+    std::map<const std::string, std::shared_ptr<GLTexture>> TextureLoader::loadedTextures;
 
-        // for (const auto& entry : std::filesystem::directory_iterator(assetsDirectory)) {
-        //     std::shared_ptr<GLTexture> texture = std::make_shared<GLTexture>(entry.path().c_str(), GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+    void TextureLoader::load_textures(const std::string& assetsPath) {
+        TextureLoader::assetsPath = assetsPath;
 
-        //     std::string fileName = entry.path().stem().generic_string();
-        //     loadedTextures[fileName] = texture;
-        // }
+        for (const auto& entry : std::filesystem::directory_iterator(assetsPath)) {
+            std::shared_ptr<GLTexture> texture = std::make_shared<GLTexture>(entry.path().string().c_str(), GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+
+            std::string fileName = entry.path().stem().string();
+            loadedTextures[fileName] = texture;
+        }
+    }
+
+    std::shared_ptr<GLTexture> TextureLoader::get_texture(const std::string& fileName) {
+        if (loadedTextures.find(fileName) != loadedTextures.end()) {
+            return loadedTextures[fileName];
+        }
+
+        return nullptr;
     }
 }

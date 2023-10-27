@@ -14,14 +14,13 @@ namespace game::core {
     using namespace bebone::gfx::opengl;
     using namespace bebone::core;
 
-    class TextureLoader : NonCopyable {
+    class TextureLoader : private NonCopyable {
         private:
             static std::map<const std::string, std::shared_ptr<GLTexture>> loadedTextures;
             static std::string assetsPath;
 
-            static std::shared_ptr<GLTexture> load_texture(const std::string& path);
         public:
-            static void load_textures(const std::string& assetsDirectory);
+            static void load_textures(const std::string& assetsPath);
             static std::shared_ptr<GLTexture> get_texture(const std::string& fileName);
     };
 }

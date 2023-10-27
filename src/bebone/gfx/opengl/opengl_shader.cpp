@@ -57,30 +57,41 @@ namespace bebone::gfx::opengl {
         glLinkProgram(id);
     }
 
+    GLint GLShaderProgram::get_uniform_location(const char* uniformName) const {
+        return glGetUniformLocation(id, uniformName);
+    }
+
     void GLShaderProgram::set_uniform(const char* uniformName, const i32& value) const {
         if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = glGetUniformLocation(id, uniformName);
+            const auto uniform = get_uniform_location(uniformName);
             glUniform1i(uniform, value);
+        }
+    }
+
+    void GLShaderProgram::set_uniform(const char* uniformName, const GLsizei& size, const i32* value) const {
+        if(m_properties & ENABLE_UNIFORMS) {
+            const auto uniform = get_uniform_location(uniformName);
+            glUniform1iv(uniform, size, value);
         }
     }
 
     void GLShaderProgram::set_uniform(const char* uniformName, const u32& value) const {
         if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = glGetUniformLocation(id, uniformName);
+            const auto uniform = get_uniform_location(uniformName);
             glUniform1ui(uniform, value);
         }
     }
 
     void GLShaderProgram::set_uniform(const char* uniformName, const f32& value) const {
         if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = glGetUniformLocation(id, uniformName);
+            const auto uniform = get_uniform_location(uniformName);
             glUniform1f(uniform, value);
         }
     }
 
     void GLShaderProgram::set_uniform(const char* uniformName, const Mat4f& value) const {
         if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = glGetUniformLocation(id, uniformName);
+            const auto uniform = get_uniform_location(uniformName);
             glUniformMatrix4fv(uniform, 1, GL_FALSE, value.e);
         }
     }

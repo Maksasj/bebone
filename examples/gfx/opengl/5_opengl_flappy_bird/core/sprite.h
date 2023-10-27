@@ -3,21 +3,22 @@
 
 #include "bebone/bebone.h"
 #include <memory>
+#include <string>
 
 using namespace bebone::gfx::opengl;
 
 namespace game::core {
     using namespace std;
 
-    class Sprite {
+    class Sprite : private NonCopyable {
         private:
             shared_ptr<GLTexture> texture;
         public:
             Sprite();
-            Sprite(shared_ptr<GLTexture>& texture);
+            Sprite(const std::string& textureName);
 
             const shared_ptr<GLTexture>& get_texture() const;
-            void set_texture(shared_ptr<GLTexture>& texture);
+            void set_texture(const std::string& textureName);
     };
 }
 
