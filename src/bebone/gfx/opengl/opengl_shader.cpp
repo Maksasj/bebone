@@ -37,6 +37,7 @@ namespace bebone::gfx::opengl {
         if(!success) {
             glGetShaderInfoLog(shader, 512, nullptr, infoLog);
 
+            // Todo resolve this
             std::cout << infoLog << "\n";
 
             throw std::runtime_error("Failed to compile shader, with error: " + std::string(infoLog));
@@ -84,6 +85,7 @@ namespace bebone::gfx::opengl {
         if (!success) {
             glGetProgramInfoLog(program, 512, nullptr, infoLog);
 
+            // Todo resolve this
             std::cout << infoLog << "\n";
 
             throw std::runtime_error("Failed to link shader program, with error: " + std::string(infoLog));
