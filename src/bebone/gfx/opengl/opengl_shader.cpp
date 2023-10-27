@@ -22,8 +22,25 @@ namespace bebone::gfx::opengl {
 
         const auto str = code.c_str();
 
-        glShaderSource(m_shader, 1, &str, NULL);
+        glShaderSource(m_shader, 1, &str, nullptr);
         glCompileShader(m_shader);
+
+        check_shader_compilation(m_shader);
+    }
+
+    void GLShader::check_shader_compilation(const GLuint& shader) {
+        char infoLog[512];
+        i32 success;
+
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+        if(!success) {
+            glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+
+            std::cout << infoLog << "\n";
+
+            throw std::runtime_error("Failed to compile shader, with error: " + std::string(infoLog));
+        }
     }
 
     GLuint GLShader::get_shader() const {
@@ -55,6 +72,22 @@ namespace bebone::gfx::opengl {
         glAttachShader(id, vertex.get_shader());
         glAttachShader(id, fragment.get_shader());
         glLinkProgram(id);
+
+        check_program_linking(id);
+    }
+
+    void GLShaderProgram::check_program_linking(const GLuint& program) {
+        i32 success;
+        char infoLog[512];
+
+        glGetProgramiv(program, GL_LINK_STATUS, &success);
+        if (!success) {
+            glGetProgramInfoLog(program, 512, nullptr, infoLog);
+
+            std::cout << infoLog << "\n";
+
+            throw std::runtime_error("Failed to link shader program, with error: " + std::string(infoLog));
+        }
     }
 
     GLint GLShaderProgram::get_uniform_location(const char* uniformName) const {

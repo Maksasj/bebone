@@ -15,6 +15,8 @@ namespace bebone::gfx::opengl {
             GLuint m_shader;
             GLShaderProperties m_properties;
 
+            static void check_shader_compilation(const GLuint& shader);
+
         public:
             GLShader(const ShaderCode& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
             GLShader(const std::string& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
@@ -32,6 +34,9 @@ namespace bebone::gfx::opengl {
 
             void create_shader_program(const GLShader& vertex, const GLShader& fragment);
             GLint get_uniform_location(const char* uniformName) const;
+
+            static void check_program_linking(const GLuint& program);
+
         public:
             GLShaderProgram(const GLShader& vertex, const GLShader& fragment);
 

@@ -1,7 +1,7 @@
 #version 450 core
 
 layout (location = 0) in vec2 a_TexCoords;
-layout (location = 1) in int a_TextureUnit;
+layout (location = 1) in flat int a_TextureUnit;
 
 layout (location = 0) out vec4 v_Color;
 
