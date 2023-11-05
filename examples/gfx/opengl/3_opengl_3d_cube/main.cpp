@@ -10,19 +10,23 @@ const unsigned int SCR_HEIGHT = 600;
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
-const std::vector<GLfloat> vertices {
-    // positions          // colors
-    -0.5, -0.5,  0.5,   1.0f, 1.0f, 1.0f,
-     0.5, -0.5,  0.5,   1.0f, 1.0f, 0.0f,
-     0.5,  0.5,  0.5,   1.0f, 0.0f, 1.0f,
-    -0.5,  0.5,  0.5,   1.0f, 0.0f, 0.0f,
-    -0.5, -0.5, -0.5,   0.0f, 1.0f, 1.0f,
-     0.5, -0.5, -0.5,   0.0f, 1.0f, 0.0f,
-     0.5,  0.5, -0.5,   0.0f, 0.0f, 1.0f,
-    -0.5,  0.5, -0.5,   0.0f, 0.0f, 0.0f
+struct Vertex {
+    Vec3f pos;
+    Vec3f color;
 };
 
-const std::vector<GLuint> indices {
+const std::vector<Vertex> vertices {
+    {{-0.5, -0.5,  0.5},   {1.0f, 1.0f, 1.0f}},
+    {{ 0.5, -0.5,  0.5},   {1.0f, 1.0f, 0.0f}},
+    {{ 0.5,  0.5,  0.5},   {1.0f, 0.0f, 1.0f}},
+    {{-0.5,  0.5,  0.5},   {1.0f, 0.0f, 0.0f}},
+    {{-0.5, -0.5, -0.5},   {0.0f, 1.0f, 1.0f}},
+    {{ 0.5, -0.5, -0.5},   {0.0f, 1.0f, 0.0f}},
+    {{ 0.5,  0.5, -0.5},   {0.0f, 0.0f, 1.0f}},
+    {{-0.5,  0.5, -0.5},   {0.0f, 0.0f, 0.0f}}
+};
+
+const std::vector<u32> indices {
     0, 1, 2, 2, 3, 0,
     1, 5, 6, 6, 2, 1,
     7, 6, 5, 5, 4, 7,
@@ -61,11 +65,11 @@ int main() {
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices.data(), sizeof(float) * vertices.size());
+    GLVertexBufferObject vbo(vertices.data(), sizeof(Vertex) * vertices.size());
     GLElementBufferObject ebo(indices);
 
-    vao.link_attributes(vbo, 0, 3, GL_FLOAT, 6 * (sizeof(float)), (void*)0);
-    vao.link_attributes(vbo, 1, 3, GL_FLOAT, 6 * (sizeof(float)), (void*)(3 * sizeof(float)));
+    vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, pos));
+    vao.link_attributes(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
 
     vao.unbind();
 	vbo.unbind();

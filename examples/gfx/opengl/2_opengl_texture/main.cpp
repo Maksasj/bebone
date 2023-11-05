@@ -8,17 +8,22 @@ const unsigned int SCR_HEIGHT = 600;
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
-const std::vector<GLfloat> vertices {
-    // positions          // colors           // texture coords
-    0.5f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-    0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+struct Vertex {
+    Vec3f pos;
+    Vec3f color;
+    Vec2f texCord;
 };
 
-const std::vector<GLuint> indices {
-    0, 1, 3, // first triangle
-    1, 2, 3  // second triangle
+const std::vector<Vertex> vertices {
+    {{0.5f,  0.5f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
+    {{0.5f, -0.5f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
+    {{-0.5f, -0.5f, 0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
+    {{-0.5f,  0.5f, 0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
+};
+
+const std::vector<u32> indices {
+    0, 1, 3,
+    1, 2, 3
 };
 
 int main() {
@@ -39,12 +44,12 @@ int main() {
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices.data(), sizeof(float) * vertices.size());
+    GLVertexBufferObject vbo(vertices.data(), sizeof(Vertex) * vertices.size());
     GLElementBufferObject ebo(indices);
 
-    vao.link_attributes(vbo, 0, 3, GL_FLOAT, 8 * (sizeof(float)), (void*)0);
-    vao.link_attributes(vbo, 1, 3, GL_FLOAT, 8 * (sizeof(float)), (void*)(3 * sizeof(float)));
-    vao.link_attributes(vbo, 2, 2, GL_FLOAT, 8 * (sizeof(float)), (void*)(6 * sizeof(float)));
+    vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, pos));
+    vao.link_attributes(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
+    vao.link_attributes(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, texCord));
 
     vao.unbind();
 	vbo.unbind();
@@ -81,5 +86,6 @@ int main() {
     texture.destroy();
 
     glfwTerminate();
+
     return 0;
 }

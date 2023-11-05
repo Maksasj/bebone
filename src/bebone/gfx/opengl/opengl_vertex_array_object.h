@@ -5,14 +5,17 @@
 #include "opengl_vertex_buffer_object.h"
 
 namespace bebone::gfx::opengl {
+    using namespace bebone::core;
+
     class GLVertexArrayObject final : public GLBufferObject {
         public:
             GLVertexArrayObject();
 
             // Todo lets write destructor
 
+            void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, const u64& offset);
             void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
-            
+
             void bind();
             void unbind();
             void destroy();
