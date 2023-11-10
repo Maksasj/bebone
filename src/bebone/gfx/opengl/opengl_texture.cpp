@@ -25,7 +25,6 @@ namespace bebone::gfx::opengl {
     }
 
     void GLTexture::bind_texture_unit(const GLuint& textureUnit) {
-        bind();
         glBindTextureUnit(textureUnit, id);
     }
 

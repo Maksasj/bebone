@@ -16,9 +16,8 @@ namespace game::core {
     }
 
     std::shared_ptr<GLTexture> TextureLoader::get_texture(const std::string& fileName) {
-        if (loadedTextures.find(fileName) != loadedTextures.end()) {
+        if (loadedTextures.find(fileName) != loadedTextures.end())
             return loadedTextures[fileName];
-        }
 
         return nullptr;
     }
