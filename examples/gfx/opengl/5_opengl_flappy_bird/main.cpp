@@ -16,7 +16,7 @@ using namespace game::core;
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("4. 2d game example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("5. 2d game example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

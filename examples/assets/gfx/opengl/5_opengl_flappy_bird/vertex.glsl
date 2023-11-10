@@ -5,7 +5,7 @@ layout (location = 1) in vec2 a_TexCoords;
 layout (location = 2) in int a_TextureUnit;
 
 layout (location = 0) out vec2 v_TexCoords;
-layout (location = 1) out int v_TextureUnit;
+layout (location = 1) out flat int v_TextureUnit;
 
 uniform mat4 u_Model;
 uniform mat4 u_Projection;

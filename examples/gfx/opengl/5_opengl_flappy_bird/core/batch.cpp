@@ -48,23 +48,25 @@ namespace game::core {
         }
 
         auto quad = create_quad(transform.get_position(), cachedTextureUnits[texture]);
+        size_t verticesSize = quad.size() * sizeof(ShaderVertex);
         
-        vbo->buffer_sub_data(quadSize * sizeof(ShaderVertex), quad.size() * sizeof(ShaderVertex), quad.data());
-        quadSize += quad.size();
+        vbo->buffer_sub_data(quadSize * verticesSize, verticesSize, quad.data());
+        ++quadSize;
 
         add_indices();
     }
 
     void Batch::add_indices() {
         unsigned int indices[6];
+        size_t totalVerticesSize = quadSize * 4;
 
-        indices[0] = quadSize - 4;
-        indices[1] = quadSize - 3;
-        indices[2] = quadSize - 1;
+        indices[0] = totalVerticesSize - 4;
+        indices[1] = totalVerticesSize - 3;
+        indices[2] = totalVerticesSize - 1;
 
-        indices[3] = quadSize - 3;
-        indices[4] = quadSize - 2;
-        indices[5] = quadSize - 1;
+        indices[3] = totalVerticesSize - 3;
+        indices[4] = totalVerticesSize - 2;
+        indices[5] = totalVerticesSize - 1;
 
         ebo->buffer_sub_data(indicesSize * sizeof(unsigned int), sizeof(indices), indices);
 
@@ -93,9 +95,8 @@ namespace game::core {
         model = model * model.scale(1.0f);
         model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
         model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
-        
+
         for (auto texture : texturesToDraw) {
-            texture->bind();
             texture->bind_texture_unit(cachedTextureUnits[texture]);
         }
 
