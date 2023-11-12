@@ -10,6 +10,7 @@
 #include "opengl_element_buffer_object.h"
 
 #include "opengl_shader.h"
+#include "opengl_shader_program.h"
 #include "opengl_shader_factory.h"
 
 #include "opengl_texture.h"
