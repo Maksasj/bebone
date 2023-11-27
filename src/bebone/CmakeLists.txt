@@ -1,16 +1,13 @@
+# Subdirectories
 add_subdirectory(core)
 add_subdirectory(gfx)
-add_subdirectory(input)
-add_subdirectory(net)
-add_subdirectory(physics)
-add_subdirectory(sound)
+add_subdirectory(bebone_imgui)
 
+# Source files
 file(GLOB BEBONE_SRC_FILE bebone.cpp)
 add_library(bebone STATIC ${BEBONE_SRC_FILE})
 
+# Library linking
 target_link_libraries(bebone bebone_core)
 target_link_libraries(bebone bebone_gfx)
-target_link_libraries(bebone bebone_input)
-target_link_libraries(bebone bebone_net)
-target_link_libraries(bebone bebone_physics)
-target_link_libraries(bebone bebone_sound)
+target_link_libraries(bebone bebone_imgui)
