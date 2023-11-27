@@ -17,3 +17,6 @@
 [submodule "3dparty/stb"]
 	path = 3dparty/stb
 	url = https://github.com/Maksasj/stb
+[submodule "3dparty/imgui"]
+	path = 3dparty/imgui
+	url = https://github.com/Maksasj/imgui
