@@ -8,8 +8,6 @@ namespace game::core {
     using namespace std;
     using namespace ecs;
 
-    float t = 0.0f;
-
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
@@ -22,21 +20,11 @@ namespace game::core {
         auto shaderProgram = make_shared<GLShaderProgram>(vertexShader, fragmentShader);
 
         TextureLoader::load_textures("examples\\assets\\gfx\\opengl\\5_opengl_flappy_bird\\gfx\\");
-        auto flappyBird = make_shared<Sprite>("flappy_bird");
-
-        batch = make_shared<Batch>(shaderProgram, camera, 1024);
         
-        player = make_shared<GameObject>();
-        auto renderer = make_shared<SpriteRenderer>(flappyBird);
-        player->add_component(renderer);
-        batch->add(player, renderer);
+        batch = make_shared<Batch>(shaderProgram, camera, 1024);
     }
 
     void Game::update() {
-        t += 10.0f * Time::deltaTime;
-
-        player->get_transform().set_rotation(t);
-
         batch->render();
     }
 }

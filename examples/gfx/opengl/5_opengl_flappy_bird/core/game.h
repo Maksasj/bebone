@@ -15,7 +15,6 @@ namespace game::core {
         private:
             shared_ptr<Batch> batch;
             shared_ptr<OrthographicCamera> camera;
-            shared_ptr<GameObject> player;
 
         public:
             Game(const unsigned int& width, const unsigned int& height);
