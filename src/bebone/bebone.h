@@ -3,6 +3,6 @@
 
 #include "core/core.h"
 #include "gfx/gfx.h"
-#include "bebone_imgui/bebone_imgui.h"
+#include "gfx/begui/begui.h"
 
 #endif
