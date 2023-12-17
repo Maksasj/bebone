@@ -1,9 +1,10 @@
 #include "game_object.h"
 
 namespace game::core {
+    GameObject::GameObject() : transform() {}
     GameObject::GameObject(const Transform& transform) : transform(transform) {}
 
-    const Transform& GameObject::get_transform() const {
+    Transform& GameObject::get_transform() {
         return transform;
     }
 

@@ -11,8 +11,9 @@ namespace game::core::ecs {
             std::vector<std::shared_ptr<IComponent>> components;
         
         public:
-            void add_component(std::shared_ptr<IComponent>& component);
-            void remove_component(std::shared_ptr<IComponent>& component);
+            void add_component(std::shared_ptr<IComponent> component);
+            void get_component(std::shared_ptr<IComponent>& component);
+            void remove_component(std::shared_ptr<IComponent> component);
             void update_components();
     };
 }

@@ -7,6 +7,7 @@ namespace game::core::ecs {
     class IComponent : private bebone::core::NonCopyable {
     public:
         virtual void update() = 0;
+        virtual ~IComponent() { }
     };
 }
 

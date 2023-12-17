@@ -2,9 +2,9 @@
 
 namespace game::core {
     Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit) :
-        camera(camera), shaderProgram(shaderProgram), cachedTextureUnits(std::map<std::shared_ptr<GLTexture>, int>()), texturesToDraw(std::vector<std::shared_ptr<GLTexture>>()), currentTextureUnitIndex(0), indicesSize(0), quadSize(0), quadLimit(quadLimit) {
+        camera(camera), shaderProgram(shaderProgram), cachedTextureUnits(map<shared_ptr<GLTexture>, int>()), texturesToDraw(vector<shared_ptr<GLTexture>>()), currentTextureUnitIndex(0), indicesSize(0), quadSize(0) {
         
-        textureUnitCapacity = std::min({GLGpuProperties::texture_unit_capacity(), MAX_TEXTURE_UNITS});
+        textureUnitCapacity = min({GLGpuProperties::texture_unit_capacity(), MAX_TEXTURE_UNITS});
 
         size_t indexLimit = quadLimit * 6;
 
@@ -36,24 +36,8 @@ namespace game::core {
         shaderProgram = nullptr;
     }
 
-    void Batch::add(const std::shared_ptr<Sprite>& sprite, const Transform& transform) {
-        if (quadSize + 1 >= quadLimit) {
-            return;
-        }
-
-        auto texture = sprite->get_texture();
-
-        if (!try_cache_texture(texture)) {
-            return;
-        }
-
-        auto quad = create_quad(sprite, transform.get_position(), cachedTextureUnits[texture]);
-        size_t verticesSize = quad.size() * sizeof(ShaderVertex);
-        
-        vbo->buffer_sub_data(quadSize * verticesSize, verticesSize, quad.data());
-        ++quadSize;
-
-        add_indices();
+    void Batch::add(const shared_ptr<GameObject>& gameObject, const shared_ptr<SpriteRenderer>& renderer) {
+        gameObjectsToDraw[gameObject] = renderer;
     }
 
     void Batch::add_indices() {
@@ -73,7 +57,7 @@ namespace game::core {
         indicesSize += 6;
     }
 
-    bool Batch::try_cache_texture(const std::shared_ptr<GLTexture>& texture) {
+    bool Batch::try_cache_texture(const shared_ptr<GLTexture>& texture) {
         if (currentTextureUnitIndex >= textureUnitCapacity) {
             return false;
         }
@@ -89,6 +73,8 @@ namespace game::core {
     }
 
     void Batch::render() {
+        upload_textures();
+
         shaderProgram->enable();
 
         Mat4f model = Mat4f::identity();
@@ -114,10 +100,34 @@ namespace game::core {
         texturesToDraw.clear();
     }
 
-    std::array<ShaderVertex, 4> Batch::create_quad(const std::shared_ptr<Sprite>& sprite, const Vec2f& position, const int& textureUnit) {
-        f32 size = 1.0f;
-        float width = sprite->get_width() * size / PIXELS_PER_UNIT;
-        float height = sprite->get_height() * size / PIXELS_PER_UNIT;
+    void Batch::upload_textures() {
+        for (auto it = gameObjectsToDraw.begin(); it != gameObjectsToDraw.end(); ++it) {
+            auto gameObject = it->first;
+            auto renderer = it->second;
+
+            auto transform = gameObject->get_transform();
+            auto sprite = renderer->get_sprite();
+            auto texture = sprite->get_texture();
+
+            if (!try_cache_texture(texture)) {
+                continue;
+            }
+
+            auto quad = create_quad(sprite, transform, cachedTextureUnits[texture]);
+            size_t verticesSize = quad.size() * sizeof(ShaderVertex);
+
+            vbo->buffer_sub_data(quadSize * verticesSize, verticesSize, quad.data());
+            ++quadSize;
+
+            add_indices();
+        }
+    }
+
+    array<ShaderVertex, 4> Batch::create_quad(const shared_ptr<Sprite>& sprite, const Transform& transform, const int& textureUnit) {
+        Vec3f position = transform.get_position();
+        f32 scale = transform.get_scale();
+        float width = sprite->get_width() * scale / PIXELS_PER_UNIT;
+        float height = sprite->get_height() * scale / PIXELS_PER_UNIT;
 
         ShaderVertex v0;
         v0.position = { position.x - width, position.y - height };

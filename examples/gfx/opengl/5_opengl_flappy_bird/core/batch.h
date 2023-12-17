@@ -8,13 +8,17 @@
 
 #include "orthographic_camera.h"
 #include "sprite.h"
-#include "transform.h"
 #include "shader_vertex.h"
+
+#include "entity_component_system/game_object.h"
+#include "entity_component_system/transform.h"
+#include "entity_component_system/components/sprite_renderer.h"
 
 namespace game::core {
     using namespace bebone::core;
     using namespace std;
     using namespace bebone::gfx::opengl;
+    using namespace ecs;
     
     class Batch : private NonCopyable {
         private:
@@ -32,23 +36,24 @@ namespace game::core {
             int textureUnitCapacity;
             int samplers[32] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
 
-            std::map<std::shared_ptr<GLTexture>, int> cachedTextureUnits;
-            std::vector<std::shared_ptr<GLTexture>> texturesToDraw;
+            map<shared_ptr<GLTexture>, int> cachedTextureUnits;
+            vector<shared_ptr<GLTexture>> texturesToDraw;
             int currentTextureUnitIndex;
 
             size_t indicesSize;
             size_t quadSize;
-            size_t quadLimit;
 
-            array<ShaderVertex, 4> create_quad(const std::shared_ptr<Sprite>& sprite, const Vec2f& position, const int& textureUnit);
+            map<shared_ptr<GameObject>, shared_ptr<SpriteRenderer>> gameObjectsToDraw;
+
+            array<ShaderVertex, 4> create_quad(const shared_ptr<Sprite>& sprite, const Transform& transform, const int& textureUnit);
             void add_indices();
-            bool try_cache_texture(const std::shared_ptr<GLTexture>& texture);
-
+            void upload_textures();
+            bool try_cache_texture(const shared_ptr<GLTexture>& texture);
         public:
             Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit);
             ~Batch();
 
-            void add(const std::shared_ptr<Sprite>& sprite, const Transform& transform);
+            void add(const shared_ptr<GameObject>& gameObject, const shared_ptr<SpriteRenderer>& renderer);
             void render();
     };
 }

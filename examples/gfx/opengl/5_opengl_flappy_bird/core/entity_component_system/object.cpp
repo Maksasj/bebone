@@ -2,11 +2,11 @@
 #include <algorithm>
 
 namespace game::core::ecs {
-    void Object::add_component(std::shared_ptr<IComponent>& component) {
+    void Object::add_component(std::shared_ptr<IComponent> component) {
         components.push_back(component);
     }
 
-    void Object::remove_component(std::shared_ptr<IComponent>& component) {
+    void Object::remove_component(std::shared_ptr<IComponent> component) {
         auto it = std::find(components.begin(), components.end(), component);
 
         if (it != components.end()) {
