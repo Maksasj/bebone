@@ -2,27 +2,27 @@
 
 namespace game::core {
     Transform::Transform() : 
-        position(Vec3f::splat(0.0f)), rotation(Vec3f::splat(0.0f)), scale(1.0f) { }
+        position(Vec2f::splat(0.0f)), rotation(0.0f), scale(1.0f) { }
 
-    Transform::Transform(const Vec3f& position) : 
-        position(position), rotation(Vec3f::splat(0.0f)), scale(1.0f) { }
+    Transform::Transform(const Vec2f& position) : 
+        position(position), rotation(0.0f), scale(1.0f) { }
 
-    Transform::Transform(const Vec3f& position, const Vec3f& rotation, const f32& scale) : 
+    Transform::Transform(const Vec2f& position, const f32& rotation, const f32& scale) : 
         position(position), rotation(rotation), scale(scale) { }
 
-    const Vec3f& Transform::get_position() const {
+    const Vec2f& Transform::get_position() const {
         return position;
     }
 
-    void Transform::set_position(const Vec3f& newPosition) {
+    void Transform::set_position(const Vec2f& newPosition) {
         position = newPosition;
     }
 
-    const Vec3f& Transform::get_rotation() const {
+    const f32& Transform::get_rotation() const {
         return rotation;
     }
 
-    void Transform::set_rotation(const Vec3f& newRotation) {
+    void Transform::set_rotation(const f32& newRotation) {
         rotation = newRotation;
     }
 

@@ -1,5 +1,7 @@
 #include "batch.h"
 
+#define PI 3.14159265358979323846
+
 namespace game::core {
     Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit) :
         camera(camera), shaderProgram(shaderProgram), cachedTextureUnits(map<shared_ptr<GLTexture>, int>()), texturesToDraw(vector<shared_ptr<GLTexture>>()), currentTextureUnitIndex(0), indicesSize(0), quadSize(0) {
@@ -124,31 +126,49 @@ namespace game::core {
     }
 
     array<ShaderVertex, 4> Batch::create_quad(const shared_ptr<Sprite>& sprite, const Transform& transform, const int& textureUnit) {
-        Vec3f position = transform.get_position();
+        Vec2f position = transform.get_position();
         f32 scale = transform.get_scale();
+        f32 rotation = transform.get_rotation();
+
         float width = sprite->get_width() * scale / PIXELS_PER_UNIT;
         float height = sprite->get_height() * scale / PIXELS_PER_UNIT;
 
         ShaderVertex v0;
-        v0.position = { position.x - width, position.y - height };
+        Vec2f tmpPosition = { position.x - width, position.y - height };
+        rotate(tmpPosition, rotation);
+        v0.position = tmpPosition;
         v0.textureCoordinates = { 0.0f, 0.0f };
         v0.textureUnit = textureUnit;
 
         ShaderVertex v1;
-        v1.position = { position.x - width, position.y + height };
+        tmpPosition = { position.x - width, position.y + height };
+        rotate(tmpPosition, rotation);
+        v1.position = tmpPosition;
         v1.textureCoordinates = { 0.0f, 1.0f };
         v1.textureUnit = textureUnit;
 
         ShaderVertex v2;
-        v2.position = { position.x + width, position.y + height };
+        tmpPosition = { position.x + width, position.y + height };
+        rotate(tmpPosition, rotation);
+        v2.position = tmpPosition;
         v2.textureCoordinates = { 1.0f, 1.0f };
         v2.textureUnit = textureUnit;
 
         ShaderVertex v3;
-        v3.position = { position.x + width, position.y - height };
+        tmpPosition = { position.x + width, position.y - height };
+        rotate(tmpPosition, rotation);
+        v3.position = tmpPosition;
         v3.textureCoordinates = { 1.0f, 0.0f };
         v3.textureUnit = textureUnit;
 
         return { v0, v1, v2, v3 };
+    }
+
+    void Batch::rotate(Vec2f& v, const f32& angle) const {
+        double radian = angle * PI / 180;
+        float x = v.x * std::cos(radian) - v.y * std::sin(radian);
+        float y = v.x * std::sin(radian) + v.y * std::cos(radian);
+        v.x = x;
+        v.y = y;
     }
 }

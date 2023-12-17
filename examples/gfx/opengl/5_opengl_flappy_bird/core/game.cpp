@@ -8,6 +8,8 @@ namespace game::core {
     using namespace std;
     using namespace ecs;
 
+    float t = 0.0f;
+
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
@@ -23,23 +25,20 @@ namespace game::core {
 
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 
-        player1 = make_shared<GameObject>();
-        player2 = make_shared<GameObject>();
+        player = make_shared<GameObject>();
         auto flappyBird = make_shared<Sprite>("flappy_bird");
-        auto spriteRenderer1 = make_shared<SpriteRenderer>(flappyBird);
-        auto spriteRenderer2 = make_shared<SpriteRenderer>(flappyBird);
+        auto renderer = make_shared<SpriteRenderer>(flappyBird);
 
-        player1->add_component(spriteRenderer1);
-        player2->add_component(spriteRenderer2);
+        player->add_component(renderer);
+        batch->add(player, renderer);
 
-        batch->add(player1, spriteRenderer1);
-        batch->add(player2, spriteRenderer2);
-
-        player2->get_transform().set_position(Vec3f(1.0f, 0.75f, 0.0f));
-        player2->get_transform().set_scale(0.5f);
+        //player->get_transform().set_rotation(45.0f);
     }
 
     void Game::update() {
+        t += 0.5f;
+        player->get_transform().set_rotation(t);
+
         batch->render();
     }
 }
