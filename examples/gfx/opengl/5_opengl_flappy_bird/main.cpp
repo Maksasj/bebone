@@ -4,6 +4,7 @@
 
 #include "core/game.h"
 #include "core/sprite.h"
+#include "core/game_time.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -26,17 +27,25 @@ int main() {
 
     Game game(SCR_WIDTH, SCR_HEIGHT);
 
+    double beginTime = Time::get_time();
+    double endTime;
+
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
-        game.update();
+        if (Time::deltaTime >= 0) {
+            game.update();
+        }
 
         glfwSwapBuffers(window->get_backend());
         glfwPollEvents();
+
+        endTime = Time::get_time();
+        Time::deltaTime = endTime - beginTime;
+        beginTime = endTime;
     }
     
     glfwTerminate();
-
     return 0;
 }

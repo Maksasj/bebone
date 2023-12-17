@@ -8,6 +8,8 @@ namespace game::core {
     using namespace std;
     using namespace ecs;
 
+    float t = 0.0f;
+
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
@@ -31,6 +33,10 @@ namespace game::core {
     }
 
     void Game::update() {
+        t += 10.0f * Time::deltaTime;
+
+        player->get_transform().set_rotation(t);
+
         batch->render();
     }
 }
