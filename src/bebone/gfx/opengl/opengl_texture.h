@@ -8,6 +8,8 @@ namespace bebone::gfx::opengl {
         private:
             GLuint id;
             GLenum textureType;
+            int width;
+            int height;
 
         public:
             GLTexture(const char* image, GLenum textureType, GLenum format, GLenum pixelType);
@@ -17,6 +19,9 @@ namespace bebone::gfx::opengl {
             void bind();
             void unbind();
             void destroy();
+
+            int get_width() const;
+            int get_height() const;
     };
 }
 

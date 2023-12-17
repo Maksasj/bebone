@@ -2,11 +2,11 @@
 
 namespace bebone::gfx::opengl {
     GLTexture::GLTexture(const char* image, GLenum textureType, GLenum format, GLenum pixelType) : textureType(textureType) {
-        int imageWidth, imageHeight, colorChannelNumber;
+        int colorChannelNumber;
 
         stbi_set_flip_vertically_on_load(true);
 
-        unsigned char* bytes = stbi_load(image, &imageWidth, &imageHeight, &colorChannelNumber, 0);
+        unsigned char* bytes = stbi_load(image, &width, &height, &colorChannelNumber, 0);
 
         glGenTextures(1, &id);
         glBindTexture(textureType, id);
@@ -17,7 +17,7 @@ namespace bebone::gfx::opengl {
         glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_NEAREST);
         glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_NEAREST);
 
-        glTexImage2D(textureType, 0, GL_RGBA, imageWidth, imageHeight, 0, format, pixelType, bytes);
+        glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, format, pixelType, bytes);
         glGenerateMipmap(textureType);
 
         stbi_image_free(bytes);
@@ -38,5 +38,13 @@ namespace bebone::gfx::opengl {
 
     void GLTexture::destroy() {
         glDeleteTextures(1, &id);
+    }
+
+    int GLTexture::get_width() const {
+        return width;
+    }
+    
+    int GLTexture::get_height() const {
+        return height;
     }
 }

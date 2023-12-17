@@ -19,6 +19,9 @@ namespace game::core {
 
             const shared_ptr<GLTexture>& get_texture() const;
             void set_texture(const std::string& textureName);
+            
+            int get_height() const;
+            int get_width() const;
     };
 }
 

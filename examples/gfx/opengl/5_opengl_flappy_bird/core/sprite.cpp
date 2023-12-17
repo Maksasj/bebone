@@ -17,4 +17,12 @@ namespace game::core {
     void Sprite::set_texture(const std::string& textureName) {
         texture = TextureLoader::get_texture(textureName);
     }
+
+    int Sprite::get_height() const {
+        return texture->get_height();
+    }
+
+    int Sprite::get_width() const {
+        return texture->get_width();
+    }
 }

@@ -25,8 +25,10 @@ namespace game::core {
         auto flappyBird = std::make_shared<Sprite>("flappy_bird");
         auto face = std::make_shared<Sprite>("awesome_face");
         
-        batch->add(face, Transform(Vec3f(0.25f, 0.4f, 0.0f)));
-        batch->add(flappyBird, Transform(Vec3f(-0.5f, -0.2f, 0.0f)));
+        //batch->add(face, Transform(Vec3f(0.25f, 0.4f, 0.0f)));
+        //batch->add(flappyBird, Transform(Vec3f(-0.5f, -0.2f, 0.0f)));
+        batch->add(flappyBird, Transform(Vec3f(0.0f, 0.0f, 0.0f)));
+        //batch->add(flappyBird, Transform(Vec3f(-0.5, 0.5f, 0.0f)));
         batch->render();
     }
 }

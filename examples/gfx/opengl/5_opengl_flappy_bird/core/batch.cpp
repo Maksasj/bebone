@@ -47,7 +47,7 @@ namespace game::core {
             return;
         }
 
-        auto quad = create_quad(transform.get_position(), cachedTextureUnits[texture]);
+        auto quad = create_quad(sprite, transform.get_position(), cachedTextureUnits[texture]);
         size_t verticesSize = quad.size() * sizeof(ShaderVertex);
         
         vbo->buffer_sub_data(quadSize * verticesSize, verticesSize, quad.data());
@@ -114,26 +114,28 @@ namespace game::core {
         texturesToDraw.clear();
     }
 
-    std::array<ShaderVertex, 4> Batch::create_quad(const Vec2f& position, const int& textureUnit) {
-        f32 size = 0.5f;
+    std::array<ShaderVertex, 4> Batch::create_quad(const std::shared_ptr<Sprite>& sprite, const Vec2f& position, const int& textureUnit) {
+        f32 size = 1.0f;
+        float width = sprite->get_width() * size / PIXELS_PER_UNIT;
+        float height = sprite->get_height() * size / PIXELS_PER_UNIT;
 
         ShaderVertex v0;
-        v0.position = { position.x - size, position.y - size };
+        v0.position = { position.x - width, position.y - height };
         v0.textureCoordinates = { 0.0f, 0.0f };
         v0.textureUnit = textureUnit;
 
         ShaderVertex v1;
-        v1.position = { position.x - size, position.y + size };
+        v1.position = { position.x - width, position.y + height };
         v1.textureCoordinates = { 0.0f, 1.0f };
         v1.textureUnit = textureUnit;
 
         ShaderVertex v2;
-        v2.position = { position.x + size, position.y + size };
+        v2.position = { position.x + width, position.y + height };
         v2.textureCoordinates = { 1.0f, 1.0f };
         v2.textureUnit = textureUnit;
 
         ShaderVertex v3;
-        v3.position = { position.x + size, position.y - size };
+        v3.position = { position.x + width, position.y - height };
         v3.textureCoordinates = { 1.0f, 0.0f };
         v3.textureUnit = textureUnit;
 
