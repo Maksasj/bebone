@@ -41,9 +41,14 @@ namespace game::core {
         shaderProgram = nullptr;
     }
 
-    void Batch::add(const shared_ptr<GameObject>& gameObject, const shared_ptr<SpriteRenderer>& renderer) {
+    void Batch::add(const shared_ptr<GameObject>& gameObject) {
         if (gameObjectsToDraw.find(gameObject) == gameObjectsToDraw.end()) {
-            gameObjectsToDraw[gameObject] = renderer;
+            auto renderer = gameObject->get_component<SpriteRenderer>();
+            if (renderer != nullptr) {
+                gameObjectsToDraw[gameObject] = renderer;
+            } else {
+                cout << gameObject->get_name() << " does not have a SpriteRenderer!";
+            }
         }
     }
 

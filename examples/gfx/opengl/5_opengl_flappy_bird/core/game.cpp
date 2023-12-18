@@ -35,11 +35,12 @@ namespace game::core {
         // StateMachine::set_state(mainMenuState);
 
         auto sprite = make_shared<Sprite>("flappy_bird");
-        gameObject = make_shared<GameObject>();
+        gameObject = make_shared<GameObject>("Flappy Bird");
         auto renderer = make_shared<SpriteRenderer>(sprite);
 
-        gameObject->add_component(renderer);
-        //gameObject->get_component<SpriteRenderer>();
+        //gameObject->add_component(renderer);
+
+        batch->add(gameObject);
     }
 
     void Game::update() {

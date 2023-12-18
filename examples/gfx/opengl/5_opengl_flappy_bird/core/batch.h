@@ -65,7 +65,7 @@ namespace game::core {
             Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit);
             ~Batch();
 
-            void add(const shared_ptr<GameObject>& gameObject, const shared_ptr<SpriteRenderer>& renderer);
+            void add(const shared_ptr<GameObject>& gameObject);
             void remove(const shared_ptr<GameObject>& gameObject);
             void render();
 

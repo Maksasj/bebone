@@ -1,7 +1,7 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
-#include <vector>
+//#include <vector>
 #include <memory>
 #include <map>
 #include <typeindex>
@@ -12,9 +12,11 @@ namespace game::core::ecs {
 
     class Object : private bebone::core::NonCopyable {
         private:
-            //vector<shared_ptr<IComponent>> components;
-            multimap<type_index, shared_ptr<IComponent>> components;
-        
+            map<type_index, vector<shared_ptr<IComponent>>> components;
+
+            type_index get_type(shared_ptr<IComponent> component);
+            vector<shared_ptr<IComponent>>& get_component_vector(const type_index& type);
+
         public:
             Object();
             void add_component(shared_ptr<IComponent> component);
@@ -23,7 +25,13 @@ namespace game::core::ecs {
 
             template <typename T>
             shared_ptr<T> get_component() {
-                return dynamic_pointer_cast<T>(components[typeid(T)]);
+                auto v = components[typeid(T)];
+                
+                if (!v.empty()) {
+                    return dynamic_pointer_cast<T>(v[0]);
+                }
+                
+                return nullptr;
             }
     };
 }
