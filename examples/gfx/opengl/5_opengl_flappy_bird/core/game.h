@@ -22,6 +22,8 @@ namespace game::core {
             shared_ptr<Batch> batch;
             shared_ptr<OrthographicCamera> camera;
 
+            shared_ptr<GameObject> gameObject;
+
             shared_ptr<MainMenuState> mainMenuState;
             shared_ptr<GameState> gameState;
             shared_ptr<EndGameState> endGameState;

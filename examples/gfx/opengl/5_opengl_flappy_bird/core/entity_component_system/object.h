@@ -3,18 +3,28 @@
 
 #include <vector>
 #include <memory>
+#include <map>
+#include <typeindex>
 #include "i_component.h"
 
 namespace game::core::ecs {
+    using namespace std;
+
     class Object : private bebone::core::NonCopyable {
         private:
-            std::vector<std::shared_ptr<IComponent>> components;
+            //vector<shared_ptr<IComponent>> components;
+            multimap<type_index, shared_ptr<IComponent>> components;
         
         public:
-            void add_component(std::shared_ptr<IComponent> component);
-            void get_component(std::shared_ptr<IComponent>& component);
-            void remove_component(std::shared_ptr<IComponent> component);
+            Object();
+            void add_component(shared_ptr<IComponent> component);
+            void remove_component(shared_ptr<IComponent> component);
             void update_components();
+
+            template <typename T>
+            shared_ptr<T> get_component() {
+                return dynamic_pointer_cast<T>(components[typeid(T)]);
+            }
     };
 }
 

@@ -24,15 +24,22 @@ namespace game::core {
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 
-        mainMenuState = make_shared<MainMenuState>();
-        gameState = make_shared<GameState>();
-        endGameState = make_shared<EndGameState>();
+        // mainMenuState = make_shared<MainMenuState>();
+        // gameState = make_shared<GameState>();
+        // endGameState = make_shared<EndGameState>();
 
-        mainMenuState->set_game_state(gameState);
-        gameState->set_end_game_state(endGameState);
-        endGameState->set_game_state(gameState);
+        // mainMenuState->set_game_state(gameState);
+        // gameState->set_end_game_state(endGameState);
+        // endGameState->set_game_state(gameState);
 
-        StateMachine::set_state(mainMenuState);
+        // StateMachine::set_state(mainMenuState);
+
+        auto sprite = make_shared<Sprite>("flappy_bird");
+        gameObject = make_shared<GameObject>();
+        auto renderer = make_shared<SpriteRenderer>(sprite);
+
+        gameObject->add_component(renderer);
+        //gameObject->get_component<SpriteRenderer>();
     }
 
     void Game::update() {

@@ -2,8 +2,12 @@
 #include <algorithm>
 
 namespace game::core::ecs {
+    Object::Object() {
+        components = multimap<type_index, shared_ptr<IComponent>>();
+    }
+
     void Object::add_component(std::shared_ptr<IComponent> component) {
-        components.push_back(component);
+        components.insert({type_index(typeid(component)), component });
     }
 
     void Object::remove_component(std::shared_ptr<IComponent> component) {
@@ -16,7 +20,7 @@ namespace game::core::ecs {
 
     void Object::update_components() {
         for (auto it = components.begin(); it != components.end(); ++it) {
-            (*it)->update();
+            (*it).second->update();
         }
     }
 }
