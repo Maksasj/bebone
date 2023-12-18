@@ -3,5 +3,6 @@
 
 #include "core/core.h"
 #include "gfx/gfx.h"
+#include "gfx/begui/begui.h"
 
 #endif

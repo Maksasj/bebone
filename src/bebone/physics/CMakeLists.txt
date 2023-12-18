@@ -1,3 +1,0 @@
-file(GLOB_RECURSE BEBONE_PHYSICS_SRC_FILES "*.cpp")
-
-add_library(bebone_physics STATIC ${BEBONE_PHYSICS_SRC_FILES})

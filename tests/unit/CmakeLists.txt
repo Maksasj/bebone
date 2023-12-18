@@ -1,12 +1,3 @@
 enable_testing()
 
-include_directories("./")
-include_directories("../../src")
-
-include_directories("../../3dparty/omni_types/src")
-include_directories("../../3dparty/Vulkan-Headers/include")
-include_directories("../../3dparty/stb")
-
 add_subdirectory(bebone)
-add_subdirectory(client)
-add_subdirectory(shared)
