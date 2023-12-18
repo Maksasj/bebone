@@ -7,12 +7,13 @@ namespace game::core {
     using namespace bebone::gfx;
     using namespace std;
     using namespace ecs;
+    using namespace fsm;
 
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
-        camera = make_shared<OrthographicCamera>(aspect * -1.0f, aspect * 1.0f, 1.0, -1.0, -1.0f, 1.0f);
-
+        camera = make_shared<OrthographicCamera>(aspect * -3.0f, aspect * 3.0f, 3.0, -3.0, -3.0f, 3.0f);
+ 
         const auto shaderFlags = ENABLE_UNIFORMS;
 
         auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/5_opengl_flappy_bird/vertex.glsl", ShaderTypes::VERTEX_SHADER, shaderFlags);
@@ -22,6 +23,16 @@ namespace game::core {
         TextureLoader::load_textures("examples\\assets\\gfx\\opengl\\5_opengl_flappy_bird\\gfx\\");
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
+
+        mainMenuState = make_shared<MainMenuState>();
+        gameState = make_shared<GameState>();
+        endGameState = make_shared<EndGameState>();
+
+        mainMenuState->set_game_state(gameState);
+        gameState->set_end_game_state(endGameState);
+        endGameState->set_game_state(gameState);
+
+        StateMachine::set_state(mainMenuState);
     }
 
     void Game::update() {

@@ -1,19 +1,16 @@
 #include "state_machine.h"
 
-namespace game::core::finite_state_machine {
-    StateMachine::StateMachine(State& initialState) {
-        initialState.enter();
-        currentState = &initialState;
-    }
+namespace game::core::fsm {
+    std::shared_ptr<State> StateMachine::currentState = nullptr;
 
-    void StateMachine::set_state(State& state) {
+    void StateMachine::set_state(std::shared_ptr<State> state) {
         if (currentState != nullptr) {
             currentState->exit();
         }
         
-        state.enter();
+        state->enter();
 
-        currentState = &state;
+        currentState = state;
     }
 
     void StateMachine::update_current_state() {

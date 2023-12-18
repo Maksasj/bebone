@@ -171,8 +171,8 @@ namespace game::core {
 
     void Batch::rotateVertex(Vec2f& v, const f32& angle) const {
         double radian = Math::deg_to_rad(angle);
-        float x = v.x * std::cos(radian) - v.y * std::sin(radian);
-        float y = v.x * std::sin(radian) + v.y * std::cos(radian);
+        float x = v.x * cos(radian) - v.y * sin(radian);
+        float y = v.x * sin(radian) + v.y * cos(radian);
         v.x = x;
         v.y = y;
     }
