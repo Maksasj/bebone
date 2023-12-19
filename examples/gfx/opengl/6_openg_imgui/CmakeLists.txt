@@ -1,7 +1,5 @@
 file(GLOB_RECURSE BEBONE_EXAMPLE_GFX_OPENGL_6_OPENGL_IMGUI *.cpp)
 
-include_directories("../../../../3dparty/imgui")
-
 include_directories("../../src")
 include_directories("./")
 
