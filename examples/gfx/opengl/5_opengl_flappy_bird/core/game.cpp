@@ -38,7 +38,7 @@ namespace game::core {
         gameObject = make_shared<GameObject>("Flappy Bird");
         auto renderer = make_shared<SpriteRenderer>(sprite);
 
-        //gameObject->add_component(renderer);
+        gameObject->add_component(renderer);
 
         batch->add(gameObject);
     }
