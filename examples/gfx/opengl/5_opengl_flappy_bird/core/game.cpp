@@ -2,12 +2,18 @@
 #include "texture_loader.h"
 #include "entity_component_system/components/sprite_renderer.h"
 #include "entity_component_system/game_object.h"
+#include "input_system/input.h"
 
 namespace game::core {
     using namespace bebone::gfx;
     using namespace std;
     using namespace ecs;
     using namespace fsm;
+    using namespace input_system;
+
+    void testFunc() {
+        cout << "test" << endl;
+    }
 
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
@@ -41,9 +47,13 @@ namespace game::core {
         gameObject->add_component(renderer);
 
         batch->add(gameObject);
+
+        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(testFunc));
     }
 
     void Game::update() {
+        Input::execute_pooled_actions();
+
         batch->render();
     }
 }
