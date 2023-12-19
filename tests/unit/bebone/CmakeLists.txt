@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(BeboneTests)
 
-include_directories("../../src")
-include_directories("./")
+include_directories("../../../src")
 
 add_subdirectory(core)
 add_subdirectory(physics)
