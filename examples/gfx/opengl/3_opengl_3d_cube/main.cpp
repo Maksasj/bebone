@@ -16,14 +16,14 @@ struct Vertex {
 };
 
 const std::vector<Vertex> vertices {
-    {{-0.5, -0.5,  0.5},   {1.0f, 1.0f, 1.0f}},
-    {{ 0.5, -0.5,  0.5},   {1.0f, 1.0f, 0.0f}},
-    {{ 0.5,  0.5,  0.5},   {1.0f, 0.0f, 1.0f}},
-    {{-0.5,  0.5,  0.5},   {1.0f, 0.0f, 0.0f}},
-    {{-0.5, -0.5, -0.5},   {0.0f, 1.0f, 1.0f}},
-    {{ 0.5, -0.5, -0.5},   {0.0f, 1.0f, 0.0f}},
-    {{ 0.5,  0.5, -0.5},   {0.0f, 0.0f, 1.0f}},
-    {{-0.5,  0.5, -0.5},   {0.0f, 0.0f, 0.0f}}
+    {{-1.0, -1.0,  1.0},   {1.0f, 1.0f, 1.0f}},
+    {{ 1.0, -1.0,  1.0},   {1.0f, 1.0f, 0.0f}},
+    {{ 1.0,  1.0,  1.0},   {1.0f, 0.0f, 1.0f}},
+    {{-1.0,  1.0,  1.0},   {1.0f, 0.0f, 0.0f}},
+    {{-1.0, -1.0, -1.0},   {0.0f, 1.0f, 1.0f}},
+    {{ 1.0, -1.0, -1.0},   {0.0f, 1.0f, 0.0f}},
+    {{ 1.0,  1.0, -1.0},   {0.0f, 0.0f, 1.0f}},
+    {{-1.0,  1.0, -1.0},   {0.0f, 0.0f, 0.0f}}
 };
 
 const std::vector<u32> indices {
@@ -53,7 +53,6 @@ int main() {
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-    glfwSwapInterval(0);
 
     auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/vertex.shader", ShaderTypes::VERTEX_SHADER);
     auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/3_opengl_3d_cube/fragment.shader", ShaderTypes::FRAGMENT_SHADER);
@@ -92,17 +91,16 @@ int main() {
     cameraUbo.unmap();
     cameraUbo.unbind();
 
-    float t = 0;
-
     GLContext::enable(GL_DEPTH_TEST);
 
+    f32 t = 0.0f;
     while (!window->closing()) {
         ++t;
 
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        transformPtr->rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+        transformPtr->rotation = trait_bryan_angle_yxz(Vec3f(t * 0.01f, t * 0.01f, 0.0f));
 
         shaderProgram.enable();
 

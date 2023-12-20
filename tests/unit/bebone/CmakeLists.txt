@@ -10,4 +10,3 @@ include_directories("../../../3dparty/stb")
 include_directories("../../../3dparty/imgui")
 
 add_subdirectory(core)
-add_subdirectory(physics)
