@@ -29,11 +29,13 @@ int main() {
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
     auto renderer = VulkanRenderer(window);
 
-    /*
-    auto instance = VulkanInstance::create_instance();
-    auto device = instance->create_device(window);
-    auto swapchain = device->create_swap_chain();
+    // auto instance = VulkanInstance::create_instance();
+    // auto device = instance->create_device(window);
+    // auto swapchain = device->create_swap_chain(window);
 
+    // auto descriptorPool = device->create_descriptor_pool();
+
+    /*
     auto descriptorPool = device->create_descriptor_pool();
     auto descriptorSetLayout = descriptorPool->create_descriptor_set_layout();
     auto descriptorSet = descriptorPool->create_descriptor_set(descriptorSetLayout);
@@ -93,15 +95,10 @@ int main() {
 
         uint32_t frameIndex;
 
-        {
-            auto result = renderer.swapChain->acquireNextImage(&frameIndex);
+        auto result = renderer.swapChain->acquireNextImage(&frameIndex);
 
-            if(result == VK_ERROR_OUT_OF_DATE_KHR)
-                continue;
-
-            if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-                throw std::runtime_error("failed to acquire swap chain image!");
-        }
+        if(result == VK_ERROR_OUT_OF_DATE_KHR)
+            continue;
 
         auto& cmd = renderer.commandBuffers->get_command_buffer(frameIndex);
 
@@ -119,13 +116,10 @@ int main() {
             cmd.end_render_pass();
         cmd.end_record();
 
-        auto result = renderer.swapChain->submitCommandBuffers(&cmd.commandBuffer, &frameIndex);
+        result = renderer.swapChain->submitCommandBuffers(&cmd.commandBuffer, &frameIndex);
 
         if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window->is_resized())
             continue;
-
-        if(result != VK_SUCCESS)
-            throw std::runtime_error("failed to acquire submit command buffers !\n");
     }
 
     vkDeviceWaitIdle(renderer.device->device());

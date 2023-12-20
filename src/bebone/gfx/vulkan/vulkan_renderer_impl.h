@@ -60,7 +60,7 @@ namespace bebone::gfx {
                 device = vulkanInstance->create_device(window);
 
                 // Todo fif should be moved to swap chain, or no
-                swapChain = device->create_swapchain(*_window);
+                swapChain = device->create_swap_chain(window);
 
                 // Todo swapChain->get_image_count() basically same thing as fif
                 commandBuffers = std::make_shared<VulkanCommandBufferPool>(*device, swapChain->get_image_count());

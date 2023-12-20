@@ -40,8 +40,7 @@ namespace bebone::gfx {
             ~VulkanDevice();
 
             std::shared_ptr<VulkanBufferImpl> create_buffer(const size_t& size);
-
-            std::shared_ptr<VulkanSwapChain> create_swapchain(VulkanWindow& window);
+            std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 
             VkDevice device() const { return device_; }
             VkSurfaceKHR surface() { return surface_; }

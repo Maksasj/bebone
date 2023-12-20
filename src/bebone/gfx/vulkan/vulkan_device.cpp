@@ -23,8 +23,12 @@ namespace bebone::gfx {
         std::cout << "physical device: " << properties.deviceName << std::endl;
     }
 
-    std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swapchain(VulkanWindow& window) {
-        return std::make_shared<VulkanSwapChain>(*this, window.get_extend());
+    // std::shared_pte<VulkanDescriptorPool> create_descriptor_pool() {
+//
+    // }
+
+    std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::shared_ptr<Window> &window) {
+        return std::make_shared<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });
     }
 
     std::shared_ptr<VulkanBufferImpl> VulkanDevice::create_buffer(const size_t& size) {

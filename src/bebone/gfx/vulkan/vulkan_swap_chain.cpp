@@ -60,7 +60,10 @@ VkResult bebone::gfx::VulkanSwapChain::acquireNextImage(uint32_t *imageIndex) {
 		VK_NULL_HANDLE,
 		imageIndex);
 
-  return result;
+    if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+        throw std::runtime_error("failed to acquire swap chain image!");
+
+    return result;
 }
 
 VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex) {
@@ -104,6 +107,9 @@ VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffe
 	VkResult result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
 
 	currentFrame = (currentFrame + 1) % imageCount;
+
+    if(result != VK_SUCCESS)
+        throw std::runtime_error("failed to acquire submit command buffers !");
 
 	return result;
 }
