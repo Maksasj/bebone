@@ -23,9 +23,6 @@ namespace bebone::gfx {
     class VulkanRenderer;
 
     class VulkanCommandBuffer {
-        private:
-            core::ArenaContainer arena;
-
         public:
             const size_t _frameIndex;
 
@@ -41,17 +38,17 @@ namespace bebone::gfx {
 
             void set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);
 
-            void bind_pipeline(Pipeline& pipeline);
+            void bind_pipeline(VulkanPipeline& pipeline);
 
             template<class VertexType>
             void bind_vertex_buffer(VertexBuffer<VertexType>& vertexBuffer) {
-                VulkanBindVertexBufferCommand* ptrTarget = static_cast<VulkanBindVertexBufferCommand*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand)));
-                std::ignore = new (ptrTarget) VulkanBindVertexBufferCommand(commandBuffer, static_cast<VulkanBufferImpl*>(vertexBuffer.get_impl()));
+                VulkanBindVertexBufferCommand command(commandBuffer, static_cast<VulkanBufferImpl*>(vertexBuffer.get_impl()));
+                command.execute();
             }
 
             void bind_vertex_buffer(std::shared_ptr<VulkanBufferImpl>& buffer) {
-                VulkanBindVertexBufferCommand* ptrTarget = static_cast<VulkanBindVertexBufferCommand*>(arena.alloc(sizeof(VulkanBindVertexBufferCommand)));
-                std::ignore = new (ptrTarget) VulkanBindVertexBufferCommand(commandBuffer, buffer.get());
+                VulkanBindVertexBufferCommand command(commandBuffer, buffer.get());
+                command.execute();
             }
 
             void bind_index_buffer(IndexBuffer& indexBuffer);
@@ -62,9 +59,6 @@ namespace bebone::gfx {
 
             void draw(const size_t& vertexCount);
             void draw_indexed(const size_t& vertexCount);
-
-            void preprocess();
-            void submit();
     };
 }
 

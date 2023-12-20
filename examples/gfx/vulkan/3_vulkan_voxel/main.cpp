@@ -88,7 +88,6 @@ int main() {
             cmd.end_render_pass();
         cmd.end_record();
 
-        cmd.submit();
         renderer.present(frame);
     }
 

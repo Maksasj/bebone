@@ -106,10 +106,6 @@ namespace bebone::gfx {
                 return VulkanPipelineLayoutBuilderImpl(*device);
             }
 
-            VulkanSwapChain& get_swap_chain() {
-                return *swapChain;
-            }
-
             GPUResourceManager create_gpu_resource_manager() {
                 return GPUResourceManager(swapChain->get_image_count(), *device);
             }
@@ -134,6 +130,8 @@ namespace bebone::gfx {
             VulkanFrame get_frame() const {
                 uint32_t imageIndex;
                 auto result = swapChain->acquireNextImage(&imageIndex);
+
+                std::cout << imageIndex << "\n";
 
                 if(result == VK_ERROR_OUT_OF_DATE_KHR) {
                     // This logic needs to be abstracted away

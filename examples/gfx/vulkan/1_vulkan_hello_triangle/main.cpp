@@ -44,6 +44,11 @@ int main() {
     auto pipelineLayout = device-create_pipeline_layout();
 
     auto pipeline = device->create_pipeline(pipelineLayout);
+
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool-create_command_buffers(3); // An array of command buffers
+
+    device->wait_idle();
     */
 
     auto descriptorPool = VulkanDescriptorPool(*renderer.device);
@@ -72,26 +77,39 @@ int main() {
         fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
     }
 
-    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
+    PipelineConfigInfo pipelineConfig;
+    PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
+    pipelineConfig.renderPass = renderer.swapChain->renderTarget->renderPass.renderPass;
+    pipelineConfig.pipelineLayout = pipelineLayout.get_layout();
+    auto pipeline = std::make_shared<VulkanPipeline>(*renderer.device, vertexShaderCode, fragmentShaderCode, pipelineConfig);
 
-    auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
+    auto vertexBuffer = VertexBuffer(new VulkanVertexBufferImpl(vertices, *renderer.device));
+    auto indexBuffer = IndexBuffer(new VulkanIndexBufferImpl(indices, *renderer.device));
+
+    auto commandBufferPool = renderer.commandBuffers;
 
     while (!window->closing()) {
         glfwPollEvents();
 
-        auto frame = renderer.get_frame();
+        uint32_t frameIndex;
 
-        if(!frame.valid())
-            continue;
+        {
+            auto result = renderer.swapChain->acquireNextImage(&frameIndex);
 
-        auto& cmd = frame.get_command_buffer();
+            if(result == VK_ERROR_OUT_OF_DATE_KHR)
+                continue;
+
+            if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+                throw std::runtime_error("failed to acquire swap chain image!");
+        }
+
+        auto& cmd = renderer.commandBuffers->get_command_buffer(frameIndex);
 
         cmd.begin_record();
-            cmd.begin_render_pass(renderer.swapChain, frame.frameIndex);
+            cmd.begin_render_pass(renderer.swapChain, frameIndex);
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
-            cmd.bind_pipeline(pipeline);
+            cmd.bind_pipeline(*pipeline);
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);
@@ -101,9 +119,13 @@ int main() {
             cmd.end_render_pass();
         cmd.end_record();
 
-        cmd.submit();
+        auto result = renderer.swapChain->submitCommandBuffers(&cmd.commandBuffer, &frameIndex);
 
-        renderer.present(frame);
+        if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window->is_resized())
+            continue;
+
+        if(result != VK_SUCCESS)
+            throw std::runtime_error("failed to acquire submit command buffers !\n");
     }
 
     vkDeviceWaitIdle(renderer.device->device());
