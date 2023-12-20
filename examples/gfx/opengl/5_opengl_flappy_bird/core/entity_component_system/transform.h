@@ -2,9 +2,10 @@
 #define _TRANSFORM_H_
 
 #include "bebone/bebone.h"
-using namespace bebone::core;
 
 namespace game::core {
+    using namespace bebone::core;
+
     class Transform {
         private:
             Vec2f position;

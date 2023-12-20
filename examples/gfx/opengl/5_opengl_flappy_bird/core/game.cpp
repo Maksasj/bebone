@@ -1,6 +1,7 @@
 #include "game.h"
 #include "texture_loader.h"
 #include "entity_component_system/components/sprite_renderer.h"
+#include "entity_component_system/components/gravity.h"
 #include "entity_component_system/game_object.h"
 #include "input_system/input.h"
 
@@ -11,14 +12,10 @@ namespace game::core {
     using namespace fsm;
     using namespace input_system;
 
-    void testFunc() {
-        cout << "test" << endl;
-    }
-
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
-        camera = make_shared<OrthographicCamera>(aspect * -3.0f, aspect * 3.0f, 3.0, -3.0, -3.0f, 3.0f);
+        camera = make_shared<OrthographicCamera>(aspect * -5.0f, aspect * 5.0f, 5.0, -5.0, -5.0f, 5.0f);
  
         const auto shaderFlags = ENABLE_UNIFORMS;
 
@@ -43,16 +40,27 @@ namespace game::core {
         auto sprite = make_shared<Sprite>("flappy_bird");
         gameObject = make_shared<GameObject>("Flappy Bird");
         auto renderer = make_shared<SpriteRenderer>(sprite);
+        auto gravity = make_shared<Gravity>();
 
         gameObject->add_component(renderer);
+        gameObject->add_component(gravity);
 
         batch->add(gameObject);
 
-        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(testFunc));
+        auto function = [this]() {
+            auto gravity = gameObject->get_component<Gravity>();
+            gravity->set_velocity(0.06f);
+        };
+        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(function));
     }
 
     void Game::update() {
         Input::execute_pooled_actions();
+        
+        gameObject->update();
+        auto gravity = gameObject->get_component<Gravity>();
+        auto& transform = gameObject->get_transform();
+        transform.set_position(Vec2f(transform.get_position().x, transform.get_position().y + gravity->get_velocity()));
 
         batch->render();
     }

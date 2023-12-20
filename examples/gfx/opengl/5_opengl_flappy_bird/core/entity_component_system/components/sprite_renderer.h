@@ -3,11 +3,11 @@
 
 #include <memory>
 
-#include "../i_component.h"
+#include "../component.h"
 #include "../../sprite.h"
 
 namespace game::core::ecs {
-    class SpriteRenderer : public IComponent {
+    class SpriteRenderer : public Component {
         private:
             shared_ptr<Sprite> sprite;
 

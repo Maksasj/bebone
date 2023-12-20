@@ -3,15 +3,15 @@
 
 namespace game::core::ecs {
     Object::Object() {
-        components = map<type_index, vector<shared_ptr<IComponent>>>();
+        components = map<type_index, vector<shared_ptr<Component>>>();
     }
 
-    void Object::add_component(shared_ptr<IComponent> component) {
+    void Object::add_component(shared_ptr<Component> component) {
         type_index type = get_type(component);
         components[type].push_back(component);
     }
 
-    void Object::remove_component(shared_ptr<IComponent> component) {
+    void Object::remove_component(shared_ptr<Component> component) {
         type_index type = get_type(component);
         auto& v = get_component_vector(type);
 
@@ -37,12 +37,12 @@ namespace game::core::ecs {
         }
     }
 
-    type_index Object::get_type(shared_ptr<IComponent> component) {
+    type_index Object::get_type(shared_ptr<Component> component) {
         auto ptr = component.get();
         return type_index(typeid(*ptr));
     }
 
-    vector<shared_ptr<IComponent>>& Object::get_component_vector(const type_index& type) {
+    vector<shared_ptr<Component>>& Object::get_component_vector(const type_index& type) {
         return components[type];
     }
 }
