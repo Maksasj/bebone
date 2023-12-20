@@ -123,7 +123,7 @@ class Camera {
             return viewMatrix;
         }
 
-        void bind(VulkanCommandBuffer& cmd, PipelineLayout& pipelineLayout) {
+        void bind(VulkanCommandBuffer& cmd, VulkanPipelineLayoutImpl& pipelineLayout) {
             const size_t frame = cmd._frameIndex;
             const size_t* transformIndex = &transformBuffer->get_handle(frame).index;
 

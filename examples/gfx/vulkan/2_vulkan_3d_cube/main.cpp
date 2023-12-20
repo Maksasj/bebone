@@ -136,7 +136,7 @@ int main() {
         auto& cmd = frame.get_command_buffer();
 
         cmd.begin_record();
-            cmd.begin_render_pass(renderer, frame.frameIndex);
+            cmd.begin_render_pass(renderer.swapChain, frame.frameIndex);
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd.bind_pipeline(pipeline);

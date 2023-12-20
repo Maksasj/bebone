@@ -6,6 +6,7 @@
 
 #include "vulkan_instance.h"
 #include "vulkan_device_chooser.h"
+#include "vulkan_buffer_impl.h"
 
 #include <iostream>
 #include <set>
@@ -37,6 +38,8 @@ namespace bebone::gfx {
 
             VulkanDevice(VulkanWindow &window, VulkanInstance &vulkanInstance);
             ~VulkanDevice();
+
+            std::shared_ptr<VulkanBufferImpl> create_buffer(const size_t& size);
 
             std::shared_ptr<VulkanSwapChain> create_swapchain(VulkanWindow& window);
 

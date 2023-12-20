@@ -11,7 +11,7 @@
 #include "vulkan_pipeline_layout_impl.h"
 
 namespace bebone::gfx {
-    class VulkanPipelineLayoutBuilderImpl : public PipelineLayoutBuilderImpl {
+    class VulkanPipelineLayoutBuilderImpl {
         private:
             VulkanDevice& _device;
             std::vector<VkPushConstantRange> constantRanges;
@@ -24,18 +24,20 @@ namespace bebone::gfx {
 
             }
 
-            void set_constant_range(const size_t& offset, const size_t& size) override {
+            VulkanPipelineLayoutBuilderImpl& set_constant_range(const size_t& offset, const size_t& size) {
                 VkPushConstantRange pushConstant;
                 pushConstant.offset = offset;
                 pushConstant.size = size;
                 pushConstant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 
                 constantRanges.push_back(pushConstant);
+
+                return *this;
             }
 
-            PipelineLayout build(GPUResourceManager& _gpuResourceManager) override {
+            VulkanPipelineLayoutImpl build(GPUResourceManager& _gpuResourceManager) {
                 VulkanDescriptorPool& descriptorPool = _gpuResourceManager.get_descriptor_pool();
-                return PipelineLayout::create_from_impl<VulkanPipelineLayoutImpl>(_device, descriptorPool, constantRanges);
+                return VulkanPipelineLayoutImpl(_device, descriptorPool, constantRanges);
             }
     };
 }

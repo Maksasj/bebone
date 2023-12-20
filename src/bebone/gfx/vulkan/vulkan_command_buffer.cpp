@@ -16,12 +16,10 @@ namespace bebone::gfx {
         std::ignore = new (ptrTarget) VulkanEndRecordCommand(commandBuffer);
     }
 
-    void VulkanCommandBuffer::begin_render_pass(VulkanRenderer& renderer, const u32& frameBuffer) {
+    void VulkanCommandBuffer::begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer) {
         VulkanBeginRenderPassCommand* ptrTarget = static_cast<VulkanBeginRenderPassCommand*>(arena.alloc(sizeof(VulkanBeginRenderPassCommand)));
-        
-        VulkanSwapChain& swapChain = renderer.get_swap_chain();
-        
-        std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(commandBuffer, swapChain, frameBuffer);
+
+        std::ignore = new (ptrTarget) VulkanBeginRenderPassCommand(commandBuffer, *swapChain, frameBuffer);
     }
 
     void VulkanCommandBuffer::set_viewport(const i32& x, const i32& y, const u32& width, const u32& height) {
@@ -64,23 +62,23 @@ namespace bebone::gfx {
         std::ignore = new (ptrTarget) VulkanDrawIndexedCommand(commandBuffer, indexCount);
     }
 
-    void VulkanCommandBuffer::bind_descriptor_set(PipelineLayout& pipelineLayout, VkDescriptorSet& descriptorSet) {
+    void VulkanCommandBuffer::bind_descriptor_set(VulkanPipelineLayoutImpl& pipelineLayout, VkDescriptorSet& descriptorSet) {
         VulkanBindDescriptorSet* ptrTarget = static_cast<VulkanBindDescriptorSet*>(arena.alloc(sizeof(VulkanBindDescriptorSet)));
-        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+        VulkanPipelineLayoutImpl* pipelineLayoutImpl = &pipelineLayout;
 
         std::ignore = new (ptrTarget) VulkanBindDescriptorSet(commandBuffer, pipelineLayoutImpl, &descriptorSet); 
     }
 
-    void VulkanCommandBuffer::push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, const void* constantPtr) {
+    void VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const void* constantPtr) {
         VulkanPushConstant* ptrTarget = static_cast<VulkanPushConstant*>(arena.alloc(sizeof(VulkanPushConstant)));
-        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+        VulkanPipelineLayoutImpl* pipelineLayoutImpl = &pipelineLayout;
 
         std::ignore = new (ptrTarget) VulkanPushConstant(commandBuffer, pipelineLayoutImpl, size, 0, constantPtr); 
     }
 
-    void VulkanCommandBuffer::push_constant(PipelineLayout& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
+    void VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
         VulkanPushConstant* ptrTarget = static_cast<VulkanPushConstant*>(arena.alloc(sizeof(VulkanPushConstant)));
-        VulkanPipelineLayoutImpl* pipelineLayoutImpl = static_cast<VulkanPipelineLayoutImpl*>(pipelineLayout.get_impl());
+        VulkanPipelineLayoutImpl* pipelineLayoutImpl = &pipelineLayout;
 
         std::ignore = new (ptrTarget) VulkanPushConstant(commandBuffer, pipelineLayoutImpl, size, offset, constantPtr); 
     }

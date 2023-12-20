@@ -49,7 +49,7 @@ class World {
             }
         }
 
-        void render(VulkanFrame& frame, PipelineLayout& pipelineLayout) {
+        void render(VulkanFrame& frame, VulkanPipelineLayoutImpl& pipelineLayout) {
             const size_t& size = chunkRenderingQueue->size();
 
             for(size_t i = 0; i < size; ++i) {

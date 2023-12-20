@@ -17,7 +17,7 @@ namespace bebone::gfx {
 
             }
 
-            void bind(VulkanCommandBuffer& commandBuffer, PipelineLayout& pipelineLayout) {
+            void bind(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl& pipelineLayout) {
                 commandBuffer.bind_descriptor_set(pipelineLayout, *descriptorSets[commandBuffer._frameIndex]);
             }
 
@@ -81,7 +81,7 @@ namespace bebone::gfx {
     };
 
     class GPUResourceManager {
-        private:
+        public:
             const size_t _fif;
 
             VulkanDevice& _device;
@@ -90,7 +90,6 @@ namespace bebone::gfx {
             size_t availableUniformHandle;
             size_t availableTextureHandle;
 
-        public:
             GPUResourceManager(const size_t& fif, VulkanDevice& device) : _fif(fif), _device(device), descriptorPool(device) {
                 availableUniformHandle = 0;
                 availableTextureHandle = 0;

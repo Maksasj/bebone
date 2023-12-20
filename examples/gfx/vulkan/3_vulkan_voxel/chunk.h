@@ -85,7 +85,7 @@ class Chunk {
             mesh = builder.build(renderer);
         }
 
-        void render(VulkanFrame& frame, PipelineLayout& pipelineLayout) {
+        void render(VulkanFrame& frame, VulkanPipelineLayoutImpl& pipelineLayout) {
             VulkanCommandBuffer& cmd = frame.get_command_buffer();
 
             mesh->bind(cmd);

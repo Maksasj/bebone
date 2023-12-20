@@ -28,12 +28,26 @@ int main() {
 
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
     auto renderer = VulkanRenderer(window);
-    
-    auto resourceManager = renderer.create_gpu_resource_manager();
 
-    auto pipelineLayout = renderer
-        .create_pipeline_layout_builder()
-        .build(resourceManager);
+    /*
+    auto instance = VulkanInstance::create_instance();
+    auto device = instance->create_device(window);
+    auto swapchain = device->create_swap_chain();
+
+    auto descriptorPool = device->create_descriptor_pool();
+    auto descriptorSetLayout = descriptorPool->create_descriptor_set_layout();
+    auto descriptorSet = descriptorPool->create_descriptor_set(descriptorSetLayout);
+
+    auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
+
+    auto pipelineLayout = device-create_pipeline_layout();
+
+    auto pipeline = device->create_pipeline(pipelineLayout);
+    */
+
+    auto descriptorPool = VulkanDescriptorPool(*renderer.device);
+    auto pipelineLayout = VulkanPipelineLayoutImpl(*renderer.device, descriptorPool, {});
 
     ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
     ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
@@ -74,7 +88,7 @@ int main() {
         auto& cmd = frame.get_command_buffer();
 
         cmd.begin_record();
-            cmd.begin_render_pass(renderer, frame.frameIndex);
+            cmd.begin_render_pass(renderer.swapChain, frame.frameIndex);
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd.bind_pipeline(pipeline);
