@@ -78,7 +78,7 @@ int main() {
             cmd.begin_render_pass(renderer.swapChain, frame.frameIndex);
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
-            cmd.bind_pipeline(pipeline);
+            cmd.bind_pipeline(*pipeline.get_impl());
             resourceSet.bind(cmd, pipelineLayout);
 
             mainCamera.bind(cmd, pipelineLayout);
