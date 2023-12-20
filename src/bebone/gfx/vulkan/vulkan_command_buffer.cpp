@@ -36,8 +36,8 @@ namespace bebone::gfx {
         command.execute();
     }
 
-    void VulkanCommandBuffer::bind_index_buffer(IndexBuffer& indexBuffer) {
-        VulkanBindIndexBufferCommand command(commandBuffer, *static_cast<VulkanIndexBufferImpl*>(indexBuffer.get_impl()));
+    void VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer) {
+        VulkanBindIndexBufferCommand command(commandBuffer, *indexBuffer);
         command.execute();
     }
 

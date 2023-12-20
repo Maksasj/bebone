@@ -10,10 +10,7 @@
 #include "../pipeline_layout.h"
 
 #include "vulkan_swap_chain.h"
-
 #include "vulkan_pipeline_impl.h"
-
-#include "../pipeline.h"
 
 #include "vulkan_commands.h"
 
@@ -51,7 +48,7 @@ namespace bebone::gfx {
                 command.execute();
             }
 
-            void bind_index_buffer(IndexBuffer& indexBuffer);
+            void bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer);
             void bind_descriptor_set(VulkanPipelineLayoutImpl& pipelineLayout, VkDescriptorSet& descriptorSet);
 
             void push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const void* ptr);

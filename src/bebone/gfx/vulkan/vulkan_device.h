@@ -14,6 +14,9 @@
 
 namespace bebone::gfx {
     class VulkanSwapChain;
+    class VulkanDescriptorPool;
+    class VulkanCommandBufferPool;
+    class VulkanPipelineLayoutImpl;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -41,6 +44,13 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanBufferImpl> create_buffer(const size_t& size);
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
+            std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
+            std::shared_ptr<VulkanPipelineLayoutImpl> create_pipeline_layout(std::shared_ptr<VulkanDescriptorPool>& pool, const std::vector<VkPushConstantRange>& constantRanges);
+            std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
+
+            void wait_idle() {
+                vkDeviceWaitIdle(device_);
+            }
 
             VkDevice device() const { return device_; }
             VkSurfaceKHR surface() { return surface_; }

@@ -27,41 +27,24 @@ int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
-    auto renderer = VulkanRenderer(window);
 
-    // auto instance = VulkanInstance::create_instance();
-    // auto device = instance->create_device(window);
-    // auto swapchain = device->create_swap_chain(window);
+    auto instance = VulkanInstance::create_instance();
+    auto device = instance->create_device(window);
+    auto swapChain = device->create_swap_chain(window);
 
-    // auto descriptorPool = device->create_descriptor_pool();
-
-    /*
     auto descriptorPool = device->create_descriptor_pool();
-    auto descriptorSetLayout = descriptorPool->create_descriptor_set_layout();
-    auto descriptorSet = descriptorPool->create_descriptor_set(descriptorSetLayout);
 
-    auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
-
-    auto pipelineLayout = device-create_pipeline_layout();
-
-    auto pipeline = device->create_pipeline(pipelineLayout);
+    auto pipelineLayout = device->create_pipeline_layout(descriptorPool, {});
 
     auto commandBufferPool = device->create_command_buffer_pool();
-    auto commandBuffers = commandBufferPool-create_command_buffers(3); // An array of command buffers
-
-    device->wait_idle();
-    */
-
-    auto descriptorPool = VulkanDescriptorPool(*renderer.device);
-    auto pipelineLayout = VulkanPipelineLayoutImpl(*renderer.device, descriptorPool, {});
+    auto commandBuffers = commandBufferPool->create_command_buffers(3);
 
     ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
     ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
 
     {   // Compiling glsl vertex shader code;
         SpirVShaderCompiler shaderCompiler;
-        
+
         shaderCompiler.add_shader_source(ShaderSource(
             read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl"),
             ShaderTypes::VERTEX_SHADER
@@ -71,7 +54,7 @@ int main() {
 
     {   // Compiling glsl fragment shader code;
         SpirVShaderCompiler shaderCompiler;
-        
+
         shaderCompiler.add_shader_source(ShaderSource(
             read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl"),
             ShaderTypes::FRAGMENT_SHADER
@@ -81,48 +64,49 @@ int main() {
 
     PipelineConfigInfo pipelineConfig;
     PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
-    pipelineConfig.renderPass = renderer.swapChain->renderTarget->renderPass.renderPass;
-    pipelineConfig.pipelineLayout = pipelineLayout.get_layout();
-    auto pipeline = std::make_shared<VulkanPipeline>(*renderer.device, vertexShaderCode, fragmentShaderCode, pipelineConfig);
+    pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass;
+    pipelineConfig.pipelineLayout = pipelineLayout->get_layout();
+    auto pipeline = std::make_shared<VulkanPipeline>(*device, vertexShaderCode, fragmentShaderCode, pipelineConfig);
 
-    auto vertexBuffer = VertexBuffer(new VulkanVertexBufferImpl(vertices, *renderer.device));
-    auto indexBuffer = IndexBuffer(new VulkanIndexBufferImpl(indices, *renderer.device));
+    auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
 
-    auto commandBufferPool = renderer.commandBuffers;
+    vertexBuffer->upload_data(vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer->upload_data(indices.data(), sizeof(u32) * indices.size());
 
     while (!window->closing()) {
         glfwPollEvents();
 
         uint32_t frameIndex;
 
-        auto result = renderer.swapChain->acquireNextImage(&frameIndex);
+        auto result = swapChain->acquireNextImage(&frameIndex);
 
         if(result == VK_ERROR_OUT_OF_DATE_KHR)
             continue;
 
-        auto& cmd = renderer.commandBuffers->get_command_buffer(frameIndex);
+        auto& cmd = commandBuffers[frameIndex];
 
-        cmd.begin_record();
-            cmd.begin_render_pass(renderer.swapChain, frameIndex);
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+        cmd->begin_record();
+            cmd->begin_render_pass(swapChain, frameIndex);
+            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
 
-            cmd.bind_pipeline(*pipeline);
+            cmd->bind_pipeline(*pipeline);
 
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
+            cmd->bind_vertex_buffer(vertexBuffer);
+            cmd->bind_index_buffer(indexBuffer);
 
-            cmd.draw_indexed(indices.size());
+            cmd->draw_indexed(indices.size());
 
-            cmd.end_render_pass();
-        cmd.end_record();
+            cmd->end_render_pass();
+        cmd->end_record();
 
-        result = renderer.swapChain->submitCommandBuffers(&cmd.commandBuffer, &frameIndex);
+        result = swapChain->submitCommandBuffers(&cmd->commandBuffer, &frameIndex);
 
         if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window->is_resized())
             continue;
     }
 
-    vkDeviceWaitIdle(renderer.device->device());
+    device->wait_idle();
 
     glfwTerminate();
 

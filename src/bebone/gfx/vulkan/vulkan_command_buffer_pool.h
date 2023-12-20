@@ -18,10 +18,20 @@ namespace bebone::gfx {
             core::ArenaContainer commandBuffers;
 
         public:
-            VulkanCommandBufferPool(VulkanDevice& device, const size_t& commandBufferCount)
-                : _device(device),
-                  commandBuffers(sizeof(VulkanCommandBuffer) * commandBufferCount) {
+            VulkanCommandBufferPool(VulkanDevice& device) : _device(device), commandBuffers(sizeof(VulkanCommandBuffer) * 3) {
+                QueueFamilyIndices queueFamilyIndices = device.findPhysicalQueueFamilies();
 
+                VkCommandPoolCreateInfo poolInfo = {};
+                poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+                poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily;
+                poolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+                if (vkCreateCommandPool(device.device(), &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+                    throw std::runtime_error("failed to create command pool!");
+                }
+            }
+
+            VulkanCommandBufferPool(VulkanDevice& device, const size_t& commandBufferCount) : _device(device), commandBuffers(sizeof(VulkanCommandBuffer) * commandBufferCount) {
                 QueueFamilyIndices queueFamilyIndices = device.findPhysicalQueueFamilies();
 
                 VkCommandPoolCreateInfo poolInfo = {};
@@ -56,6 +66,35 @@ namespace bebone::gfx {
 
             ~VulkanCommandBufferPool() {
                 vkDestroyCommandPool(_device.device(), commandPool, nullptr);
+            }
+
+            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& commandBufferCount) {
+                std::vector<std::shared_ptr<VulkanCommandBuffer>> commandBuffersVector;
+
+                for(size_t i = 0; i < commandBufferCount; ++i) {
+                    VulkanCommandBuffer* commandBuffer = static_cast<VulkanCommandBuffer*>(commandBuffers.alloc(sizeof(VulkanCommandBuffer)));
+
+                    if(commandBuffer == nullptr) {
+                        throw std::runtime_error("failed to allocate vulkan command buffer");
+                    }
+
+                    std::ignore = new (commandBuffer) VulkanCommandBuffer(i);
+
+                    VkCommandBufferAllocateInfo allocInfo{};
+                    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+                    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+                    allocInfo.commandPool = commandPool;
+                    allocInfo.commandBufferCount = static_cast<uint32_t>(1);
+
+                    if(vkAllocateCommandBuffers(_device.device(), &allocInfo, &commandBuffer->commandBuffer) != VK_SUCCESS) {
+                        throw std::runtime_error("Failed to allocate command buffers !");
+                    }
+
+                    std::shared_ptr<VulkanCommandBuffer> ptr(commandBuffer);
+                    commandBuffersVector.push_back(ptr);
+                }
+
+                return commandBuffersVector;
             }
 
             VkCommandBuffer begin_single_time_commands() {

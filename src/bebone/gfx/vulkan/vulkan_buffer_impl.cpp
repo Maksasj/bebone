@@ -43,6 +43,13 @@ namespace bebone::gfx {
         vkFreeMemory(device.device(), bufferMemory, nullptr);
     }
 
+    void VulkanBufferImpl::upload_data(const void* src, const size_t& size) {
+        void* data;
+        vkMapMemory(device.device(), bufferMemory, 0, size, 0, &data);
+        memcpy(data, src, size);
+        vkUnmapMemory(device.device(), bufferMemory);
+    }
+
     VkBuffer VulkanBufferImpl::get_buffer() const {
         return buffer;
     }

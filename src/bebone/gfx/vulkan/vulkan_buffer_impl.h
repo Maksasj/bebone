@@ -47,6 +47,8 @@ namespace bebone::gfx {
 
             ~VulkanBufferImpl();
 
+            void upload_data(const void* src, const size_t& size);
+
             VkBuffer get_buffer() const;
 
             size_t get_size();

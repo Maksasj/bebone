@@ -108,8 +108,9 @@ VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffe
 
 	currentFrame = (currentFrame + 1) % imageCount;
 
-    if(result != VK_SUCCESS)
+    if(result != VK_SUCCESS) {
         throw std::runtime_error("failed to acquire submit command buffers !");
+    }
 
 	return result;
 }

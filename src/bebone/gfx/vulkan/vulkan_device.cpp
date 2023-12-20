@@ -1,5 +1,10 @@
 #include "vulkan_device.h"
+
 #include "vulkan_swap_chain.h"
+#include "vulkan_descriptor_pool.h"
+#include "vulkan_command_buffer_pool.h"
+#include "vulkan_pipeline_layout_impl.h"
+#include "vulkan_pipeline_impl.h"
 
 namespace bebone::gfx {
     VulkanDevice::VulkanDevice(VulkanWindow &window, VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
@@ -23,12 +28,20 @@ namespace bebone::gfx {
         std::cout << "physical device: " << properties.deviceName << std::endl;
     }
 
-    // std::shared_pte<VulkanDescriptorPool> create_descriptor_pool() {
-//
-    // }
+    std::shared_ptr<VulkanDescriptorPool> VulkanDevice::create_descriptor_pool() {
+        return std::make_shared<VulkanDescriptorPool>(*this);
+    }
 
     std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::shared_ptr<Window> &window) {
         return std::make_shared<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });
+    }
+
+    std::shared_ptr<VulkanPipelineLayoutImpl> VulkanDevice::create_pipeline_layout(std::shared_ptr<VulkanDescriptorPool>& pool, const std::vector<VkPushConstantRange>& constantRanges) {
+        return std::make_shared<VulkanPipelineLayoutImpl>(*this, *pool, constantRanges);
+    }
+
+    std::shared_ptr<VulkanCommandBufferPool> VulkanDevice::create_command_buffer_pool() {
+        return std::make_shared<VulkanCommandBufferPool>(*this);
     }
 
     std::shared_ptr<VulkanBufferImpl> VulkanDevice::create_buffer(const size_t& size) {
