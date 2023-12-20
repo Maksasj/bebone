@@ -27,8 +27,8 @@ int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
-
     auto instance = VulkanInstance::create_instance();
+
     auto device = instance->create_device(window);
     auto swapChain = device->create_swap_chain(window);
 
@@ -78,7 +78,6 @@ int main() {
         glfwPollEvents();
 
         uint32_t frameIndex;
-
         auto result = swapChain->acquireNextImage(&frameIndex);
 
         if(result == VK_ERROR_OUT_OF_DATE_KHR)

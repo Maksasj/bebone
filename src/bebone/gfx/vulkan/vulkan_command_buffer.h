@@ -43,6 +43,11 @@ namespace bebone::gfx {
                 command.execute();
             }
 
+            void bind_index_buffer(IndexBuffer& indexBuffer) {
+                VulkanBindIndexBufferCommand command(commandBuffer, *indexBuffer.get_impl());
+                command.execute();
+            }
+
             void bind_vertex_buffer(std::shared_ptr<VulkanBufferImpl>& buffer) {
                 VulkanBindVertexBufferCommand command(commandBuffer, buffer.get());
                 command.execute();
