@@ -14,7 +14,7 @@ namespace game::core {
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
-        camera = make_shared<OrthographicCamera>(aspect * -5.0f, aspect * 5.0f, 5.0, -5.0, -5.0f, 5.0f);
+        camera = make_shared<OrthographicCamera>(aspect * -7.0f, aspect * 7.0f, 7.0, -7.0, -7.0f, 7.0f);
  
         const auto shaderFlags = ENABLE_UNIFORMS;
 
@@ -26,21 +26,37 @@ namespace game::core {
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 
-        auto sprite = make_shared<Sprite>("flappy_bird");
-        auto gameObject = make_shared<GameObject>("Flappy Bird");
-        auto renderer = make_shared<SpriteRenderer>(sprite);
-        gameObject->add_component(renderer);
-        batch->add(gameObject);
+        auto bg = create_game_object_with_renderer("Background", "bg");
+        bg->get_transform()->set_scale(0.6f);
+        batch->add(bg);
 
-        mainMenuState = make_shared<MainMenuState>(gameObject);
-        gameState = make_shared<GameState>(gameObject);
-        endGameState = make_shared<EndGameState>(gameObject);
+        auto flappyBird = create_game_object_with_renderer("Flappy Bird", "flappy_bird");
+        batch->add(flappyBird);
+        
+        auto ground = create_game_object_with_renderer("Ground", "ground");
+        batch->add(ground);
+        auto& groundTransform = ground->get_transform();
+        groundTransform->set_scale(0.5f);
+        groundTransform->set_position(Vec2f(0, -7.0f));
+
+        mainMenuState = make_shared<MainMenuState>(flappyBird);
+        gameState = make_shared<GameState>(flappyBird);
+        endGameState = make_shared<EndGameState>(flappyBird);
         
         mainMenuState->set_game_state(gameState);
         gameState->set_end_game_state(endGameState);
         endGameState->set_game_state(gameState);
 
         StateMachine::set_state(mainMenuState);
+    }
+
+    shared_ptr<GameObject> Game::create_game_object_with_renderer(const string& gameObjectName, const string& textureName) {
+        auto gameObject = make_shared<GameObject>(gameObjectName);
+        auto sprite = make_shared<Sprite>(textureName);
+        auto renderer = make_shared<SpriteRenderer>(sprite);
+        gameObject->add_component(renderer);
+
+        return gameObject;
     }
 
     void Game::update() {

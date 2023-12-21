@@ -2,6 +2,7 @@
 #define _GAME_H_
 
 #include <memory>
+#include <string>
 
 #include "bebone/bebone.h"
 #include "game_time.h"
@@ -25,6 +26,8 @@ namespace game::core {
             shared_ptr<MainMenuState> mainMenuState;
             shared_ptr<GameState> gameState;
             shared_ptr<EndGameState> endGameState;
+
+            shared_ptr<GameObject> create_game_object_with_renderer(const string& gameObjectName, const string& textureName);
         public:
             Game(const unsigned int& width, const unsigned int& height);
             void update();

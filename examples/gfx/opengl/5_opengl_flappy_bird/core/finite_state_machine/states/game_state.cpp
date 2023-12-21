@@ -18,7 +18,6 @@ namespace game::core::fsm {
         auto flying = make_shared<Flying>(flappyBird->get_transform(), flyForce);
         flappyBird->add_component(flying);
         flying->set_velocity(flyForce);
-        flappyBird->update();
     }
 
     void GameState::update() {
