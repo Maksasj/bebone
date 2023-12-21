@@ -1,5 +1,5 @@
-#ifndef _GRAVITY_H_
-#define _GRAVITY_H_
+#ifndef _FLYING_H_
+#define _FLYING_H_
 
 #include <memory>
 
@@ -14,15 +14,16 @@ namespace game::core::ecs {
     using namespace bebone::core;
     using namespace std;
 
-    class Gravity : public Component {
+    class Flying : public Component {
         private:
             float velocityY;
+            float flyForce;
             const float gravity = 0.1f;
             shared_ptr<Transform> transform;
 
         public:
-            Gravity(shared_ptr<Transform> transform);
-            ~Gravity();
+            Flying(shared_ptr<Transform> transform, float flyForce);
+            ~Flying();
 
             void update();
 

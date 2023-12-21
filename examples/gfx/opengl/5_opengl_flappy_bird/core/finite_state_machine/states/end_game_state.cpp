@@ -1,15 +1,15 @@
 #include "end_game_state.h"
-#include <iostream>
 
 namespace game::core::fsm {
-    EndGameState::EndGameState() : gameState(nullptr) { }
+    EndGameState::EndGameState(shared_ptr<GameObject> flappyBird) : gameState(nullptr), flappyBird(flappyBird) { }
 
     EndGameState::~EndGameState() {
         gameState = nullptr;
+        flappyBird = nullptr;
     }
 
     void EndGameState::enter() {
-        cout << "end game state" << endl;
+
     }
 
     void EndGameState::set_game_state(shared_ptr<State> gameState) {
@@ -17,10 +17,6 @@ namespace game::core::fsm {
     }
 
     void EndGameState::transition_to_game_state() {
-        if (gameState == nullptr) {
-            cerr << "game state is null" << endl;
-        }
-
         StateMachine::set_state(gameState);
     }
 }

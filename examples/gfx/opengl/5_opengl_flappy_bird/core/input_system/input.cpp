@@ -12,6 +12,10 @@ namespace game::core::input_system {
         queuedMouseClicks.push(keyCode);
     }
 
+    void Input::remove_mouse_action(const MouseKeyCode& keyCode) {
+        mouseActions.erase(keyCode);
+    }
+
     void Input::execute_pooled_actions() {
         while (!queuedMouseClicks.empty()) {
             auto mouseKeyCode = queuedMouseClicks.front();

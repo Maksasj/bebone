@@ -17,6 +17,7 @@ namespace game::core::input_system {
 
         public:
             static void register_mouse_action(const MouseKeyCode& keyCode, const Action& action);
+            static void remove_mouse_action(const MouseKeyCode& keyCode);
             static void send_button_to_the_queue(const MouseKeyCode& keyCode);
             static void execute_pooled_actions();
     };

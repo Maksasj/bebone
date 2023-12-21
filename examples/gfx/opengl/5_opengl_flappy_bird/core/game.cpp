@@ -1,7 +1,6 @@
 #include "game.h"
 #include "texture_loader.h"
 #include "entity_component_system/components/sprite_renderer.h"
-#include "entity_component_system/components/gravity.h"
 #include "entity_component_system/game_object.h"
 #include "input_system/input.h"
 
@@ -27,31 +26,27 @@ namespace game::core {
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 
-        // mainMenuState = make_shared<MainMenuState>();
-        // gameState = make_shared<GameState>();
-        // endGameState = make_shared<EndGameState>();
-
-        // mainMenuState->set_game_state(gameState);
-        // gameState->set_end_game_state(endGameState);
-        // endGameState->set_game_state(gameState);
-
-        // StateMachine::set_state(mainMenuState);
-
         auto sprite = make_shared<Sprite>("flappy_bird");
-        gameObject = make_shared<GameObject>("Flappy Bird");
+        auto gameObject = make_shared<GameObject>("Flappy Bird");
         auto renderer = make_shared<SpriteRenderer>(sprite);
-        auto gravity = make_shared<Gravity>(gameObject->get_transform());
-
         gameObject->add_component(renderer);
-        gameObject->add_component(gravity);
-
         batch->add(gameObject);
+
+        mainMenuState = make_shared<MainMenuState>(gameObject);
+        gameState = make_shared<GameState>(gameObject);
+        endGameState = make_shared<EndGameState>(gameObject);
+        
+        mainMenuState->set_game_state(gameState);
+        gameState->set_end_game_state(endGameState);
+        endGameState->set_game_state(gameState);
+
+        StateMachine::set_state(mainMenuState);
     }
 
     void Game::update() {
         Input::execute_pooled_actions();
-        
-        gameObject->update();
+
+        StateMachine::update_current_state();
 
         batch->render();
     }
