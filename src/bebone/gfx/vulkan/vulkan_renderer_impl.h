@@ -76,7 +76,7 @@ namespace bebone::gfx {
                 vulkanInstance = nullptr;
             }
 
-            Pipeline create_pipeline(VulkanPipelineLayoutImpl& pipelineLayout, const ShaderCode& vertexSpirvCode, const ShaderCode& fragmentSpirvCode) {
+            Pipeline create_pipeline(VulkanPipelineLayoutImpl& pipelineLayout, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
                 vulkanPipelineLayout = &pipelineLayout; // vulkanPipelineLayout should be saved somewhere
 
                 PipelineConfigInfo pipelineConfig;
@@ -85,7 +85,8 @@ namespace bebone::gfx {
                 pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
                 pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout();
 
-                VulkanPipeline* pipeline = new VulkanPipeline(*device, vertexSpirvCode, fragmentSpirvCode, pipelineConfig);
+                // Todo
+                VulkanPipeline* pipeline = new VulkanPipeline(*device, vertShaderModule, fragShaderModule, pipelineConfig);
                 pipelines.push_back(pipeline);
 
                 return Pipeline(&pipelines.back());
@@ -123,7 +124,8 @@ namespace bebone::gfx {
                     pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
                     pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout(); // vulkanPipelineLayout should be saved somewhere
 
-                    pipeline->recreate(pipelineConfig);
+                    // Todo
+                    // pipeline->recreate(pipelineConfig);
                 }
             }
 

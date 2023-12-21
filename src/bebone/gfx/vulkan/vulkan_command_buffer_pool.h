@@ -50,7 +50,7 @@ namespace bebone::gfx {
                         throw std::runtime_error("failed to allocate vulkan command buffer");
                     }
 
-                    std::ignore = new (commandBuffer) VulkanCommandBuffer(i);
+                    std::ignore = new (commandBuffer) VulkanCommandBuffer();
 
                     VkCommandBufferAllocateInfo allocInfo{};
                     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -78,7 +78,7 @@ namespace bebone::gfx {
                         throw std::runtime_error("failed to allocate vulkan command buffer");
                     }
 
-                    std::ignore = new (commandBuffer) VulkanCommandBuffer(i);
+                    std::ignore = new (commandBuffer) VulkanCommandBuffer();
 
                     VkCommandBufferAllocateInfo allocInfo{};
                     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;

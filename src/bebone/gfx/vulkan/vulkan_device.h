@@ -14,9 +14,13 @@
 
 namespace bebone::gfx {
     class VulkanSwapChain;
+    class VulkanPipeline;
+    class ShaderCode;
     class VulkanDescriptorPool;
     class VulkanCommandBufferPool;
+    class VulkanShaderModule;
     class VulkanPipelineLayoutImpl;
+    struct ShaderType;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -47,6 +51,12 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
             std::shared_ptr<VulkanPipelineLayoutImpl> create_pipeline_layout(std::shared_ptr<VulkanDescriptorPool>& pool, const std::vector<VkPushConstantRange>& constantRanges);
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
+            std::shared_ptr<VulkanPipeline> create_pipeline(
+                    std::shared_ptr<VulkanSwapChain>& swapChain,
+                    std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout,
+                    std::shared_ptr<VulkanShaderModule>& vertShaderModule,
+                    std::shared_ptr<VulkanShaderModule>& fragShaderModule);
+            std::shared_ptr<VulkanShaderModule> create_shader_module(const std::string& shaderCodePath, const ShaderType& type);
 
             void wait_idle() {
                 vkDeviceWaitIdle(device_);

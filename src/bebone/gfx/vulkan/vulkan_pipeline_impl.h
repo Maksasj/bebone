@@ -3,6 +3,8 @@
 
 #include "../shaders/shader_code.h"
 
+#include "vulkan_shader_module.h"
+
 #include "vulkan_pipeline_config_info.h"
 
 namespace bebone::gfx {
@@ -34,18 +36,18 @@ namespace bebone::gfx {
 
     class VulkanPipeline {
         private:
-            void create_graphics_pipeline(const PipelineConfigInfo& configInfo) {
+            void create_graphics_pipeline(const PipelineConfigInfo& configInfo, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
                 VkPipelineShaderStageCreateInfo shaderStages[2];
                 shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
                 shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-                shaderStages[0].module = vertShaderModule;
+                shaderStages[0].module = vertShaderModule->shader;
                 shaderStages[0].pName = "main";
                 shaderStages[0].flags = 0;
                 shaderStages[0].pNext = nullptr;
                 shaderStages[0].pSpecializationInfo = nullptr;
                 shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
                 shaderStages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-                shaderStages[1].module = fragShaderModule;
+                shaderStages[1].module = fragShaderModule->shader;
                 shaderStages[1].pName = "main";
                 shaderStages[1].flags = 0;
                 shaderStages[1].pNext = nullptr;
@@ -81,7 +83,7 @@ namespace bebone::gfx {
                 pipelineInfo.basePipelineIndex = -1;
                 pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-                if (vkCreateGraphicsPipelines(device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &grapgicsPipeline) != VK_SUCCESS) {
+                if (vkCreateGraphicsPipelines(device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
                     throw std::runtime_error("failed to create graphics pipeline");
                 } else {
                     std::cout << "Created graphics pipeline !\n";
@@ -101,32 +103,32 @@ namespace bebone::gfx {
         public:
             VulkanDevice& device;
 
-            VkPipeline grapgicsPipeline;
-            VkShaderModule vertShaderModule;
-            VkShaderModule fragShaderModule;
+            VkPipeline graphicsPipeline;
+            // VkShaderModule vertShaderModule;
+            // VkShaderModule fragShaderModule;
 
-            VulkanPipeline(VulkanDevice& _device, const ShaderCode& vertSpirv, const ShaderCode& fragSpirv, const PipelineConfigInfo& configInfo)
+            VulkanPipeline(VulkanDevice& _device, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule, const PipelineConfigInfo& configInfo)
                      : device(_device) {
-                create_shader_module(vertSpirv, &vertShaderModule);
-                create_shader_module(fragSpirv, &fragShaderModule);
+                // create_shader_module(vertSpirv, &vertShaderModule);
+                // create_shader_module(fragSpirv, &fragShaderModule);
 
-                create_graphics_pipeline(configInfo);
+                create_graphics_pipeline(configInfo, vertShaderModule, fragShaderModule);
             }
 
-            void recreate(const PipelineConfigInfo& configInfo) {
-                vkDestroyPipeline(device.device(), grapgicsPipeline, nullptr);
+            void recreate(const PipelineConfigInfo& configInfo, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
+                vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
 
-                create_graphics_pipeline(configInfo);
+                create_graphics_pipeline(configInfo, vertShaderModule, fragShaderModule);
             }
 
             ~VulkanPipeline() {
-                vkDestroyShaderModule(device.device(), vertShaderModule, nullptr);
-                vkDestroyShaderModule(device.device(), fragShaderModule, nullptr);
-                vkDestroyPipeline(device.device(), grapgicsPipeline, nullptr);
+                // vkDestroyShaderModule(device.device(), vertShaderModule, nullptr);
+                // vkDestroyShaderModule(device.device(), fragShaderModule, nullptr);
+                vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
             }
 
             void bind(VkCommandBuffer commandBuffer) {
-                vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, grapgicsPipeline);
+                vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
             }
     };
 }

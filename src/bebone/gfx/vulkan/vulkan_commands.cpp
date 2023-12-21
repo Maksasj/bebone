@@ -86,7 +86,7 @@ namespace bebone::gfx {
     }
 
     void VulkanBindPipelineCommand::execute()  {
-        vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline.grapgicsPipeline);
+        vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline.graphicsPipeline);
     }
 
     VulkanBindVertexBufferCommand::VulkanBindVertexBufferCommand(VkCommandBuffer& commandBuffer, VulkanBufferImpl* buffer) : _commandBuffer(commandBuffer), _buffer(buffer) {

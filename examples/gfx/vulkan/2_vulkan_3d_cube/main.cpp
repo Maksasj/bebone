@@ -71,32 +71,10 @@ int main() {
         .set_constant_range(0, sizeof(Handles))
         .build(resourceManager);
 
-    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
-    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
+    auto vertShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
 
-    {   // Compiling glsl vertex shader code;
-        SpirVShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl"),
-            ShaderTypes::VERTEX_SHADER
-        ));
-        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
-    }
-
-    {   // Compiling glsl fragment shader code;
-        SpirVShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl"),
-            ShaderTypes::FRAGMENT_SHADER
-        ));
-        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
-    }
-
-    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
-
-    // auto vertexBuffer = device.create_buffer(sizeof(Vertex) * vertices.size());
+    auto pipeline = renderer.create_pipeline(pipelineLayout, vertShaderModule, fragShaderModule);
 
     auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
     auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
@@ -140,7 +118,7 @@ int main() {
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd.bind_pipeline(*pipeline.get_impl());
-            resourceSet.bind(cmd, pipelineLayout);
+            resourceSet.bind(cmd, pipelineLayout, frame.frameIndex);
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);
@@ -158,7 +136,7 @@ int main() {
         renderer.present(frame);
     }
 
-    vkDeviceWaitIdle(renderer.device->device());
+    renderer.device->wait_idle();
 
     glfwTerminate();
 

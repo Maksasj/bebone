@@ -17,8 +17,10 @@ namespace bebone::gfx {
 
             }
 
-            void bind(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl& pipelineLayout) {
-                commandBuffer.bind_descriptor_set(pipelineLayout, *descriptorSets[commandBuffer._frameIndex]);
+            void bind(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl& pipelineLayout, const size_t& frameIndex) {
+                // Todo resolve this
+
+                commandBuffer.bind_descriptor_set(pipelineLayout, *descriptorSets[frameIndex]);
             }
 
             VkDescriptorSet* get_descriptor(const size_t& index) {

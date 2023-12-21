@@ -5,8 +5,18 @@
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
 #include "vulkan_pipeline_impl.h"
+#include "vulkan_shader_module.h"
+
+#include "../shaders/spirv_shader_compiler.h"
 
 namespace bebone::gfx {
+    std::string vulkan_device_read_file(const std::string& path) {
+        std::ifstream file(path);
+        std::stringstream ss;
+        ss << file.rdbuf();
+        return ss.str();
+    }
+
     VulkanDevice::VulkanDevice(VulkanWindow &window, VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
         createSurface(_vulkanInstance);
 
@@ -46,6 +56,34 @@ namespace bebone::gfx {
 
     std::shared_ptr<VulkanBufferImpl> VulkanDevice::create_buffer(const size_t& size) {
         return std::make_shared<VulkanBufferImpl>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this);
+    }
+
+    std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
+            std::shared_ptr<VulkanSwapChain>& swapChain,
+            std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout,
+            std::shared_ptr<VulkanShaderModule>& vertShaderModule,
+            std::shared_ptr<VulkanShaderModule>& fragShaderModule
+        ) {
+
+        PipelineConfigInfo pipelineConfig;
+        PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
+        pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass;
+        pipelineConfig.pipelineLayout = pipelineLayout->get_layout();
+
+        return std::make_shared<VulkanPipeline>(*this, vertShaderModule, fragShaderModule, pipelineConfig);
+    }
+
+    std::shared_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& shaderCodePath, const ShaderType& type) {
+        SpirVShaderCompiler shaderCompiler;
+
+        shaderCompiler.add_shader_source(ShaderSource(
+                vulkan_device_read_file(shaderCodePath),
+            type
+        ));
+
+        ShaderCode shadeCode = shaderCompiler.compile(type);
+
+        return std::make_shared<VulkanShaderModule>(*this, shadeCode);
     }
 
     void VulkanDevice::createLogicalDevice() {

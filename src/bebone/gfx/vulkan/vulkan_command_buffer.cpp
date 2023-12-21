@@ -2,26 +2,30 @@
 #include "vulkan_renderer_impl.h"
 
 namespace bebone::gfx {
-    VulkanCommandBuffer::VulkanCommandBuffer(const size_t& frameIndex) : _frameIndex(frameIndex) {
+    VulkanCommandBuffer::VulkanCommandBuffer() {
 
     }
 
-    void VulkanCommandBuffer::begin_record() {
+    VulkanCommandBuffer& VulkanCommandBuffer::begin_record() {
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
         if(vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
             throw std::runtime_error("failed to being recording command buffer");
         }
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::end_record() {
+    VulkanCommandBuffer& VulkanCommandBuffer::end_record() {
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
             throw std::runtime_error("failed to end command buffer");
         }
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer) {
+    VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer) {
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = swapChain->renderTarget->renderPass.renderPass;
@@ -38,9 +42,11 @@ namespace bebone::gfx {
         renderPassInfo.pClearValues = clearValues.data();
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::set_viewport(const i32& x, const i32& y, const u32& width, const u32& height) {
+    VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(const i32& x, const i32& y, const u32& width, const u32& height) {
         VkViewport viewport;
 
         viewport.x = static_cast<float>(x);
@@ -55,38 +61,56 @@ namespace bebone::gfx {
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::end_render_pass() {
+    VulkanCommandBuffer& VulkanCommandBuffer::end_render_pass() {
         vkCmdEndRenderPass(commandBuffer);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::bind_pipeline(VulkanPipeline& pipeline) {
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.grapgicsPipeline);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(VulkanPipeline& pipeline) {
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.graphicsPipeline);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer) {
         // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
         vkCmdBindIndexBuffer(commandBuffer, indexBuffer->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::draw(const size_t& vertexCount) {
+    VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertexCount) {
         vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::draw_indexed(const size_t& indexCount) {
+    VulkanCommandBuffer& VulkanCommandBuffer::draw_indexed(const size_t& indexCount) {
         vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indexCount), 1, 0, 0, 0);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::bind_descriptor_set(VulkanPipelineLayoutImpl& pipelineLayout, VkDescriptorSet& descriptorSet) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(VulkanPipelineLayoutImpl& pipelineLayout, VkDescriptorSet& descriptorSet) {
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.get_layout(), 0, 1, &descriptorSet, 0, nullptr);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const void* constantPtr) {
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const void* constantPtr) {
         vkCmdPushConstants(commandBuffer, pipelineLayout.get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, constantPtr);
+
+        return *this;
     }
 
-    void VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
         vkCmdPushConstants(commandBuffer, pipelineLayout.get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, constantPtr);
+
+        return *this;
     }
 }

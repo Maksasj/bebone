@@ -21,48 +21,52 @@ namespace bebone::gfx {
 
     class VulkanCommandBuffer {
         public:
-            const size_t _frameIndex;
-
             VkCommandBuffer commandBuffer;
 
-            VulkanCommandBuffer(const size_t& frameIndex);
+            VulkanCommandBuffer();
 
-            void begin_record();
-            void end_record();
+            VulkanCommandBuffer& begin_record();
+            VulkanCommandBuffer& end_record();
 
-            void begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer);
-            void end_render_pass();
+            VulkanCommandBuffer& begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer);
+            VulkanCommandBuffer& end_render_pass();
 
-            void set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);
+            VulkanCommandBuffer& set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);
 
-            void bind_pipeline(VulkanPipeline& pipeline);
+            VulkanCommandBuffer& bind_pipeline(VulkanPipeline& pipeline);
 
             template<class VertexType>
-            void bind_vertex_buffer(VertexBuffer<VertexType>& vertexBuffer) {
+            VulkanCommandBuffer& bind_vertex_buffer(VertexBuffer<VertexType>& vertexBuffer) {
                 VkBuffer buffers[] = { vertexBuffer.get_impl()->get_buffer() };
                 VkDeviceSize offset[] = {0};
                 vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
+
+                return *this;
             }
 
-            void bind_index_buffer(IndexBuffer& indexBuffer) {
+            VulkanCommandBuffer& bind_index_buffer(IndexBuffer& indexBuffer) {
                 // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
                 vkCmdBindIndexBuffer(commandBuffer, indexBuffer.get_impl()->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
+
+                return *this;
             }
 
-            void bind_vertex_buffer(std::shared_ptr<VulkanBufferImpl>& buffer) {
+            VulkanCommandBuffer& bind_vertex_buffer(std::shared_ptr<VulkanBufferImpl>& buffer) {
                 VkBuffer buffers[] = {buffer->get_buffer()};
                 VkDeviceSize offset[] = {0};
                 vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
+
+                return *this;
             }
 
-            void bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer);
-            void bind_descriptor_set(VulkanPipelineLayoutImpl& pipelineLayout, VkDescriptorSet& descriptorSet);
+            VulkanCommandBuffer& bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer);
+            VulkanCommandBuffer& bind_descriptor_set(VulkanPipelineLayoutImpl& pipelineLayout, VkDescriptorSet& descriptorSet);
 
-            void push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const void* ptr);
-            void push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const size_t& offset, const void* ptr);
+            VulkanCommandBuffer& push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const void* ptr);
+            VulkanCommandBuffer& push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const size_t& offset, const void* ptr);
 
-            void draw(const size_t& vertexCount);
-            void draw_indexed(const size_t& vertexCount);
+            VulkanCommandBuffer& draw(const size_t& vertexCount);
+            VulkanCommandBuffer& draw_indexed(const size_t& vertexCount);
     };
 }
 
