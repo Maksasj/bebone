@@ -2,22 +2,25 @@
 #define _GAME_OBJECT_H_
 
 #include <string>
+#include <memory>
 
 #include "object.h"
 #include "transform.h"
 
-namespace game::core {
+namespace game::core::ecs {
+    using namespace std;
+
     class GameObject : public ecs::Object {
         private:
-            std::string name;
-            Transform transform;
+            string name;
+            shared_ptr<Transform> transform;
 
         public:
-            GameObject(const std::string& name);
-            GameObject(const std::string& name, const Transform& transform);
+            GameObject(const string& name);
+            GameObject(const string& name, const Vec2f& position);
 
-            Transform& get_transform();
-            std::string get_name() const;
+            shared_ptr<Transform>& get_transform();
+            string get_name() const;
             
             void update();
 

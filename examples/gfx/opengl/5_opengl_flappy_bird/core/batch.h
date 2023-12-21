@@ -56,7 +56,7 @@ namespace game::core {
             #endif
 #pragma endregion
 
-            array<ShaderVertex, 4> create_quad(const shared_ptr<Sprite>& sprite, const Transform& transform, const int& textureUnit);
+            array<ShaderVertex, 4> create_quad(const shared_ptr<Sprite>& sprite, const shared_ptr<Transform>& transform, const int& textureUnit);
             void add_indices();
             void upload_textures();
             void rotateVertex(Vec2f& v, const f32& angle) const;

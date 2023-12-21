@@ -1,6 +1,6 @@
 #include "transform.h"
 
-namespace game::core {
+namespace game::core::ecs {
     Transform::Transform() : 
         position(Vec2f::splat(0.0f)), rotation(0.0f), scale(1.0f) { }
 

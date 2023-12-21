@@ -40,27 +40,18 @@ namespace game::core {
         auto sprite = make_shared<Sprite>("flappy_bird");
         gameObject = make_shared<GameObject>("Flappy Bird");
         auto renderer = make_shared<SpriteRenderer>(sprite);
-        auto gravity = make_shared<Gravity>();
+        auto gravity = make_shared<Gravity>(gameObject->get_transform());
 
         gameObject->add_component(renderer);
         gameObject->add_component(gravity);
 
         batch->add(gameObject);
-
-        auto function = [this]() {
-            auto gravity = gameObject->get_component<Gravity>();
-            gravity->set_velocity(0.06f);
-        };
-        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(function));
     }
 
     void Game::update() {
         Input::execute_pooled_actions();
         
         gameObject->update();
-        auto gravity = gameObject->get_component<Gravity>();
-        auto& transform = gameObject->get_transform();
-        transform.set_position(Vec2f(transform.get_position().x, transform.get_position().y + gravity->get_velocity()));
 
         batch->render();
     }

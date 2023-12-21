@@ -139,10 +139,10 @@ namespace game::core {
         return true;
     }
 
-    array<ShaderVertex, 4> Batch::create_quad(const shared_ptr<Sprite>& sprite, const Transform& transform, const int& textureUnit) {
-        Vec2f position = transform.get_position();
-        f32 scale = transform.get_scale();
-        f32 rotation = transform.get_rotation();
+    array<ShaderVertex, 4> Batch::create_quad(const shared_ptr<Sprite>& sprite, const shared_ptr<Transform>& transform, const int& textureUnit) {
+        Vec2f position = transform->get_position();
+        f32 scale = transform->get_scale();
+        f32 rotation = transform->get_rotation();
 
         float width = sprite->get_width() * scale / PIXELS_PER_UNIT;
         float height = sprite->get_height() * scale / PIXELS_PER_UNIT;

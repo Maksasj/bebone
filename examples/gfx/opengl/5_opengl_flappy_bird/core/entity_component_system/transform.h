@@ -3,7 +3,7 @@
 
 #include "bebone/bebone.h"
 
-namespace game::core {
+namespace game::core::ecs {
     using namespace bebone::core;
 
     class Transform {

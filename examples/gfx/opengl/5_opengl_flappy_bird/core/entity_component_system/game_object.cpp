@@ -1,14 +1,19 @@
 #include "game_object.h"
 
-namespace game::core {
-    GameObject::GameObject(const std::string& name) : name(name), transform() {}
-    GameObject::GameObject(const std::string& name, const Transform& transform) : name(name), transform(transform) {}
+namespace game::core::ecs {
+    GameObject::GameObject(const string& name) : name(name) {
+        transform = make_shared<Transform>();
+    }
+    
+    GameObject::GameObject(const string& name, const Vec2f& position) : name(name) {
+        transform = make_shared<Transform>(position);
+    }
 
-    Transform& GameObject::get_transform() {
+    shared_ptr<Transform>& GameObject::get_transform() {
         return transform;
     }
 
-    std::string GameObject::get_name() const {
+    string GameObject::get_name() const {
         return name;
     }
 
