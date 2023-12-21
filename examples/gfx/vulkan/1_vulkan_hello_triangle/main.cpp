@@ -85,6 +85,7 @@ int main() {
 
         auto& cmd = commandBuffers[frameIndex];
 
+        // Todo, maybe make this maybe channable ?
         cmd->begin_record();
             cmd->begin_render_pass(swapChain, frameIndex);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());

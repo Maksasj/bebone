@@ -2,7 +2,6 @@
 #define _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
 
 #include "../shaders/shader_code.h"
-#include "../pipeline_impl.h"
 
 #include "vulkan_pipeline_config_info.h"
 
@@ -33,7 +32,7 @@ namespace bebone::gfx {
         return atrributeDescriptions;
     }
 
-    class VulkanPipeline : public PipelineImpl {
+    class VulkanPipeline {
         private:
             void create_graphics_pipeline(const PipelineConfigInfo& configInfo) {
                 VkPipelineShaderStageCreateInfo shaderStages[2];

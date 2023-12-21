@@ -39,18 +39,20 @@ namespace bebone::gfx {
 
             template<class VertexType>
             void bind_vertex_buffer(VertexBuffer<VertexType>& vertexBuffer) {
-                VulkanBindVertexBufferCommand command(commandBuffer, static_cast<VulkanBufferImpl*>(vertexBuffer.get_impl()));
-                command.execute();
+                VkBuffer buffers[] = { vertexBuffer.get_impl()->get_buffer() };
+                VkDeviceSize offset[] = {0};
+                vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
             }
 
             void bind_index_buffer(IndexBuffer& indexBuffer) {
-                VulkanBindIndexBufferCommand command(commandBuffer, *indexBuffer.get_impl());
-                command.execute();
+                // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
+                vkCmdBindIndexBuffer(commandBuffer, indexBuffer.get_impl()->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
             }
 
             void bind_vertex_buffer(std::shared_ptr<VulkanBufferImpl>& buffer) {
-                VulkanBindVertexBufferCommand command(commandBuffer, buffer.get());
-                command.execute();
+                VkBuffer buffers[] = {buffer->get_buffer()};
+                VkDeviceSize offset[] = {0};
+                vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
             }
 
             void bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer);
