@@ -74,10 +74,13 @@ int main() {
     auto vertShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
 
-    auto pipeline = renderer.create_pipeline(pipelineLayout, vertShaderModule, fragShaderModule);
+    VulkanPipeline* pipeline = renderer.create_pipeline(pipelineLayout, vertShaderModule, fragShaderModule);
 
-    auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
+    auto vertexBuffer = renderer.device->create_buffer(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = renderer.device->create_buffer(sizeof(u32) * indices.size());
+
+    vertexBuffer->upload_data(vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer->upload_data(indices.data(), sizeof(u32) * indices.size());
 
     auto transformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
     auto cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
@@ -117,7 +120,7 @@ int main() {
             cmd.begin_render_pass(renderer.swapChain, frame.frameIndex);
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
-            cmd.bind_pipeline(*pipeline.get_impl());
+            cmd.bind_pipeline(*pipeline);
             resourceSet.bind(cmd, pipelineLayout, frame.frameIndex);
 
             cmd.bind_vertex_buffer(vertexBuffer);

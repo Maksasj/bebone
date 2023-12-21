@@ -3,7 +3,6 @@
 
 #include "vulkan_device.h"
 #include "../gfx_backend.h"
-#include "../pipeline_layout_impl.h"
 
 #include "vulkan_descriptor_pool.h"
 

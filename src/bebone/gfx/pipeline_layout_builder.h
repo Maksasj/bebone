@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "pipeline_layout.h"
+// #include "pipeline_layout.h"
 #include "pipeline_layout_builder_impl.h"
 #include "gpu_resource_manager.h"
 
@@ -26,9 +26,9 @@ namespace bebone::gfx {
                 return *this;
             }
 
-            PipelineLayout build(GPUResourceManager& _gpuResourceManager) {
-                return _impl->build(_gpuResourceManager);
-            }
+            // PipelineLayout build(GPUResourceManager& _gpuResourceManager) {
+            //     return _impl->build(_gpuResourceManager);
+            // }
 
             PipelineLayoutBuilderImpl* get_impl() {
                 return _impl;

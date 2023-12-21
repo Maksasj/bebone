@@ -14,9 +14,6 @@
 
 #include "vulkan_pipeline_impl.h"
 
-#include "../vertex_buffer.h"
-#include "../pipeline.h"
-
 #include "vulkan_device.h"
 
 #include "vulkan_frame.h"
@@ -76,7 +73,7 @@ namespace bebone::gfx {
                 vulkanInstance = nullptr;
             }
 
-            Pipeline create_pipeline(VulkanPipelineLayoutImpl& pipelineLayout, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
+            VulkanPipeline* create_pipeline(VulkanPipelineLayoutImpl& pipelineLayout, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
                 vulkanPipelineLayout = &pipelineLayout; // vulkanPipelineLayout should be saved somewhere
 
                 PipelineConfigInfo pipelineConfig;
@@ -89,7 +86,7 @@ namespace bebone::gfx {
                 VulkanPipeline* pipeline = new VulkanPipeline(*device, vertShaderModule, fragShaderModule, pipelineConfig);
                 pipelines.push_back(pipeline);
 
-                return Pipeline(&pipelines.back());
+                return pipeline;
             }
 
             template<class VertexType>

@@ -14,14 +14,10 @@
 #include "gpu_resource_manager.h"
 
 #include "vulkan/vulkan_device.h"
-#include "pipeline_impl.h"
 #include "bebone/gfx/vulkan/vulkan_swap_chain.h"
 
 #include "window/window.h"
 #include "window/window_factory.h"
-
-#include "vertex_buffer.h"
-#include "index_buffer.h"
 
 #include "pipeline_layout_builder.h"
 

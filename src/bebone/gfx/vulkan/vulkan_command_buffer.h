@@ -5,14 +5,8 @@
 
 #include "../../core/core.h"
 
-#include "../vertex_buffer.h"
-#include "../index_buffer.h"
-#include "../pipeline_layout.h"
-
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline_impl.h"
-
-#include "vulkan_commands.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -34,22 +28,6 @@ namespace bebone::gfx {
             VulkanCommandBuffer& set_viewport(const i32& x, const i32& y, const u32& width, const u32& height);
 
             VulkanCommandBuffer& bind_pipeline(VulkanPipeline& pipeline);
-
-            template<class VertexType>
-            VulkanCommandBuffer& bind_vertex_buffer(VertexBuffer<VertexType>& vertexBuffer) {
-                VkBuffer buffers[] = { vertexBuffer.get_impl()->get_buffer() };
-                VkDeviceSize offset[] = {0};
-                vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
-
-                return *this;
-            }
-
-            VulkanCommandBuffer& bind_index_buffer(IndexBuffer& indexBuffer) {
-                // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
-                vkCmdBindIndexBuffer(commandBuffer, indexBuffer.get_impl()->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
-
-                return *this;
-            }
 
             VulkanCommandBuffer& bind_vertex_buffer(std::shared_ptr<VulkanBufferImpl>& buffer) {
                 VkBuffer buffers[] = {buffer->get_buffer()};
