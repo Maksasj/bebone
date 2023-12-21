@@ -81,9 +81,9 @@ int main() {
     auto descriptorPool = std::shared_ptr<VulkanDescriptorPool>(&resourceManager.descriptorPool);
 
     auto pipelineLayout = renderer.device->create_pipeline_layout(descriptorPool, {{
+        .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT),
         .offset = 0,
-        .size = sizeof(Handles),
-        .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT)
+        .size = sizeof(Handles)
     }});
 
     auto vertShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
