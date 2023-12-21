@@ -130,8 +130,6 @@ namespace bebone::gfx {
                 uint32_t imageIndex;
                 auto result = swapChain->acquireNextImage(&imageIndex);
 
-                std::cout << imageIndex << "\n";
-
                 if(result == VK_ERROR_OUT_OF_DATE_KHR) {
                     // This logic needs to be abstracted away
                     recreate_pipelines();

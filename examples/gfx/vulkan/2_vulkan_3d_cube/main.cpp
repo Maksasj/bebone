@@ -49,8 +49,6 @@ struct Transform {
     Mat4f rotation;
 };
 
-std::string read_file(const std::string& path);
-
 Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up);
 
 int main() {
@@ -144,13 +142,6 @@ int main() {
     glfwTerminate();
 
     return 0;
-}
-
-std::string read_file(const std::string& path) {
-    std::ifstream file(path);
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
 }
 
 Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up) {
