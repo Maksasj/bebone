@@ -21,11 +21,8 @@
 #include "vulkan_uniform_buffer_impl.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
-#include "vulkan_pipeline_layout_builder_impl.h"
 
 #include "../render_target.h"
-
-#include "../pipeline_layout_builder.h"
 
 #include "../gpu_resource_manager.h"
 
@@ -89,41 +86,22 @@ namespace bebone::gfx {
                 return pipeline;
             }
 
-            template<class VertexType>
-            VulkanVertexBufferImpl<VertexType>* create_vertex_buffer_impl(const std::vector<VertexType>& vertices) {
-                VulkanVertexBufferImpl<VertexType>* vertexBufferImpl = new VulkanVertexBufferImpl<VertexType>(vertices, *device);
-                return vertexBufferImpl;
-            }
-
-            VulkanIndexBufferImpl* create_index_buffer_impl(const std::vector<int>& indices) {
-                VulkanIndexBufferImpl* indexBufferImpl = new VulkanIndexBufferImpl(indices, *device);
-                return indexBufferImpl;
-            }
-
-            VulkanPipelineLayoutBuilderImpl create_pipeline_layout_builder() {
-                return VulkanPipelineLayoutBuilderImpl(*device);
-            }
-
-            GPUResourceManager create_gpu_resource_manager() {
-                return GPUResourceManager(swapChain->get_image_count(), *device);
-            }
-
             void recreate_pipelines() const {
                 vkDeviceWaitIdle(device->device());
 
                 _window->reset_resize_flag();
                 swapChain->recreate(_window->get_extend());
 
-                for(auto& pipeline : pipelines) {
-                    PipelineConfigInfo pipelineConfig;
-                    PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
-
-                    pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
-                    pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout(); // vulkanPipelineLayout should be saved somewhere
-
-                    // Todo
-                    // pipeline->recreate(pipelineConfig);
-                }
+                // for(auto& pipeline : pipelines) {
+                //     PipelineConfigInfo pipelineConfig;
+                //     PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
+//
+                //     pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass; // Setting up render pass
+                //     pipelineConfig.pipelineLayout = vulkanPipelineLayout->get_layout(); // vulkanPipelineLayout should be saved somewhere
+//
+                //     // Todo
+                //     // pipeline->recreate(pipelineConfig);
+                // }
             }
 
             VulkanFrame get_frame() const {

@@ -9,22 +9,11 @@
 
 namespace bebone::gfx {
     class GPUResourceSet {
-        private:
+        public:
             std::vector<VkDescriptorSet*> descriptorSets;
 
-        public:
             GPUResourceSet(std::vector<VkDescriptorSet*> _descriptorSets) : descriptorSets(_descriptorSets) {
 
-            }
-
-            void bind(VulkanCommandBuffer& commandBuffer, VulkanPipelineLayoutImpl& pipelineLayout, const size_t& frameIndex) {
-                // Todo resolve this
-
-                commandBuffer.bind_descriptor_set(pipelineLayout, *descriptorSets[frameIndex]);
-            }
-
-            VkDescriptorSet* get_descriptor(const size_t& index) {
-                return descriptorSets[index];
             }
     };
 
@@ -32,43 +21,13 @@ namespace bebone::gfx {
         private:
             const size_t _fif;
             VulkanDescriptorPool& _descriptorPool;
-            std::vector<VkDescriptorSetLayoutBinding> bindings;
 
         public:
             GPUResourceSetBlueprint(const size_t fif, VulkanDescriptorPool& descriptorPool) : _fif(fif), _descriptorPool(descriptorPool) {
                 
             }
 
-            GPUResourceSetBlueprint& set_texture_resource(const size_t& binding) {
-                VkDescriptorSetLayoutBinding layoutBinding{};
-                layoutBinding.binding = binding;
-                layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                layoutBinding.descriptorCount = 65536; // Todo this is max thing
-
-                layoutBinding.stageFlags = VK_SHADER_STAGE_ALL; // Todo this should be confiruble
-                layoutBinding.pImmutableSamplers = nullptr; // Optional
-
-                bindings.push_back(layoutBinding);
-
-                return *this;
-            }
-
-            GPUResourceSetBlueprint& add_uniform_buffer_resource(const size_t& binding) {
-                VkDescriptorSetLayoutBinding layoutBinding{};
-                
-                layoutBinding.binding = binding;
-                layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                layoutBinding.descriptorCount = 65536; // Todo this is max thing
-
-                layoutBinding.stageFlags = VK_SHADER_STAGE_ALL; // Todo this should be confiruble
-                layoutBinding.pImmutableSamplers = nullptr; // Optional
-
-                bindings.push_back(layoutBinding);
-
-                return *this;
-            }
-
-            GPUResourceSet build() {
+            GPUResourceSet build(std::vector<VkDescriptorSetLayoutBinding> bindings) {
                 VkDescriptorSetLayout* descriptorLayout = _descriptorPool.create_descriptor_set_layout(bindings);
 
                 std::vector<VkDescriptorSet*> descriptorSets;
@@ -90,15 +49,9 @@ namespace bebone::gfx {
             VulkanDescriptorPool descriptorPool;
 
             size_t availableUniformHandle;
-            size_t availableTextureHandle;
 
             GPUResourceManager(const size_t& fif, VulkanDevice& device) : _fif(fif), _device(device), descriptorPool(device) {
                 availableUniformHandle = 0;
-                availableTextureHandle = 0;
-            }
-
-            VulkanDescriptorPool& get_descriptor_pool () {
-                return descriptorPool;
             }
 
             template<class DataType>
@@ -117,7 +70,7 @@ namespace bebone::gfx {
                     VkWriteDescriptorSet descriptorWrite{};
                     descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
                     
-                    descriptorWrite.dstSet = *resourceSet.get_descriptor(i);
+                    descriptorWrite.dstSet = *resourceSet.descriptorSets[i];
                     descriptorWrite.dstBinding = binding;
                     descriptorWrite.dstArrayElement = bufferImpl[i]->get_handle().index; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
@@ -132,11 +85,6 @@ namespace bebone::gfx {
                 }
 
                 return bufferImpl;
-            }
-
-            template<class DataType>
-            UniformBuffer<DataType> create_uniform_buffer(GPUResourceSet& resourceSet, const size_t& binding) {
-                return UniformBuffer<DataType>(create_uniform_buffer_impl<DataType>(resourceSet, binding));
             }
 
             GPUResourceSetBlueprint create_resource_set() {

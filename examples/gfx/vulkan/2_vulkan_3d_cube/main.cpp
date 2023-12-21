@@ -57,22 +57,39 @@ int main() {
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
     auto renderer = VulkanRenderer(window);
 
-    auto resourceManager = renderer.create_gpu_resource_manager();
+    auto resourceManager = GPUResourceManager(renderer.swapChain->get_image_count(), *renderer.device);
+
     auto resourceSet = resourceManager
         .create_resource_set()
-        .add_uniform_buffer_resource(0)
-        .add_uniform_buffer_resource(1)
-        .build();
+        .build({
+           {
+               .binding = 0,
+               .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+               .descriptorCount = 65536,
+               .stageFlags = VK_SHADER_STAGE_ALL,
+               .pImmutableSamplers = nullptr
+           },
+           {
+               .binding = 1,
+               .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+               .descriptorCount = 65536, // Todo this is max thing
+               .stageFlags = VK_SHADER_STAGE_ALL, // Todo this should be confiruble
+               .pImmutableSamplers = nullptr // Optional
+           },
+        });
 
-    auto pipelineLayout = renderer
-        .create_pipeline_layout_builder()
-        .set_constant_range(0, sizeof(Handles))
-        .build(resourceManager);
+    auto descriptorPool = std::shared_ptr<VulkanDescriptorPool>(&resourceManager.descriptorPool);
+
+    auto pipelineLayout = renderer.device->create_pipeline_layout(descriptorPool, {{
+        .offset = 0,
+        .size = sizeof(Handles),
+        .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT)
+    }});
 
     auto vertShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
 
-    VulkanPipeline* pipeline = renderer.create_pipeline(pipelineLayout, vertShaderModule, fragShaderModule);
+    auto pipeline = renderer.device->create_pipeline(renderer.swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
     auto vertexBuffer = renderer.device->create_buffer(sizeof(Vertex) * vertices.size());
     auto indexBuffer = renderer.device->create_buffer(sizeof(u32) * indices.size());
@@ -119,7 +136,8 @@ int main() {
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd.bind_pipeline(*pipeline);
-            resourceSet.bind(cmd, pipelineLayout, frame.frameIndex);
+
+            cmd.bind_descriptor_set(pipelineLayout, *resourceSet.descriptorSets[frame.frameIndex]);
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);

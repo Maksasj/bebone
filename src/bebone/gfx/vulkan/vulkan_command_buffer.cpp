@@ -96,20 +96,20 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(VulkanPipelineLayoutImpl& pipelineLayout, VkDescriptorSet& descriptorSet) {
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.get_layout(), 0, 1, &descriptorSet, 0, nullptr);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, VkDescriptorSet& descriptorSet) {
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSet, 0, nullptr);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const void* constantPtr) {
-        vkCmdPushConstants(commandBuffer, pipelineLayout.get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, constantPtr);
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, const uint32_t& size, const void* constantPtr) {
+        vkCmdPushConstants(commandBuffer, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, constantPtr);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(VulkanPipelineLayoutImpl& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
-        vkCmdPushConstants(commandBuffer, pipelineLayout.get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, constantPtr);
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
+        vkCmdPushConstants(commandBuffer, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, constantPtr);
 
         return *this;
     }

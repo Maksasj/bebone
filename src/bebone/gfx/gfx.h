@@ -19,8 +19,6 @@
 #include "window/window.h"
 #include "window/window_factory.h"
 
-#include "pipeline_layout_builder.h"
-
 #include "render_target.h"
 
 #endif
