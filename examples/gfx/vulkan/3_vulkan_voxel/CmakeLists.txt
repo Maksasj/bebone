@@ -1,7 +1,0 @@
-file(GLOB_RECURSE BEBONE_EXAMPLE_GFX_VULKAN_3_VULKAN_VOXEL *.cpp)
-
-include_directories("../../src")
-include_directories("./")
-
-add_executable(Bebone_Example_Gfx_3_Vulkan_Voxel ${BEBONE_EXAMPLE_GFX_VULKAN_3_VULKAN_VOXEL})
-target_link_libraries(Bebone_Example_Gfx_3_Vulkan_Voxel bebone)
