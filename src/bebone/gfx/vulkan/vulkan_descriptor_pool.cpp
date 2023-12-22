@@ -13,7 +13,7 @@ namespace bebone::gfx {
 
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         std::vector<VkDescriptorPoolSize> poolSizes = {
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanDescriptorSet::maxBindlessResources },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 65536 },
             // { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, maxBindlessResources },
         };
 

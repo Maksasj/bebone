@@ -20,7 +20,7 @@ namespace bebone::gfx {
         countInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
         countInfo.pNext = nullptr;
 
-        unsigned int maxBinding = maxBindlessResources - 1;
+        unsigned int maxBinding = 65536 - 1;
         countInfo.descriptorSetCount = 1;
 
         countInfo.pDescriptorCounts = &maxBinding;
