@@ -55,11 +55,19 @@ int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
-    auto renderer = VulkanRenderer(window);
+    // auto renderer = VulkanRenderer(window);
 
-    auto descriptorPool = std::make_shared<VulkanDescriptorPool>(*renderer.device);
+    auto instance = VulkanInstance::create_instance();
 
-    auto descriptorSetLayout = renderer.device->create_descriptor_set_layouts({
+    auto device = instance->create_device(window);
+    auto swapChain = device->create_swap_chain(window);
+
+    auto descriptorPool = device->create_descriptor_pool();
+
+
+    // auto descriptorPool = std::make_shared<VulkanDescriptorPool>(*renderer.device);
+
+    auto descriptorSetLayout = device->create_descriptor_set_layouts({
           {
               .binding = 0,
               .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -77,30 +85,33 @@ int main() {
       });
 
     auto descriptors = std::vector<std::shared_ptr<VulkanDescriptorSet>>({
-        descriptorPool->create_descriptor_bindless(renderer.device, descriptorSetLayout[0]),
-        descriptorPool->create_descriptor_bindless(renderer.device, descriptorSetLayout[0]),
-        descriptorPool->create_descriptor_bindless(renderer.device, descriptorSetLayout[0])
+        descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0]),
+        descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0]),
+        descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0])
     });
 
-    auto pipelineLayout = renderer.device->create_pipeline_layout(descriptorSetLayout, {{
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool->create_command_buffers(3);
+
+    auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {{
         .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT),
         .offset = 0,
         .size = sizeof(Handles)
     }});
 
-    auto vertShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragShaderModule = renderer.device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
 
-    auto pipeline = renderer.device->create_pipeline(renderer.swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
+    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
-    auto vertexBuffer = renderer.device->create_buffer(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = renderer.device->create_buffer(sizeof(u32) * indices.size());
+    auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
 
     vertexBuffer->upload_data(vertices.data(), sizeof(Vertex) * vertices.size());
     indexBuffer->upload_data(indices.data(), sizeof(u32) * indices.size());
 
-    auto transformUBO = renderer.device->create_buffers(sizeof(Transform), 3);
-    auto cameraUBO = renderer.device->create_buffers(sizeof(CameraTransform), 3);
+    auto transformUBO = device->create_buffers(sizeof(Transform), 3);
+    auto cameraUBO = device->create_buffers(sizeof(CameraTransform), 3);
 
     descriptorPool->update_descriptor_sets(transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
     descriptorPool->update_descriptor_sets(transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
@@ -125,9 +136,10 @@ int main() {
     while (!window->closing()) {
         glfwPollEvents();
 
-        auto frame = renderer.get_frame();
+        uint32_t frameIndex;
+        auto result = swapChain->acquireNextImage(&frameIndex);
 
-        if(!frame.valid())
+        if(result == VK_ERROR_OUT_OF_DATE_KHR)
             continue;
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
@@ -135,37 +147,40 @@ int main() {
         ++t;
 
         auto handles = Handles {
-            static_cast<u32>(frame.frameIndex + 3),
-            static_cast<u32>(frame.frameIndex )
+            static_cast<u32>(frameIndex + 3),
+            static_cast<u32>(frameIndex )
         };
-        
-        auto& cmd = frame.get_command_buffer();
 
-        cmd.begin_record();
-            cmd.begin_render_pass(renderer.swapChain, frame.frameIndex);
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+        auto& cmd = commandBuffers[frameIndex];
 
-            cmd.bind_pipeline(*pipeline);
+        cmd->begin_record();
+            cmd->begin_render_pass(swapChain, frameIndex);
+            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
 
-            cmd.bind_descriptor_set(pipelineLayout, descriptors[frame.frameIndex]->descriptorSet);
+            cmd->bind_pipeline(*pipeline);
 
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
+            cmd->bind_descriptor_set(pipelineLayout, descriptors[frameIndex]->descriptorSet);
 
-            transformUBO[frame.frameIndex]->upload_data(&transform, sizeof(Transform));
-            cameraUBO[frame.frameIndex]->upload_data(&cameraTransform, sizeof(CameraTransform));
+            cmd->bind_vertex_buffer(vertexBuffer);
+            cmd->bind_index_buffer(indexBuffer);
 
-            cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
+            transformUBO[frameIndex]->upload_data(&transform, sizeof(Transform));
+            cameraUBO[frameIndex]->upload_data(&cameraTransform, sizeof(CameraTransform));
 
-            cmd.draw_indexed(indices.size());
+            cmd->push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
 
-            cmd.end_render_pass();
-        cmd.end_record();
+            cmd->draw_indexed(indices.size());
 
-        renderer.present(frame);
+            cmd->end_render_pass();
+        cmd->end_record();
+
+        result = swapChain->submitCommandBuffers(&cmd->commandBuffer, &frameIndex);
+
+        if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window->is_resized())
+            continue;
     }
 
-    renderer.device->wait_idle();
+    device->wait_idle();
 
     glfwTerminate();
 

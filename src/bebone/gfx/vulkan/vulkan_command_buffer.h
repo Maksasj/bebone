@@ -2,6 +2,7 @@
 #define _BEBONE_GFX_VULKAN_VULKAN_COMMAND_BUFFER_H_
 
 #include <stdexcept>
+#include <memory>
 
 #include "../../core/core.h"
 
