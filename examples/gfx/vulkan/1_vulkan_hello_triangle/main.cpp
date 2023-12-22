@@ -27,7 +27,7 @@ int main() {
 
     auto descriptorPool = device->create_descriptor_pool();
 
-    auto pipelineLayout = device->create_pipeline_layout(descriptorPool, {});
+    auto pipelineLayout = device->create_pipeline_layout({}, {});
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(3);

@@ -1,19 +1,19 @@
 #include "vulkan_descriptor_pool.h"
 
 #include "vulkan_device.h"
+#include "vulkan_descriptor_set.h"
 
 namespace bebone::gfx {
     // Todo Count should be pre computed
     VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) : _device(device) {
         // If vector resizes, then all pointers to descriptors will not be valid
 
-        descriptorSets.reserve(65536);
-        descriptorSetLayouts.reserve(65536);
-
+        // descriptorSets.reserve(65536);
+        // descriptorSetLayouts.reserve(65536);
 
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         std::vector<VkDescriptorPoolSize> poolSizes = {
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, maxBindlessResources },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanDescriptorSet::maxBindlessResources },
             // { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, maxBindlessResources },
         };
 
@@ -30,63 +30,38 @@ namespace bebone::gfx {
     }
 
     VulkanDescriptorPool::~VulkanDescriptorPool() {
-        for(const auto& layouts : descriptorSetLayouts) {
-            vkDestroyDescriptorSetLayout(_device.device(), layouts, nullptr);
-        }
+        // for(const auto& layouts : descriptorSetLayouts) {
+        //     vkDestroyDescriptorSetLayout(_device.device(), layouts, nullptr);
+        // }
 
         vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
     }
 
-    VkDescriptorSetLayout* VulkanDescriptorPool::create_descriptor_set_layout(const std::vector<VkDescriptorSetLayoutBinding>& bindings) {
-        std::vector<VkDescriptorBindingFlags> bindingFlags;
+    void VulkanDescriptorPool::update_descriptor_sets(std::shared_ptr<VulkanBufferImpl>& buffer, const size_t& size, std::shared_ptr<VulkanDescriptorSet>& descriptorSet, const size_t& binding, const size_t& dstArrayElement) {
+        VkDescriptorBufferInfo bufferInfo{};
+        bufferInfo.buffer = buffer->get_buffer();
+        bufferInfo.offset = 0;
+        bufferInfo.range = size;
 
-        for(size_t i = 0; i < bindings.size(); ++i) {
-            VkDescriptorBindingFlags bindlessFlags;
+        VkWriteDescriptorSet descriptorWrite{};
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
-            if(i == bindings.size() - 1) {
-                bindlessFlags =
-                    VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT |
-                    // VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT |
-                    VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
-            } else {
-                bindlessFlags =
-                    VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT |
-                    VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
-            }
+        descriptorWrite.dstSet = descriptorSet->descriptorSet;
+        descriptorWrite.dstBinding = binding;
+        descriptorWrite.dstArrayElement = dstArrayElement; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
-            bindingFlags.push_back(bindlessFlags);
-        }
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pBufferInfo = &bufferInfo;
 
-        descriptorSetLayouts.push_back(VkDescriptorSetLayout{});
-        VkDescriptorSetLayout &descriptorSetLayout = descriptorSetLayouts[descriptorSetLayouts.size() - 1];
+        descriptorWrite.pImageInfo = nullptr; // Optional
+        descriptorWrite.pTexelBufferView = nullptr; // Optional
 
-        // Descriptor set
-        VkDescriptorSetLayoutCreateInfo layoutInfo{};
-        layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layoutInfo.bindingCount = bindings.size();
-        layoutInfo.pBindings = bindings.data();
-        layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
-
-        VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo;
-        extendedInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
-        extendedInfo.pNext = nullptr;
-        extendedInfo.bindingCount = bindingFlags.size();
-
-        if(bindingFlags.size() == 0) {
-            extendedInfo.pBindingFlags = nullptr;
-        } else
-            extendedInfo.pBindingFlags = bindingFlags.data();
-
-        layoutInfo.pNext = &extendedInfo;
-
-        if (vkCreateDescriptorSetLayout(_device.device(), &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create descriptor set layout!");
-        }
-
-        return &descriptorSetLayout;
+        vkUpdateDescriptorSets(_device.device(), 1, &descriptorWrite, 0, nullptr);
     }
 
-    VkDescriptorSet* VulkanDescriptorPool::create_descriptor_bindless(VkDescriptorSetLayout* descriptorSetLayout) {
+    std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor_bindless(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout) {
+        /*
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = descriptorPool;
@@ -107,14 +82,15 @@ namespace bebone::gfx {
 
         auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
 
-        /** Aka taking last */
         if (vkAllocateDescriptorSets(_device.device(), &allocInfo, &descriptorSet) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
+        */
 
-        return &descriptorSet;
+        return std::make_shared<VulkanDescriptorSet>(device, *this, descriptorSetLayout);
     }
 
+    /*
     VkDescriptorSet* VulkanDescriptorPool::create_descriptor(VkDescriptorSetLayout* descriptorSetLayout, VkBuffer buffer) {
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -126,7 +102,7 @@ namespace bebone::gfx {
 
         auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
 
-        /** Aka taking last */
+        // Aka taking last
         if (vkAllocateDescriptorSets(_device.device(), &allocInfo, &descriptorSet) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
@@ -152,16 +128,17 @@ namespace bebone::gfx {
 
         return &descriptorSet;
     }
+    */
 
-    VkDescriptorSet& VulkanDescriptorPool::get_descriptor_set(const size_t& index) {
-        return descriptorSets[index];
-    }
+    // VkDescriptorSet& VulkanDescriptorPool::get_descriptor_set(const size_t& index) {
+    //     return descriptorSets[index];
+    // }
 
-    size_t VulkanDescriptorPool::get_layouts_count() const {
-        return descriptorSetLayouts.size();
-    }
+    // size_t VulkanDescriptorPool::get_layouts_count() const {
+    //     return descriptorSetLayouts.size();
+    // }
 
-    VkDescriptorSetLayout* VulkanDescriptorPool::get_layouts_data() {
-        return descriptorSetLayouts.data();
-    }
+    // VkDescriptorSetLayout* VulkanDescriptorPool::get_layouts_data() {
+    //     return descriptorSetLayouts.data();
+    // }
 }

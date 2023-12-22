@@ -59,7 +59,7 @@ int main() {
 
     auto descriptorPool = std::make_shared<VulkanDescriptorPool>(*renderer.device);
 
-    auto descriptorSetLayout = descriptorPool->create_descriptor_set_layout({
+    auto descriptorSetLayout = renderer.device->create_descriptor_set_layouts({
           {
               .binding = 0,
               .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -76,13 +76,13 @@ int main() {
           },
       });
 
-    descriptorPool->create_descriptor_bindless(descriptorSetLayout);
-    descriptorPool->create_descriptor_bindless(descriptorSetLayout);
-    descriptorPool->create_descriptor_bindless(descriptorSetLayout);
+    auto descriptors = std::vector<std::shared_ptr<VulkanDescriptorSet>>({
+        descriptorPool->create_descriptor_bindless(renderer.device, descriptorSetLayout[0]),
+        descriptorPool->create_descriptor_bindless(renderer.device, descriptorSetLayout[0]),
+        descriptorPool->create_descriptor_bindless(renderer.device, descriptorSetLayout[0])
+    });
 
-    auto& descriptorSets = descriptorPool->descriptorSets;
-
-    auto pipelineLayout = renderer.device->create_pipeline_layout(descriptorPool, {{
+    auto pipelineLayout = renderer.device->create_pipeline_layout(descriptorSetLayout, {{
         .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT),
         .offset = 0,
         .size = sizeof(Handles)
@@ -102,13 +102,13 @@ int main() {
     auto transformUBO = renderer.device->create_buffers(sizeof(Transform), 3);
     auto cameraUBO = renderer.device->create_buffers(sizeof(CameraTransform), 3);
 
-    descriptorPool->update_descriptor_sets(transformUBO[0], sizeof(Transform), descriptorSets[0], 0, 0);
-    descriptorPool->update_descriptor_sets(transformUBO[1], sizeof(Transform), descriptorSets[1], 0, 1);
-    descriptorPool->update_descriptor_sets(transformUBO[2], sizeof(Transform), descriptorSets[2], 0, 2);
+    descriptorPool->update_descriptor_sets(transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
+    descriptorPool->update_descriptor_sets(transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
+    descriptorPool->update_descriptor_sets(transformUBO[2], sizeof(Transform), descriptors[2], 0, 2);
 
-    descriptorPool->update_descriptor_sets(cameraUBO[0], sizeof(CameraTransform), descriptorSets[0], 1, 0 + 3);
-    descriptorPool->update_descriptor_sets(cameraUBO[1], sizeof(CameraTransform), descriptorSets[1], 1, 1 + 3);
-    descriptorPool->update_descriptor_sets(cameraUBO[2], sizeof(CameraTransform), descriptorSets[2], 1, 2 + 3);
+    descriptorPool->update_descriptor_sets(cameraUBO[0], sizeof(CameraTransform), descriptors[0], 1, 0 + 3);
+    descriptorPool->update_descriptor_sets(cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
+    descriptorPool->update_descriptor_sets(cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
 
     auto cameraTransform = CameraTransform{
         getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
@@ -147,7 +147,7 @@ int main() {
 
             cmd.bind_pipeline(*pipeline);
 
-            cmd.bind_descriptor_set(pipelineLayout, descriptorSets[frame.frameIndex]);
+            cmd.bind_descriptor_set(pipelineLayout, descriptors[frame.frameIndex]->descriptorSet);
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);

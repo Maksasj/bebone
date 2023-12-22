@@ -6,13 +6,15 @@
 #include "vulkan_descriptor_pool.h"
 
 namespace bebone::gfx {
+    class VulkanDevice;
+
     class VulkanDescriptorSetLayout {
         private:
 
         public:
-            VulkanDescriptorSetLayout(VulkanDescriptorPool& descriptorPool) {
-                // descriptorPool.create_descriptor_set_layout(bindings);
-            }
+            VkDescriptorSetLayout descriptorSetLayout;
+
+            VulkanDescriptorSetLayout(VulkanDevice& device, const std::vector<VkDescriptorSetLayoutBinding>& bindings);
     };
 }
 

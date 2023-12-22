@@ -3,5 +3,6 @@
 
 #include "vulkan_command_buffer.h"
 #include "vulkan_renderer_impl.h"
+#include "vulkan_descriptor_set.h"
 
 #endif

@@ -20,6 +20,7 @@ namespace bebone::gfx {
     class VulkanCommandBufferPool;
     class VulkanShaderModule;
     class VulkanPipelineLayoutImpl;
+    class VulkanDescriptorSetLayout;
     struct ShaderType;
 
     class VulkanDevice : private core::NonCopyable {
@@ -47,18 +48,23 @@ namespace bebone::gfx {
             ~VulkanDevice();
 
             std::shared_ptr<VulkanBufferImpl> create_buffer(const size_t& size);
-            std::vector<std::shared_ptr<VulkanBufferImpl>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount);
+            std::vector<std::shared_ptr<VulkanBufferImpl>> create_buffers(const size_t& size, const size_t& bufferCount);
 
-            std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
-            std::shared_ptr<VulkanPipelineLayoutImpl> create_pipeline_layout(std::shared_ptr<VulkanDescriptorPool>& pool, const std::vector<VkPushConstantRange>& constantRanges);
-            std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
+            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(const std::vector<VkDescriptorSetLayoutBinding>& bindings);
+
+            std::shared_ptr<VulkanPipelineLayoutImpl> create_pipeline_layout(
+                    const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
+                    const std::vector<VkPushConstantRange>& constantRanges);
             std::shared_ptr<VulkanPipeline> create_pipeline(
-                    std::shared_ptr<VulkanSwapChain>& swapChain,
-                    std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout,
-                    std::shared_ptr<VulkanShaderModule>& vertShaderModule,
-                    std::shared_ptr<VulkanShaderModule>& fragShaderModule);
+                std::shared_ptr<VulkanSwapChain>& swapChain,
+                std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout,
+                std::shared_ptr<VulkanShaderModule>& vertShaderModule,
+                std::shared_ptr<VulkanShaderModule>& fragShaderModule);
+
+            std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
             std::shared_ptr<VulkanShaderModule> create_shader_module(const std::string& shaderCodePath, const ShaderType& type);
+            std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 
             void wait_idle() {
                 vkDeviceWaitIdle(device_);

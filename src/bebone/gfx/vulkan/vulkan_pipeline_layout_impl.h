@@ -9,11 +9,14 @@
 namespace bebone::gfx {
     class VulkanPipelineLayoutImpl {
         private:
-            VulkanDevice& _device;
             VkPipelineLayout pipelineLayout;
 
         public:
-            VulkanPipelineLayoutImpl(VulkanDevice& device, VulkanDescriptorPool& descriptorPool, const std::vector<VkPushConstantRange>& constantRanges);
+            VulkanPipelineLayoutImpl(
+                VulkanDevice& device,
+                const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
+                const std::vector<VkPushConstantRange>& constantRanges
+            );
 
             ~VulkanPipelineLayoutImpl();
 
