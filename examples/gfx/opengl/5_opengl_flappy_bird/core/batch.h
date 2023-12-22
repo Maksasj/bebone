@@ -59,7 +59,7 @@ namespace game::core {
             array<ShaderVertex, 4> create_quad(const shared_ptr<Sprite>& sprite, const shared_ptr<Transform>& transform, const int& textureUnit);
             void add_indices();
             void upload_textures();
-            void rotateVertex(Vec3f& v, const f32& angle) const;
+            Vec2f rotateVertex(const Vec2f& v, const f32& angle) const;
             bool try_cache_texture(const shared_ptr<GLTexture>& texture);
         public:
             Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit);

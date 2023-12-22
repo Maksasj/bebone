@@ -34,6 +34,7 @@ namespace game::core {
         auto flappyBird = create_game_object_with_renderer("Flappy Bird", "flappy_bird");
         batch->add(flappyBird);
         flappyBird->get_transform()->set_position(Vec3f(0.0f, 0.0f, 0.0f));
+        flappyBird->get_transform()->set_rotation(35.0f);
         
         auto ground = create_game_object_with_renderer("Ground", "ground");
         batch->add(ground);

@@ -146,40 +146,42 @@ namespace game::core {
 
         float width = sprite->get_width() * scale / PIXELS_PER_UNIT;
         float height = sprite->get_height() * scale / PIXELS_PER_UNIT;
+        Vec2f tmp;
 
         ShaderVertex v0;
-        v0.position = { position.x - width, position.y - height, position.z };
+        tmp = rotateVertex( {-width, -height}, rotation);
+        v0.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
         v0.textureCoordinates = { 0.0f, 0.0f };
         v0.textureUnit = textureUnit;
-        rotateVertex(v0.position, rotation);
 
         ShaderVertex v1;
-        v1.position = { position.x - width, position.y + height, position.z };
+        tmp = rotateVertex( {-width, height}, rotation);
+        v1.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
         v1.textureCoordinates = { 0.0f, 1.0f };
         v1.textureUnit = textureUnit;
-        rotateVertex(v1.position, rotation);
 
         ShaderVertex v2;
-        v2.position = { position.x + width, position.y + height, position.z };
+        tmp = rotateVertex( {width, height}, rotation);
+        v2.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
         v2.textureCoordinates = { 1.0f, 1.0f };
         v2.textureUnit = textureUnit;
-        rotateVertex(v2.position, rotation);
 
         ShaderVertex v3;
-        v3.position = { position.x + width, position.y - height, position.z };
+        tmp = rotateVertex( {width, -height}, rotation);
+        v3.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
         v3.textureCoordinates = { 1.0f, 0.0f };
         v3.textureUnit = textureUnit;
-        rotateVertex(v3.position, rotation);
 
         return { v0, v1, v2, v3 };
     }
 
-    void Batch::rotateVertex(Vec3f& v, const f32& angle) const {
+    Vec2f Batch::rotateVertex(const Vec2f& v, const f32& angle) const {
+        Vec2f newV = v;
+        
         double radian = Math::deg_to_rad(angle);
-        float x = v.x * cos(radian) - v.y * sin(radian);
-        float y = v.x * sin(radian) + v.y * cos(radian);
-        v.x = x;
-        v.y = y;
+        newV.x = v.x * cos(radian) - v.y * sin(radian);
+        newV.y = v.x * sin(radian) + v.y * cos(radian);
+        return newV;
     }
 
     void Batch::add_indices() {
