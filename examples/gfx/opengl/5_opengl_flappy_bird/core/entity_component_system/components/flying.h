@@ -16,11 +16,16 @@ namespace game::core::ecs {
 
     class Flying : public Component {
         private:
-            float velocityY;
-            float flyForce;
-            const float gravity = 0.1f;
             shared_ptr<Transform> transform;
 
+            float velocityY;
+            const float gravity = 0.1f;
+            float flyForce;
+
+            float rotZAlterationSpeed = -550.0f;
+            float minRotZ = -85.0f;
+            float maxRotZ = 25.0f;
+            
         public:
             Flying(shared_ptr<Transform> transform, float flyForce);
             ~Flying();

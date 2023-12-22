@@ -1,9 +1,10 @@
 #include "flying.h"
 
+#include <cmath>
 #include "../../input_system/input.h"
 
 namespace game::core::ecs {
-    Flying::Flying(shared_ptr<Transform> transform, float flyForce) : velocityY(0.0f), flyForce(flyForce), transform(transform) {
+    Flying::Flying(shared_ptr<Transform> transform, float flyForce) : transform(transform), velocityY(0.0f), flyForce(flyForce)  {
         using namespace game::core::input_system;
 
         auto flyFunction = [this]() {
@@ -19,6 +20,15 @@ namespace game::core::ecs {
     void Flying::update() {
         velocityY += Time::deltaTime * -gravity;
         transform->set_position(Vec3f(transform->get_position().x, transform->get_position().y + velocityY, transform->get_position().z));
+
+        if (velocityY < 0) {
+            float rotZ = transform->get_rotation();
+            rotZ += rotZAlterationSpeed * Time::deltaTime * std::abs(velocityY * 2);
+
+            if (rotZ > minRotZ) {
+                transform->set_rotation(rotZ);
+            }
+        }
     }
 
     float Flying::get_velocity() const {
@@ -27,5 +37,6 @@ namespace game::core::ecs {
 
     void Flying::set_velocity(const float& velocity) {
         velocityY = velocity;
+        transform->set_rotation(this->maxRotZ);
     }
 }
