@@ -1,6 +1,8 @@
 #ifndef BEBONE_VULKAN_DESCRIPTOR_SET
 #define BEBONE_VULKAN_DESCRIPTOR_SET
 
+#include <memory>
+
 #include "../gfx_backend.h"
 
 namespace bebone::gfx {
