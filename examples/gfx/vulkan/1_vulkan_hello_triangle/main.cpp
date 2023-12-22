@@ -9,9 +9,9 @@ struct Vertex {
 };
 
 const std::vector<Vertex> vertices = {
-    {{0.5f, 0.5f, 0.0f},  {1.0f, 1.0f, 1.0f}},
-    {{0.0f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}},
+    {{0.5f, 0.5f, 0.0f},  {1.0f, 0.0f, 0.0f}},
+    {{0.0f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+    {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
 };
 
 const std::vector<int> indices = { 0, 1, 2 };
@@ -56,13 +56,13 @@ int main() {
 
         cmd->begin_record()
             .begin_render_pass(swapChain, frameIndex)
-                .set_viewport(0, 0, window->get_width(), window->get_height())
-                .bind_pipeline(*pipeline)
-                    .bind_vertex_buffer(vertexBuffer)
-                    .bind_index_buffer(indexBuffer)
-                    .draw_indexed(indices.size())
+            .set_viewport(0, 0, window->get_width(), window->get_height())
+            .bind_pipeline(*pipeline)
+            .bind_vertex_buffer(vertexBuffer)
+            .bind_index_buffer(indexBuffer)
+            .draw_indexed(indices.size())
             .end_render_pass()
-        .end_record();
+            .end_record();
 
         result = swapChain->submitCommandBuffers(&cmd->commandBuffer, &frameIndex);
 

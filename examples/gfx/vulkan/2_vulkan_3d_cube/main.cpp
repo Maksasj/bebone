@@ -8,10 +8,10 @@
 using namespace bebone::gfx;
 using namespace bebone::core;
 
-struct Vertex {
-    Vec3f pos;
-    Vec3f color;
-};
+struct Vertex { Vec3f pos, color; };
+struct Handles { u32 cameraHandle, transformHandle; };
+struct CameraTransform { Mat4f view, proj; };
+struct Transform { Mat4f transform, scale, rotation; };
 
 const std::vector<Vertex> vertices = {
     {{-1.0, -1.0, -1.0}, {0.0f, 1.0f, 1.0f}},
@@ -33,30 +33,13 @@ const std::vector<int> indices = {
     3, 2, 6, 6, 7, 3
 };
 
-struct Handles {
-    u32 cameraHandle;
-    u32 transformHandle;
-};
-
-struct CameraTransform {
-    Mat4f view;
-    Mat4f proj;
-};
-
-struct Transform {
-    Mat4f transform;
-    Mat4f scale;
-    Mat4f rotation;
-};
-
+// Todo move view matrix to omni_types
 Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up);
 
 int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
-    // auto renderer = VulkanRenderer(window);
-
     auto instance = VulkanInstance::create_instance();
 
     auto device = instance->create_device(window);
@@ -64,9 +47,7 @@ int main() {
 
     auto descriptorPool = device->create_descriptor_pool();
 
-
-    // auto descriptorPool = std::make_shared<VulkanDescriptorPool>(*renderer.device);
-
+    // Todo make this nicer
     auto descriptorSetLayout = device->create_descriptor_set_layouts({
           {
               .binding = 0,
@@ -84,6 +65,7 @@ int main() {
           },
       });
 
+    // Todo make this nicer
     auto descriptors = std::vector<std::shared_ptr<VulkanDescriptorSet>>({
         descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0]),
         descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0]),
@@ -93,6 +75,7 @@ int main() {
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(3);
 
+    // Todo make this nicer
     auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {{
         .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT),
         .offset = 0,
@@ -101,7 +84,6 @@ int main() {
 
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
-
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
     auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
@@ -113,10 +95,12 @@ int main() {
     auto transformUBO = device->create_buffers(sizeof(Transform), 3);
     auto cameraUBO = device->create_buffers(sizeof(CameraTransform), 3);
 
+    // Todo make this nicer
     descriptorPool->update_descriptor_sets(transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
     descriptorPool->update_descriptor_sets(transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
     descriptorPool->update_descriptor_sets(transformUBO[2], sizeof(Transform), descriptors[2], 0, 2);
 
+    // Todo make this nicer
     descriptorPool->update_descriptor_sets(cameraUBO[0], sizeof(CameraTransform), descriptors[0], 1, 0 + 3);
     descriptorPool->update_descriptor_sets(cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
     descriptorPool->update_descriptor_sets(cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
@@ -137,42 +121,32 @@ int main() {
         glfwPollEvents();
 
         uint32_t frameIndex;
+        // Todo make this nicer, like custom VulkanResult type
         auto result = swapChain->acquireNextImage(&frameIndex);
 
         if(result == VK_ERROR_OUT_OF_DATE_KHR)
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
-        ++t;
 
-        auto handles = Handles {
-            static_cast<u32>(frameIndex + 3),
-            static_cast<u32>(frameIndex )
-        };
+        auto handles = Handles {static_cast<u32>(frameIndex + 3), static_cast<u32>(frameIndex) };
+        transformUBO[frameIndex]->upload_data(&transform, sizeof(Transform));
+        cameraUBO[frameIndex]->upload_data(&cameraTransform, sizeof(CameraTransform));
 
         auto& cmd = commandBuffers[frameIndex];
 
-        cmd->begin_record();
-            cmd->begin_render_pass(swapChain, frameIndex);
-            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-
-            cmd->bind_pipeline(*pipeline);
-
-            cmd->bind_descriptor_set(pipelineLayout, descriptors[frameIndex]->descriptorSet);
-
-            cmd->bind_vertex_buffer(vertexBuffer);
-            cmd->bind_index_buffer(indexBuffer);
-
-            transformUBO[frameIndex]->upload_data(&transform, sizeof(Transform));
-            cameraUBO[frameIndex]->upload_data(&cameraTransform, sizeof(CameraTransform));
-
-            cmd->push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
-
-            cmd->draw_indexed(indices.size());
-
-            cmd->end_render_pass();
-        cmd->end_record();
+        cmd->begin_record()
+            .begin_render_pass(swapChain, frameIndex)
+            .set_viewport(0, 0, window->get_width(), window->get_height())
+            .bind_pipeline(*pipeline)
+            .bind_descriptor_set(pipelineLayout, descriptors[frameIndex]->descriptorSet) // todo make this nicer
+            .bind_vertex_buffer(vertexBuffer)
+            .bind_index_buffer(indexBuffer)
+            .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
+            .draw_indexed(indices.size())
+            .end_render_pass()
+            .end_record();
 
         result = swapChain->submitCommandBuffers(&cmd->commandBuffer, &frameIndex);
 
@@ -182,6 +156,7 @@ int main() {
 
     device->wait_idle();
 
+    // Todo move all glfw things to glfw context static class
     glfwTerminate();
 
     return 0;

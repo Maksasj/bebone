@@ -14,6 +14,7 @@ namespace bebone::gfx {
             }
 
             static void init() {
+                // Todo move this to GLContext class
                 if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
                     std::cout << "Failed to initialize GLAD" << std::endl;
                     exit(1);
