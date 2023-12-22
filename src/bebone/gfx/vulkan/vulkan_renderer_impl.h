@@ -9,22 +9,16 @@
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_command_buffer.h"
 
-#include "vulkan_vertex_buffer_impl.h"
-#include "vulkan_index_buffer_impl.h"
-
 #include "vulkan_pipeline_impl.h"
 
 #include "vulkan_device.h"
 
 #include "vulkan_frame.h"
 
-#include "vulkan_uniform_buffer_impl.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_layout_impl.h"
 
 #include "../render_target.h"
-
-#include "../gpu_resource_manager.h"
 
 #include "../window/window.h"
 

@@ -58,6 +58,15 @@ namespace bebone::gfx {
         return std::make_shared<VulkanBufferImpl>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this);
     }
 
+    std::vector<std::shared_ptr<VulkanBufferImpl>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount) {
+        std::vector<std::shared_ptr<VulkanBufferImpl>> buffers;
+
+        for(size_t i = 0; i < bufferCount; ++i)
+            buffers.push_back(std::make_shared<VulkanBufferImpl>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this));
+
+        return buffers;
+    }
+
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
             std::shared_ptr<VulkanSwapChain>& swapChain,
             std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout,

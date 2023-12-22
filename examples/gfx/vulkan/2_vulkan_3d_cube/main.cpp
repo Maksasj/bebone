@@ -57,28 +57,30 @@ int main() {
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
     auto renderer = VulkanRenderer(window);
 
-    auto resourceManager = GPUResourceManager(renderer.swapChain->get_image_count(), *renderer.device);
+    auto descriptorPool = std::make_shared<VulkanDescriptorPool>(*renderer.device);
 
-    auto resourceSet = resourceManager
-        .create_resource_set()
-        .build({
-           {
-               .binding = 0,
-               .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-               .descriptorCount = 65536,
-               .stageFlags = VK_SHADER_STAGE_ALL,
-               .pImmutableSamplers = nullptr
-           },
-           {
-               .binding = 1,
-               .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-               .descriptorCount = 65536, // Todo this is max thing
-               .stageFlags = VK_SHADER_STAGE_ALL, // Todo this should be confiruble
-               .pImmutableSamplers = nullptr // Optional
-           },
-        });
+    auto descriptorSetLayout = descriptorPool->create_descriptor_set_layout({
+          {
+              .binding = 0,
+              .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+              .descriptorCount = 65536,
+              .stageFlags = VK_SHADER_STAGE_ALL,
+              .pImmutableSamplers = nullptr
+          },
+          {
+              .binding = 1,
+              .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+              .descriptorCount = 65536, // Todo this is max thing
+              .stageFlags = VK_SHADER_STAGE_ALL, // Todo this should be confiruble
+              .pImmutableSamplers = nullptr // Optional
+          },
+      });
 
-    auto descriptorPool = std::shared_ptr<VulkanDescriptorPool>(&resourceManager.descriptorPool);
+    descriptorPool->create_descriptor_bindless(descriptorSetLayout);
+    descriptorPool->create_descriptor_bindless(descriptorSetLayout);
+    descriptorPool->create_descriptor_bindless(descriptorSetLayout);
+
+    auto& descriptorSets = descriptorPool->descriptorSets;
 
     auto pipelineLayout = renderer.device->create_pipeline_layout(descriptorPool, {{
         .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT),
@@ -97,8 +99,16 @@ int main() {
     vertexBuffer->upload_data(vertices.data(), sizeof(Vertex) * vertices.size());
     indexBuffer->upload_data(indices.data(), sizeof(u32) * indices.size());
 
-    auto transformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
-    auto cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
+    auto transformUBO = renderer.device->create_buffers(sizeof(Transform), 3);
+    auto cameraUBO = renderer.device->create_buffers(sizeof(CameraTransform), 3);
+
+    descriptorPool->update_descriptor_sets(transformUBO[0], sizeof(Transform), descriptorSets[0], 0, 0);
+    descriptorPool->update_descriptor_sets(transformUBO[1], sizeof(Transform), descriptorSets[1], 0, 1);
+    descriptorPool->update_descriptor_sets(transformUBO[2], sizeof(Transform), descriptorSets[2], 0, 2);
+
+    descriptorPool->update_descriptor_sets(cameraUBO[0], sizeof(CameraTransform), descriptorSets[0], 1, 0 + 3);
+    descriptorPool->update_descriptor_sets(cameraUBO[1], sizeof(CameraTransform), descriptorSets[1], 1, 1 + 3);
+    descriptorPool->update_descriptor_sets(cameraUBO[2], sizeof(CameraTransform), descriptorSets[2], 1, 2 + 3);
 
     auto cameraTransform = CameraTransform{
         getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
@@ -125,8 +135,8 @@ int main() {
         ++t;
 
         auto handles = Handles {
-            static_cast<u32>(cameraUBO.get_handle(frame.frameIndex).index),
-            static_cast<u32>(transformUBO.get_handle(frame.frameIndex).index)
+            static_cast<u32>(frame.frameIndex + 3),
+            static_cast<u32>(frame.frameIndex )
         };
         
         auto& cmd = frame.get_command_buffer();
@@ -137,13 +147,13 @@ int main() {
 
             cmd.bind_pipeline(*pipeline);
 
-            cmd.bind_descriptor_set(pipelineLayout, *resourceSet.descriptorSets[frame.frameIndex]);
+            cmd.bind_descriptor_set(pipelineLayout, descriptorSets[frame.frameIndex]);
 
             cmd.bind_vertex_buffer(vertexBuffer);
             cmd.bind_index_buffer(indexBuffer);
 
-            transformUBO.set_data(frame, transform);
-            cameraUBO.set_data(frame, cameraTransform);
+            transformUBO[frame.frameIndex]->upload_data(&transform, sizeof(Transform));
+            cameraUBO[frame.frameIndex]->upload_data(&cameraTransform, sizeof(CameraTransform));
 
             cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
 

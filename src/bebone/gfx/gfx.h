@@ -11,8 +11,6 @@
 
 #include "rendering_engine.h"
 
-#include "gpu_resource_manager.h"
-
 #include "vulkan/vulkan_device.h"
 #include "bebone/gfx/vulkan/vulkan_swap_chain.h"
 

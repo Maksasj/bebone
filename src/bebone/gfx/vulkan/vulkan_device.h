@@ -47,6 +47,8 @@ namespace bebone::gfx {
             ~VulkanDevice();
 
             std::shared_ptr<VulkanBufferImpl> create_buffer(const size_t& size);
+            std::vector<std::shared_ptr<VulkanBufferImpl>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount);
+
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
             std::shared_ptr<VulkanPipelineLayoutImpl> create_pipeline_layout(std::shared_ptr<VulkanDescriptorPool>& pool, const std::vector<VkPushConstantRange>& constantRanges);
