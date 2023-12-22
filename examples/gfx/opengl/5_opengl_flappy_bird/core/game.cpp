@@ -28,16 +28,18 @@ namespace game::core {
 
         auto bg = create_game_object_with_renderer("Background", "bg");
         bg->get_transform()->set_scale(0.6f);
+        bg->get_transform()->set_position(Vec3f(0.0f, 0.0f, 2.0f));
         batch->add(bg);
 
         auto flappyBird = create_game_object_with_renderer("Flappy Bird", "flappy_bird");
         batch->add(flappyBird);
+        flappyBird->get_transform()->set_position(Vec3f(0.0f, 0.0f, 0.0f));
         
         auto ground = create_game_object_with_renderer("Ground", "ground");
         batch->add(ground);
         auto& groundTransform = ground->get_transform();
         groundTransform->set_scale(0.5f);
-        groundTransform->set_position(Vec2f(0, -7.0f));
+        groundTransform->set_position(Vec3f(0, -7.0f, 1.0f));
 
         mainMenuState = make_shared<MainMenuState>(flappyBird);
         gameState = make_shared<GameState>(flappyBird);

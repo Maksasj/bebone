@@ -15,7 +15,7 @@ namespace game::core {
             vbo = make_shared<GLVertexBufferObject>(nullptr, vertexLimit * sizeof(ShaderVertex), GL_DYNAMIC_DRAW);
             ebo = make_shared<GLElementBufferObject>(nullptr, indexLimit * sizeof(unsigned int), GL_DYNAMIC_DRAW);
 
-            vao->link_attributes(*vbo, 0, 2, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, position));
+            vao->link_attributes(*vbo, 0, 3, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, position));
             vao->link_attributes(*vbo, 1, 2, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, textureCoordinates));
             vao->link_attributes(*vbo, 2, 1, GL_INT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, textureUnit));
         vao->unbind();
@@ -140,7 +140,7 @@ namespace game::core {
     }
 
     array<ShaderVertex, 4> Batch::create_quad(const shared_ptr<Sprite>& sprite, const shared_ptr<Transform>& transform, const int& textureUnit) {
-        Vec2f position = transform->get_position();
+        Vec3f position = transform->get_position();
         f32 scale = transform->get_scale();
         f32 rotation = transform->get_rotation();
 
@@ -148,25 +148,25 @@ namespace game::core {
         float height = sprite->get_height() * scale / PIXELS_PER_UNIT;
 
         ShaderVertex v0;
-        v0.position = { position.x - width, position.y - height };
+        v0.position = { position.x - width, position.y - height, position.z };
         v0.textureCoordinates = { 0.0f, 0.0f };
         v0.textureUnit = textureUnit;
         rotateVertex(v0.position, rotation);
 
         ShaderVertex v1;
-        v1.position = { position.x - width, position.y + height };
+        v1.position = { position.x - width, position.y + height, position.z };
         v1.textureCoordinates = { 0.0f, 1.0f };
         v1.textureUnit = textureUnit;
         rotateVertex(v1.position, rotation);
 
         ShaderVertex v2;
-        v2.position = { position.x + width, position.y + height };
+        v2.position = { position.x + width, position.y + height, position.z };
         v2.textureCoordinates = { 1.0f, 1.0f };
         v2.textureUnit = textureUnit;
         rotateVertex(v2.position, rotation);
 
         ShaderVertex v3;
-        v3.position = { position.x + width, position.y - height };
+        v3.position = { position.x + width, position.y - height, position.z };
         v3.textureCoordinates = { 1.0f, 0.0f };
         v3.textureUnit = textureUnit;
         rotateVertex(v3.position, rotation);
@@ -174,7 +174,7 @@ namespace game::core {
         return { v0, v1, v2, v3 };
     }
 
-    void Batch::rotateVertex(Vec2f& v, const f32& angle) const {
+    void Batch::rotateVertex(Vec3f& v, const f32& angle) const {
         double radian = Math::deg_to_rad(angle);
         float x = v.x * cos(radian) - v.y * sin(radian);
         float y = v.x * sin(radian) + v.y * cos(radian);

@@ -34,6 +34,7 @@ int main() {
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glfwSwapInterval(1);
 
+    glEnable(GL_DEPTH_TEST); 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -45,7 +46,7 @@ int main() {
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
-        GLContext::clear(GL_COLOR_BUFFER_BIT);
+        GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (Time::deltaTime >= 0) {
             game.update();

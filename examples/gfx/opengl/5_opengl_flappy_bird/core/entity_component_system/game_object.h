@@ -17,7 +17,7 @@ namespace game::core::ecs {
 
         public:
             GameObject(const string& name);
-            GameObject(const string& name, const Vec2f& position);
+            GameObject(const string& name, const Vec3f& position);
 
             shared_ptr<Transform>& get_transform();
             string get_name() const;

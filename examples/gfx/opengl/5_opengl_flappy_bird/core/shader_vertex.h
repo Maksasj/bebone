@@ -7,7 +7,7 @@ namespace game::core {
     using namespace bebone::core;
 
     struct ShaderVertex {
-        Vec2f position;
+        Vec3f position;
         Vec2f textureCoordinates;
         int textureUnit;
     };

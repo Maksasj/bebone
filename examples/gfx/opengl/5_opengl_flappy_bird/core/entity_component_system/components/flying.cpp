@@ -3,7 +3,7 @@
 #include "../../input_system/input.h"
 
 namespace game::core::ecs {
-    Flying::Flying(shared_ptr<Transform> transform, float flyForce) : velocityY(0.0f), transform(transform), flyForce(flyForce) {
+    Flying::Flying(shared_ptr<Transform> transform, float flyForce) : velocityY(0.0f), flyForce(flyForce), transform(transform) {
         using namespace game::core::input_system;
 
         auto flyFunction = [this]() {
@@ -18,7 +18,7 @@ namespace game::core::ecs {
 
     void Flying::update() {
         velocityY += Time::deltaTime * -gravity;
-        transform->set_position(Vec2f(transform->get_position().x, transform->get_position().y + velocityY));
+        transform->set_position(Vec3f(transform->get_position().x, transform->get_position().y + velocityY, transform->get_position().z));
     }
 
     float Flying::get_velocity() const {

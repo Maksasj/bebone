@@ -5,7 +5,7 @@ namespace game::core::ecs {
         transform = make_shared<Transform>();
     }
     
-    GameObject::GameObject(const string& name, const Vec2f& position) : name(name) {
+    GameObject::GameObject(const string& name, const Vec3f& position) : name(name) {
         transform = make_shared<Transform>(position);
     }
 
