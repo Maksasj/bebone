@@ -5,7 +5,11 @@
 #include "vulkan_descriptor_set_layout.h"
 
 namespace bebone::gfx {
-    VulkanDescriptorSet::VulkanDescriptorSet(std::shared_ptr<VulkanDevice>& device, VulkanDescriptorPool& descriptorPool, std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout) {
+    VulkanDescriptorSet::VulkanDescriptorSet(
+        std::shared_ptr<VulkanDevice>& device,
+        VulkanDescriptorPool& descriptorPool,
+        std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout
+    ) {
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = descriptorPool.descriptorPool;
@@ -24,7 +28,6 @@ namespace bebone::gfx {
 
         // auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
 
-        /** Aka taking last */
         if (vkAllocateDescriptorSets(device->device(), &allocInfo, &descriptorSet) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }

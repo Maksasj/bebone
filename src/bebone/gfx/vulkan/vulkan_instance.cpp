@@ -2,7 +2,6 @@
 #include "vulkan_device.h"
 
 namespace bebone::gfx {
-
     VkInstance& VulkanInstance::get_instance() {
         return instance;
     }
