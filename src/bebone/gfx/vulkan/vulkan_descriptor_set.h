@@ -15,7 +15,7 @@ namespace bebone::gfx {
             static constexpr uint32_t maxBindlessResources = 65536;
 
             VulkanDescriptorSet(
-                std::shared_ptr<VulkanDevice> device,
+                std::shared_ptr<VulkanDevice>& device,
                 VulkanDescriptorPool& descriptorPool,
                 std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout
             );
