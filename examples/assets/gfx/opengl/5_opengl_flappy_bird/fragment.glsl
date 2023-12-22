@@ -10,5 +10,10 @@ uniform sampler2D u_Textures[32];
 void main() {
 	int index = int(a_TextureUnit);
 
-	v_Color = texture(u_Textures[index], a_TexCoords);
+	vec4 color = texture(u_Textures[index], a_TexCoords);
+
+	if (color.a == 0.0)
+		discard;
+
+	v_Color = color;
 }
