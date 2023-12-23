@@ -78,8 +78,8 @@ namespace bebone::gfx {
 
             uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-            QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::findQueueFamilies(physicalDevice, surface_); }
-            SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::querySwapChainSupport(physicalDevice, surface_); }
+            QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::find_queue_families(physicalDevice, surface_); }
+            SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::query_swap_chain_support(physicalDevice, surface_); }
 
             VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
         };

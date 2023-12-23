@@ -5,6 +5,13 @@
 
 #include <string>
 #include <vector>
+#include <array>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <limits>
+#include <set>
+#include <stdexcept>
 
 #include "../render_target.h"
 
@@ -14,14 +21,13 @@ namespace bebone::gfx {
 
     class VulkanSwapChain : private core::NonCopyable {
         private:
-            void createSwapChain();
-            void createRenderTarget();
-            void createSyncObjects();
+            void create_swap_chain();
+            void create_render_target();
+            void create_sync_objects();
 
-            // Helper functions
-            static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
-            static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
-            static VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D windowExtent);
+            static VkSurfaceFormatKHR choose_swap_surface_format(const std::vector<VkSurfaceFormatKHR> &availableFormats);
+            static VkPresentModeKHR choose_swap_present_mode(const std::vector<VkPresentModeKHR> &availablePresentModes);
+            static VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D windowExtent);
 
             VulkanDevice &device;
 
@@ -47,10 +53,6 @@ namespace bebone::gfx {
 
             VulkanResult acquire_next_image(uint32_t *imageIndex);
             VulkanResult submit_command_buffers(std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex);
-
-            const u32& get_image_count() const {
-                return imageCount;
-            }
 
             size_t currentFrame = 0;
     };

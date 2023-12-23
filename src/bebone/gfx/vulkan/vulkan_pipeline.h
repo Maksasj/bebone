@@ -34,7 +34,7 @@ namespace bebone::gfx {
         return atrributeDescriptions;
     }
 
-    class VulkanPipeline {
+    class VulkanPipeline : private core::NonCopyable {
         private:
             void create_graphics_pipeline(const PipelineConfigInfo& configInfo, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
                 VkPipelineShaderStageCreateInfo shaderStages[2];

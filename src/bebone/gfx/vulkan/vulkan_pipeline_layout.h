@@ -7,7 +7,7 @@
 #include "vulkan_descriptor_pool.h"
 
 namespace bebone::gfx {
-    class VulkanPipelineLayout {
+    class VulkanPipelineLayout : private core::NonCopyable {
         private:
             VkPipelineLayout pipelineLayout;
 

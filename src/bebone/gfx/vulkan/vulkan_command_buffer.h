@@ -12,9 +12,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    class VulkanRenderer;
-
-    class VulkanCommandBuffer {
+    class VulkanCommandBuffer : private core::NonCopyable {
         public:
             VkCommandBuffer commandBuffer;
 
@@ -30,14 +28,7 @@ namespace bebone::gfx {
 
             VulkanCommandBuffer& bind_pipeline(VulkanPipeline& pipeline);
 
-            VulkanCommandBuffer& bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer) {
-                VkBuffer buffers[] = {buffer->get_buffer()};
-                VkDeviceSize offset[] = {0};
-                vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
-
-                return *this;
-            }
-
+            VulkanCommandBuffer& bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer);
             VulkanCommandBuffer& bind_index_buffer(std::shared_ptr<VulkanBuffer>& indexBuffer);
             VulkanCommandBuffer& bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, VkDescriptorSet& descriptorSet);
 

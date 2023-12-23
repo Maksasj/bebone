@@ -102,7 +102,7 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::createLogicalDevice() {
-        QueueFamilyIndices indices = VulkanDeviceChooser::findQueueFamilies(physicalDevice, surface_);
+        QueueFamilyIndices indices = VulkanDeviceChooser::find_queue_families(physicalDevice, surface_);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily, indices.presentFamily};
