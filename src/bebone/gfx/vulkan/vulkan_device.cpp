@@ -4,8 +4,8 @@
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_descriptor_set_layout.h"
 #include "vulkan_command_buffer_pool.h"
-#include "vulkan_pipeline_layout_impl.h"
-#include "vulkan_pipeline_impl.h"
+#include "vulkan_pipeline_layout.h"
+#include "vulkan_pipeline.h"
 #include "vulkan_shader_module.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 
@@ -52,30 +52,30 @@ namespace bebone::gfx {
         return std::make_shared<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });
     }
 
-    std::shared_ptr<VulkanPipelineLayoutImpl> VulkanDevice::create_pipeline_layout(const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VkPushConstantRange>& constantRanges) {
-        return std::make_shared<VulkanPipelineLayoutImpl>(*this, layouts, constantRanges);
+    std::shared_ptr<VulkanPipelineLayout> VulkanDevice::create_pipeline_layout(const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VkPushConstantRange>& constantRanges) {
+        return std::make_shared<VulkanPipelineLayout>(*this, layouts, constantRanges);
     }
 
     std::shared_ptr<VulkanCommandBufferPool> VulkanDevice::create_command_buffer_pool() {
         return std::make_shared<VulkanCommandBufferPool>(*this);
     }
 
-    std::shared_ptr<VulkanBufferImpl> VulkanDevice::create_buffer(const size_t& size) {
-        return std::make_shared<VulkanBufferImpl>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this);
+    std::shared_ptr<VulkanBuffer> VulkanDevice::create_buffer(const size_t& size) {
+        return std::make_shared<VulkanBuffer>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this);
     }
 
-    std::vector<std::shared_ptr<VulkanBufferImpl>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount) {
-        std::vector<std::shared_ptr<VulkanBufferImpl>> buffers;
+    std::vector<std::shared_ptr<VulkanBuffer>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount) {
+        std::vector<std::shared_ptr<VulkanBuffer>> buffers;
 
         for(size_t i = 0; i < bufferCount; ++i)
-            buffers.push_back(std::make_shared<VulkanBufferImpl>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this));
+            buffers.push_back(std::make_shared<VulkanBuffer>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this));
 
         return buffers;
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
             std::shared_ptr<VulkanSwapChain>& swapChain,
-            std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout,
+            std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
             std::shared_ptr<VulkanShaderModule>& vertShaderModule,
             std::shared_ptr<VulkanShaderModule>& fragShaderModule
         ) {

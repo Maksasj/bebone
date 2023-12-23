@@ -6,7 +6,7 @@
 
 #include "vulkan_instance.h"
 #include "vulkan_device_chooser.h"
-#include "vulkan_buffer_impl.h"
+#include "vulkan_buffer.h"
 
 #include <iostream>
 #include <set>
@@ -19,7 +19,7 @@ namespace bebone::gfx {
     class VulkanDescriptorPool;
     class VulkanCommandBufferPool;
     class VulkanShaderModule;
-    class VulkanPipelineLayoutImpl;
+    class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
     class VulkanDescriptorSetLayoutBinding;
 
@@ -46,18 +46,18 @@ namespace bebone::gfx {
             VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window);
             ~VulkanDevice();
 
-            std::shared_ptr<VulkanBufferImpl> create_buffer(const size_t& size);
-            std::vector<std::shared_ptr<VulkanBufferImpl>> create_buffers(const size_t& size, const size_t& bufferCount);
+            std::shared_ptr<VulkanBuffer> create_buffer(const size_t& size);
+            std::vector<std::shared_ptr<VulkanBuffer>> create_buffers(const size_t& size, const size_t& bufferCount);
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
-            std::shared_ptr<VulkanPipelineLayoutImpl> create_pipeline_layout(
+            std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
                     const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
                     const std::vector<VkPushConstantRange>& constantRanges);
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 std::shared_ptr<VulkanSwapChain>& swapChain,
-                std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout,
+                std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
                 std::shared_ptr<VulkanShaderModule>& vertShaderModule,
                 std::shared_ptr<VulkanShaderModule>& fragShaderModule);
 

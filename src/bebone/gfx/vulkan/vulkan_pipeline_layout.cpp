@@ -1,9 +1,9 @@
-#include "vulkan_pipeline_layout_impl.h"
+#include "vulkan_pipeline_layout.h"
 
 #include "vulkan_descriptor_set_layout.h"
 
 namespace bebone::gfx {
-    VulkanPipelineLayoutImpl::VulkanPipelineLayoutImpl(
+    VulkanPipelineLayout::VulkanPipelineLayout(
             VulkanDevice& device,
             const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
             const std::vector<VkPushConstantRange>& constantRanges
@@ -27,11 +27,11 @@ namespace bebone::gfx {
         }
     }
 
-    VkPipelineLayout VulkanPipelineLayoutImpl::get_layout() {
+    VkPipelineLayout VulkanPipelineLayout::get_layout() {
         return pipelineLayout;
     }
 
-    VulkanPipelineLayoutImpl::~VulkanPipelineLayoutImpl() {
+    VulkanPipelineLayout::~VulkanPipelineLayout() {
         // vkDestroyPipelineLayout(_device.device(), pipelineLayout, nullptr);
     }
 }

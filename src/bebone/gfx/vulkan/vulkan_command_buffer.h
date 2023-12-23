@@ -7,7 +7,7 @@
 #include "../../core/core.h"
 
 #include "vulkan_swap_chain.h"
-#include "vulkan_pipeline_impl.h"
+#include "vulkan_pipeline.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -30,7 +30,7 @@ namespace bebone::gfx {
 
             VulkanCommandBuffer& bind_pipeline(VulkanPipeline& pipeline);
 
-            VulkanCommandBuffer& bind_vertex_buffer(std::shared_ptr<VulkanBufferImpl>& buffer) {
+            VulkanCommandBuffer& bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer) {
                 VkBuffer buffers[] = {buffer->get_buffer()};
                 VkDeviceSize offset[] = {0};
                 vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
@@ -38,11 +38,11 @@ namespace bebone::gfx {
                 return *this;
             }
 
-            VulkanCommandBuffer& bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer);
-            VulkanCommandBuffer& bind_descriptor_set(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, VkDescriptorSet& descriptorSet);
+            VulkanCommandBuffer& bind_index_buffer(std::shared_ptr<VulkanBuffer>& indexBuffer);
+            VulkanCommandBuffer& bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, VkDescriptorSet& descriptorSet);
 
-            VulkanCommandBuffer& push_constant(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, const uint32_t& size, const void* ptr);
-            VulkanCommandBuffer& push_constant(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, const uint32_t& size, const size_t& offset, const void* ptr);
+            VulkanCommandBuffer& push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const void* ptr);
+            VulkanCommandBuffer& push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const size_t& offset, const void* ptr);
 
             VulkanCommandBuffer& draw(const size_t& vertexCount);
             VulkanCommandBuffer& draw_indexed(const size_t& vertexCount);

@@ -34,7 +34,7 @@ namespace bebone::gfx {
             // VkDescriptorSet* create_descriptor(VkDescriptorSetLayout* descriptorSetLayout, VkBuffer buffer);
 
             void update_descriptor_set(
-                std::shared_ptr<VulkanBufferImpl>& buffer,
+                std::shared_ptr<VulkanBuffer>& buffer,
                 const size_t& size,
                 std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
                 const size_t& binding,

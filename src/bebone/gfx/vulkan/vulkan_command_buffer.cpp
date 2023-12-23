@@ -1,6 +1,6 @@
 #include "vulkan_command_buffer.h"
 
-#include "vulkan_pipeline_layout_impl.h"
+#include "vulkan_pipeline_layout.h"
 
 namespace bebone::gfx {
     VulkanCommandBuffer::VulkanCommandBuffer() {
@@ -78,7 +78,7 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBufferImpl>& indexBuffer) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBuffer>& indexBuffer) {
         // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
         vkCmdBindIndexBuffer(commandBuffer, indexBuffer->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
 
@@ -97,19 +97,19 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, VkDescriptorSet& descriptorSet) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, VkDescriptorSet& descriptorSet) {
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSet, 0, nullptr);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, const uint32_t& size, const void* constantPtr) {
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const void* constantPtr) {
         vkCmdPushConstants(commandBuffer, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, constantPtr);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayoutImpl>& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
         vkCmdPushConstants(commandBuffer, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, constantPtr);
 
         return *this;
