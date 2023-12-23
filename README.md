@@ -20,8 +20,11 @@
 
 ### 0.1v Release (This year)
 1. **Graphics abstraction layer**. General OpenGL and abstractions. Window, Monitor apis.
-2. **Asset management system**. Basic abstractions for creating/editing image/mesh/*sound* data.
-3. **Input system**.
+2. **Event system**. Generic event system
+3. **Input system**. Event based input system
+
+### 0.1.1v
+1. **Asset system**. Basic abstractions for creating/editing image data.
 
 ### 0.2v ...
 1. *Scripting*.
