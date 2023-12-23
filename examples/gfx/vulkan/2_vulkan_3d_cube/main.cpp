@@ -66,11 +66,7 @@ int main() {
       });
 
     // Todo make this nicer
-    auto descriptors = std::vector<std::shared_ptr<VulkanDescriptorSet>>({
-        descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0]),
-        descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0]),
-        descriptorPool->create_descriptor_bindless(device, descriptorSetLayout[0])
-    });
+    auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(3);
@@ -120,27 +116,27 @@ int main() {
     while (!window->closing()) {
         glfwPollEvents();
 
-        uint32_t frameIndex;
+        uint32_t frame;
         // Todo make this nicer, like custom VulkanResult type
-        auto result = swapChain->acquireNextImage(&frameIndex);
+        auto result = swapChain->acquire_next_image(&frame);
 
-        if(result == VK_ERROR_OUT_OF_DATE_KHR)
+        if(result.is_ok())
             continue;
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
-        auto handles = Handles {static_cast<u32>(frameIndex + 3), static_cast<u32>(frameIndex) };
-        transformUBO[frameIndex]->upload_data(&transform, sizeof(Transform));
-        cameraUBO[frameIndex]->upload_data(&cameraTransform, sizeof(CameraTransform));
+        auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
+        transformUBO[frame]->upload_data(&transform, sizeof(Transform));
+        cameraUBO[frame]->upload_data(&cameraTransform, sizeof(CameraTransform));
 
-        auto& cmd = commandBuffers[frameIndex];
+        auto& cmd = commandBuffers[frame];
 
         cmd->begin_record()
-            .begin_render_pass(swapChain, frameIndex)
+            .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(*pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptors[frameIndex]->descriptorSet) // todo make this nicer
+            .bind_descriptor_set(pipelineLayout, descriptors[frame]->descriptorSet) // todo make this nicer
             .bind_vertex_buffer(vertexBuffer)
             .bind_index_buffer(indexBuffer)
             .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
@@ -148,9 +144,9 @@ int main() {
             .end_render_pass()
             .end_record();
 
-        result = swapChain->submitCommandBuffers(&cmd->commandBuffer, &frameIndex);
+        result = swapChain->submit_command_buffers(cmd, &frame);
 
-        if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window->is_resized())
+        if(result.is_ok() || window->is_resized())
             continue;
     }
 

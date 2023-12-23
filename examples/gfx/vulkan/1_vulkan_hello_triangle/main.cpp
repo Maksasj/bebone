@@ -25,8 +25,6 @@ int main() {
     auto device = instance->create_device(window);
     auto swapChain = device->create_swap_chain(window);
 
-    auto descriptorPool = device->create_descriptor_pool();
-
     auto pipelineLayout = device->create_pipeline_layout({}, {});
 
     auto commandBufferPool = device->create_command_buffer_pool();
@@ -34,7 +32,6 @@ int main() {
 
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
-
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
     auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
@@ -46,16 +43,16 @@ int main() {
     while (!window->closing()) {
         glfwPollEvents();
 
-        uint32_t frameIndex;
-        auto result = swapChain->acquireNextImage(&frameIndex);
+        uint32_t frame;
+        auto result = swapChain->acquire_next_image(&frame);
 
-        if(result == VK_ERROR_OUT_OF_DATE_KHR)
+        if(result.is_ok())
             continue;
 
-        auto& cmd = commandBuffers[frameIndex];
+        auto& cmd = commandBuffers[frame];
 
         cmd->begin_record()
-            .begin_render_pass(swapChain, frameIndex)
+            .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(*pipeline)
             .bind_vertex_buffer(vertexBuffer)
@@ -64,9 +61,9 @@ int main() {
             .end_render_pass()
             .end_record();
 
-        result = swapChain->submitCommandBuffers(&cmd->commandBuffer, &frameIndex);
+        result = swapChain->submit_command_buffers(cmd, &frame);
 
-        if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window->is_resized())
+        if(result.is_ok() || window->is_resized())
             continue;
     }
 

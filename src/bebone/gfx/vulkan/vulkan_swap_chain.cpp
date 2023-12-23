@@ -1,5 +1,8 @@
 #include "vulkan_swap_chain.h"
 
+#include "vulkan_result.h"
+#include "vulkan_command_buffer.h"
+
 // std
 #include <array>
 #include <cstdlib>
@@ -8,6 +11,7 @@
 #include <limits>
 #include <set>
 #include <stdexcept>
+
 
 bebone::gfx::VulkanSwapChain::VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D _windowExtent)
 	: device{deviceRef} {
@@ -49,10 +53,10 @@ void bebone::gfx::VulkanSwapChain::recreate(VkExtent2D _windowExtent) {
 	createRenderTarget();
 }
 
-VkResult bebone::gfx::VulkanSwapChain::acquireNextImage(uint32_t *imageIndex) {
+bebone::gfx::VulkanResult bebone::gfx::VulkanSwapChain::acquire_next_image(uint32_t *imageIndex) {
 	vkWaitForFences(device.device(), 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 
-	VkResult result = vkAcquireNextImageKHR(
+	auto result = vkAcquireNextImageKHR(
 		device.device(),
 		swapChain,
 		std::numeric_limits<uint64_t>::max(),
@@ -63,10 +67,10 @@ VkResult bebone::gfx::VulkanSwapChain::acquireNextImage(uint32_t *imageIndex) {
     if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
         throw std::runtime_error("failed to acquire swap chain image!");
 
-    return result;
+    return VulkanResult(result);
 }
 
-VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex) {
+bebone::gfx::VulkanResult bebone::gfx::VulkanSwapChain::submit_command_buffers(std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex) {
 	// Submitting and synchronization
     if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
 		vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
@@ -84,7 +88,7 @@ VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffe
 	submitInfo.pWaitSemaphores = waitSemaphores;
 	submitInfo.pWaitDstStageMask = waitStages;
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = buffers;
+	submitInfo.pCommandBuffers = &commandBuffer->commandBuffer;
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -112,7 +116,7 @@ VkResult bebone::gfx::VulkanSwapChain::submitCommandBuffers(const VkCommandBuffe
         throw std::runtime_error("failed to acquire submit command buffers !");
     }
 
-	return result;
+    return VulkanResult(result);
 }
 
 void bebone::gfx::VulkanSwapChain::createSwapChain() {

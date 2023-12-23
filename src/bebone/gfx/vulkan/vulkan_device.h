@@ -25,8 +25,6 @@ namespace bebone::gfx {
 
     class VulkanDevice : private core::NonCopyable {
         private:
-            VulkanWindow &window;
-
             VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
             VkDevice device_;
@@ -37,14 +35,13 @@ namespace bebone::gfx {
 
             VulkanInstance &vulkanInstance;
 
-            void createSurface(VulkanInstance &vulkanInstance);
             void pickPhysicalDevice(VulkanInstance &vulkanInstance);
             void createLogicalDevice();
 
         public:
             VkPhysicalDeviceProperties properties;
 
-            VulkanDevice(VulkanWindow &window, VulkanInstance &vulkanInstance);
+            VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window);
             ~VulkanDevice();
 
             std::shared_ptr<VulkanBufferImpl> create_buffer(const size_t& size);

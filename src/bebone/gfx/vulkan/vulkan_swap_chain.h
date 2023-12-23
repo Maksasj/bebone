@@ -9,6 +9,9 @@
 #include "../render_target.h"
 
 namespace bebone::gfx {
+    class VulkanResult;
+    class VulkanCommandBuffer;
+
     class VulkanSwapChain : private core::NonCopyable {
         private:
             void createSwapChain();
@@ -42,8 +45,8 @@ namespace bebone::gfx {
             VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent);
             ~VulkanSwapChain();
 
-            VkResult acquireNextImage(uint32_t *imageIndex);
-            VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
+            VulkanResult acquire_next_image(uint32_t *imageIndex);
+            VulkanResult submit_command_buffers(std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex);
 
             const u32& get_image_count() const {
                 return imageCount;

@@ -125,7 +125,7 @@ namespace bebone::gfx {
 
     std::shared_ptr<VulkanDevice> VulkanInstance::create_device(std::shared_ptr<Window>& window) {
         auto& vulkanWindow = *static_cast<VulkanWindow*>(window.get());
-        return std::make_shared<VulkanDevice>(vulkanWindow, *this);
+        return std::make_shared<VulkanDevice>(*this, vulkanWindow);
     }
 }
 

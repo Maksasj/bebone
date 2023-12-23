@@ -18,8 +18,8 @@ namespace bebone::gfx {
         return ss.str();
     }
 
-    VulkanDevice::VulkanDevice(VulkanWindow &window, VulkanInstance& _vulkanInstance) : window{window}, vulkanInstance(_vulkanInstance) {
-        createSurface(_vulkanInstance);
+    VulkanDevice::VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window) : vulkanInstance(_vulkanInstance) {
+        window.create_window_surface(vulkanInstance.get_instance(), &surface_);
 
         pickPhysicalDevice(_vulkanInstance);
         createLogicalDevice();
@@ -163,10 +163,6 @@ namespace bebone::gfx {
 
         vkGetDeviceQueue(device_, indices.graphicsFamily, 0, &graphicsQueue_);
         vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
-    }
-
-    void VulkanDevice::createSurface(VulkanInstance& vulkanInstance) {
-        window.create_window_surface(vulkanInstance.get_instance(), &surface_);
     }
 
     VkFormat VulkanDevice::findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
