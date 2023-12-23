@@ -87,12 +87,12 @@ int main() {
     descriptorPool->update_descriptor_set(cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
     descriptorPool->update_descriptor_set(cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
 
-    auto cameraTransform = CameraTransform{
+    auto cameraTransform = CameraTransform {
         getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
-    auto transform = Transform{
+    auto transform = Transform {
         Mat4f::translation(Vec3f::splat(0.0f)),
         Mat4f::scale(1.0f),
         Mat4f::identity()
@@ -112,6 +112,7 @@ int main() {
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
+
         transformUBO[frame]->upload_data(&transform, sizeof(Transform));
         cameraUBO[frame]->upload_data(&cameraTransform, sizeof(CameraTransform));
 

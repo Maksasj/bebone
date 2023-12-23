@@ -37,8 +37,8 @@ namespace bebone::gfx {
 
             VulkanInstance &vulkanInstance;
 
-            void pickPhysicalDevice(VulkanInstance &vulkanInstance);
-            void createLogicalDevice();
+            void pick_physical_device(VulkanInstance &vulkanInstance);
+            void create_logical_device();
 
         public:
             VkPhysicalDeviceProperties properties;
@@ -74,14 +74,14 @@ namespace bebone::gfx {
             VkQueue graphicsQueue() { return graphicsQueue_; }
             VkQueue presentQueue() { return presentQueue_; }
 
-            void createImageWithInfo(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory);
+            void create_image_with_info(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory);
 
-            uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+            uint32_t find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
             QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::find_queue_families(physicalDevice, surface_); }
             SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::query_swap_chain_support(physicalDevice, surface_); }
 
-            VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+            VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
         };
 }
 

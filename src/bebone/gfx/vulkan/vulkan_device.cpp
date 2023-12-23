@@ -22,8 +22,8 @@ namespace bebone::gfx {
     VulkanDevice::VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window) : vulkanInstance(_vulkanInstance) {
         window.create_window_surface(vulkanInstance.get_instance(), &surface_);
 
-        pickPhysicalDevice(_vulkanInstance);
-        createLogicalDevice();
+        pick_physical_device(_vulkanInstance);
+        create_logical_device();
     }
 
     VulkanDevice::~VulkanDevice() {
@@ -31,7 +31,7 @@ namespace bebone::gfx {
         vkDestroySurfaceKHR(vulkanInstance.get_instance(), surface_, nullptr);
     }
 
-    void VulkanDevice::pickPhysicalDevice(VulkanInstance& vulkanInstance) {
+    void VulkanDevice::pick_physical_device(VulkanInstance& vulkanInstance) {
         VulkanDeviceChooser chooser;
 
         physicalDevice = chooser.get_physical_device(vulkanInstance, surface_);
@@ -92,7 +92,7 @@ namespace bebone::gfx {
         SpirVShaderCompiler shaderCompiler;
 
         shaderCompiler.add_shader_source(ShaderSource(
-                vulkan_device_read_file(shaderCodePath),
+            vulkan_device_read_file(shaderCodePath),
             type
         ));
 
@@ -101,7 +101,7 @@ namespace bebone::gfx {
         return std::make_shared<VulkanShaderModule>(*this, shadeCode);
     }
 
-    void VulkanDevice::createLogicalDevice() {
+    void VulkanDevice::create_logical_device() {
         QueueFamilyIndices indices = VulkanDeviceChooser::find_queue_families(physicalDevice, surface_);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -166,7 +166,7 @@ namespace bebone::gfx {
         vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
     }
 
-    VkFormat VulkanDevice::findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+    VkFormat VulkanDevice::find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
         for (VkFormat format : candidates) {
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
@@ -182,7 +182,7 @@ namespace bebone::gfx {
         throw std::runtime_error("failed to find supported format!");
     }
 
-    uint32_t VulkanDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+    uint32_t VulkanDevice::find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
 
@@ -195,7 +195,7 @@ namespace bebone::gfx {
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-    void VulkanDevice::createImageWithInfo(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory) {
+    void VulkanDevice::create_image_with_info(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory) {
         if (vkCreateImage(device_, &imageInfo, nullptr, &image) != VK_SUCCESS) {
             throw std::runtime_error("failed to create image!");
         }
@@ -206,7 +206,7 @@ namespace bebone::gfx {
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+        allocInfo.memoryTypeIndex = find_memory_type(memRequirements.memoryTypeBits, properties);
 
         if (vkAllocateMemory(device_, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate image memory!");

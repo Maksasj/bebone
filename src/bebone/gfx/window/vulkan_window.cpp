@@ -12,8 +12,4 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create window surface");
         }
     }
-
-    VkExtent2D VulkanWindow::get_extend() const {
-        return { static_cast<uint32_t>(get_width()), static_cast<uint32_t>(get_height()) };
-    }
 }
