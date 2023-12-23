@@ -1,10 +1,15 @@
 #include "vulkan_descriptor_set_layout.h"
+#include "vulkan_descriptor_set_layout_binding.h"
 
 #include "vulkan_device.h"
 
 namespace bebone::gfx {
-    VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(VulkanDevice& device, const std::vector<VkDescriptorSetLayoutBinding>& bindings) {
+    VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(VulkanDevice& device, const std::vector<VulkanDescriptorSetLayoutBinding>& allBindings) {
         std::vector<VkDescriptorBindingFlags> bindingFlags;
+        std::vector<VkDescriptorSetLayoutBinding> bindings;
+
+        for(const auto& b : allBindings)
+            bindings.push_back(b.binding);
 
         for(size_t i = 0; i < bindings.size(); ++i) {
             VkDescriptorBindingFlags bindlessFlags;

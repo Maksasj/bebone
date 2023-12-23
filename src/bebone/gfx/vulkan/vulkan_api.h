@@ -4,6 +4,7 @@
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_command_buffer.h"
 
+#include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_descriptor_set.h"
 

@@ -7,6 +7,7 @@
 #include "vulkan_pipeline_layout_impl.h"
 #include "vulkan_pipeline_impl.h"
 #include "vulkan_shader_module.h"
+#include "vulkan_descriptor_set_layout_binding.h"
 
 #include "../shaders/spirv_shader_compiler.h"
 
@@ -43,7 +44,7 @@ namespace bebone::gfx {
         return std::make_shared<VulkanDescriptorPool>(*this);
     }
 
-    std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(const std::vector<VkDescriptorSetLayoutBinding>& bindings) {
+    std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
         return { std::make_shared<VulkanDescriptorSetLayout>(*this, bindings) };
     }
 

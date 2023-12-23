@@ -37,7 +37,7 @@ namespace bebone::gfx {
         vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
     }
 
-    void VulkanDescriptorPool::update_descriptor_sets(std::shared_ptr<VulkanBufferImpl>& buffer, const size_t& size, std::shared_ptr<VulkanDescriptorSet>& descriptorSet, const size_t& binding, const size_t& dstArrayElement) {
+    void VulkanDescriptorPool::update_descriptor_set(std::shared_ptr<VulkanBufferImpl>& buffer, const size_t& size, std::shared_ptr<VulkanDescriptorSet>& descriptorSet, const size_t& binding, const size_t& dstArrayElement) {
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = buffer->get_buffer();
         bufferInfo.offset = 0;

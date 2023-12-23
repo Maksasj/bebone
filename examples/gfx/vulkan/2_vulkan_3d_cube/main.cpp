@@ -47,25 +47,11 @@ int main() {
 
     auto descriptorPool = device->create_descriptor_pool();
 
-    // Todo make this nicer
     auto descriptorSetLayout = device->create_descriptor_set_layouts({
-          {
-              .binding = 0,
-              .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-              .descriptorCount = 65536,
-              .stageFlags = VK_SHADER_STAGE_ALL,
-              .pImmutableSamplers = nullptr
-          },
-          {
-              .binding = 1,
-              .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-              .descriptorCount = 65536, // Todo this is max thing
-              .stageFlags = VK_SHADER_STAGE_ALL, // Todo this should be confiruble
-              .pImmutableSamplers = nullptr // Optional
-          },
-      });
+        VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
+        VulkanDescriptorSetLayoutBinding::bindless_uniform(1)
+    });
 
-    // Todo make this nicer
     auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
 
     auto commandBufferPool = device->create_command_buffer_pool();
@@ -92,14 +78,14 @@ int main() {
     auto cameraUBO = device->create_buffers(sizeof(CameraTransform), 3);
 
     // Todo make this nicer
-    descriptorPool->update_descriptor_sets(transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
-    descriptorPool->update_descriptor_sets(transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
-    descriptorPool->update_descriptor_sets(transformUBO[2], sizeof(Transform), descriptors[2], 0, 2);
+    descriptorPool->update_descriptor_set(transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
+    descriptorPool->update_descriptor_set(transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
+    descriptorPool->update_descriptor_set(transformUBO[2], sizeof(Transform), descriptors[2], 0, 2);
 
     // Todo make this nicer
-    descriptorPool->update_descriptor_sets(cameraUBO[0], sizeof(CameraTransform), descriptors[0], 1, 0 + 3);
-    descriptorPool->update_descriptor_sets(cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
-    descriptorPool->update_descriptor_sets(cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
+    descriptorPool->update_descriptor_set(cameraUBO[0], sizeof(CameraTransform), descriptors[0], 1, 0 + 3);
+    descriptorPool->update_descriptor_set(cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
+    descriptorPool->update_descriptor_set(cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
 
     auto cameraTransform = CameraTransform{
         getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
@@ -117,7 +103,6 @@ int main() {
         glfwPollEvents();
 
         uint32_t frame;
-        // Todo make this nicer, like custom VulkanResult type
         auto result = swapChain->acquire_next_image(&frame);
 
         if(result.is_ok())

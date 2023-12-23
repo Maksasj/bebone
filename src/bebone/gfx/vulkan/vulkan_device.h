@@ -21,6 +21,8 @@ namespace bebone::gfx {
     class VulkanShaderModule;
     class VulkanPipelineLayoutImpl;
     class VulkanDescriptorSetLayout;
+    class VulkanDescriptorSetLayoutBinding;
+
     struct ShaderType;
 
     class VulkanDevice : private core::NonCopyable {
@@ -48,7 +50,7 @@ namespace bebone::gfx {
             std::vector<std::shared_ptr<VulkanBufferImpl>> create_buffers(const size_t& size, const size_t& bufferCount);
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
-            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(const std::vector<VkDescriptorSetLayoutBinding>& bindings);
+            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
             std::shared_ptr<VulkanPipelineLayoutImpl> create_pipeline_layout(
                     const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,

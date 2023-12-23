@@ -7,6 +7,7 @@
 
 namespace bebone::gfx {
     class VulkanDevice;
+    class VulkanDescriptorSetLayoutBinding;
 
     class VulkanDescriptorSetLayout {
         private:
@@ -14,7 +15,7 @@ namespace bebone::gfx {
         public:
             VkDescriptorSetLayout descriptorSetLayout;
 
-            VulkanDescriptorSetLayout(VulkanDevice& device, const std::vector<VkDescriptorSetLayoutBinding>& bindings);
+            VulkanDescriptorSetLayout(VulkanDevice& device, const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
     };
 }
 
