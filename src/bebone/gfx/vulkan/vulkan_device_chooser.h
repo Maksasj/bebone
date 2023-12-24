@@ -21,7 +21,6 @@ namespace bebone::gfx {
     class VulkanDeviceChooser {
         private:
             bool check_device_extension_support(VkPhysicalDevice device);
-
             bool is_device_suitable(VkPhysicalDevice device, VkSurfaceKHR& surface);
 
         public:

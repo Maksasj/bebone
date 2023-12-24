@@ -2,32 +2,32 @@
 
 namespace bebone::gfx {
     RenderTarget::RenderTarget(VulkanDevice& _device, std::vector<VkImage>& _swapChainImages, VkFormat _imageFormat, VkExtent2D _extent)
-            : device(_device), renderPass(_device, _imageFormat), swapChainImages(_swapChainImages), imageFormat(_imageFormat), extent(_extent) {
+            : renderPass(_device, _imageFormat), swapChainImages(_swapChainImages), imageFormat(_imageFormat), extent(_extent) {
 
-            create_image_views();
-            create_depth_resources();
-            create_framebuffers();
+            create_image_views(_device);
+            create_depth_resources(_device);
+            create_framebuffers(_device);
         }
 
     RenderTarget::~RenderTarget() {
-        for (auto imageView : swapChainImageViews) {
-            vkDestroyImageView(device.device(), imageView, nullptr);
-        }
-
-        swapChainImageViews.clear();
-
-        for (size_t i = 0; i < depthImages.size(); i++) {
-            vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
-            vkDestroyImage(device.device(), depthImages[i], nullptr);
-            vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
-        }
-
-        for (auto framebuffer : swapChainFramebuffers) {
-            vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
-        }
+        // for (auto imageView : swapChainImageViews) {
+        //     vkDestroyImageView(device.device(), imageView, nullptr);
+        // }
+// 
+        // swapChainImageViews.clear();
+// 
+        // for (size_t i = 0; i < depthImages.size(); i++) {
+        //     vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
+        //     vkDestroyImage(device.device(), depthImages[i], nullptr);
+        //     vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
+        // }
+// 
+        // for (auto framebuffer : swapChainFramebuffers) {
+        //     vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
+        // }
     }
 
-    void RenderTarget::create_image_views() {
+    void RenderTarget::create_image_views(VulkanDevice& device) {
         swapChainImageViews.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
@@ -48,7 +48,7 @@ namespace bebone::gfx {
         }
     }
 
-    void RenderTarget::create_framebuffers() {
+    void RenderTarget::create_framebuffers(VulkanDevice& device) {
         swapChainFramebuffers.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
@@ -69,8 +69,8 @@ namespace bebone::gfx {
         }
     }
 
-    void RenderTarget::create_depth_resources() {
-        VkFormat depthFormat = find_depth_format();
+    void RenderTarget::create_depth_resources(VulkanDevice& device) {
+        VkFormat depthFormat = find_depth_format(device);
 
         depthImages.resize(swapChainImages.size());
         depthImageMemorys.resize(swapChainImages.size());
@@ -112,7 +112,7 @@ namespace bebone::gfx {
         }
     }
 
-    VkFormat RenderTarget::find_depth_format() { // Todo move this to device
+    VkFormat RenderTarget::find_depth_format(VulkanDevice& device) { // Todo move this to device
         return device.find_supported_format(
             {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
             VK_IMAGE_TILING_OPTIMAL,

@@ -7,13 +7,12 @@
 namespace bebone::gfx {
     class VulkanRenderPass {
         public:
-            VulkanDevice& device;
             VkRenderPass renderPass;
 
             VulkanRenderPass(VulkanDevice& _device, VkFormat colorAttachmentImageFormat);
             ~VulkanRenderPass();
 
-            VkFormat find_depth_format();
+            VkFormat find_depth_format(VulkanDevice& device);
     };
 }
 

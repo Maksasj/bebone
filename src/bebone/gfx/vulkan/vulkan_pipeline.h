@@ -10,15 +10,17 @@
 namespace bebone::gfx {
     class VulkanPipeline : private core::NonCopyable {
         private:
-            void create_graphics_pipeline(const PipelineConfigInfo& configInfo, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule);
+            void create_graphics_pipeline(
+                VulkanDevice& device,
+                std::shared_ptr<VulkanShaderModule>& vertShaderModule,
+                std::shared_ptr<VulkanShaderModule>& fragShaderModule,
+                const PipelineConfigInfo& configInfo);
 
         public:
-            VulkanDevice& device;
-
             VkPipeline graphicsPipeline;
 
             VulkanPipeline(
-                VulkanDevice& _device,
+                VulkanDevice& device,
                 std::shared_ptr<VulkanShaderModule>& vertShaderModule,
                 std::shared_ptr<VulkanShaderModule>& fragShaderModule,
                 const PipelineConfigInfo& configInfo);
@@ -26,9 +28,10 @@ namespace bebone::gfx {
             ~VulkanPipeline();
 
             void recreate(
-                const PipelineConfigInfo& configInfo,
+                VulkanDevice& device,
                 std::shared_ptr<VulkanShaderModule>& vertShaderModule,
-                std::shared_ptr<VulkanShaderModule>& fragShaderModule);
+                std::shared_ptr<VulkanShaderModule>& fragShaderModule,
+                const PipelineConfigInfo& configInfo);
 
             void bind(VkCommandBuffer commandBuffer);
     };

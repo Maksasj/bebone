@@ -29,7 +29,12 @@ namespace bebone::gfx {
         return atrributeDescriptions;
     }
 
-    void VulkanPipeline::create_graphics_pipeline(const PipelineConfigInfo& configInfo, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
+    void VulkanPipeline::create_graphics_pipeline(
+        VulkanDevice& device,
+        std::shared_ptr<VulkanShaderModule>& vertShaderModule,
+        std::shared_ptr<VulkanShaderModule>& fragShaderModule,
+        const PipelineConfigInfo& configInfo
+    ) {
         VkPipelineShaderStageCreateInfo shaderStages[2];
         shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -83,19 +88,29 @@ namespace bebone::gfx {
         }
     }
 
-    VulkanPipeline::VulkanPipeline(VulkanDevice& _device, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule, const PipelineConfigInfo& configInfo)
-             : device(_device) {
-        create_graphics_pipeline(configInfo, vertShaderModule, fragShaderModule);
+    VulkanPipeline::VulkanPipeline(
+        VulkanDevice& device,
+        std::shared_ptr<VulkanShaderModule>& vertShaderModule,
+        std::shared_ptr<VulkanShaderModule>& fragShaderModule,
+        const PipelineConfigInfo& configInfo
+    ) {
+        create_graphics_pipeline(device, vertShaderModule, fragShaderModule, configInfo);
     }
 
-    void VulkanPipeline::recreate(const PipelineConfigInfo& configInfo, std::shared_ptr<VulkanShaderModule>& vertShaderModule, std::shared_ptr<VulkanShaderModule>& fragShaderModule) {
+    void VulkanPipeline::recreate(
+        VulkanDevice& device,
+        std::shared_ptr<VulkanShaderModule>& vertShaderModule,
+        std::shared_ptr<VulkanShaderModule>& fragShaderModule,
+        const PipelineConfigInfo& configInfo
+    ) {
+
         vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
 
-        create_graphics_pipeline(configInfo, vertShaderModule, fragShaderModule);
+        create_graphics_pipeline(device, vertShaderModule, fragShaderModule, configInfo);
     }
 
     VulkanPipeline::~VulkanPipeline() {
-        vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
+        // vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
     }
 
     void VulkanPipeline::bind(VkCommandBuffer commandBuffer) {

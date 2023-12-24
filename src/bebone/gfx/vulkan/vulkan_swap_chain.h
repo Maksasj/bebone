@@ -21,15 +21,13 @@ namespace bebone::gfx {
 
     class VulkanSwapChain : private core::NonCopyable {
         private:
-            void create_swap_chain();
-            void create_render_target();
-            void create_sync_objects();
+            void create_swap_chain(VulkanDevice& device);
+            void create_render_target(VulkanDevice& device);
+            void create_sync_objects(VulkanDevice& device);
 
             static VkSurfaceFormatKHR choose_swap_surface_format(const std::vector<VkSurfaceFormatKHR> &availableFormats);
             static VkPresentModeKHR choose_swap_present_mode(const std::vector<VkPresentModeKHR> &availablePresentModes);
             static VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D windowExtent);
-
-            VulkanDevice &device;
 
             VkExtent2D extent;
             VkSurfaceFormatKHR surfaceFormat;
@@ -44,15 +42,15 @@ namespace bebone::gfx {
             std::vector<VkFence> inFlightFences;
             std::vector<VkFence> imagesInFlight;
         public:
-            void recreate(VkExtent2D windowExtent);
+            // void recreate(VulkanDevice& device, VkExtent2D windowExtent);
 
             std::unique_ptr<RenderTarget> renderTarget;
 
             VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent);
             ~VulkanSwapChain();
 
-            VulkanResult acquire_next_image(uint32_t *imageIndex);
-            VulkanResult submit_command_buffers(std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex);
+            VulkanResult acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *imageIndex);
+            VulkanResult submit_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex);
 
             size_t currentFrame = 0;
     };

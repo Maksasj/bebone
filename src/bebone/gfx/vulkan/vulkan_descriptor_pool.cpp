@@ -4,13 +4,7 @@
 #include "vulkan_descriptor_set.h"
 
 namespace bebone::gfx {
-    // Todo Count should be pre computed
-    VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) : _device(device) {
-        // If vector resizes, then all pointers to descriptors will not be valid
-
-        // descriptorSets.reserve(65536);
-        // descriptorSetLayouts.reserve(65536);
-
+    VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) {
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         std::vector<VkDescriptorPoolSize> poolSizes = {
             { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 65536 },
@@ -24,7 +18,7 @@ namespace bebone::gfx {
         poolInfo.maxSets = static_cast<uint32_t>(65536 * poolSizes.size());
         poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
-        if (vkCreateDescriptorPool(_device.device(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+        if (vkCreateDescriptorPool(device.device(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
@@ -34,10 +28,10 @@ namespace bebone::gfx {
         //     vkDestroyDescriptorSetLayout(_device.device(), layouts, nullptr);
         // }
 
-        vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
+        // vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
     }
 
-    void VulkanDescriptorPool::update_descriptor_set(std::shared_ptr<VulkanBuffer>& buffer, const size_t& size, std::shared_ptr<VulkanDescriptorSet>& descriptorSet, const size_t& binding, const size_t& dstArrayElement) {
+    void VulkanDescriptorPool::update_descriptor_set(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanBuffer>& buffer, const size_t& size, std::shared_ptr<VulkanDescriptorSet>& descriptorSet, const size_t& binding, const size_t& dstArrayElement) {
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = buffer->get_buffer();
         bufferInfo.offset = 0;
@@ -57,7 +51,7 @@ namespace bebone::gfx {
         descriptorWrite.pImageInfo = nullptr; // Optional
         descriptorWrite.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(_device.device(), 1, &descriptorWrite, 0, nullptr);
+        vkUpdateDescriptorSets(device->device(), 1, &descriptorWrite, 0, nullptr);
     }
 
     std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout) {

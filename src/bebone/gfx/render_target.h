@@ -11,8 +11,6 @@
 namespace bebone::gfx {
     class RenderTarget {
         public:
-            VulkanDevice& device;
-
             VulkanRenderPass renderPass;
 
             // Framebuffer things
@@ -30,12 +28,11 @@ namespace bebone::gfx {
             RenderTarget(VulkanDevice& _device, std::vector<VkImage>& _swapChainImages, VkFormat _imageFormat, VkExtent2D _extent);
             ~RenderTarget();
 
-            void create_image_views();
-            
-            void create_framebuffers();
-            void create_depth_resources();
+            void create_image_views(VulkanDevice& device);
+            void create_framebuffers(VulkanDevice& device);
+            void create_depth_resources(VulkanDevice& device);
 
-            VkFormat find_depth_format();
+            VkFormat find_depth_format(VulkanDevice& device);
     };
 }
 

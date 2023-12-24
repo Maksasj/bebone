@@ -5,7 +5,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    void VulkanBuffer::create_buffer(VkDeviceSize size, VkBufferUsageFlags usage) {
+    void VulkanBuffer::create_buffer(VulkanDevice& device, VkDeviceSize size, VkBufferUsageFlags usage) {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
@@ -17,7 +17,7 @@ namespace bebone::gfx {
         }
     }
 
-    void VulkanBuffer::allocate_memory(VkMemoryPropertyFlags properties) {
+    void VulkanBuffer::allocate_memory(VulkanDevice& device, VkMemoryPropertyFlags properties) {
         VkMemoryRequirements memRequirements;
         vkGetBufferMemoryRequirements(device.device(), buffer, &memRequirements);
 
@@ -31,34 +31,26 @@ namespace bebone::gfx {
         }
     }
 
-    VulkanBuffer::VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device) : device(device), _size(static_cast<size_t>(size)) {
-        create_buffer(size, VULKAN_BUFFER_ANY_USE_FLAG);
-        allocate_memory(properties);
+    VulkanBuffer::VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device) : _size(static_cast<size_t>(size)) {
+        create_buffer(device, size, VULKAN_BUFFER_ANY_USE_FLAG);
+        allocate_memory(device, properties);
 
         vkBindBufferMemory(device.device(), buffer, bufferMemory, 0);
     }
 
     VulkanBuffer::~VulkanBuffer() {
-        vkDestroyBuffer(device.device(), buffer, nullptr);
-        vkFreeMemory(device.device(), bufferMemory, nullptr);
+        // vkDestroyBuffer(device.device(), buffer, nullptr);
+        // vkFreeMemory(device.device(), bufferMemory, nullptr);
     }
 
-    void VulkanBuffer::upload_data(const void* src, const size_t& size) {
+    void VulkanBuffer::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
         void* data;
-        vkMapMemory(device.device(), bufferMemory, 0, size, 0, &data);
+        vkMapMemory(device->device(), bufferMemory, 0, size, 0, &data);
         memcpy(data, src, size);
-        vkUnmapMemory(device.device(), bufferMemory);
+        vkUnmapMemory(device->device(), bufferMemory);
     }
 
     VkBuffer VulkanBuffer::get_buffer() const {
         return buffer;
-    }
-
-    size_t VulkanBuffer::get_size() {
-        return _size;
-    }
-
-    VkDeviceMemory VulkanBuffer::get_buffer_memory() const {
-        return bufferMemory;
     }
 }

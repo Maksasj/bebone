@@ -18,8 +18,6 @@ namespace bebone::gfx {
             // std::vector<VkDescriptorSet> descriptorSets;
             // std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
 
-            VulkanDevice& _device;
-
             // Todo Count should be pre computed 
             VulkanDescriptorPool(VulkanDevice& device);
 
@@ -34,6 +32,7 @@ namespace bebone::gfx {
             // VkDescriptorSet* create_descriptor(VkDescriptorSetLayout* descriptorSetLayout, VkBuffer buffer);
 
             void update_descriptor_set(
+                std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanBuffer>& buffer,
                 const size_t& size,
                 std::shared_ptr<VulkanDescriptorSet>& descriptorSet,

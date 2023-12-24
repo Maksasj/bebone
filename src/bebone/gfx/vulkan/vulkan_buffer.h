@@ -31,29 +31,21 @@ namespace bebone::gfx {
 
     class VulkanBuffer : private core::NonCopyable {
         private:
-            VulkanDevice& device;
-
             VkBuffer buffer;
             VkDeviceMemory bufferMemory;
 
             const size_t _size;
 
-            void create_buffer(VkDeviceSize size, VkBufferUsageFlags usage);
-
-            void allocate_memory(VkMemoryPropertyFlags properties);
+            void create_buffer(VulkanDevice& device, VkDeviceSize size, VkBufferUsageFlags usage);
+            void allocate_memory(VulkanDevice& device, VkMemoryPropertyFlags properties);
 
         public:
             VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device);
-
             ~VulkanBuffer();
 
-            void upload_data(const void* src, const size_t& size);
+            void upload_data(std::shared_ptr<VulkanDevice> &device, const void *src, const size_t &size);
 
             VkBuffer get_buffer() const;
-
-            size_t get_size();
-
-            VkDeviceMemory get_buffer_memory() const;
     };
 }
 

@@ -1,9 +1,9 @@
 #include "vulkan_render_pass.h"
 
 namespace bebone::gfx {
-    VulkanRenderPass::VulkanRenderPass(VulkanDevice& _device, VkFormat colorAttachmentImageFormat) : device(_device) {
+    VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, VkFormat colorAttachmentImageFormat) {
             VkAttachmentDescription depthAttachment{};
-            depthAttachment.format = find_depth_format();
+            depthAttachment.format = find_depth_format(device);
             depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
             depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
             depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -60,10 +60,10 @@ namespace bebone::gfx {
         }
 
         VulkanRenderPass::~VulkanRenderPass() {
-            vkDestroyRenderPass(device.device(), renderPass, nullptr);
+            // vkDestroyRenderPass(device.device(), renderPass, nullptr);
         }
 
-        VkFormat VulkanRenderPass::find_depth_format() { // Todo move this to device
+        VkFormat VulkanRenderPass::find_depth_format(VulkanDevice& device) { // Todo move this to device
             return device.find_supported_format(
                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
                 VK_IMAGE_TILING_OPTIMAL,

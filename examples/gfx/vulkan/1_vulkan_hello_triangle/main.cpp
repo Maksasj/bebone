@@ -28,7 +28,7 @@ int main() {
     auto pipelineLayout = device->create_pipeline_layout({}, {});
 
     auto commandBufferPool = device->create_command_buffer_pool();
-    auto commandBuffers = commandBufferPool->create_command_buffers(3);
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
@@ -37,14 +37,14 @@ int main() {
     auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
     auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
 
-    vertexBuffer->upload_data(vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer->upload_data(indices.data(), sizeof(u32) * indices.size());
+    vertexBuffer->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
     while (!window->closing()) {
         glfwPollEvents();
 
         uint32_t frame;
-        auto result = swapChain->acquire_next_image(&frame);
+        auto result = swapChain->acquire_next_image(device, &frame);
 
         if(result.is_ok())
             continue;
@@ -61,7 +61,7 @@ int main() {
             .end_render_pass()
             .end_record();
 
-        result = swapChain->submit_command_buffers(cmd, &frame);
+        result = swapChain->submit_command_buffers(device, cmd, &frame);
 
         if(result.is_ok() || window->is_resized())
             continue;

@@ -55,7 +55,7 @@ int main() {
     auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
 
     auto commandBufferPool = device->create_command_buffer_pool();
-    auto commandBuffers = commandBufferPool->create_command_buffers(3);
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     // Todo make this nicer
     auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {{
@@ -71,21 +71,21 @@ int main() {
     auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
     auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
 
-    vertexBuffer->upload_data(vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer->upload_data(indices.data(), sizeof(u32) * indices.size());
+    vertexBuffer->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
     auto transformUBO = device->create_buffers(sizeof(Transform), 3);
     auto cameraUBO = device->create_buffers(sizeof(CameraTransform), 3);
 
     // Todo make this nicer
-    descriptorPool->update_descriptor_set(transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
-    descriptorPool->update_descriptor_set(transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
-    descriptorPool->update_descriptor_set(transformUBO[2], sizeof(Transform), descriptors[2], 0, 2);
+    descriptorPool->update_descriptor_set(device, transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
+    descriptorPool->update_descriptor_set(device, transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
+    descriptorPool->update_descriptor_set(device, transformUBO[2], sizeof(Transform), descriptors[2], 0, 2);
 
     // Todo make this nicer
-    descriptorPool->update_descriptor_set(cameraUBO[0], sizeof(CameraTransform), descriptors[0], 1, 0 + 3);
-    descriptorPool->update_descriptor_set(cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
-    descriptorPool->update_descriptor_set(cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
+    descriptorPool->update_descriptor_set(device, cameraUBO[0], sizeof(CameraTransform), descriptors[0], 1, 0 + 3);
+    descriptorPool->update_descriptor_set(device, cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
+    descriptorPool->update_descriptor_set(device, cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
 
     auto cameraTransform = CameraTransform {
         getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
@@ -103,7 +103,7 @@ int main() {
         glfwPollEvents();
 
         uint32_t frame;
-        auto result = swapChain->acquire_next_image(&frame);
+        auto result = swapChain->acquire_next_image(device, &frame);
 
         if(result.is_ok())
             continue;
@@ -113,24 +113,24 @@ int main() {
 
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
-        transformUBO[frame]->upload_data(&transform, sizeof(Transform));
-        cameraUBO[frame]->upload_data(&cameraTransform, sizeof(CameraTransform));
+        transformUBO[frame]->upload_data(device, &transform, sizeof(Transform));
+        cameraUBO[frame]->upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
         auto& cmd = commandBuffers[frame];
 
         cmd->begin_record()
-            .begin_render_pass(swapChain, frame)
-            .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_pipeline(*pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptors[frame]->descriptorSet) // todo make this nicer
-            .bind_vertex_buffer(vertexBuffer)
-            .bind_index_buffer(indexBuffer)
-            .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
-            .draw_indexed(indices.size())
-            .end_render_pass()
-            .end_record();
+                .begin_render_pass(swapChain, frame)
+                .set_viewport(0, 0, window->get_width(), window->get_height())
+                .bind_pipeline(*pipeline)
+                .bind_descriptor_set(pipelineLayout, descriptors[frame]->descriptorSet) // todo make this nicer
+                .bind_vertex_buffer(vertexBuffer)
+                .bind_index_buffer(indexBuffer)
+                .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
+                .draw_indexed(indices.size())
+                .end_render_pass()
+                .end_record();
 
-        result = swapChain->submit_command_buffers(cmd, &frame);
+        result = swapChain->submit_command_buffers(device, cmd, &frame);
 
         if(result.is_ok() || window->is_resized())
             continue;
