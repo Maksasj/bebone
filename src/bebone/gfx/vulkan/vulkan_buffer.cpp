@@ -12,14 +12,14 @@ namespace bebone::gfx {
         bufferInfo.usage = usage;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-        if (vkCreateBuffer(device.device(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
+        if (vkCreateBuffer(device.device(), &bufferInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create vulkan buffer!");
         }
     }
 
     void VulkanBuffer::allocate_memory(VulkanDevice& device, VkMemoryPropertyFlags properties) {
         VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(device.device(), buffer, &memRequirements);
+        vkGetBufferMemoryRequirements(device.device(), backend, &memRequirements);
 
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -35,12 +35,7 @@ namespace bebone::gfx {
         create_buffer(device, size, VULKAN_BUFFER_ANY_USE_FLAG);
         allocate_memory(device, properties);
 
-        vkBindBufferMemory(device.device(), buffer, bufferMemory, 0);
-    }
-
-    VulkanBuffer::~VulkanBuffer() {
-        // vkDestroyBuffer(device.device(), buffer, nullptr);
-        // vkFreeMemory(device.device(), bufferMemory, nullptr);
+        vkBindBufferMemory(device.device(), backend, bufferMemory, 0);
     }
 
     void VulkanBuffer::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
@@ -51,6 +46,13 @@ namespace bebone::gfx {
     }
 
     VkBuffer VulkanBuffer::get_buffer() const {
-        return buffer;
+        return backend;
+    }
+
+    void VulkanBuffer::destroy(bebone::gfx::VulkanDevice &device) {
+        vkDestroyBuffer(device.device(), backend, nullptr);
+        
+        // Todo move this some where else
+        vkFreeMemory(device.device(), bufferMemory, nullptr);
     }
 }

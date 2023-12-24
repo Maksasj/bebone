@@ -1,16 +1,17 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include "../gfx_backend.h"
-#include "../window/window.h"
-
-#include "vulkan_instance.h"
-#include "vulkan_device_chooser.h"
-#include "vulkan_buffer.h"
-
 #include <iostream>
 #include <set>
 #include <unordered_set>
+
+#include "../gfx_backend.h"
+#include "../window/window.h"
+
+#include "vulkan_wrapper.tpp"
+#include "vulkan_instance.h"
+#include "vulkan_device_chooser.h"
+#include "vulkan_buffer.h"
 
 namespace bebone::gfx {
     class VulkanSwapChain;
@@ -45,7 +46,6 @@ namespace bebone::gfx {
             VkPhysicalDeviceProperties properties;
 
             VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window);
-            ~VulkanDevice();
 
             std::shared_ptr<VulkanBuffer> create_buffer(const size_t& size);
             std::vector<std::shared_ptr<VulkanBuffer>> create_buffers(const size_t& size, const size_t& bufferCount);
@@ -73,7 +73,7 @@ namespace bebone::gfx {
 
             void wait_idle();
 
-            VkDevice device() const { return device_; }
+            VkDevice device() { return device_; }
             VkSurfaceKHR surface() { return surface_; }
             VkQueue graphicsQueue() { return graphicsQueue_; }
             VkQueue presentQueue() { return presentQueue_; }
@@ -86,7 +86,24 @@ namespace bebone::gfx {
             SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::query_swap_chain_support(physicalDevice, surface_); }
 
             VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-        };
+
+            template <typename... Args>
+            void destroy_all(std::shared_ptr<Args>... args) {
+                (args->destroy(*this), ...);
+            }
+
+            template <typename... Args>
+            void destroy_all(std::vector<std::shared_ptr<Args>>... args) {
+                for(auto& arg : (args, ...)) {
+                    arg->destroy(*this);
+                }
+            }
+
+            void destroy() {
+                vkDestroyDevice(device_, nullptr);
+                vkDestroySurfaceKHR(vulkanInstance.get_instance(), surface_, nullptr);
+            }
+    };
 }
 
 #endif

@@ -2,29 +2,11 @@
 
 namespace bebone::gfx {
     RenderTarget::RenderTarget(VulkanDevice& _device, std::vector<VkImage>& _swapChainImages, VkFormat _imageFormat, VkExtent2D _extent)
-            : renderPass(_device, _imageFormat), swapChainImages(_swapChainImages), imageFormat(_imageFormat), extent(_extent) {
+        : renderPass(_device, _imageFormat), swapChainImages(_swapChainImages), imageFormat(_imageFormat), extent(_extent) {
 
-            create_image_views(_device);
-            create_depth_resources(_device);
-            create_framebuffers(_device);
-        }
-
-    RenderTarget::~RenderTarget() {
-        // for (auto imageView : swapChainImageViews) {
-        //     vkDestroyImageView(device.device(), imageView, nullptr);
-        // }
-// 
-        // swapChainImageViews.clear();
-// 
-        // for (size_t i = 0; i < depthImages.size(); i++) {
-        //     vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
-        //     vkDestroyImage(device.device(), depthImages[i], nullptr);
-        //     vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
-        // }
-// 
-        // for (auto framebuffer : swapChainFramebuffers) {
-        //     vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
-        // }
+        create_image_views(_device);
+        create_depth_resources(_device);
+        create_framebuffers(_device);
     }
 
     void RenderTarget::create_image_views(VulkanDevice& device) {

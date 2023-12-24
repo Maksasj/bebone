@@ -67,6 +67,13 @@ int main() {
 
     device->wait_idle();
 
+    device->destroy_all(commandBuffers);
+    device->destroy_all(vertexBuffer,indexBuffer,commandBufferPool);
+    device->destroy_all(vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+
+    device->destroy();
+    instance->destroy();
+
     glfwTerminate();
 
     return 0;

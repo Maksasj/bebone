@@ -120,6 +120,17 @@ int main() {
 
     device->wait_idle();
 
+    device->destroy_all(commandBuffers);
+    device->destroy_all(vertexBuffer,indexBuffer,commandBufferPool);
+    device->destroy_all(transformUBO);
+    device->destroy_all(cameraUBO);
+    device->destroy_all(descriptorSetLayout);
+    device->destroy_all(descriptors);
+    device->destroy_all(descriptorPool, vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+
+    device->destroy();
+    instance->destroy();
+
     // Todo move all glfw things to glfw context static class
     glfwTerminate();
 

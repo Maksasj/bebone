@@ -28,7 +28,6 @@ namespace bebone::gfx {
             VkInstance& get_instance();
 
             VulkanInstance();
-            ~VulkanInstance();
 
             std::shared_ptr<VulkanDevice> create_device(std::shared_ptr<Window>& window);
 
@@ -36,6 +35,13 @@ namespace bebone::gfx {
 
             static std::shared_ptr<VulkanInstance> create_instance() {
                 return std::make_shared<VulkanInstance>();
+            }
+
+            void destroy() {
+                if(enableValidationLayers)
+                    debugMessenger = nullptr;
+
+                vkDestroyInstance(instance, nullptr);
             }
     };
 }

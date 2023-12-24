@@ -27,11 +27,6 @@ namespace bebone::gfx {
         create_logical_device();
     }
 
-    VulkanDevice::~VulkanDevice() {
-        vkDestroyDevice(device_, nullptr);
-        vkDestroySurfaceKHR(vulkanInstance.get_instance(), surface_, nullptr);
-    }
-
     void VulkanDevice::pick_physical_device(VulkanInstance& vulkanInstance) {
         VulkanDeviceChooser chooser;
 

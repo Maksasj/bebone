@@ -245,6 +245,15 @@ namespace bebone::gfx {
     }
 
     void VulkanSwapChain::destroy(VulkanDevice& device) {
+        renderTarget->destroy(device);
+
+        // Todo move this somewhere else
+        for (size_t i = 0; i < imageCount; i++) {
+            vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(device.device(), inFlightFences[i], nullptr);
+        }
+
         vkDestroySwapchainKHR(device.device(), backend, nullptr);
     }
 }

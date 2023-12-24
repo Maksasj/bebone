@@ -6,6 +6,8 @@
 #include "../../core/core.h"
 #include "../gfx_backend.h"
 
+#include "vulkan_wrapper.tpp"
+
 namespace bebone::gfx {
     using namespace bebone::core;
 
@@ -29,9 +31,8 @@ namespace bebone::gfx {
         VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR |
         VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR;
 
-    class VulkanBuffer : private core::NonCopyable {
+    class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
         private:
-            VkBuffer buffer;
             VkDeviceMemory bufferMemory;
 
             const size_t _size;
@@ -41,11 +42,12 @@ namespace bebone::gfx {
 
         public:
             VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device);
-            ~VulkanBuffer();
 
             void upload_data(std::shared_ptr<VulkanDevice> &device, const void *src, const size_t &size);
 
             VkBuffer get_buffer() const;
+
+            void destroy(VulkanDevice &device) override;
     };
 }
 

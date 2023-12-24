@@ -102,13 +102,6 @@ namespace bebone::gfx {
         }
     }
 
-    VulkanInstance::~VulkanInstance() {
-        if(enableValidationLayers)
-            debugMessenger = nullptr;
-
-        vkDestroyInstance(instance, nullptr);
-    }
-
     std::vector<const char *> VulkanInstance::getRequiredExtensions() {
         uint32_t glfwExtensionCount = 0;
         const char **glfwExtensions;
