@@ -20,25 +20,23 @@ int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
-    auto instance = VulkanInstance::create_instance();
 
+    auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
     auto swapChain = device->create_swap_chain(window);
 
-    auto pipelineLayout = device->create_pipeline_layout({}, {});
-
-    auto commandBufferPool = device->create_command_buffer_pool();
-    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
-
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto pipelineLayout = device->create_pipeline_layout({}, {});
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
     auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
     auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
-
     vertexBuffer->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
     indexBuffer->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     while (!window->closing()) {
         glfwPollEvents();

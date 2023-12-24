@@ -31,58 +31,46 @@ const std::vector<int> indices = {
 };
 
 // Todo move view matrix to omni_types
-Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up);
+Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up);
 
 int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
-    auto instance = VulkanInstance::create_instance();
 
+    auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
     auto swapChain = device->create_swap_chain(window);
 
     auto descriptorPool = device->create_descriptor_pool();
-
     auto descriptorSetLayout = device->create_descriptor_set_layouts({
         VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
         VulkanDescriptorSetLayoutBinding::bindless_uniform(1)
     });
-
     auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
 
-    auto commandBufferPool = device->create_command_buffer_pool();
-    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
-
-    auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {{
+    auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {
         VulkanConstRange::common(sizeof(Handles), 0)
-    }});
-
+    });
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
     auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
     auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
-
     vertexBuffer->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
     indexBuffer->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
     auto transformUBO = device->create_buffers(sizeof(Transform), 3);
     auto cameraUBO = device->create_buffers(sizeof(CameraTransform), 3);
+    descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2});
+    descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5});
 
-    // Todo make this nicer
-    descriptorPool->update_descriptor_set(device, transformUBO[0], sizeof(Transform), descriptors[0], 0, 0);
-    descriptorPool->update_descriptor_set(device, transformUBO[1], sizeof(Transform), descriptors[1], 0, 1);
-    descriptorPool->update_descriptor_set(device, transformUBO[2], sizeof(Transform), descriptors[2], 0, 2);
-
-    // Todo make this nicer
-    descriptorPool->update_descriptor_set(device, cameraUBO[0], sizeof(CameraTransform), descriptors[0], 1, 0 + 3);
-    descriptorPool->update_descriptor_set(device, cameraUBO[1], sizeof(CameraTransform), descriptors[1], 1, 1 + 3);
-    descriptorPool->update_descriptor_set(device, cameraUBO[2], sizeof(CameraTransform), descriptors[2], 1, 2 + 3);
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto cameraTransform = CameraTransform {
-        getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
+        get_view_matrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
@@ -105,10 +93,10 @@ int main() {
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
-        auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
-
         transformUBO[frame]->upload_data(device, &transform, sizeof(Transform));
         cameraUBO[frame]->upload_data(device, &cameraTransform, sizeof(CameraTransform));
+
+        auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
         auto& cmd = commandBuffers[frame];
 
@@ -138,12 +126,12 @@ int main() {
     return 0;
 }
 
-Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up) {
-    const Vec3f w = direction.normalize();
-    const Vec3f u = w.cross(up).normalize();
-    const Vec3f v = w.cross(u);
+Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up) {
+    const auto w = direction.normalize();
+    const auto u = w.cross(up).normalize();
+    const auto v = w.cross(u);
 
-    Mat4f viewMatrix = Mat4f::identity();
+    auto viewMatrix = Mat4f::identity();
     viewMatrix[0 * 4 + 0] = u.x;
     viewMatrix[1 * 4 + 0] = u.y;
     viewMatrix[2 * 4 + 0] = u.z;
