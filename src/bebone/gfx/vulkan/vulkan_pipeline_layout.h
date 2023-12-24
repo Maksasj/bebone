@@ -7,6 +7,8 @@
 #include "vulkan_descriptor_pool.h"
 
 namespace bebone::gfx {
+    class VulkanConstRange;
+
     class VulkanPipelineLayout : private core::NonCopyable {
         private:
             VkPipelineLayout pipelineLayout;
@@ -15,7 +17,7 @@ namespace bebone::gfx {
             VulkanPipelineLayout(
                 VulkanDevice& device,
                 const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
-                const std::vector<VkPushConstantRange>& constantRanges
+                const std::vector<VulkanConstRange>& constantRanges
             );
 
             ~VulkanPipelineLayout();

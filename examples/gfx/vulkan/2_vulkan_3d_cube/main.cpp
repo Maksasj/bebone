@@ -54,11 +54,8 @@ int main() {
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
-    // Todo make this nicer
     auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {{
-        .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT),
-        .offset = 0,
-        .size = sizeof(Handles)
+        VulkanConstRange::common(sizeof(Handles), 0)
     }});
 
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);

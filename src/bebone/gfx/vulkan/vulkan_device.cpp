@@ -8,6 +8,7 @@
 #include "vulkan_pipeline.h"
 #include "vulkan_shader_module.h"
 #include "vulkan_descriptor_set_layout_binding.h"
+#include "vulkan_const_range.h"
 
 #include "../shaders/spirv_shader_compiler.h"
 
@@ -52,7 +53,7 @@ namespace bebone::gfx {
         return std::make_shared<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });
     }
 
-    std::shared_ptr<VulkanPipelineLayout> VulkanDevice::create_pipeline_layout(const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VkPushConstantRange>& constantRanges) {
+    std::shared_ptr<VulkanPipelineLayout> VulkanDevice::create_pipeline_layout(const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VulkanConstRange>& constantRanges) {
         return std::make_shared<VulkanPipelineLayout>(*this, layouts, constantRanges);
     }
 

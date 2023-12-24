@@ -21,27 +21,8 @@ namespace bebone::gfx {
     std::vector<std::shared_ptr<VulkanCommandBuffer>> VulkanCommandBufferPool::create_command_buffers(std::shared_ptr<VulkanDevice>& device, const size_t& commandBufferCount) {
         std::vector<std::shared_ptr<VulkanCommandBuffer>> commandBuffersVector;
 
-        for(size_t i = 0; i < commandBufferCount; ++i) {
-            // VulkanCommandBuffer* commandBuffer = static_cast<VulkanCommandBuffer*>(commandBuffers.alloc(sizeof(VulkanCommandBuffer)));
-//
-            // if(commandBuffer == nullptr) {
-            //     throw std::runtime_error("failed to allocate vulkan command buffer");
-            // }
-//
-            // std::ignore = new (commandBuffer) VulkanCommandBuffer();
-//
-            // VkCommandBufferAllocateInfo allocInfo{};
-            // allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-            // allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-            // allocInfo.commandPool = commandPool;
-            // allocInfo.commandBufferCount = static_cast<uint32_t>(1);
-//
-            // if(vkAllocateCommandBuffers(device->device(), &allocInfo, &commandBuffer->commandBuffer) != VK_SUCCESS) {
-            //     throw std::runtime_error("Failed to allocate command buffers !");
-            // }
-
+        for(size_t i = 0; i < commandBufferCount; ++i)
             commandBuffersVector.push_back(std::make_shared<VulkanCommandBuffer>(device, *this));
-        }
 
         return commandBuffersVector;
     }

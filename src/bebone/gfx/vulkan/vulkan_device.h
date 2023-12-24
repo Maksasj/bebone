@@ -22,6 +22,7 @@ namespace bebone::gfx {
     class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
     class VulkanDescriptorSetLayoutBinding;
+    class VulkanConstRange;
 
     struct ShaderType;
 
@@ -54,7 +55,7 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
                     const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
-                    const std::vector<VkPushConstantRange>& constantRanges);
+                    const std::vector<VulkanConstRange>& constantRanges);
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 std::shared_ptr<VulkanSwapChain>& swapChain,

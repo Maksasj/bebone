@@ -1,16 +1,22 @@
 #include "vulkan_pipeline_layout.h"
 
+#include "vulkan_const_range.h"
 #include "vulkan_descriptor_set_layout.h"
 
 namespace bebone::gfx {
     VulkanPipelineLayout::VulkanPipelineLayout(
             VulkanDevice& device,
             const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
-            const std::vector<VkPushConstantRange>& constantRanges
+            const std::vector<VulkanConstRange>& constantRanges
         ) {
+
+        std::vector<VkPushConstantRange> ranges;
+        for(auto range : constantRanges)
+            ranges.push_back(range.range);
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+
 
         std::vector<VkDescriptorSetLayout> layouts;
         for(const auto& layout : descriptorSetLayouts) {
@@ -19,8 +25,8 @@ namespace bebone::gfx {
 
         pipelineLayoutInfo.setLayoutCount = layouts.size();
         pipelineLayoutInfo.pSetLayouts = layouts.data();
-        pipelineLayoutInfo.pushConstantRangeCount = constantRanges.size();
-        pipelineLayoutInfo.pPushConstantRanges = constantRanges.data();
+        pipelineLayoutInfo.pushConstantRangeCount = ranges.size();
+        pipelineLayoutInfo.pPushConstantRanges = ranges.data();
 
         if(vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create pipeline layout");

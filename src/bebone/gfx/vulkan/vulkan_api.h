@@ -28,4 +28,6 @@
 
 #include "vulkan_swap_chain.h"
 
+#include "vulkan_const_range.h"
+
 #endif
