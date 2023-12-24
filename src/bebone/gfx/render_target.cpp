@@ -1,40 +1,30 @@
 #include "render_target.h"
 
+#include "vulkan/vulkan_image.h"
+#include "vulkan/vulkan_image_view.h"
+
 namespace bebone::gfx {
-    RenderTarget::RenderTarget(VulkanDevice& _device, std::vector<VkImage>& _swapChainImages, VkFormat _imageFormat, VkExtent2D _extent)
-        : renderPass(_device, _imageFormat), swapChainImages(_swapChainImages), imageFormat(_imageFormat), extent(_extent) {
+    RenderTarget::RenderTarget(
+        VulkanDevice& device,
+        std::vector<std::shared_ptr<VulkanImage>>& swapChainImages,
+        VkFormat _imageFormat,
+        VkExtent2D _extent
+    ) : renderPass(device, _imageFormat), swapChainImages(swapChainImages), imageFormat(_imageFormat), extent(_extent) {
 
-        create_image_views(_device);
-        create_depth_resources(_device);
-        create_framebuffers(_device);
-    }
+        for(auto& image : swapChainImages)
+            image->create_image_view(device, imageFormat);
 
-    void RenderTarget::create_image_views(VulkanDevice& device) {
-        swapChainImageViews.resize(swapChainImages.size());
-
-        for (size_t i = 0; i < swapChainImages.size(); i++) {
-            VkImageViewCreateInfo viewInfo{};
-            viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            viewInfo.image = swapChainImages[i];
-            viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            viewInfo.format = imageFormat;
-            viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            viewInfo.subresourceRange.baseMipLevel = 0;
-            viewInfo.subresourceRange.levelCount = 1;
-            viewInfo.subresourceRange.baseArrayLayer = 0;
-            viewInfo.subresourceRange.layerCount = 1;
-
-            if (vkCreateImageView(device.device(), &viewInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create texture image view!");
-            }
-        }
+        create_depth_resources(device);
+        create_framebuffers(device);
     }
 
     void RenderTarget::create_framebuffers(VulkanDevice& device) {
         swapChainFramebuffers.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            std::array<VkImageView, 2> attachments = {swapChainImageViews[i], depthImageViews[i]};
+            // std::array<VkImageView, 2> attachments = { swapChainImages[i]->imageView->backend, depthImageViews[i]};
+            // std::array<VkImageView, 2> attachments = { swapChainImageViews[i], depthImageViews[i]};
+            std::array<VkImageView, 2> attachments = { swapChainImages[i]->imageView->backend, depthImageViews[i]};
 
             VkFramebufferCreateInfo framebufferInfo = {};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -52,7 +42,7 @@ namespace bebone::gfx {
     }
 
     void RenderTarget::create_depth_resources(VulkanDevice& device) {
-        VkFormat depthFormat = find_depth_format(device);
+        VkFormat depthFormat = device.find_depth_format();
 
         depthImages.resize(swapChainImages.size());
         depthImageMemorys.resize(swapChainImages.size());
@@ -94,10 +84,22 @@ namespace bebone::gfx {
         }
     }
 
-    VkFormat RenderTarget::find_depth_format(VulkanDevice& device) { // Todo move this to device
-        return device.find_supported_format(
-            {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-            VK_IMAGE_TILING_OPTIMAL,
-            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+    void RenderTarget::destroy(VulkanDevice& device) {
+        // Todo move this some where else
+        renderPass.destroy(device);
+
+        // Todo move this some where else
+        for (auto imageView : swapChainImages)
+            imageView->imageView->destroy(device);
+
+        for (size_t i = 0; i < depthImages.size(); i++) {
+            vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
+            vkDestroyImage(device.device(), depthImages[i], nullptr);
+            vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
+        }
+
+        for (auto framebuffer : swapChainFramebuffers) {
+            vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
+        }
     }
 }

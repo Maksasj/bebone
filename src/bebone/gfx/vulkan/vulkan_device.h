@@ -83,7 +83,7 @@ namespace bebone::gfx {
             uint32_t find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
             QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::find_queue_families(physicalDevice, surface_); }
-            SwapChainSupportDetails getSwapChainSupport() { return VulkanDeviceChooser::query_swap_chain_support(physicalDevice, surface_); }
+            SwapChainSupportDetails get_swap_chain_support() { return VulkanDeviceChooser::query_swap_chain_support(physicalDevice, surface_); }
 
             VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
@@ -99,10 +99,9 @@ namespace bebone::gfx {
                 }
             }
 
-            void destroy() {
-                vkDestroyDevice(device_, nullptr);
-                vkDestroySurfaceKHR(vulkanInstance.get_instance(), surface_, nullptr);
-            }
+            void destroy();
+
+            VkFormat find_depth_format();
     };
 }
 

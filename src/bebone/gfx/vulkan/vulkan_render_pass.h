@@ -11,8 +11,6 @@ namespace bebone::gfx {
         public:
             VulkanRenderPass(VulkanDevice& _device, VkFormat colorAttachmentImageFormat);
 
-            VkFormat find_depth_format(VulkanDevice& device);
-
             void destroy(VulkanDevice& device) override;
     };
 }

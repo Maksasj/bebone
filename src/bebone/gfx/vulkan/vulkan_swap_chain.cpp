@@ -1,46 +1,21 @@
 #include "vulkan_swap_chain.h"
 
 #include "vulkan_result.h"
+#include "vulkan_image.h"
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
     VulkanSwapChain::VulkanSwapChain(VulkanDevice &device, VkExtent2D _windowExtent) {
-        SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
+        SwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
         extent = choose_swap_extent(swapChainSupport.capabilities, _windowExtent);
 
         create_swap_chain(device);
-        create_render_target(device);
+
+        auto images = create_swap_chain_images(device);
+        renderTarget = std::make_unique<RenderTarget>(device, images, surfaceFormat.format, extent);
+
         create_sync_objects(device);
     }
-
-    // VulkanSwapChain::~VulkanSwapChain() {
-        // if (swapChain != nullptr) {
-        //     vkDestroySwapchainKHR(device.device(), swapChain, nullptr);
-        //     swapChain = nullptr;
-        // }
-//
-        // // // cleanup synchronization objects
-        // for (size_t i = 0; i < imageCount; i++) {
-        //     vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
-        //     vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
-        //     vkDestroyFence(device.device(), inFlightFences[i], nullptr);
-        // }
-    // }
-
-    // void VulkanSwapChain::recreate(VulkanDevice& device, VkExtent2D _windowExtent) {
-    //     renderTarget = nullptr;
-//
-    //     SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
-    //     extent = choose_swap_extent(swapChainSupport.capabilities, _windowExtent);
-//
-    //     if (swapChain != nullptr) {
-    //         vkDestroySwapchainKHR(device.device(), swapChain, nullptr);
-    //         swapChain = nullptr;
-    //     }
-//
-    //     create_swap_chain(device);
-    //     create_render_target(device);
-    // }
 
     VulkanResult VulkanSwapChain::acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *imageIndex) {
         vkWaitForFences(device->device(), 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
@@ -109,8 +84,24 @@ namespace bebone::gfx {
         return { result };
     }
 
+    std::vector<std::shared_ptr<VulkanImage>> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device) {
+        std::vector<VkImage> images;
+        uint32_t imageCount;
+
+        vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, nullptr);
+        images.resize(imageCount);
+        vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, images.data());
+
+        std::vector<std::shared_ptr<VulkanImage>> out;
+
+        for(auto& image : images)
+            out.push_back(std::make_shared<VulkanImage>(image));
+
+        return out;
+    }
+
     void VulkanSwapChain::create_swap_chain(VulkanDevice& device) {
-        SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
+        SwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
 
         surfaceFormat = choose_swap_surface_format(swapChainSupport.formats);
         presentMode = choose_swap_present_mode(swapChainSupport.presentModes);
@@ -158,22 +149,6 @@ namespace bebone::gfx {
         if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
         }
-    }
-
-    void VulkanSwapChain::create_render_target(VulkanDevice& device) {
-        std::vector<VkImage> swapChainImages;
-
-        // we only specified a minimum number of images in the swap chain, so the implementation is
-        // allowed to create a swap chain with more. That's why we'll first query the final number of
-        // images with vkGetSwapchainImagesKHR, then resize the container and finally call it again to
-        // retrieve the handles.
-        uint32_t imageCount;
-
-        vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, nullptr);
-        swapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, swapChainImages.data());
-
-        renderTarget = std::make_unique<RenderTarget>(device, swapChainImages, surfaceFormat.format, extent);
     }
 
     void VulkanSwapChain::create_sync_objects(VulkanDevice& device) {

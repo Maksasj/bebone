@@ -17,32 +17,22 @@ namespace bebone::gfx {
         }
     }
 
-    void VulkanBuffer::allocate_memory(VulkanDevice& device, VkMemoryPropertyFlags properties) {
+    VulkanBuffer::VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device) {
+        create_buffer(device, size, VULKAN_BUFFER_ANY_USE_FLAG);
+
         VkMemoryRequirements memRequirements;
         vkGetBufferMemoryRequirements(device.device(), backend, &memRequirements);
 
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = device.find_memory_type(memRequirements.memoryTypeBits, properties);
-
-        if (vkAllocateMemory(device.device(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate vulkan buffer memory!");
-        }
-    }
-
-    VulkanBuffer::VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device) : _size(static_cast<size_t>(size)) {
-        create_buffer(device, size, VULKAN_BUFFER_ANY_USE_FLAG);
-        allocate_memory(device, properties);
-
-        vkBindBufferMemory(device.device(), backend, bufferMemory, 0);
+        bufferMemory = std::make_shared<VulkanDeviceMemory>(memRequirements, properties, device);
+        bufferMemory->bind_buffer_memory(device, *this);
     }
 
     void VulkanBuffer::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
         void* data;
-        vkMapMemory(device->device(), bufferMemory, 0, size, 0, &data);
+
+        bufferMemory->map(device, size, &data);
         memcpy(data, src, size);
-        vkUnmapMemory(device->device(), bufferMemory);
+        bufferMemory->unmap(device);
     }
 
     VkBuffer VulkanBuffer::get_buffer() const {
@@ -51,8 +41,7 @@ namespace bebone::gfx {
 
     void VulkanBuffer::destroy(bebone::gfx::VulkanDevice &device) {
         vkDestroyBuffer(device.device(), backend, nullptr);
-        
-        // Todo move this some where else
-        vkFreeMemory(device.device(), bufferMemory, nullptr);
+
+        bufferMemory->destroy(device);
     }
 }

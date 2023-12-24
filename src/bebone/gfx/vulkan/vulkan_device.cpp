@@ -199,6 +199,7 @@ namespace bebone::gfx {
         VkMemoryRequirements memRequirements;
         vkGetImageMemoryRequirements(device_, image, &memRequirements);
 
+        // Memory thing
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
@@ -215,5 +216,17 @@ namespace bebone::gfx {
 
     void VulkanDevice::wait_idle() {
         vkDeviceWaitIdle(device_);
+    }
+
+    void VulkanDevice::destroy() {
+        vkDestroyDevice(device_, nullptr);
+        vkDestroySurfaceKHR(vulkanInstance.get_instance(), surface_, nullptr);
+    }
+
+    VkFormat VulkanDevice::find_depth_format() {
+        return find_supported_format(
+            {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
+            VK_IMAGE_TILING_OPTIMAL,
+            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
     }
 }

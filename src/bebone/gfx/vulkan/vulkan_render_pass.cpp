@@ -3,7 +3,7 @@
 namespace bebone::gfx {
     VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, VkFormat colorAttachmentImageFormat) {
         VkAttachmentDescription depthAttachment{};
-        depthAttachment.format = find_depth_format(device);
+        depthAttachment.format = device.find_depth_format();
         depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -57,13 +57,6 @@ namespace bebone::gfx {
         if (vkCreateRenderPass(device.device(), &renderPassInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create render pass!");
         }
-    }
-
-    VkFormat VulkanRenderPass::find_depth_format(VulkanDevice& device) { // Todo move this to device
-        return device.find_supported_format(
-            {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-            VK_IMAGE_TILING_OPTIMAL,
-            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
     }
 
     void VulkanRenderPass::destroy(VulkanDevice& device) {

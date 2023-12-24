@@ -7,6 +7,7 @@
 #include "../gfx_backend.h"
 
 #include "vulkan_wrapper.tpp"
+#include "vulkan_device_memory.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -33,12 +34,9 @@ namespace bebone::gfx {
 
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
         private:
-            VkDeviceMemory bufferMemory;
-
-            const size_t _size;
+            std::shared_ptr<VulkanDeviceMemory> bufferMemory;
 
             void create_buffer(VulkanDevice& device, VkDeviceSize size, VkBufferUsageFlags usage);
-            void allocate_memory(VulkanDevice& device, VkMemoryPropertyFlags properties);
 
         public:
             VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device);
