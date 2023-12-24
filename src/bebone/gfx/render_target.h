@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "vulkan_render_pass.h"
+#include "vulkan/vulkan_render_pass.h"
 
 #include "vulkan/vulkan_device.h"
 #include "gfx_backend.h"

@@ -55,6 +55,7 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
                     const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
                     const std::vector<VkPushConstantRange>& constantRanges);
+
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 std::shared_ptr<VulkanSwapChain>& swapChain,
                 std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
@@ -62,12 +63,14 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanShaderModule>& fragShaderModule);
 
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
-            std::shared_ptr<VulkanShaderModule> create_shader_module(const std::string& shaderCodePath, const ShaderType& type);
+
+            std::shared_ptr<VulkanShaderModule> create_shader_module(
+                const std::string& shaderCodePath,
+                const ShaderType& type);
+
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 
-            void wait_idle() {
-                vkDeviceWaitIdle(device_);
-            }
+            void wait_idle();
 
             VkDevice device() const { return device_; }
             VkSurfaceKHR surface() { return surface_; }

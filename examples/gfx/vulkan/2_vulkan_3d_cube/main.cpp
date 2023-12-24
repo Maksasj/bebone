@@ -1,6 +1,3 @@
-#include <iostream>
-#include <fstream>
-
 #define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
 #define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
@@ -119,16 +116,16 @@ int main() {
         auto& cmd = commandBuffers[frame];
 
         cmd->begin_record()
-                .begin_render_pass(swapChain, frame)
-                .set_viewport(0, 0, window->get_width(), window->get_height())
-                .bind_pipeline(*pipeline)
-                .bind_descriptor_set(pipelineLayout, descriptors[frame]->descriptorSet) // todo make this nicer
-                .bind_vertex_buffer(vertexBuffer)
-                .bind_index_buffer(indexBuffer)
-                .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
-                .draw_indexed(indices.size())
-                .end_render_pass()
-                .end_record();
+            .begin_render_pass(swapChain, frame)
+            .set_viewport(0, 0, window->get_width(), window->get_height())
+            .bind_pipeline(*pipeline)
+            .bind_descriptor_set(pipelineLayout, descriptors[frame]->descriptorSet) // todo make this nicer
+            .bind_vertex_buffer(vertexBuffer)
+            .bind_index_buffer(indexBuffer)
+            .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
+            .draw_indexed(indices.size())
+            .end_render_pass()
+            .end_record();
 
         result = swapChain->submit_command_buffers(device, cmd, &frame);
 

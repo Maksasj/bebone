@@ -1,10 +1,20 @@
 #include "vulkan_command_buffer.h"
 
+#include "vulkan_device.h"
 #include "vulkan_pipeline_layout.h"
+#include "vulkan_command_buffer_pool.h"
 
 namespace bebone::gfx {
-    VulkanCommandBuffer::VulkanCommandBuffer() {
+    VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& commandBufferPool) {
+        VkCommandBufferAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        allocInfo.commandPool = commandBufferPool.commandPool;
+        allocInfo.commandBufferCount = static_cast<uint32_t>(1);
 
+        if(vkAllocateCommandBuffers(device->device(), &allocInfo, &commandBuffer) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to allocate command buffers !");
+        }
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::begin_record() {

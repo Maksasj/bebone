@@ -216,4 +216,8 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to bind image memory!");
         }
     }
+
+    void VulkanDevice::wait_idle() {
+        vkDeviceWaitIdle(device_);
+    }
 }
