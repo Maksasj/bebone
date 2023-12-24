@@ -83,7 +83,7 @@ namespace bebone::gfx {
 
         PipelineConfigInfo pipelineConfig;
         PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
-        pipelineConfig.renderPass = swapChain->renderTarget->renderPass.renderPass;
+        pipelineConfig.renderPass = swapChain->renderTarget->renderPass.backend;
         pipelineConfig.pipelineLayout = pipelineLayout->get_layout();
 
         return std::make_shared<VulkanPipeline>(*this, vertShaderModule, fragShaderModule, pipelineConfig);

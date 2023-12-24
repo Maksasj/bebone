@@ -9,10 +9,10 @@ namespace bebone::gfx {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandPool = commandBufferPool.commandPool;
+        allocInfo.commandPool = commandBufferPool.backend;
         allocInfo.commandBufferCount = static_cast<uint32_t>(1);
 
-        if(vkAllocateCommandBuffers(device->device(), &allocInfo, &commandBuffer) != VK_SUCCESS) {
+        if(vkAllocateCommandBuffers(device->device(), &allocInfo, &backend) != VK_SUCCESS) {
             throw std::runtime_error("Failed to allocate command buffers !");
         }
     }
@@ -21,7 +21,7 @@ namespace bebone::gfx {
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-        if(vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+        if(vkBeginCommandBuffer(backend, &beginInfo) != VK_SUCCESS) {
             throw std::runtime_error("failed to being recording command buffer");
         }
 
@@ -29,7 +29,7 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::end_record() {
-        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+        if (vkEndCommandBuffer(backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to end command buffer");
         }
 
@@ -39,7 +39,7 @@ namespace bebone::gfx {
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer) {
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = swapChain->renderTarget->renderPass.renderPass;
+        renderPassInfo.renderPass = swapChain->renderTarget->renderPass.backend;
         renderPassInfo.framebuffer = swapChain->renderTarget->swapChainFramebuffers[frameBuffer];
 
         renderPassInfo.renderArea.offset = {0, 0};
@@ -52,7 +52,7 @@ namespace bebone::gfx {
         renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
         renderPassInfo.pClearValues = clearValues.data();
 
-        vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBeginRenderPass(backend, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         return *this;
     }
@@ -70,20 +70,20 @@ namespace bebone::gfx {
 
         VkRect2D scissor = {{x, y}, {width, height}};
 
-        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-        vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+        vkCmdSetViewport(backend, 0, 1, &viewport);
+        vkCmdSetScissor(backend, 0, 1, &scissor);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::end_render_pass() {
-        vkCmdEndRenderPass(commandBuffer);
+        vkCmdEndRenderPass(backend);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(VulkanPipeline& pipeline) {
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.graphicsPipeline);
+        vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.backend);
 
         return *this;
     }
@@ -91,45 +91,49 @@ namespace bebone::gfx {
     VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer) {
         VkBuffer buffers[] = {buffer->get_buffer()};
         VkDeviceSize offset[] = {0};
-        vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offset);
+        vkCmdBindVertexBuffers(backend, 0, 1, buffers, offset);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBuffer>& indexBuffer) {
         // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
-        vkCmdBindIndexBuffer(commandBuffer, indexBuffer->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(backend, indexBuffer->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertexCount) {
-        vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
+        vkCmdDraw(backend, vertexCount, 1, 0, 0);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw_indexed(const size_t& indexCount) {
-        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indexCount), 1, 0, 0, 0);
+        vkCmdDrawIndexed(backend, static_cast<uint32_t>(indexCount), 1, 0, 0, 0);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, VkDescriptorSet& descriptorSet) {
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSet, 0, nullptr);
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSet, 0, nullptr);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const void* constantPtr) {
-        vkCmdPushConstants(commandBuffer, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, constantPtr);
+        vkCmdPushConstants(backend, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, constantPtr);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
-        vkCmdPushConstants(commandBuffer, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, constantPtr);
+        vkCmdPushConstants(backend, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, constantPtr);
 
         return *this;
+    }
+
+    void VulkanCommandBuffer::destroy(VulkanDevice& device) {
+
     }
 }

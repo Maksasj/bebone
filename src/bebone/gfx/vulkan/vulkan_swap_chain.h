@@ -1,7 +1,6 @@
 #ifndef _BEBONE_GFX_VULKAN_SWAP_CHAIN_H_
 #define _BEBONE_GFX_VULKAN_SWAP_CHAIN_H_
 
-#include "vulkan_device.h"
 
 #include <string>
 #include <vector>
@@ -13,13 +12,15 @@
 #include <set>
 #include <stdexcept>
 
+#include "vulkan_device.h"
 #include "../render_target.h"
+#include "vulkan_wrapper.tpp"
 
 namespace bebone::gfx {
     class VulkanResult;
     class VulkanCommandBuffer;
 
-    class VulkanSwapChain : private core::NonCopyable {
+    class VulkanSwapChain : public VulkanWrapper<VkSwapchainKHR>, private core::NonCopyable {
         private:
             void create_swap_chain(VulkanDevice& device);
             void create_render_target(VulkanDevice& device);
@@ -33,8 +34,6 @@ namespace bebone::gfx {
             VkSurfaceFormatKHR surfaceFormat;
             VkPresentModeKHR presentMode;
 
-            VkSwapchainKHR swapChain;
-
             u32 imageCount;
 
             std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -47,12 +46,13 @@ namespace bebone::gfx {
             std::unique_ptr<RenderTarget> renderTarget;
 
             VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent);
-            ~VulkanSwapChain();
 
             VulkanResult acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *imageIndex);
             VulkanResult submit_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex);
 
             size_t currentFrame = 0;
+
+            void destroy(VulkanDevice& device) override;
     };
 }
 

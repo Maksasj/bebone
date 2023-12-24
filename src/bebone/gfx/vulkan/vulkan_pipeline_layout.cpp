@@ -20,7 +20,7 @@ namespace bebone::gfx {
 
         std::vector<VkDescriptorSetLayout> layouts;
         for(const auto& layout : descriptorSetLayouts) {
-            layouts.push_back(layout->descriptorSetLayout);
+            layouts.push_back(layout->backend);
         }
 
         pipelineLayoutInfo.setLayoutCount = layouts.size();
@@ -28,16 +28,16 @@ namespace bebone::gfx {
         pipelineLayoutInfo.pushConstantRangeCount = ranges.size();
         pipelineLayoutInfo.pPushConstantRanges = ranges.data();
 
-        if(vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        if(vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create pipeline layout");
         }
     }
 
     VkPipelineLayout VulkanPipelineLayout::get_layout() {
-        return pipelineLayout;
+        return backend;
     }
 
-    VulkanPipelineLayout::~VulkanPipelineLayout() {
-        // vkDestroyPipelineLayout(_device.device(), pipelineLayout, nullptr);
+    void VulkanPipelineLayout::destroy(VulkanDevice& device) {
+        vkDestroyPipelineLayout(device.device(), backend, nullptr);
     }
 }

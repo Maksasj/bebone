@@ -80,7 +80,7 @@ int main() {
     transformUbo.bind();
     shaderProgram.bind_buffer("Transform", 0, transformUbo);
     auto transformPtr = static_cast<Transform*>(transformUbo.map());
-        transformPtr->translation = Mat4f::translation(Vec3f(0, 0, 0));
+        transformPtr->translation = Mat4f::translation(Vec3f::splat(0));
         transformPtr->scale = Mat4f::identity();
 
     cameraUbo.bind();

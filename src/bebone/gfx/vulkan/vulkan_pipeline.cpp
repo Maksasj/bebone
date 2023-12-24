@@ -38,14 +38,14 @@ namespace bebone::gfx {
         VkPipelineShaderStageCreateInfo shaderStages[2];
         shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-        shaderStages[0].module = vertShaderModule->shader;
+        shaderStages[0].module = vertShaderModule->backend;
         shaderStages[0].pName = "main";
         shaderStages[0].flags = 0;
         shaderStages[0].pNext = nullptr;
         shaderStages[0].pSpecializationInfo = nullptr;
         shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         shaderStages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-        shaderStages[1].module = fragShaderModule->shader;
+        shaderStages[1].module = fragShaderModule->backend;
         shaderStages[1].pName = "main";
         shaderStages[1].flags = 0;
         shaderStages[1].pNext = nullptr;
@@ -81,7 +81,7 @@ namespace bebone::gfx {
         pipelineInfo.basePipelineIndex = -1;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-        if (vkCreateGraphicsPipelines(device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+        if (vkCreateGraphicsPipelines(device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline");
         } else {
             std::cout << "Created graphics pipeline !\n";
@@ -103,17 +103,17 @@ namespace bebone::gfx {
         std::shared_ptr<VulkanShaderModule>& fragShaderModule,
         const PipelineConfigInfo& configInfo
     ) {
-
-        vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
+        // Todo move this
+        vkDestroyPipeline(device.device(), backend, nullptr);
 
         create_graphics_pipeline(device, vertShaderModule, fragShaderModule, configInfo);
     }
 
-    VulkanPipeline::~VulkanPipeline() {
-        // vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
+    void VulkanPipeline::bind(VkCommandBuffer commandBuffer) {
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, backend);
     }
 
-    void VulkanPipeline::bind(VkCommandBuffer commandBuffer) {
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    void VulkanPipeline::destroy(VulkanDevice& device) {
+        vkDestroyPipeline(device.device(), backend, nullptr);
     }
 }

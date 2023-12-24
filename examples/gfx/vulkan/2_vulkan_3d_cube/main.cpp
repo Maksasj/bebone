@@ -70,7 +70,7 @@ int main() {
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto cameraTransform = CameraTransform {
-        get_view_matrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
+        get_view_matrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
@@ -104,7 +104,7 @@ int main() {
             .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(*pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptors[frame]->descriptorSet) // todo make this nicer
+            .bind_descriptor_set(pipelineLayout, descriptors[frame]->backend) // todo make this nicer
             .bind_vertex_buffer(vertexBuffer)
             .bind_index_buffer(indexBuffer)
             .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)

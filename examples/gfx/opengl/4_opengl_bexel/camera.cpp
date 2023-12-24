@@ -5,7 +5,7 @@ namespace bexel {
         m_renderDistance = renderDistance;
 
         m_position = position;
-        m_rotation = Vec3f(0.0f, 0.0f, 0.0f);
+        m_rotation = Vec3f::splat(0.0f);
         m_direction = Vec3f::splat(0.0f);
 
         m_mouseLocked = true;
@@ -15,7 +15,7 @@ namespace bexel {
     }
 
     Mat4f Camera::calculate_view_matrix() const {
-        const static auto upVector = Vec3f(0.0f, -1.0f, 0.0f);
+        const static auto upVector = Vec3f::down;
 
         const auto w = m_direction.normalize();
         const auto u = w.cross(upVector).normalize();

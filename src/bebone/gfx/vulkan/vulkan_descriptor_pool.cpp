@@ -18,18 +18,16 @@ namespace bebone::gfx {
         poolInfo.maxSets = static_cast<uint32_t>(65536 * poolSizes.size());
         poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
-        if (vkCreateDescriptorPool(device.device(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+        if (vkCreateDescriptorPool(device.device(), &poolInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
 
-    VulkanDescriptorPool::~VulkanDescriptorPool() {
-        // for(const auto& layouts : descriptorSetLayouts) {
-        //     vkDestroyDescriptorSetLayout(_device.device(), layouts, nullptr);
-        // }
-
-        // vkDestroyDescriptorPool(_device.device(), descriptorPool, nullptr);
-    }
+    // VulkanDescriptorPool::~VulkanDescriptorPool() {
+    //     // for(const auto& layouts : descriptorSetLayouts) {
+    //     //     vkDestroyDescriptorSetLayout(_device.device(), layouts, nullptr);
+    //     // }
+    // }
 
     void VulkanDescriptorPool::update_descriptor_set(
         std::shared_ptr<VulkanDevice>& device,
@@ -47,7 +45,7 @@ namespace bebone::gfx {
         VkWriteDescriptorSet descriptorWrite{};
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
-        descriptorWrite.dstSet = descriptorSet->descriptorSet;
+        descriptorWrite.dstSet = descriptorSet->backend;
         descriptorWrite.dstBinding = binding;
         descriptorWrite.dstArrayElement = dstArrayElement; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
@@ -92,5 +90,9 @@ namespace bebone::gfx {
             descriptors.push_back(std::make_shared<VulkanDescriptorSet>(device, *this, descriptorSetLayout));
 
         return descriptors;
+    }
+
+    void VulkanDescriptorPool::destroy(VulkanDevice& device) {
+        vkDestroyDescriptorPool(device.device(), backend, nullptr);
     }
 }

@@ -54,13 +54,9 @@ namespace bebone::gfx {
         renderPassInfo.dependencyCount = 1;
         renderPassInfo.pDependencies = &dependency;
 
-        if (vkCreateRenderPass(device.device(), &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
+        if (vkCreateRenderPass(device.device(), &renderPassInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create render pass!");
         }
-    }
-
-    VulkanRenderPass::~VulkanRenderPass() {
-        // vkDestroyRenderPass(device.device(), renderPass, nullptr);
     }
 
     VkFormat VulkanRenderPass::find_depth_format(VulkanDevice& device) { // Todo move this to device
@@ -68,5 +64,9 @@ namespace bebone::gfx {
             {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
             VK_IMAGE_TILING_OPTIMAL,
             VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+    }
+
+    void VulkanRenderPass::destroy(VulkanDevice& device) {
+        vkDestroyRenderPass(device.device(), backend, nullptr);
     }
 }

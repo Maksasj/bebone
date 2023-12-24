@@ -3,12 +3,12 @@
 
 #include "../shaders/shader_code.h"
 
+#include "vulkan_wrapper.tpp"
 #include "vulkan_shader_module.h"
-
 #include "vulkan_pipeline_config_info.h"
 
 namespace bebone::gfx {
-    class VulkanPipeline : private core::NonCopyable {
+    class VulkanPipeline : public VulkanWrapper<VkPipeline>, private core::NonCopyable {
         private:
             void create_graphics_pipeline(
                 VulkanDevice& device,
@@ -17,15 +17,11 @@ namespace bebone::gfx {
                 const PipelineConfigInfo& configInfo);
 
         public:
-            VkPipeline graphicsPipeline;
-
             VulkanPipeline(
                 VulkanDevice& device,
                 std::shared_ptr<VulkanShaderModule>& vertShaderModule,
                 std::shared_ptr<VulkanShaderModule>& fragShaderModule,
                 const PipelineConfigInfo& configInfo);
-
-            ~VulkanPipeline();
 
             void recreate(
                 VulkanDevice& device,
@@ -34,6 +30,8 @@ namespace bebone::gfx {
                 const PipelineConfigInfo& configInfo);
 
             void bind(VkCommandBuffer commandBuffer);
+
+            void destroy(VulkanDevice& device) override;
     };
 }
 

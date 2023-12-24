@@ -47,8 +47,12 @@ namespace bebone::gfx {
 
         layoutInfo.pNext = &extendedInfo;
 
-        if (vkCreateDescriptorSetLayout(device.device(), &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
+        if (vkCreateDescriptorSetLayout(device.device(), &layoutInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor set layout!");
         }
+    }
+
+    void VulkanDescriptorSetLayout::destroy(VulkanDevice& device) {
+        vkDestroyDescriptorSetLayout(device.device(), backend, nullptr);
     }
 }

@@ -4,16 +4,16 @@
 #include "../gfx_backend.h"
 
 #include "vulkan_device.h"
+#include "vulkan_wrapper.tpp"
 
 namespace bebone::gfx {
-    class VulkanRenderPass {
+    class VulkanRenderPass : public VulkanWrapper<VkRenderPass> {
         public:
-            VkRenderPass renderPass;
-
             VulkanRenderPass(VulkanDevice& _device, VkFormat colorAttachmentImageFormat);
-            ~VulkanRenderPass();
 
             VkFormat find_depth_format(VulkanDevice& device);
+
+            void destroy(VulkanDevice& device) override;
     };
 }
 

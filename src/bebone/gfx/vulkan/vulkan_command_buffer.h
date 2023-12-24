@@ -6,6 +6,7 @@
 
 #include "../../core/core.h"
 
+#include "vulkan_wrapper.tpp"
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline.h"
 
@@ -15,10 +16,8 @@ namespace bebone::gfx {
     class VulkanDevice;
     class VulkanCommandBufferPool;
 
-    class VulkanCommandBuffer : private core::NonCopyable {
+    class VulkanCommandBuffer : public VulkanWrapper<VkCommandBuffer>, private core::NonCopyable {
         public:
-            VkCommandBuffer commandBuffer;
-
             VulkanCommandBuffer(
                 std::shared_ptr<VulkanDevice>& device,
                 VulkanCommandBufferPool& commandBufferPool);
@@ -60,6 +59,8 @@ namespace bebone::gfx {
 
             VulkanCommandBuffer& draw(const size_t& vertexCount);
             VulkanCommandBuffer& draw_indexed(const size_t& vertexCount);
+
+            void destroy(VulkanDevice& device) override;
     };
 }
 

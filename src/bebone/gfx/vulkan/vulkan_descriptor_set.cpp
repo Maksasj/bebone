@@ -12,9 +12,9 @@ namespace bebone::gfx {
     ) {
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = descriptorPool.descriptorPool;
+        allocInfo.descriptorPool = descriptorPool.backend;
         allocInfo.descriptorSetCount = 1;
-        allocInfo.pSetLayouts = &descriptorSetLayout->descriptorSetLayout;
+        allocInfo.pSetLayouts = &descriptorSetLayout->backend;
 
         VkDescriptorSetVariableDescriptorCountAllocateInfoEXT countInfo;
         countInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
@@ -28,8 +28,12 @@ namespace bebone::gfx {
 
         // auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
 
-        if (vkAllocateDescriptorSets(device->device(), &allocInfo, &descriptorSet) != VK_SUCCESS) {
+        if (vkAllocateDescriptorSets(device->device(), &allocInfo, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
+    }
+
+    void VulkanDescriptorSet::destroy(VulkanDevice& device) {
+
     }
 }

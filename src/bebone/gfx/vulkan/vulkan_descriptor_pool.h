@@ -11,17 +11,9 @@ namespace bebone::gfx {
     class VulkanDescriptorSet;
     class VulkanDescriptorSetLayout;
 
-    class VulkanDescriptorPool : private core::NonCopyable {
+    class VulkanDescriptorPool : public VulkanWrapper<VkDescriptorPool>, private core::NonCopyable {
         public:
-            VkDescriptorPool descriptorPool;
-
-            // std::vector<VkDescriptorSet> descriptorSets;
-            // std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
-
-            // Todo Count should be pre computed 
             VulkanDescriptorPool(VulkanDevice& device);
-
-            ~VulkanDescriptorPool();
 
             std::shared_ptr<VulkanDescriptorSet> create_descriptor(
                 std::shared_ptr<VulkanDevice>& device,
@@ -31,12 +23,6 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout,
                 const size_t& descriptorCount);
-
-            // std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor_bindless(std::shared_ptr<VulkanDevice>& device, VkDescriptorSetLayout* descriptorSetLayout);
-
-            // VkDescriptorSet* create_descriptor_bindless(std::shared_ptr<VulkanDevice>& device, VkDescriptorSetLayout* descriptorSetLayout);
-
-            // VkDescriptorSet* create_descriptor(VkDescriptorSetLayout* descriptorSetLayout, VkBuffer buffer);
 
             void update_descriptor_set(
                 std::shared_ptr<VulkanDevice>& device,
@@ -56,11 +42,7 @@ namespace bebone::gfx {
                 const std::vector<size_t>& dstArrayElements
             );
 
-            // VkDescriptorSet& get_descriptor_set(const size_t& index);
-
-            // size_t get_layouts_count() const;
-
-            // VkDescriptorSetLayout* get_layouts_data();
+            void destroy(VulkanDevice& device) override;
     };  
 }
 

@@ -30,4 +30,6 @@
 
 #include "vulkan_const_range.h"
 
+#include "vulkan_wrapper.tpp"
+
 #endif

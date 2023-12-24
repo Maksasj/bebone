@@ -9,13 +9,13 @@ namespace bebone::gfx {
     class VulkanDevice;
     class VulkanDescriptorSetLayoutBinding;
 
-    class VulkanDescriptorSetLayout : private core::NonCopyable {
-        private:
-
+    class VulkanDescriptorSetLayout : public VulkanWrapper<VkDescriptorSetLayout>, private core::NonCopyable {
         public:
-            VkDescriptorSetLayout descriptorSetLayout;
+            VulkanDescriptorSetLayout(
+                VulkanDevice& device,
+                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
-            VulkanDescriptorSetLayout(VulkanDevice& device, const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
+            void destroy(VulkanDevice& device) override;
     };
 }
 
