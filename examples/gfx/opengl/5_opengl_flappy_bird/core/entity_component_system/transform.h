@@ -25,6 +25,8 @@ namespace game::core::ecs {
 
             const f32& get_scale() const;
             void set_scale(const f32& newScale);
+
+            void move(const Vec3f& v);
     };
 }
 

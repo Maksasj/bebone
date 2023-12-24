@@ -11,6 +11,8 @@ namespace game::core {
     using namespace fsm;
     using namespace input_system;
 
+    vector<shared_ptr<GameObject>> Game::gameObjects = vector<shared_ptr<GameObject>>();
+
     Game::Game(const unsigned int& width, const unsigned int& height) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
@@ -26,20 +28,38 @@ namespace game::core {
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 
-        auto bg = create_game_object_with_renderer("Background", "bg", 32);
+        auto bg = instantiate("Background", Vec3f(0.0f, 0.0f, 2.0f));
+        add_renderer_component(bg, "bg", 32);
         bg->get_transform()->set_scale(0.6f);
-        bg->get_transform()->set_position(Vec3f(0.0f, 0.0f, 2.0f));
         batch->add(bg);
 
-        auto flappyBird = create_game_object_with_renderer("Flappy Bird", "flappy_bird", 32);
+        auto flappyBird = instantiate("Flappy Bird");
+        add_renderer_component(flappyBird, "flappy_bird", 32);
         batch->add(flappyBird);
-        flappyBird->get_transform()->set_position(Vec3f(0.0f, 0.0f, 0.0f));
         
-        auto ground = create_game_object_with_renderer("Ground", "ground", 32);
-        batch->add(ground);
-        auto& groundTransform = ground->get_transform();
-        groundTransform->set_scale(0.5f);
-        groundTransform->set_position(Vec3f(0, -7.0f, 1.0f));
+        auto ground1 = instantiate("Ground1", Vec3f(0, -7.0f, 1.0f));
+        auto ground1Transform = ground1->get_transform();
+        add_renderer_component(ground1, "ground", 32);
+        batch->add(ground1);
+        ground1Transform->set_scale(0.5f);
+
+        auto groundSprite = ground1->get_component<SpriteRenderer>()->get_sprite();
+
+        Vec3f ground2Position = ground1Transform->get_position();
+        ground2Position.x -= groundSprite->get_width() / groundSprite->get_pixels_per_unit() + ground1Transform->get_scale();
+
+        auto ground2 = instantiate("Ground2", ground2Position);
+        add_renderer_component(ground2, "ground", 32);
+        batch->add(ground2);
+        ground2->get_transform()->set_scale(0.5f);
+
+        Vec3f ground3Position = ground1Transform->get_position();
+        ground3Position.x += groundSprite->get_width() / groundSprite->get_pixels_per_unit() + ground1Transform->get_scale();
+
+        auto ground3 = instantiate("Ground3", ground3Position);
+        add_renderer_component(ground3, "ground", 32);
+        batch->add(ground3);
+        ground3->get_transform()->set_scale(0.5f);
 
         mainMenuState = make_shared<MainMenuState>(flappyBird);
         gameState = make_shared<GameState>(flappyBird);
@@ -52,13 +72,16 @@ namespace game::core {
         StateMachine::set_state(mainMenuState);
     }
 
-    shared_ptr<GameObject> Game::create_game_object_with_renderer(const string& gameObjectName, const string& textureName, const unsigned int& pixelsPerUnit) {
-        auto gameObject = make_shared<GameObject>(gameObjectName);
-        auto sprite = make_shared<Sprite>(textureName, pixelsPerUnit);
-        auto renderer = make_shared<SpriteRenderer>(sprite);
-        gameObject->add_component(renderer);
+    shared_ptr<GameObject> Game::instantiate(const string& gameObjectName, const Vec3f& position) {
+        auto gameObject = make_shared<GameObject>(gameObjectName, position);
+        gameObjects.push_back(gameObject);
 
         return gameObject;
+    }
+
+    void Game::add_renderer_component(shared_ptr<GameObject>& gameObject, const string& textureName, const unsigned int& pixelsPerUnit) {
+        auto sprite = make_shared<Sprite>(textureName, pixelsPerUnit);
+        gameObject->add_component<SpriteRenderer>(sprite);
     }
 
     void Game::update() {
@@ -67,5 +90,18 @@ namespace game::core {
         StateMachine::update_current_state();
 
         batch->render();
+    }
+
+    shared_ptr<GameObject> Game::find_game_object_by_name(const string& gameObjectName) {
+        for (auto it = gameObjects.begin(); it != gameObjects.end(); ++it) {
+            auto gameObject = *it;
+
+            if (gameObject->get_name() == gameObjectName) {
+                return gameObject;
+            }
+        }
+        
+        cout << gameObjectName << " was not found" << endl;
+        return nullptr;
     }
 }

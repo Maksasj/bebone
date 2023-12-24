@@ -33,4 +33,8 @@ namespace game::core::ecs {
     void Transform::set_scale(const f32& newScale) {
         scale = newScale;
     }
+
+    void Transform::move(const Vec3f& v) {
+        position += v;
+    }
 }

@@ -16,6 +16,10 @@ namespace game::core::fsm {
         private:
             shared_ptr<State> endGameState;
             shared_ptr<GameObject> flappyBird;
+            
+            shared_ptr<GameObject> ground1;
+            shared_ptr<GameObject> ground2;
+            shared_ptr<GameObject> ground3;
 
         public:
             GameState(shared_ptr<GameObject> flappyBird);

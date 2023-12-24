@@ -22,8 +22,19 @@ namespace game::core::ecs {
         
         public:
             Object();
-            void add_component(shared_ptr<Component> component);
+
             void remove_component(shared_ptr<Component> component);
+
+            template <typename T, typename... Args>
+            shared_ptr<T> add_component(Args&&... args) {
+                static_assert(std::is_base_of<Component, T>::value, "T must be a Component");
+
+                auto component = std::make_shared<T>(std::forward<Args>(args)...);
+                type_index type = get_type(component);
+                components[type].push_back(component);
+
+                return component;
+            }
 
             template <typename T>
             shared_ptr<T> get_component() {

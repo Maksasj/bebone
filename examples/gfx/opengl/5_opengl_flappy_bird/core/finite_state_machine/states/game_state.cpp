@@ -1,12 +1,20 @@
 #include "game_state.h"
 
 #include "../../input_system/input.h"
+
 #include "../../entity_component_system/components/flying.h"
+#include "../../entity_component_system/components/cyclic_movement.h"
+
+#include "../../game.h"
 
 namespace game::core::fsm {
     using namespace input_system;
 
-    GameState::GameState(shared_ptr<GameObject> flappyBird) : endGameState(nullptr), flappyBird(flappyBird) { }
+    GameState::GameState(shared_ptr<GameObject> flappyBird) : endGameState(nullptr), flappyBird(flappyBird) {
+        ground1 = Game::find_game_object_by_name("Ground1");
+        ground2 = Game::find_game_object_by_name("Ground2");
+        ground3 = Game::find_game_object_by_name("Ground3");
+    }
 
     GameState::~GameState() {
         endGameState = nullptr;
@@ -15,9 +23,11 @@ namespace game::core::fsm {
 
     void GameState::enter() {
         float flyForce = 0.06f;
-        auto flying = make_shared<Flying>(flappyBird->get_transform(), flyForce);
-        flappyBird->add_component(flying);
+        
+        auto flying = flappyBird->add_component<Flying>(flappyBird->get_transform(), flyForce);
         flying->set_velocity(flyForce);
+
+        //ground1->add_component<CyclicMovement>()
     }
 
     void GameState::update() {

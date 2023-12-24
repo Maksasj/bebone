@@ -6,11 +6,6 @@ namespace game::core::ecs {
         components = map<type_index, vector<shared_ptr<Component>>>();
     }
 
-    void Object::add_component(shared_ptr<Component> component) {
-        type_index type = get_type(component);
-        components[type].push_back(component);
-    }
-
     void Object::remove_component(shared_ptr<Component> component) {
         type_index type = get_type(component);
         auto& v = get_component_vector(type);
