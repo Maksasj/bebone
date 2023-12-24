@@ -27,7 +27,7 @@ namespace game::core {
             shared_ptr<GameState> gameState;
             shared_ptr<EndGameState> endGameState;
 
-            shared_ptr<GameObject> create_game_object_with_renderer(const string& gameObjectName, const string& textureName);
+            shared_ptr<GameObject> create_game_object_with_renderer(const string& gameObjectName, const string& textureName, const unsigned int& pixelsPerUnit);
         public:
             Game(const unsigned int& width, const unsigned int& height);
             void update();

@@ -4,9 +4,9 @@
 namespace game::core {
     using namespace std;
 
-    Sprite::Sprite() : texture(nullptr) {}
+    Sprite::Sprite() : texture(nullptr), pixelsPerUnit(32) {}
 
-    Sprite::Sprite(const std::string& textureName) {
+    Sprite::Sprite(const std::string& textureName, const unsigned int& pixelsPerUnit) : pixelsPerUnit(pixelsPerUnit) {
         set_texture(textureName);
     }
 
@@ -24,5 +24,9 @@ namespace game::core {
 
     int Sprite::get_width() const {
         return texture->get_width();
+    }
+
+    unsigned int Sprite::get_pixels_per_unit() const {
+        return pixelsPerUnit;
     }
 }

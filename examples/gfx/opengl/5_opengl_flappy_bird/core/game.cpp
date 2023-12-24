@@ -26,16 +26,16 @@ namespace game::core {
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 
-        auto bg = create_game_object_with_renderer("Background", "bg");
+        auto bg = create_game_object_with_renderer("Background", "bg", 32);
         bg->get_transform()->set_scale(0.6f);
         bg->get_transform()->set_position(Vec3f(0.0f, 0.0f, 2.0f));
         batch->add(bg);
 
-        auto flappyBird = create_game_object_with_renderer("Flappy Bird", "flappy_bird");
+        auto flappyBird = create_game_object_with_renderer("Flappy Bird", "flappy_bird", 32);
         batch->add(flappyBird);
         flappyBird->get_transform()->set_position(Vec3f(0.0f, 0.0f, 0.0f));
         
-        auto ground = create_game_object_with_renderer("Ground", "ground");
+        auto ground = create_game_object_with_renderer("Ground", "ground", 32);
         batch->add(ground);
         auto& groundTransform = ground->get_transform();
         groundTransform->set_scale(0.5f);
@@ -52,9 +52,9 @@ namespace game::core {
         StateMachine::set_state(mainMenuState);
     }
 
-    shared_ptr<GameObject> Game::create_game_object_with_renderer(const string& gameObjectName, const string& textureName) {
+    shared_ptr<GameObject> Game::create_game_object_with_renderer(const string& gameObjectName, const string& textureName, const unsigned int& pixelsPerUnit) {
         auto gameObject = make_shared<GameObject>(gameObjectName);
-        auto sprite = make_shared<Sprite>(textureName);
+        auto sprite = make_shared<Sprite>(textureName, pixelsPerUnit);
         auto renderer = make_shared<SpriteRenderer>(sprite);
         gameObject->add_component(renderer);
 
