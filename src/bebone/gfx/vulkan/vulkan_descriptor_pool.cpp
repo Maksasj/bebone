@@ -38,7 +38,7 @@ namespace bebone::gfx {
         const size_t& dstArrayElement
     ) {
         VkDescriptorBufferInfo bufferInfo{};
-        bufferInfo.buffer = buffer->get_buffer();
+        bufferInfo.buffer = buffer->backend;
         bufferInfo.offset = 0;
         bufferInfo.range = size;
 

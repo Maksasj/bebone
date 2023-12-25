@@ -90,7 +90,7 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer) {
-        VkBuffer buffers[] = {buffer->get_buffer()};
+        VkBuffer buffers[] = {buffer->backend};
         VkDeviceSize offset[] = {0};
         vkCmdBindVertexBuffers(backend, 0, 1, buffers, offset);
 
@@ -99,7 +99,7 @@ namespace bebone::gfx {
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBuffer>& indexBuffer) {
         // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
-        vkCmdBindIndexBuffer(backend, indexBuffer->get_buffer(), 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(backend, indexBuffer->backend, 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
     }

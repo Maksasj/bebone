@@ -34,7 +34,7 @@ namespace bebone::gfx {
 
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
         private:
-            std::shared_ptr<VulkanDeviceMemory> bufferMemory;
+            std::shared_ptr<VulkanDeviceMemory> bufferMemory; // Todo move this out of there
 
             void create_buffer(VulkanDevice& device, VkDeviceSize size, VkBufferUsageFlags usage);
 
@@ -43,7 +43,7 @@ namespace bebone::gfx {
 
             void upload_data(std::shared_ptr<VulkanDevice> &device, const void *src, const size_t &size);
 
-            VkBuffer get_buffer() const;
+            VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
             void destroy(VulkanDevice &device) override;
     };

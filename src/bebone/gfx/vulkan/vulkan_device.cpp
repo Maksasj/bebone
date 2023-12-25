@@ -191,29 +191,6 @@ namespace bebone::gfx {
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-    void VulkanDevice::create_image_with_info(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory) {
-        if (vkCreateImage(device_, &imageInfo, nullptr, &image) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create image!");
-        }
-
-        VkMemoryRequirements memRequirements;
-        vkGetImageMemoryRequirements(device_, image, &memRequirements);
-
-        // Memory thing
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = find_memory_type(memRequirements.memoryTypeBits, properties);
-
-        if (vkAllocateMemory(device_, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate image memory!");
-        }
-
-        if (vkBindImageMemory(device_, image, imageMemory, 0) != VK_SUCCESS) {
-            throw std::runtime_error("failed to bind image memory!");
-        }
-    }
-
     void VulkanDevice::wait_idle() {
         vkDeviceWaitIdle(device_);
     }

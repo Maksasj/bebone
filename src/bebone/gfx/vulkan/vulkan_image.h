@@ -37,6 +37,8 @@ namespace bebone::gfx {
                 VulkanDevice& device,
                 const VkImageCreateInfo &imageInfo);
 
+            VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
+
             static std::shared_ptr<VulkanImage> create_default_depth_image(
                 VulkanDevice& device,
                 VkExtent2D extent,

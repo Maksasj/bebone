@@ -78,8 +78,6 @@ namespace bebone::gfx {
             VkQueue graphicsQueue() { return graphicsQueue_; }
             VkQueue presentQueue() { return presentQueue_; }
 
-            void create_image_with_info(const VkImageCreateInfo &imageInfo, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory);
-
             uint32_t find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
             QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::find_queue_families(physicalDevice, surface_); }

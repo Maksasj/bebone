@@ -20,8 +20,7 @@ namespace bebone::gfx {
     VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VkMemoryPropertyFlags properties) {
         create_buffer(device, size, VULKAN_BUFFER_ANY_USE_FLAG);
 
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(device.device(), backend, &memRequirements);
+        auto memRequirements = get_memory_requirements(device);
 
         bufferMemory = std::make_shared<VulkanDeviceMemory>(device, memRequirements, properties);
         bufferMemory->bind_buffer_memory(device, *this);
@@ -35,8 +34,10 @@ namespace bebone::gfx {
         bufferMemory->unmap(device);
     }
 
-    VkBuffer VulkanBuffer::get_buffer() const {
-        return backend;
+    VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
+        VkMemoryRequirements memRequirements;
+        vkGetBufferMemoryRequirements(device.device(), backend, &memRequirements);
+        return memRequirements;
     }
 
     void VulkanBuffer::destroy(bebone::gfx::VulkanDevice &device) {

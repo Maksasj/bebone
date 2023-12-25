@@ -17,20 +17,18 @@ namespace bebone::gfx {
         renderPass = std::make_shared<VulkanRenderPass>(device, imageFormat);
 
         // Create depth resources
-        VkFormat depthFormat = device.find_depth_format();
+        auto depthFormat = device.find_depth_format();
+
         for(size_t i = 0; i < swapChainImages.size(); ++i) {
-            VulkanDepthImage depthImage;
+            auto image = VulkanImage::create_default_depth_image(device, extent, depthFormat);
+            auto memRequirements = image->get_memory_requirements(device);
 
-            depthImage.image = VulkanImage::create_default_depth_image(device, extent, depthFormat);
+            auto memory = std::make_shared<VulkanDeviceMemory>(device, memRequirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+            memory->bind_image_memory(device, *image);
 
-            VkMemoryRequirements memRequirements; // Todo maybe we can move this thing into image && buffer
-            vkGetImageMemoryRequirements(device.device(), depthImage.image->backend, &memRequirements);
-            depthImage.memory = std::make_shared<VulkanDeviceMemory>(device, memRequirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-            depthImage.memory->bind_image_memory(device, *depthImage.image);
+            auto view = VulkanImageView::create_default_depth_image_view(device, image, depthFormat);
 
-            depthImage.view = VulkanImageView::create_default_depth_image_view(device, depthImage.image, depthFormat);
-
-            depthImages.push_back(depthImage);
+            depthImages.push_back({image, view, memory});
         }
 
         // Create frame buffers
