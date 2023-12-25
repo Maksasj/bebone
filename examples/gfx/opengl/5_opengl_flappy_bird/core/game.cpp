@@ -4,6 +4,8 @@
 #include "entity_component_system/game_object.h"
 #include "input_system/input.h"
 
+#include "rng.h"
+
 namespace game::core {
     using namespace bebone::gfx;
     using namespace std;
@@ -28,7 +30,7 @@ namespace game::core {
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 
-        auto bg = instantiate("Background", Vec3f(0.0f, 0.0f, 2.0f));
+        auto bg = instantiate("Background", Vec3f(0.0f, 0.0f, 3.0f));
         add_renderer_component(bg, "bg", 32);
         bg->get_transform()->set_scale(0.6f);
         batch->add(bg);
@@ -60,6 +62,16 @@ namespace game::core {
         add_renderer_component(ground3, "ground", 32);
         batch->add(ground3);
         ground3->get_transform()->set_scale(0.5f);
+
+        auto pipe1 = instantiate("Pipe1", Vec3f(6.2f, 0.0f, 2.0f));
+        add_renderer_component(pipe1, "pipes", 32);
+        batch->add(pipe1);
+        pipe1->get_transform()->set_scale(0.5f);
+
+        auto pipe2 = instantiate("Pipe2", Vec3f(12.0f, 0.0f, 2.0f));
+        add_renderer_component(pipe2, "pipes", 32);
+        batch->add(pipe2);
+        pipe2->get_transform()->set_scale(0.5f);
 
         mainMenuState = make_shared<MainMenuState>(flappyBird);
         gameState = make_shared<GameState>(flappyBird);

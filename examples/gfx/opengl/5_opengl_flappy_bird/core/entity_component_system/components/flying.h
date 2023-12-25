@@ -31,6 +31,9 @@ namespace game::core::ecs {
 
             float get_velocity() const;
             void set_velocity(const float& velocity);
+
+            void enable();
+            void disable();
     };
 }
 

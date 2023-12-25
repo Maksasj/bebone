@@ -25,7 +25,12 @@ namespace game::core::ecs {
             auto vIt = v.begin();
             
             while (vIt != v.end()) {
-                (*vIt)->update();
+                auto component = *vIt;
+
+                if (component->is_enabled()) {
+                    component->update();
+                }
+                
                 ++vIt;
             }
         }

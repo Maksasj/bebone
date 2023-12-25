@@ -1,18 +1,26 @@
 #include "cyclic_movement.h"
 
 #include "../../game_time.h"
+#include "../../rng.h"
 
 namespace game::core::ecs {
-    CyclicMovement::CyclicMovement(const Vec3f& movementDirection, const Vec3f& endPoint, const Vec3f& startPoint) : 
-        movementDirection(movementDirection), endPoint(endPoint), startPoint(startPoint) { }
-
+    CyclicMovement::CyclicMovement(const float& endXPoint, const float& startXPoint, const bool& randomizeY) : 
+        randomizeY(randomizeY), endXPoint(endXPoint), startXPoint(startXPoint) { }
 
     void CyclicMovement::update() {
-        if (!is_enabled()) {
-            return;
-        }
+        Vec3f movement = direction * speed * Time::deltaTime;
+        auto& transform = get_transform();
 
-        auto movement = movementDirection * Time::deltaTime;
-        get_transform()->move(movement);
+        if (transform->get_position().x + movement.x < endXPoint) {
+            float y = transform->get_position().y;
+
+            if (randomizeY) {
+                y = Random::rand(minY, maxY);
+            }
+
+            transform->set_position(Vec3f(startXPoint, y, transform->get_position().z));
+        } else {
+            transform->move(movement);
+        }
     }
 }

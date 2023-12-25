@@ -14,14 +14,18 @@ namespace game::core::ecs {
 
     class CyclicMovement : public Component {
         private:
-            Vec3f movementDirection;
-            float movementSpeed = 5.0f;
+            Vec3f direction = Vec3f(-1.0f, 0.0f, 0.0f);
+            float speed = 2.5f;
 
-            Vec3f endPoint;
-            Vec3f startPoint;
+            bool randomizeY = false;
+            float minY = -3.0f;
+            float maxY = 4.5f;
+
+            float endXPoint;
+            float startXPoint;
 
         public:
-            CyclicMovement(const Vec3f& movementDirection, const Vec3f& endPoint, const Vec3f& startPoint);
+            CyclicMovement(const float& endXPoint, const float& startXPoint, const bool& randomizeY = false);
 
             void update();
     };

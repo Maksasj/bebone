@@ -20,6 +20,8 @@ namespace game::core::fsm {
             shared_ptr<GameObject> ground1;
             shared_ptr<GameObject> ground2;
             shared_ptr<GameObject> ground3;
+            shared_ptr<GameObject> pipe1;
+            shared_ptr<GameObject> pipe2;
 
         public:
             GameState(shared_ptr<GameObject> flappyBird);
