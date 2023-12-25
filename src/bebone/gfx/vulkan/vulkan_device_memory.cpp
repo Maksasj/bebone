@@ -1,10 +1,12 @@
 #include "vulkan_device_memory.h"
 
 #include "vulkan_device.h"
+
 #include "vulkan_buffer.h"
+#include "vulkan_image.h"
 
 namespace bebone::gfx {
-    VulkanDeviceMemory::VulkanDeviceMemory(VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties, VulkanDevice& device) {
+    VulkanDeviceMemory::VulkanDeviceMemory(VulkanDevice& device, VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties) {
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
@@ -17,6 +19,10 @@ namespace bebone::gfx {
 
     void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer) {
         vkBindBufferMemory(device.device(), buffer.backend, backend, 0);
+    }
+
+    void VulkanDeviceMemory::bind_image_memory(VulkanDevice& device, VulkanImage& image) {
+        vkBindImageMemory(device.device(), image.backend, backend, 0);
     }
 
     void VulkanDeviceMemory::map(std::shared_ptr<VulkanDevice>& device, const size_t& size, void** data) {

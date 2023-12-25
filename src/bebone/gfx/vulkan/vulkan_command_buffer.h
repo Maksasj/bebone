@@ -15,6 +15,7 @@ namespace bebone::gfx {
 
     class VulkanDevice;
     class VulkanCommandBufferPool;
+    class VulkanDescriptorSet;
 
     class VulkanCommandBuffer : public VulkanWrapper<VkCommandBuffer>, private core::NonCopyable {
         public:
@@ -44,7 +45,16 @@ namespace bebone::gfx {
 
             VulkanCommandBuffer& bind_descriptor_set(
                 std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
-                VkDescriptorSet& descriptorSet);
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet);
+
+            VulkanCommandBuffer& bind_descriptor_set(
+                std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& frame);
+
+            VulkanCommandBuffer& bind_descriptor_sets(
+                std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets);
 
             VulkanCommandBuffer& push_constant(
                 std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,

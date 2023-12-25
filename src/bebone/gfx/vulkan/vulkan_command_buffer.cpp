@@ -3,6 +3,7 @@
 #include "vulkan_device.h"
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_command_buffer_pool.h"
+#include "vulkan_descriptor_set.h"
 
 namespace bebone::gfx {
     VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& commandBufferPool) {
@@ -39,11 +40,11 @@ namespace bebone::gfx {
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer) {
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = swapChain->renderTarget->renderPass.backend;
-        renderPassInfo.framebuffer = swapChain->renderTarget->swapChainFramebuffers[frameBuffer];
+        renderPassInfo.renderPass = swapChain->renderTarget->renderPass->backend;
+        renderPassInfo.framebuffer = swapChain->renderTarget->swapChainFramebuffers[frameBuffer]->backend;
 
         renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChain->renderTarget->extent;
+        renderPassInfo.renderArea.extent = swapChain->extent; // Todo not sure is extent is right, maybe there should be extent of render target
 
         std::array<VkClearValue, 2> clearValues{};
         clearValues[0].color = {{ 0.2f, 0.2f, 0.2f, 1.0f }};
@@ -115,8 +116,26 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, VkDescriptorSet& descriptorSet) {
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSet, 0, nullptr);
+
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, std::shared_ptr<VulkanDescriptorSet>& descriptorSet) {
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSet->backend, 0, nullptr);
+
+        return *this;
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets, const size_t& frame) {
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSets[frame]->backend, 0, nullptr);
+
+        return *this;
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_sets(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets) {
+        std::vector<VkDescriptorSet> sets;
+
+        for(const auto& descriptor : descriptorSets)
+            sets.push_back(descriptor->backend);
+
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, sets.size(), sets.data(), 0, nullptr);
 
         return *this;
     }

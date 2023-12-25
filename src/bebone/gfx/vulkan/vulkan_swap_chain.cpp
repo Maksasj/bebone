@@ -2,6 +2,7 @@
 
 #include "vulkan_result.h"
 #include "vulkan_image.h"
+#include "vulkan_image_view.h"
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
@@ -11,7 +12,7 @@ namespace bebone::gfx {
 
         create_swap_chain(device);
 
-        auto images = create_swap_chain_images(device);
+        auto images = create_swap_chain_images(device, surfaceFormat.format);
         renderTarget = std::make_unique<RenderTarget>(device, images, surfaceFormat.format, extent);
 
         create_sync_objects(device);
@@ -84,7 +85,7 @@ namespace bebone::gfx {
         return { result };
     }
 
-    std::vector<std::shared_ptr<VulkanImage>> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device) {
+    std::vector<VulkanSwapChainImage> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat imageFormat) {
         std::vector<VkImage> images;
         uint32_t imageCount;
 
@@ -92,10 +93,16 @@ namespace bebone::gfx {
         images.resize(imageCount);
         vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, images.data());
 
-        std::vector<std::shared_ptr<VulkanImage>> out;
+        std::vector<VulkanSwapChainImage> out;
 
-        for(auto& image : images)
-            out.push_back(std::make_shared<VulkanImage>(image));
+        for(auto& image : images) {
+            VulkanSwapChainImage swapChainImage;
+
+            swapChainImage.image = std::make_shared<VulkanImage>(image);
+            swapChainImage.view = std::make_shared<VulkanImageView>(device, *swapChainImage.image, imageFormat);
+
+            out.push_back(swapChainImage);
+        }
 
         return out;
     }
@@ -209,11 +216,11 @@ namespace bebone::gfx {
             VkExtent2D actualExtent = _windowExtent;
 
             actualExtent.width = std::max(
-                    capabilities.minImageExtent.width,
-                    std::min(capabilities.maxImageExtent.width, actualExtent.width));
+                capabilities.minImageExtent.width,
+                std::min(capabilities.maxImageExtent.width, actualExtent.width));
             actualExtent.height = std::max(
-                    capabilities.minImageExtent.height,
-                    std::min(capabilities.maxImageExtent.height, actualExtent.height));
+                capabilities.minImageExtent.height,
+                std::min(capabilities.maxImageExtent.height, actualExtent.height));
 
             return actualExtent;
         }

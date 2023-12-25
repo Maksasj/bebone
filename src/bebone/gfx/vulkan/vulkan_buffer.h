@@ -39,7 +39,7 @@ namespace bebone::gfx {
             void create_buffer(VulkanDevice& device, VkDeviceSize size, VkBufferUsageFlags usage);
 
         public:
-            VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device);
+            VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VkMemoryPropertyFlags properties);
 
             void upload_data(std::shared_ptr<VulkanDevice> &device, const void *src, const size_t &size);
 

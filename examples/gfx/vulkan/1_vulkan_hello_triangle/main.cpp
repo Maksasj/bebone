@@ -44,7 +44,7 @@ int main() {
         uint32_t frame;
         auto result = swapChain->acquire_next_image(device, &frame);
 
-        if(result.is_ok())
+        if(!result.is_ok())
             continue;
 
         auto& cmd = commandBuffers[frame];
@@ -61,7 +61,7 @@ int main() {
 
         result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-        if(result.is_ok() || window->is_resized())
+        if(!result.is_ok() || window->is_resized())
             continue;
     }
 

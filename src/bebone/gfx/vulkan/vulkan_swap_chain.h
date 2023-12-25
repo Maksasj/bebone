@@ -20,8 +20,10 @@ namespace bebone::gfx {
     class VulkanResult;
     class VulkanCommandBuffer;
 
+    struct VulkanSwapChainImage;
+
     class VulkanSwapChain : public VulkanWrapper<VkSwapchainKHR>, private core::NonCopyable {
-        private:
+        public:
             void create_swap_chain(VulkanDevice& device);
             void create_sync_objects(VulkanDevice& device);
 
@@ -39,12 +41,12 @@ namespace bebone::gfx {
             std::vector<VkSemaphore> renderFinishedSemaphores;
             std::vector<VkFence> inFlightFences;
             std::vector<VkFence> imagesInFlight;
-        public:
+
             std::unique_ptr<RenderTarget> renderTarget;
 
-            VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent);
+            VulkanSwapChain(VulkanDevice &device, VkExtent2D windowExtent);
 
-            std::vector<std::shared_ptr<VulkanImage>> create_swap_chain_images(VulkanDevice& device);
+            std::vector<VulkanSwapChainImage> create_swap_chain_images(VulkanDevice& device, VkFormat imageFormat);
 
             VulkanResult acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *imageIndex);
             VulkanResult submit_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex);

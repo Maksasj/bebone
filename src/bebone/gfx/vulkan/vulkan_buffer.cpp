@@ -17,13 +17,13 @@ namespace bebone::gfx {
         }
     }
 
-    VulkanBuffer::VulkanBuffer(VkDeviceSize size, VkMemoryPropertyFlags properties, VulkanDevice& device) {
+    VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VkMemoryPropertyFlags properties) {
         create_buffer(device, size, VULKAN_BUFFER_ANY_USE_FLAG);
 
         VkMemoryRequirements memRequirements;
         vkGetBufferMemoryRequirements(device.device(), backend, &memRequirements);
 
-        bufferMemory = std::make_shared<VulkanDeviceMemory>(memRequirements, properties, device);
+        bufferMemory = std::make_shared<VulkanDeviceMemory>(device, memRequirements, properties);
         bufferMemory->bind_buffer_memory(device, *this);
     }
 

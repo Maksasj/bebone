@@ -16,7 +16,13 @@ namespace bebone::gfx {
 
     class VulkanImageView : public VulkanWrapper<VkImageView>, private core::NonCopyable {
         public:
+            VulkanImageView(VkImageView imageView);
             VulkanImageView(VulkanDevice& device, VulkanImage& image, VkFormat& imageFormat);
+
+            static std::shared_ptr<VulkanImageView> create_default_depth_image_view(
+                VulkanDevice &device,
+                std::shared_ptr<VulkanImage>& image,
+                VkFormat format);
 
             void destroy(VulkanDevice &device) override;
     };

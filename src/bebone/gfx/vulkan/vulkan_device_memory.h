@@ -12,13 +12,16 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanDevice;
+
     class VulkanBuffer;
+    class VulkanImage;
 
     class VulkanDeviceMemory : public VulkanWrapper<VkDeviceMemory>, private core::NonCopyable {
         public:
-            VulkanDeviceMemory(VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties, VulkanDevice& device);
+            VulkanDeviceMemory(VulkanDevice& device, VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties);
 
             void bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer);
+            void bind_image_memory(VulkanDevice& device, VulkanImage& image);
 
             void map(std::shared_ptr<VulkanDevice>& device, const size_t& size, void** data);
             void unmap(std::shared_ptr<VulkanDevice>& device);

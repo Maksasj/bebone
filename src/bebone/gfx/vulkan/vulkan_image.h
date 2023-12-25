@@ -13,18 +13,34 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanDevice;
+
+    class VulkanImage;
     class VulkanImageView;
+    class VulkanDeviceMemory;
+
+    struct VulkanSwapChainImage {
+        std::shared_ptr<VulkanImage> image;
+        std::shared_ptr<VulkanImageView> view;
+    };
+
+    struct VulkanDepthImage {
+        std::shared_ptr<VulkanImage> image;
+        std::shared_ptr<VulkanImageView> view;
+        std::shared_ptr<VulkanDeviceMemory> memory;
+    };
 
     class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
         public:
-            std::shared_ptr<VulkanImageView> imageView;
-            std::shared_ptr<VulkanDeviceMemory> imageMemory;
-
             VulkanImage(const VkImage& image);
-            VulkanImage(VulkanDevice& device, const VkImageCreateInfo &imageInfo);
 
-            // Todo not sure if this is should be there;
-            void create_image_view(VulkanDevice& device, VkFormat& imageFormat);
+            VulkanImage(
+                VulkanDevice& device,
+                const VkImageCreateInfo &imageInfo);
+
+            static std::shared_ptr<VulkanImage> create_default_depth_image(
+                VulkanDevice& device,
+                VkExtent2D extent,
+                VkFormat format);
 
             void destroy(VulkanDevice &device) override;
     };

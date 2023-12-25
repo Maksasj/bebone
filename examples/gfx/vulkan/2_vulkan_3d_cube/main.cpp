@@ -61,7 +61,7 @@ int main() {
     vertexBuffer->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
     indexBuffer->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
-    auto transformUBO = device->create_buffers(sizeof(Transform), 3);
+    auto transformUBO = device->create_buffers(sizeof(Transform), 3); // Todo
     auto cameraUBO = device->create_buffers(sizeof(CameraTransform), 3);
     descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2});
     descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5});
@@ -81,13 +81,14 @@ int main() {
     };
 
     f32 t = 0.0f;
+
     while (!window->closing()) {
         glfwPollEvents();
 
         uint32_t frame;
         auto result = swapChain->acquire_next_image(device, &frame);
 
-        if(result.is_ok())
+        if(!result.is_ok())
             continue;
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
@@ -104,7 +105,7 @@ int main() {
             .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(*pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptors[frame]->backend) // todo make this nicer
+            .bind_descriptor_set(pipelineLayout, descriptors, frame)
             .bind_vertex_buffer(vertexBuffer)
             .bind_index_buffer(indexBuffer)
             .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
@@ -114,7 +115,7 @@ int main() {
 
         result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-        if(result.is_ok() || window->is_resized())
+        if(!result.is_ok() || window->is_resized())
             continue;
     }
 

@@ -57,14 +57,14 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanBuffer> VulkanDevice::create_buffer(const size_t& size) {
-        return std::make_shared<VulkanBuffer>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this);
+        return std::make_shared<VulkanBuffer>(*this, size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
     }
 
     std::vector<std::shared_ptr<VulkanBuffer>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount) {
         std::vector<std::shared_ptr<VulkanBuffer>> buffers;
 
         for(size_t i = 0; i < bufferCount; ++i)
-            buffers.push_back(std::make_shared<VulkanBuffer>(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *this));
+            buffers.push_back(std::make_shared<VulkanBuffer>(*this, size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
 
         return buffers;
     }
@@ -78,7 +78,7 @@ namespace bebone::gfx {
 
         PipelineConfigInfo pipelineConfig;
         PipelineConfigInfo::defaultPipelineConfigInfo(pipelineConfig);
-        pipelineConfig.renderPass = swapChain->renderTarget->renderPass.backend;
+        pipelineConfig.renderPass = swapChain->renderTarget->renderPass->backend;
         pipelineConfig.pipelineLayout = pipelineLayout->get_layout();
 
         return std::make_shared<VulkanPipeline>(*this, vertShaderModule, fragShaderModule, pipelineConfig);

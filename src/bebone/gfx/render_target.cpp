@@ -2,104 +2,59 @@
 
 #include "vulkan/vulkan_image.h"
 #include "vulkan/vulkan_image_view.h"
+#include "vulkan/vulkan_device_memory.h"
+#include "vulkan/vulkan_swap_chain.h"
 
 namespace bebone::gfx {
     RenderTarget::RenderTarget(
         VulkanDevice& device,
-        std::vector<std::shared_ptr<VulkanImage>>& swapChainImages,
-        VkFormat _imageFormat,
-        VkExtent2D _extent
-    ) : renderPass(device, _imageFormat), swapChainImages(swapChainImages), imageFormat(_imageFormat), extent(_extent) {
+        std::vector<VulkanSwapChainImage>& swapChainImages,
+        VkFormat imageFormat,
+        VkExtent2D extent
+    ) : swapChainImages(swapChainImages) {
 
-        for(auto& image : swapChainImages)
-            image->create_image_view(device, imageFormat);
+        // Create render pass
+        renderPass = std::make_shared<VulkanRenderPass>(device, imageFormat);
 
-        create_depth_resources(device);
-        create_framebuffers(device);
-    }
-
-    void RenderTarget::create_framebuffers(VulkanDevice& device) {
-        swapChainFramebuffers.resize(swapChainImages.size());
-
-        for (size_t i = 0; i < swapChainImages.size(); i++) {
-            // std::array<VkImageView, 2> attachments = { swapChainImages[i]->imageView->backend, depthImageViews[i]};
-            // std::array<VkImageView, 2> attachments = { swapChainImageViews[i], depthImageViews[i]};
-            std::array<VkImageView, 2> attachments = { swapChainImages[i]->imageView->backend, depthImageViews[i]};
-
-            VkFramebufferCreateInfo framebufferInfo = {};
-            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = renderPass.backend;
-            framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-            framebufferInfo.pAttachments = attachments.data();
-            framebufferInfo.width = extent.width;
-            framebufferInfo.height = extent.height;
-            framebufferInfo.layers = 1;
-
-            if (vkCreateFramebuffer(device.device(), &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create framebuffer!");
-            }
-        }
-    }
-
-    void RenderTarget::create_depth_resources(VulkanDevice& device) {
+        // Create depth resources
         VkFormat depthFormat = device.find_depth_format();
+        for(size_t i = 0; i < swapChainImages.size(); ++i) {
+            VulkanDepthImage depthImage;
 
-        depthImages.resize(swapChainImages.size());
-        depthImageMemorys.resize(swapChainImages.size());
-        depthImageViews.resize(swapChainImages.size());
+            depthImage.image = VulkanImage::create_default_depth_image(device, extent, depthFormat);
 
-        for(size_t i = 0; i < depthImages.size(); ++i) {
-            VkImageCreateInfo imageInfo{};
-            imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-            imageInfo.imageType = VK_IMAGE_TYPE_2D;
-            imageInfo.extent.width = extent.width;
-            imageInfo.extent.height = extent.height;
-            imageInfo.extent.depth = 1;
-            imageInfo.mipLevels = 1;
-            imageInfo.arrayLayers = 1;
-            imageInfo.format = depthFormat;
-            imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-            imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-            imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-            imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-            imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-            imageInfo.flags = 0;
+            VkMemoryRequirements memRequirements; // Todo maybe we can move this thing into image && buffer
+            vkGetImageMemoryRequirements(device.device(), depthImage.image->backend, &memRequirements);
+            depthImage.memory = std::make_shared<VulkanDeviceMemory>(device, memRequirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+            depthImage.memory->bind_image_memory(device, *depthImage.image);
 
-            device.create_image_with_info(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImages[i], depthImageMemorys[i]);
+            depthImage.view = VulkanImageView::create_default_depth_image_view(device, depthImage.image, depthFormat);
 
-            VkImageViewCreateInfo viewInfo{};
-            viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            viewInfo.image = depthImages[i];
-            viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            viewInfo.format = depthFormat;
-            viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-            viewInfo.subresourceRange.baseMipLevel = 0;
-            viewInfo.subresourceRange.levelCount = 1;
-            viewInfo.subresourceRange.baseArrayLayer = 0;
-            viewInfo.subresourceRange.layerCount = 1;
+            depthImages.push_back(depthImage);
+        }
 
-            if (vkCreateImageView(device.device(), &viewInfo, nullptr, &depthImageViews[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create texture image view!");
-            }
+        // Create frame buffers
+        for(size_t i = 0; i < swapChainImages.size(); ++i) {
+            auto attachments = std::vector{ swapChainImages[i].view, depthImages[i].view };
+            auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, renderPass, extent);
+
+            swapChainFramebuffers.push_back(framebuffer);
         }
     }
 
     void RenderTarget::destroy(VulkanDevice& device) {
-        // Todo move this some where else
-        renderPass.destroy(device);
+        renderPass->destroy(device);
 
-        // Todo move this some where else
-        for (auto imageView : swapChainImages)
-            imageView->imageView->destroy(device);
+        for(auto& image : swapChainImages)
+            image.view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
 
-        for (size_t i = 0; i < depthImages.size(); i++) {
-            vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
-            vkDestroyImage(device.device(), depthImages[i], nullptr);
-            vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
+        for(auto& image : depthImages) {
+            image.memory->destroy(device);
+            image.view->destroy(device);
+            image.image->destroy(device);
         }
 
-        for (auto framebuffer : swapChainFramebuffers) {
-            vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
-        }
+        for (auto& framebuffer : swapChainFramebuffers)
+            framebuffer->destroy(device);
     }
 }
