@@ -5,7 +5,7 @@
 
 #include "bebone/bebone.h"
 
-#include "../component.h"
+#include "../game_object.h"
 #include "../transform.h"
 
 namespace game::core::ecs {
@@ -14,7 +14,6 @@ namespace game::core::ecs {
 
     class CyclicMovement : public Component {
         private:
-            shared_ptr<Transform> transform;
             Vec3f movementDirection;
             float movementSpeed = 5.0f;
 
@@ -22,8 +21,7 @@ namespace game::core::ecs {
             Vec3f startPoint;
 
         public:
-            CyclicMovement(shared_ptr<Transform> transform, const Vec3f& movementDirection, const Vec3f& endPoint, const Vec3f& startPoint);
-            ~CyclicMovement();
+            CyclicMovement(const Vec3f& movementDirection, const Vec3f& endPoint, const Vec3f& startPoint);
 
             void update();
     };

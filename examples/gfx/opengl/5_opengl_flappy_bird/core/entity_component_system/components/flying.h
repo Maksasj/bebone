@@ -5,7 +5,7 @@
 
 #include "bebone/bebone.h"
 
-#include "../component.h"
+#include "../game_object.h"
 #include "../transform.h"
 
 #include "../../game_time.h"
@@ -16,8 +16,6 @@ namespace game::core::ecs {
 
     class Flying : public Component {
         private:
-            shared_ptr<Transform> transform;
-
             float velocityY;
             const float gravity = 0.1f;
             float flyForce;
@@ -27,8 +25,7 @@ namespace game::core::ecs {
             float maxRotZ = 25.0f;
             
         public:
-            Flying(shared_ptr<Transform> transform, float flyForce);
-            ~Flying();
+            Flying(const float& flyForce);
 
             void update();
 

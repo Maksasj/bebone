@@ -18,6 +18,8 @@ using namespace game::core;
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
     using namespace input_system;
+    std::ignore = window;
+    std::ignore = mods;
 
     if (action == GLFW_PRESS) {
         auto mouseKeyCode = static_cast<MouseKeyCode>(button);

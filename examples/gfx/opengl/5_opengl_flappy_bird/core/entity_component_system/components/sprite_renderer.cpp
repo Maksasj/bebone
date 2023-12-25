@@ -13,5 +13,21 @@ namespace game::core::ecs {
         this->sprite = sprite;
     }
 
-    void SpriteRenderer::update() { } 
+    void SpriteRenderer::enable() {
+        if (is_enabled()) {
+            return;
+        }
+
+        Component::enable();
+        // TODO: Add to batch
+    }
+
+    void SpriteRenderer::disable() {
+        if (!is_enabled()) {
+            return;
+        }
+
+        Component::disable();
+        // TODO: Remove from batch
+    }
 }

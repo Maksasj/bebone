@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "../component.h"
+#include "../game_object.h"
 #include "../../sprite.h"
 
 namespace game::core::ecs {
@@ -19,7 +19,10 @@ namespace game::core::ecs {
             const shared_ptr<Sprite>& get_sprite() const;
             void set_sprite(const shared_ptr<Sprite>& sprite);
 
-            void update();
+            void update() { }
+
+            void enable();
+            void disable();
     };
 }
 

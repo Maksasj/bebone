@@ -3,15 +3,16 @@
 #include "../../game_time.h"
 
 namespace game::core::ecs {
-    CyclicMovement::CyclicMovement(shared_ptr<Transform> transform, const Vec3f& movementDirection, const Vec3f& endPoint, const Vec3f& startPoint) : 
-        transform(transform), movementDirection(movementDirection), endPoint(endPoint), startPoint(startPoint) { }
-    
-    CyclicMovement::~CyclicMovement() {
-        transform = nullptr;
-    }
+    CyclicMovement::CyclicMovement(const Vec3f& movementDirection, const Vec3f& endPoint, const Vec3f& startPoint) : 
+        movementDirection(movementDirection), endPoint(endPoint), startPoint(startPoint) { }
+
 
     void CyclicMovement::update() {
+        if (!is_enabled()) {
+            return;
+        }
+
         auto movement = movementDirection * Time::deltaTime;
-        transform->move(movement);
+        get_transform()->move(movement);
     }
 }

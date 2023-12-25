@@ -4,7 +4,7 @@
 #include "../../input_system/input.h"
 
 namespace game::core::ecs {
-    Flying::Flying(shared_ptr<Transform> transform, float flyForce) : transform(transform), velocityY(0.0f), flyForce(flyForce)  {
+    Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce)  {
         using namespace game::core::input_system;
 
         auto flyFunction = [this]() {
@@ -13,14 +13,16 @@ namespace game::core::ecs {
         Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(flyFunction));
     }
 
-    Flying::~Flying() {
-        transform = nullptr;
-    }
-
     void Flying::update() {
-        velocityY += Time::deltaTime * -gravity;
-        transform->set_position(Vec3f(transform->get_position().x, transform->get_position().y + velocityY, transform->get_position().z));
+        if (!is_enabled()) {
+            return;
+        }
 
+        velocityY += Time::deltaTime * -gravity;
+        auto& transform = get_transform();
+
+        transform->set_position(Vec3f(transform->get_position().x, transform->get_position().y + velocityY, transform->get_position().z));
+        
         if (velocityY < 0) {
             float rotZ = transform->get_rotation();
             rotZ += rotZAlterationSpeed * Time::deltaTime * std::abs(velocityY * 2);
@@ -37,6 +39,6 @@ namespace game::core::ecs {
 
     void Flying::set_velocity(const float& velocity) {
         velocityY = velocity;
-        transform->set_rotation(this->maxRotZ);
+        get_transform()->set_rotation(this->maxRotZ);
     }
 }

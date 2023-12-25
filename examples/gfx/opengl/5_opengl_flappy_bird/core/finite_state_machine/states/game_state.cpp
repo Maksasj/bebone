@@ -24,10 +24,10 @@ namespace game::core::fsm {
     void GameState::enter() {
         float flyForce = 0.06f;
         
-        auto flying = flappyBird->add_component<Flying>(flappyBird->get_transform(), flyForce);
+        auto flying = flappyBird->add_component<Flying>(flyForce);
         flying->set_velocity(flyForce);
 
-        //ground1->add_component<CyclicMovement>()
+        //ground1->add_component<CyclicMovement>();
     }
 
     void GameState::update() {
