@@ -12,8 +12,6 @@ namespace bebone::gfx::opengl {
 
             void buffer_sub_data(GLintptr offset, GLsizeiptr size, const void* data);
 
-            // Todo lets write destructor
-
             void bind();
             void unbind();
             void destroy();
