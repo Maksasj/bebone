@@ -13,6 +13,10 @@ namespace bebone::gfx::opengl {
         m_properties = vertex.get_properties() | fragment.get_properties();
     }
 
+    GLShaderProgram::~GLShaderProgram() {
+        destroy();
+    }
+
     void GLShaderProgram::create_shader_program(const GLShader& vertex, const GLShader& fragment) {
         id = glCreateProgram();
         glAttachShader(id, vertex.get_shader());

@@ -8,8 +8,7 @@ namespace bebone::gfx::opengl {
     class GLVertexArrayObject final : public GLBufferObject {
         public:
             GLVertexArrayObject();
-
-            // Todo lets write destructor
+            ~GLVertexArrayObject();
 
             void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
             

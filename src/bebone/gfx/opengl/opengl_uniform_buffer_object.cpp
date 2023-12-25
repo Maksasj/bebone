@@ -7,6 +7,10 @@ namespace bebone::gfx::opengl {
         glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
     }
 
+    GLUniformBufferObject::~GLUniformBufferObject() {
+        destroy();
+    }
+
     void GLUniformBufferObject::bind_buffer_base(const i32& binding) const {
         glBindBufferBase(GL_UNIFORM_BUFFER, binding, id);
     }

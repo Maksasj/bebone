@@ -20,6 +20,7 @@ namespace bebone::gfx::opengl {
 
         public:
             GLShaderProgram(const GLShader& vertex, const GLShader& fragment);
+            ~GLShaderProgram();
 
             void set_uniform(const char* uniformName, const i32& value) const;
             void set_uniform(const char* uniformName, const GLsizei& size, const i32* value) const;

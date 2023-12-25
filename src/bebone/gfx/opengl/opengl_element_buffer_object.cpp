@@ -5,6 +5,10 @@ namespace bebone::gfx::opengl {
         bind();
 	    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), indices, GL_STATIC_DRAW);
     }
+
+    GLElementBufferObject::~GLElementBufferObject() {
+        destroy();
+    }
     
     GLElementBufferObject::GLElementBufferObject(const GLuint* indices, const size_t& size, const GLenum& usage) : GLBufferObject() {
         bind();

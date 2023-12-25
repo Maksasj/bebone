@@ -20,6 +20,7 @@ namespace bebone::gfx::opengl {
         public:
             GLShader(const ShaderCode& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
             GLShader(const std::string& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+            ~GLShader();
 
             GLuint get_shader() const;
             const GLShaderProperties& get_properties() const;

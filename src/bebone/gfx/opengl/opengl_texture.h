@@ -13,6 +13,7 @@ namespace bebone::gfx::opengl {
 
         public:
             GLTexture(const char* image, GLenum textureType, GLenum format, GLenum pixelType);
+            ~GLTexture();
 
             void bind_texture_unit(const GLuint& textureUnit);
 

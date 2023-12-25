@@ -5,6 +5,10 @@ namespace bebone::gfx::opengl {
         glGenVertexArrays(1, &id);
     }
 
+    GLVertexArrayObject::~GLVertexArrayObject() {
+        destroy();
+    }
+
     void GLVertexArrayObject::link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset) {
         vbo.bind();
 

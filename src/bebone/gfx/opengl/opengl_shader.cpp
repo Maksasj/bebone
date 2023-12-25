@@ -15,6 +15,10 @@ namespace bebone::gfx::opengl {
         glSpecializeShaderARB(m_shader, "main", 0, nullptr, nullptr);
     }
 
+    GLShader::~GLShader() {
+        destroy();
+    }
+
     GLShader::GLShader(const std::string& code, const ShaderType& shaderType, const GLShaderProperties& properties)
             : m_properties(properties) {
 
