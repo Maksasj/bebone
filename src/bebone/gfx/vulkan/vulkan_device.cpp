@@ -93,6 +93,18 @@ namespace bebone::gfx {
         return tuples;
     }
 
+    std::shared_ptr<VulkanImage> VulkanDevice::create_image(VulkanImageInfo imageInfo) {
+        return std::make_shared<VulkanImage>(*this, imageInfo);
+    }
+
+    std::shared_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
+        return std::make_shared<VulkanImage>(image);
+    }
+
+    std::shared_ptr<VulkanImageView> VulkanDevice::create_image_view(VulkanImage& image, VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
+        return std::make_shared<VulkanImageView>(*this, image, imageFormat, imageViewInfo);
+    }
+
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
             std::shared_ptr<VulkanSwapChain>& swapChain,
             std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,

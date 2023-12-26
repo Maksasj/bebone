@@ -11,7 +11,10 @@
 #include "vulkan_wrapper.tpp"
 #include "vulkan_instance.h"
 #include "vulkan_device_chooser.h"
+
 #include "vulkan_buffer.h"
+#include "vulkan_image.h"
+#include "vulkan_image_view.h"
 
 namespace bebone::gfx {
     class VulkanSwapChain;
@@ -45,7 +48,9 @@ namespace bebone::gfx {
         public:
             VkPhysicalDeviceProperties properties;
 
-            VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window);
+            VulkanDevice(
+                VulkanInstance& _vulkanInstance,
+                VulkanWindow &window);
 
             std::shared_ptr<VulkanDeviceMemory> create_device_memory(
                 VkMemoryRequirements memRequirements,
@@ -69,12 +74,25 @@ namespace bebone::gfx {
                 const size_t& bufferCount,
                 VulkanBufferInfo bufferInfo = {});
 
+            std::shared_ptr<VulkanImage> create_image(
+                VulkanImageInfo imageInfo = {});
+
+            std::shared_ptr<VulkanImage> create_image(
+                VkImage& image);
+
+            std::shared_ptr<VulkanImageView> create_image_view(
+                VulkanImage& image,
+                VkFormat& imageFormat,
+                VulkanImageViewInfo imageViewInfo = {});
+
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
-            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
+
+            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
+                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
             std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
-                    const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
-                    const std::vector<VulkanConstRange>& constantRanges);
+                const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
+                const std::vector<VulkanConstRange>& constantRanges);
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 std::shared_ptr<VulkanSwapChain>& swapChain,

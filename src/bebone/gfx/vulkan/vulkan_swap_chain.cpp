@@ -98,8 +98,8 @@ namespace bebone::gfx {
         for(auto& image : images) {
             VulkanSwapChainImageTuple swapChainImage;
 
-            swapChainImage.image = std::make_shared<VulkanImage>(image);
-            swapChainImage.view = std::make_shared<VulkanImageView>(device, *swapChainImage.image, imageFormat);
+            swapChainImage.image = device.create_image(image);
+            swapChainImage.view = device.create_image_view(*swapChainImage.image, imageFormat);
 
             out.push_back(swapChainImage);
         }

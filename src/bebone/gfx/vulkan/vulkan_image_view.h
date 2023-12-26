@@ -14,15 +14,32 @@ namespace bebone::gfx {
     class VulkanDevice;
     class VulkanImage;
 
+    struct VulkanImageSubresourceRange {
+        VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        uint32_t baseMipLevel = 0;
+        uint32_t levelCount = 1;
+        uint32_t baseArrayLayer = 0;
+        uint32_t layerCount = 1;
+    };
+
+    struct VulkanImageViewInfo {
+        // VkStructureType sType;
+        // const void* pNext;
+        VkImageViewCreateFlags flags = 0;
+        // VkImage image;
+        VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D;
+        // VkFormat format;
+        VkComponentMapping components = {};
+        VulkanImageSubresourceRange subresourceRange = {};
+    };
+
     class VulkanImageView : public VulkanWrapper<VkImageView>, private core::NonCopyable {
         public:
-            VulkanImageView(VkImageView imageView);
-            VulkanImageView(VulkanDevice& device, VulkanImage& image, VkFormat& imageFormat);
-
-            static std::shared_ptr<VulkanImageView> create_default_depth_image_view(
-                VulkanDevice &device,
-                std::shared_ptr<VulkanImage>& image,
-                VkFormat format);
+            VulkanImageView(
+                VulkanDevice& device,
+                VulkanImage& image,
+                VkFormat& imageFormat,
+                VulkanImageViewInfo imageViewInfo = {});
 
             void destroy(VulkanDevice &device) override;
     };
