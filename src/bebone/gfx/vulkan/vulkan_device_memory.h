@@ -20,11 +20,29 @@ namespace bebone::gfx {
         public:
             VulkanDeviceMemory(VulkanDevice& device, VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties);
 
-            void bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer);
-            void bind_image_memory(VulkanDevice& device, VulkanImage& image);
+            void bind_buffer_memory(
+                VulkanDevice& device,
+                VulkanBuffer& buffer);
+
+            void bind_buffer_memory(
+                VulkanDevice& device,
+                std::shared_ptr<VulkanBuffer>& buffer);
+
+            void bind_image_memory(
+                VulkanDevice& device,
+                VulkanImage& image);
+
+            void bind_image_memory(
+                VulkanDevice& device,
+                std::shared_ptr<VulkanImage>& image);
 
             void map(std::shared_ptr<VulkanDevice>& device, const size_t& size, void** data);
             void unmap(std::shared_ptr<VulkanDevice>& device);
+
+            void upload_data(
+                std::shared_ptr<VulkanDevice>& device,
+                const void* src,
+                const size_t& size);
 
             void destroy(VulkanDevice &device) override;
     };

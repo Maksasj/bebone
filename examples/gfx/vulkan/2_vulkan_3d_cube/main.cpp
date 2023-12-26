@@ -56,13 +56,13 @@ int main() {
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
-    auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
-    vertexBuffer->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
+    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
-    auto transformUBO = device->create_buffers(sizeof(Transform), 3); // Todo
-    auto cameraUBO = device->create_buffers(sizeof(CameraTransform), 3);
+    auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
+    auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
     descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2});
     descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5});
 
@@ -94,8 +94,8 @@ int main() {
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
-        transformUBO[frame]->upload_data(device, &transform, sizeof(Transform));
-        cameraUBO[frame]->upload_data(device, &cameraTransform, sizeof(CameraTransform));
+        transformUBO[frame].memory->upload_data(device, &transform, sizeof(Transform));
+        cameraUBO[frame].memory->upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
@@ -106,8 +106,8 @@ int main() {
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(*pipeline)
             .bind_descriptor_set(pipelineLayout, descriptors, frame)
-            .bind_vertex_buffer(vertexBuffer)
-            .bind_index_buffer(indexBuffer)
+            .bind_vertex_buffer(vertexBuffer.buffer)
+            .bind_index_buffer(indexBuffer.buffer)
             .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
             .draw_indexed(indices.size())
             .end_render_pass()
@@ -122,9 +122,14 @@ int main() {
     device->wait_idle();
 
     device->destroy_all(commandBuffers);
-    device->destroy_all(vertexBuffer,indexBuffer,commandBufferPool);
-    device->destroy_all(transformUBO);
-    device->destroy_all(cameraUBO);
+    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+
+    for(auto& b : transformUBO)
+        device->destroy_all(b.buffer, b.memory);
+
+    for(auto& b : cameraUBO)
+        device->destroy_all(b.buffer, b.memory);
+
     device->destroy_all(descriptorSetLayout);
     device->destroy_all(descriptors);
     device->destroy_all(descriptorPool, vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);

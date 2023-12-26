@@ -30,10 +30,10 @@ int main() {
     auto pipelineLayout = device->create_pipeline_layout({}, {});
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
-    auto vertexBuffer = device->create_buffer(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer(sizeof(u32) * indices.size());
-    vertexBuffer->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
+    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
@@ -53,8 +53,8 @@ int main() {
             .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(*pipeline)
-            .bind_vertex_buffer(vertexBuffer)
-            .bind_index_buffer(indexBuffer)
+            .bind_vertex_buffer(vertexBuffer.buffer)
+            .bind_index_buffer(indexBuffer.buffer)
             .draw_indexed(indices.size())
             .end_render_pass()
             .end_record();
@@ -67,8 +67,8 @@ int main() {
 
     device->wait_idle();
 
-    device->destroy_all(commandBuffers);
-    device->destroy_all(vertexBuffer,indexBuffer,commandBufferPool);
+    device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
+    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
     device->destroy_all(vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
 
     device->destroy();

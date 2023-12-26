@@ -47,8 +47,27 @@ namespace bebone::gfx {
 
             VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window);
 
-            std::shared_ptr<VulkanBuffer> create_buffer(const size_t& size);
-            std::vector<std::shared_ptr<VulkanBuffer>> create_buffers(const size_t& size, const size_t& bufferCount);
+            std::shared_ptr<VulkanDeviceMemory> create_device_memory(
+                VkMemoryRequirements memRequirements,
+                VkMemoryPropertyFlags properties);
+
+            std::shared_ptr<VulkanBuffer> create_buffer(
+                const size_t& size,
+                VulkanBufferInfo bufferInfo = {});
+
+            VulkanBufferMemoryTuple create_buffer_memory(
+                const size_t& size,
+                VulkanBufferInfo bufferInfo = {});
+
+            std::vector<std::shared_ptr<VulkanBuffer>> create_buffers(
+                const size_t& size,
+                const size_t& bufferCount,
+                VulkanBufferInfo bufferInfo = {});
+
+            std::vector<VulkanBufferMemoryTuple> create_buffer_memorys(
+                const size_t& size,
+                const size_t& bufferCount,
+                VulkanBufferInfo bufferInfo = {});
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);

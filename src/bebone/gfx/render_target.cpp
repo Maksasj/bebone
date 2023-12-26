@@ -8,7 +8,7 @@
 namespace bebone::gfx {
     RenderTarget::RenderTarget(
         VulkanDevice& device,
-        std::vector<VulkanSwapChainImage>& swapChainImages,
+        std::vector<VulkanSwapChainImageTuple>& swapChainImages,
         VkFormat imageFormat,
         VkExtent2D extent
     ) : swapChainImages(swapChainImages) {
@@ -33,7 +33,7 @@ namespace bebone::gfx {
 
         // Create frame buffers
         for(size_t i = 0; i < swapChainImages.size(); ++i) {
-            auto attachments = std::vector{ swapChainImages[i].view, depthImages[i].view };
+            auto attachments = std::vector { swapChainImages[i].view, depthImages[i].view };
             auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, renderPass, extent);
 
             swapChainFramebuffers.push_back(framebuffer);

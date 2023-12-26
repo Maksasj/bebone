@@ -85,7 +85,7 @@ namespace bebone::gfx {
         return { result };
     }
 
-    std::vector<VulkanSwapChainImage> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat imageFormat) {
+    std::vector<VulkanSwapChainImageTuple> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat imageFormat) {
         std::vector<VkImage> images;
         uint32_t imageCount;
 
@@ -93,10 +93,10 @@ namespace bebone::gfx {
         images.resize(imageCount);
         vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, images.data());
 
-        std::vector<VulkanSwapChainImage> out;
+        std::vector<VulkanSwapChainImageTuple> out;
 
         for(auto& image : images) {
-            VulkanSwapChainImage swapChainImage;
+            VulkanSwapChainImageTuple swapChainImage;
 
             swapChainImage.image = std::make_shared<VulkanImage>(image);
             swapChainImage.view = std::make_shared<VulkanImageView>(device, *swapChainImage.image, imageFormat);

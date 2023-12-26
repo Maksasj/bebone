@@ -56,17 +56,41 @@ namespace bebone::gfx {
         return std::make_shared<VulkanCommandBufferPool>(*this);
     }
 
-    std::shared_ptr<VulkanBuffer> VulkanDevice::create_buffer(const size_t& size) {
-        return std::make_shared<VulkanBuffer>(*this, size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    std::shared_ptr<VulkanDeviceMemory> VulkanDevice::create_device_memory(VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties) {
+        return std::make_shared<VulkanDeviceMemory>(*this, memRequirements, properties);
     }
 
-    std::vector<std::shared_ptr<VulkanBuffer>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount) {
+    std::shared_ptr<VulkanBuffer> VulkanDevice::create_buffer(const size_t& size, VulkanBufferInfo bufferInfo) {
+        return std::make_shared<VulkanBuffer>(*this, size, bufferInfo);
+    }
+
+    VulkanBufferMemoryTuple VulkanDevice::create_buffer_memory(const size_t& size, VulkanBufferInfo bufferInfo) {
+        auto buffer = create_buffer(size, bufferInfo);
+
+        auto memRequirements = buffer->get_memory_requirements(*this);
+
+        auto memory = create_device_memory(memRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        memory->bind_buffer_memory(*this, buffer);
+
+        return { buffer, memory };
+    }
+
+    std::vector<std::shared_ptr<VulkanBuffer>> VulkanDevice::create_buffers(const size_t& size, const size_t& bufferCount, VulkanBufferInfo bufferInfo) {
         std::vector<std::shared_ptr<VulkanBuffer>> buffers;
 
         for(size_t i = 0; i < bufferCount; ++i)
-            buffers.push_back(std::make_shared<VulkanBuffer>(*this, size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+            buffers.push_back(std::make_shared<VulkanBuffer>(*this, size, bufferInfo));
 
         return buffers;
+    }
+
+    std::vector<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memorys(const size_t& size, const size_t& bufferCount, VulkanBufferInfo bufferInfo) {
+        std::vector<VulkanBufferMemoryTuple> tuples;
+
+        for(size_t i = 0; i < bufferCount; ++i)
+            tuples.emplace_back(create_buffer_memory(size, bufferInfo));
+
+        return tuples;
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(

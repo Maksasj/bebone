@@ -33,9 +33,27 @@ namespace bebone::gfx {
                 const size_t& dstArrayElement
             );
 
+            void update_descriptor_set(
+                std::shared_ptr<VulkanDevice>& device,
+                VulkanBufferMemoryTuple& tuple,
+                const size_t& size,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
             void update_descriptor_sets(
                 std::shared_ptr<VulkanDevice>& device,
                 std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
+                const size_t& size,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
+
+            void update_descriptor_sets(
+                std::shared_ptr<VulkanDevice>& device,
+                std::vector<VulkanBufferMemoryTuple>& tuples,
                 const size_t& size,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
                 const size_t& binding,

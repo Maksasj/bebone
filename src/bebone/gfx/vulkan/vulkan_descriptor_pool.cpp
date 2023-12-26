@@ -59,6 +59,17 @@ namespace bebone::gfx {
         vkUpdateDescriptorSets(device->device(), 1, &descriptorWrite, 0, nullptr);
     }
 
+    void VulkanDescriptorPool::update_descriptor_set(
+        std::shared_ptr<VulkanDevice>& device,
+        VulkanBufferMemoryTuple& tuple,
+        const size_t& size,
+        std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+        const size_t& binding,
+        const size_t& dstArrayElement
+    ) {
+        update_descriptor_set(device, tuple.buffer, size, descriptorSet, binding, dstArrayElement);
+    }
+
     void VulkanDescriptorPool::update_descriptor_sets(
             std::shared_ptr<VulkanDevice>& device,
             std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
@@ -72,6 +83,26 @@ namespace bebone::gfx {
 
         for(size_t i = 0; i < dstArrayElements.size(); ++i) {
             auto& buffer = buffers[i];
+            auto& dstArrayElement = dstArrayElements[i];
+            auto& descriptorSet = descriptorSets[i];
+
+            update_descriptor_set(device, buffer, size, descriptorSet, binding, dstArrayElement);
+        }
+    }
+
+    void VulkanDescriptorPool::update_descriptor_sets(
+            std::shared_ptr<VulkanDevice>& device,
+            std::vector<VulkanBufferMemoryTuple>& tuples,
+            const size_t& size,
+            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+            const size_t& binding,
+            const std::vector<size_t>& dstArrayElements
+    ) {
+        if(tuples.size() != dstArrayElements.size())
+            throw std::runtime_error("buffer an dstArrayElements count is not matching");
+
+        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
+            auto& buffer = tuples[i].buffer;
             auto& dstArrayElement = dstArrayElements[i];
             auto& descriptorSet = descriptorSets[i];
 

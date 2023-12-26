@@ -18,12 +18,12 @@ namespace bebone::gfx {
     class VulkanImageView;
     class VulkanDeviceMemory;
 
-    struct VulkanSwapChainImage {
+    struct VulkanSwapChainImageTuple {
         std::shared_ptr<VulkanImage> image;
         std::shared_ptr<VulkanImageView> view;
     };
 
-    struct VulkanDepthImage {
+    struct VulkanDepthImageTuple {
         std::shared_ptr<VulkanImage> image;
         std::shared_ptr<VulkanImageView> view;
         std::shared_ptr<VulkanDeviceMemory> memory;

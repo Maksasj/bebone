@@ -21,8 +21,16 @@ namespace bebone::gfx {
         vkBindBufferMemory(device.device(), buffer.backend, backend, 0);
     }
 
+    void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, std::shared_ptr<VulkanBuffer>& buffer) {
+        bind_buffer_memory(device, *buffer);
+    }
+
     void VulkanDeviceMemory::bind_image_memory(VulkanDevice& device, VulkanImage& image) {
         vkBindImageMemory(device.device(), image.backend, backend, 0);
+    }
+
+    void VulkanDeviceMemory::bind_image_memory(VulkanDevice& device, std::shared_ptr<VulkanImage>& image) {
+        bind_image_memory(device, *image);
     }
 
     void VulkanDeviceMemory::map(std::shared_ptr<VulkanDevice>& device, const size_t& size, void** data) {
@@ -35,5 +43,13 @@ namespace bebone::gfx {
 
     void VulkanDeviceMemory::destroy(VulkanDevice &device) {
         vkFreeMemory(device.device(), backend, nullptr);
+    }
+
+    void VulkanDeviceMemory::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
+        void* data;
+
+        map(device, size, &data);
+        memcpy(data, src, size);
+        unmap(device);
     }
 }

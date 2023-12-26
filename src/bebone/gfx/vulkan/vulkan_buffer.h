@@ -14,6 +14,9 @@ namespace bebone::gfx {
 
     class VulkanDevice;
 
+    class VulkanBuffer;
+    class VulkanDeviceMemory;
+
     const static VkBufferUsageFlags VULKAN_BUFFER_ANY_USE_FLAG =
         VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT |
@@ -32,16 +35,22 @@ namespace bebone::gfx {
         VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR |
         VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR;
 
+    struct VulkanBufferInfo {
+        VkBufferCreateFlags flags = 0;
+        VkBufferUsageFlags usage = VULKAN_BUFFER_ANY_USE_FLAG;
+        VkSharingMode sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        uint32_t queueFamilyIndexCount = 0;
+        uint32_t* pQueueFamilyIndices = nullptr;
+    };
+
+    struct VulkanBufferMemoryTuple {
+        std::shared_ptr<VulkanBuffer> buffer;
+        std::shared_ptr<VulkanDeviceMemory> memory;
+    };
+
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
-        private:
-            std::shared_ptr<VulkanDeviceMemory> bufferMemory; // Todo move this out of there
-
-            void create_buffer(VulkanDevice& device, VkDeviceSize size, VkBufferUsageFlags usage);
-
         public:
-            VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VkMemoryPropertyFlags properties);
-
-            void upload_data(std::shared_ptr<VulkanDevice> &device, const void *src, const size_t &size);
+            VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo bufferInfo); //, VkMemoryPropertyFlags properties);
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 

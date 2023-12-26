@@ -18,12 +18,12 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanRenderPass> renderPass;
 
             std::vector<std::shared_ptr<VulkanFramebuffer>> swapChainFramebuffers;
-            std::vector<VulkanDepthImage> depthImages;
-            std::vector<VulkanSwapChainImage> swapChainImages;
+            std::vector<VulkanDepthImageTuple> depthImages;
+            std::vector<VulkanSwapChainImageTuple> swapChainImages;
 
             RenderTarget(
                 VulkanDevice& device,
-                std::vector<VulkanSwapChainImage>& swapChainImages,
+                std::vector<VulkanSwapChainImageTuple>& swapChainImages,
                 VkFormat imageFormat,
                 VkExtent2D extent);
 

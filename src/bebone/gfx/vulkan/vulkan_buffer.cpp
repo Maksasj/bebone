@@ -5,33 +5,21 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    void VulkanBuffer::create_buffer(VulkanDevice& device, VkDeviceSize size, VkBufferUsageFlags usage) {
-        VkBufferCreateInfo bufferInfo{};
-        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferInfo.size = size;
-        bufferInfo.usage = usage;
-        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo bufferInfo) {//VkMemoryPropertyFlags properties) {
+        VkBufferCreateInfo createInfo{};
 
-        if (vkCreateBuffer(device.device(), &bufferInfo, nullptr, &backend) != VK_SUCCESS) {
+        createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        createInfo.pNext = nullptr;
+        createInfo.flags = bufferInfo.flags;
+        createInfo.size = size;
+        createInfo.usage = bufferInfo.usage;
+        createInfo.sharingMode = bufferInfo.sharingMode;
+        createInfo.queueFamilyIndexCount = bufferInfo.queueFamilyIndexCount;
+        createInfo.pQueueFamilyIndices = bufferInfo.pQueueFamilyIndices;
+
+        if (vkCreateBuffer(device.device(), &createInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create vulkan buffer!");
         }
-    }
-
-    VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VkMemoryPropertyFlags properties) {
-        create_buffer(device, size, VULKAN_BUFFER_ANY_USE_FLAG);
-
-        auto memRequirements = get_memory_requirements(device);
-
-        bufferMemory = std::make_shared<VulkanDeviceMemory>(device, memRequirements, properties);
-        bufferMemory->bind_buffer_memory(device, *this);
-    }
-
-    void VulkanBuffer::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
-        void* data;
-
-        bufferMemory->map(device, size, &data);
-        memcpy(data, src, size);
-        bufferMemory->unmap(device);
     }
 
     VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
@@ -42,7 +30,5 @@ namespace bebone::gfx {
 
     void VulkanBuffer::destroy(bebone::gfx::VulkanDevice &device) {
         vkDestroyBuffer(device.device(), backend, nullptr);
-
-        bufferMemory->destroy(device);
     }
 }
