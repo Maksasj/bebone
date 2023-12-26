@@ -34,8 +34,8 @@ namespace bebone::gfx {
         // const void* pNext;
         VkImageCreateFlags flags = 0;
         VkImageType imageType = VK_IMAGE_TYPE_2D;
-        VkFormat format = VK_FORMAT_UNDEFINED;
-        VkExtent3D extent = {0, 0, 0};
+        // VkFormat format = VK_FORMAT_UNDEFINED;
+        // VkExtent3D extent = {0, 0, 0};
         uint32_t mipLevels = 1;
         uint32_t arrayLayers = 1;
         VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
@@ -53,6 +53,8 @@ namespace bebone::gfx {
 
             VulkanImage(
                 VulkanDevice& device,
+                VkFormat format,
+                VkExtent3D extent,
                 VulkanImageInfo imageInfo = {});
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);

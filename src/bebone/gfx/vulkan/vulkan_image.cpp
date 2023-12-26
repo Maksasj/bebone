@@ -10,15 +10,15 @@ namespace bebone::gfx {
         backend = image;
     }
 
-    VulkanImage::VulkanImage(VulkanDevice& device, VulkanImageInfo imageInfo) {
+    VulkanImage::VulkanImage(VulkanDevice& device, VkFormat format, VkExtent3D extent, VulkanImageInfo imageInfo) {
         VkImageCreateInfo createInfo{};
 
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         createInfo.pNext = nullptr;
         createInfo.flags = imageInfo.flags;
         createInfo.imageType = imageInfo.imageType;
-        createInfo.format = imageInfo.format;
-        createInfo.extent = imageInfo.extent;
+        createInfo.format = format;
+        createInfo.extent = extent;
         createInfo.mipLevels = imageInfo.mipLevels;
         createInfo.arrayLayers = imageInfo.arrayLayers;
         createInfo.samples = imageInfo.samples;

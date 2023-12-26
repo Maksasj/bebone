@@ -75,6 +75,8 @@ namespace bebone::gfx {
                 VulkanBufferInfo bufferInfo = {});
 
             std::shared_ptr<VulkanImage> create_image(
+                VkFormat format,
+                VkExtent3D extent,
                 VulkanImageInfo imageInfo = {});
 
             std::shared_ptr<VulkanImage> create_image(

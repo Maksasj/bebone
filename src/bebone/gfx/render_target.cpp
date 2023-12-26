@@ -20,9 +20,7 @@ namespace bebone::gfx {
         auto depthFormat = device.find_depth_format();
 
         for(size_t i = 0; i < swapChainImages.size(); ++i) {
-            auto image = device.create_image({
-                .format = depthFormat,
-                .extent = { extent.width, extent.height, 1},
+            auto image = device.create_image(depthFormat, { extent.width, extent.height, 1}, {
                 .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
             });
 
