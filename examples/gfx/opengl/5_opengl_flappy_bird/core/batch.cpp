@@ -144,8 +144,8 @@ namespace game::core {
         f32 scale = transform->get_scale();
         f32 rotation = transform->get_rotation();
 
-        float width = sprite->get_width() * scale / sprite->get_pixels_per_unit();
-        float height = sprite->get_height() * scale / sprite->get_pixels_per_unit();
+        float width = sprite->get_unit_width() * scale;
+        float height = sprite->get_unit_height() * scale;
         Vec2f tmp;
 
         ShaderVertex v0;

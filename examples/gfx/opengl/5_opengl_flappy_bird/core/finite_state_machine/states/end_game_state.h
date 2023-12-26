@@ -14,7 +14,7 @@ namespace game::core::fsm {
     
     class EndGameState : public State {
         private:
-            shared_ptr<State> gameState;
+            shared_ptr<State> menuState;
             shared_ptr<GameObject> flappyBird;
         
         public:
@@ -25,8 +25,8 @@ namespace game::core::fsm {
             void update() {};
             void exit() {};
 
-            void set_game_state(shared_ptr<State> gameState);
-            void transition_to_game_state();
+            void set_menu_state(shared_ptr<State> menuState);
+            void transition_to_menu_state();
     };
 }
 

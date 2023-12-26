@@ -35,6 +35,8 @@ namespace game::core {
 
             shared_ptr<GameObject> instantiate(const string& gameObjectName, const Vec3f& position = {0.0f, 0.0f, 0.0f});
             void add_renderer_component(shared_ptr<GameObject>& gameObject, const string& textureName, const unsigned int& pixelsPerUnit);
+
+            void update_game_objects();
         public:
             Game(const unsigned int& width, const unsigned int& height);
             void update();

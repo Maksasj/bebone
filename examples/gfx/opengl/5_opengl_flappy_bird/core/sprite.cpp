@@ -8,6 +8,9 @@ namespace game::core {
 
     Sprite::Sprite(const std::string& textureName, const unsigned int& pixelsPerUnit) : pixelsPerUnit(pixelsPerUnit) {
         set_texture(textureName);
+
+        unitWidth = get_width() / (float)pixelsPerUnit;
+        unitHeight = get_height() / (float)pixelsPerUnit;
     }
 
     const shared_ptr<GLTexture>& Sprite::get_texture() const {
@@ -28,5 +31,13 @@ namespace game::core {
 
     unsigned int Sprite::get_pixels_per_unit() const {
         return pixelsPerUnit;
+    }
+
+    float Sprite::get_unit_width() const {
+        return unitWidth;
+    }
+
+    float Sprite::get_unit_height() const {
+        return unitHeight;
     }
 }

@@ -57,6 +57,18 @@ namespace game::core::ecs {
                 
                 return nullptr;
             }
+
+            template <typename T>
+            vector<shared_ptr<T>> get_components() {
+                auto v = components[typeid(T)];
+                auto vOut = vector<shared_ptr<T>>();
+                
+                for (auto it = v.begin(); it != v.end(); ++it) {
+                    vOut.push_back(dynamic_pointer_cast<T>(*it));
+                }
+
+                return vOut;
+            }
     };
 
     class Component : private bebone::core::NonCopyable {

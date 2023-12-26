@@ -23,6 +23,11 @@ namespace game::core::fsm {
             shared_ptr<GameObject> pipe1;
             shared_ptr<GameObject> pipe2;
 
+            float groundY;
+            float airY;
+
+            bool pipe_player_collision_check(shared_ptr<GameObject> gameObject) const;
+
         public:
             GameState(shared_ptr<GameObject> flappyBird);
             ~GameState();
