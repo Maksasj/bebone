@@ -23,7 +23,7 @@ namespace game::core::fsm {
 
             void enter();
             void update() {};
-            void exit() {};
+            void exit();
 
             void set_menu_state(shared_ptr<State> menuState);
             void transition_to_menu_state();

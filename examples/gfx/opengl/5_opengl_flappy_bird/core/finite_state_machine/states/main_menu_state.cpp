@@ -1,6 +1,9 @@
 #include "main_menu_state.h"
 #include "../../input_system/input.h"
 
+#include "../../game.h"
+#include "../../rng.h"
+
 namespace game::core::fsm {
     using namespace input_system;
 
@@ -12,6 +15,12 @@ namespace game::core::fsm {
     }
 
     void MainMenuState::enter() {
+        flappyBird->get_transform()->set_position(Vec3f(0.0f, 0.0f, 0.0f));
+        flappyBird->get_transform()->set_rotation(0.0f);
+
+        Game::find_game_object_by_name("Pipe1")->get_transform()->set_position(Vec3f(6.2f, Random::rand(-3.0f, 4.5f), 2.0f));
+        Game::find_game_object_by_name("Pipe2")->get_transform()->set_position(Vec3f(12.0f, Random::rand(-3.0f, 4.5f), 2.0f));
+
         auto clickToStartFunction = [this]() {
             transition_to_game_state();
         };

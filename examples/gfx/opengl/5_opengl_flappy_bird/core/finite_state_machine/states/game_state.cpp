@@ -7,6 +7,7 @@
 #include "../../entity_component_system/components/collider.h"
 
 #include "../../game.h"
+#include "../../score.h"
 
 namespace game::core::fsm {
     using namespace input_system;
@@ -108,16 +109,19 @@ namespace game::core::fsm {
             Vec2f objTopLeft = collider->get_top_left() + objTransform->get_position();
             Vec2f objBottomRight = collider->get_bottom_right() + objTransform->get_position();
 
-            if (objTopLeft.x <= playerBottomRight.x &&
+            bool collision = objTopLeft.x <= playerBottomRight.x &&
                 objBottomRight.x >= playerTopLeft.x &&
                 objTopLeft.y >= playerBottomRight.y &&
-                objBottomRight.y <= playerTopLeft.y) {
-                    if (collider->is_trigger()) {
-                        // TODO: add points
-                    } else {
-                        return true;
-                    }
-                }
+                objBottomRight.y <= playerTopLeft.y;
+
+            if (collision && collider->is_trigger() && !collider->is_triggered()) {
+                collider->enter_trigger();
+                Score::increment();
+            } else if (!collision && collider->is_trigger() && collider->is_triggered()) {
+                collider->exit_trigger();
+            } else if (collision && !collider->is_trigger()) {
+                return true;
+            }
         }
 
         return false;

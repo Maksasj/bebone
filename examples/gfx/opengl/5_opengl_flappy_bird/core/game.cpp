@@ -63,12 +63,12 @@ namespace game::core {
         batch->add(ground3);
         ground3->get_transform()->set_scale(0.5f);
 
-        auto pipe1 = instantiate("Pipe1", Vec3f(6.2f, Random::rand(-3.0f, 4.5f), 2.0f));
+        auto pipe1 = instantiate("Pipe1");
         add_renderer_component(pipe1, "pipes", 32);
         batch->add(pipe1);
         pipe1->get_transform()->set_scale(0.5f);
 
-        auto pipe2 = instantiate("Pipe2", Vec3f(12.0f, Random::rand(-3.0f, 4.5f), 2.0f));
+        auto pipe2 = instantiate("Pipe2");
         add_renderer_component(pipe2, "pipes", 32);
         batch->add(pipe2);
         pipe2->get_transform()->set_scale(0.5f);

@@ -14,6 +14,7 @@ namespace game::core::ecs {
             Vec2f bottomRight;
 
             bool isTrigger;
+            bool triggered = false;
 
         public:
             Collider(const Vec2f& localTopLeft, const Vec2f& localBottomRight, const bool& isTrigger = false);
@@ -23,6 +24,10 @@ namespace game::core::ecs {
             Vec2f get_bottom_right() const;
             
             bool is_trigger() const;
+
+            void enter_trigger();
+            void exit_trigger();
+            bool is_triggered() const;
     };
 }
 
