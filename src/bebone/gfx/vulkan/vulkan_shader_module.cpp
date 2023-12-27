@@ -3,7 +3,7 @@
 #include "vulkan_device.h"
 
 namespace bebone::gfx {
-    VulkanShaderModule::VulkanShaderModule(VulkanDevice& device, const ShaderCode& shaderCode) {
+    VulkanShaderModule::VulkanShaderModule(VulkanDevice& device, const ShaderCode& shaderCode) : shaderType(shaderCode.get_shader_type()) {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = shaderCode.get_byte_code().size() * sizeof(unsigned int);

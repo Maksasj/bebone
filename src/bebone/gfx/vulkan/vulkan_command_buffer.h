@@ -39,6 +39,7 @@ namespace bebone::gfx {
                 const u32& height);
 
             VulkanCommandBuffer& bind_pipeline(VulkanPipeline& pipeline);
+            VulkanCommandBuffer& bind_pipeline(std::shared_ptr<VulkanPipeline>& pipeline);
 
             VulkanCommandBuffer& bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer);
             VulkanCommandBuffer& bind_index_buffer(std::shared_ptr<VulkanBuffer>& indexBuffer);

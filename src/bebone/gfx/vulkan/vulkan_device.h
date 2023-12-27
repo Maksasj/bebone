@@ -15,6 +15,7 @@
 #include "vulkan_buffer.h"
 #include "vulkan_image.h"
 #include "vulkan_image_view.h"
+#include "vulkan_pipeline.h"
 
 namespace bebone::gfx {
     class VulkanSwapChain;
@@ -99,8 +100,8 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 std::shared_ptr<VulkanSwapChain>& swapChain,
                 std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
-                std::shared_ptr<VulkanShaderModule>& vertShaderModule,
-                std::shared_ptr<VulkanShaderModule>& fragShaderModule);
+                std::vector<std::shared_ptr<VulkanShaderModule>> shaderModules,
+                VulkanPipelineConfig configInfo = {});
 
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
 
@@ -119,7 +120,7 @@ namespace bebone::gfx {
 
             uint32_t find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-            QueueFamilyIndices findPhysicalQueueFamilies() { return VulkanDeviceChooser::find_queue_families(physicalDevice, surface_); }
+            QueueFamilyIndices find_physical_queue_families() { return VulkanDeviceChooser::find_queue_families(physicalDevice, surface_); }
             SwapChainSupportDetails get_swap_chain_support() { return VulkanDeviceChooser::query_swap_chain_support(physicalDevice, surface_); }
 
             VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
