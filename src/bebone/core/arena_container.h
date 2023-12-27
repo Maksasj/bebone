@@ -11,40 +11,16 @@ namespace bebone::core {
             ArenaAllocator indices;
 
         public:
-            explicit ArenaContainer(const size_t& size) : data(size), indices(size) {
+            explicit ArenaContainer(const size_t& size);
 
-            }
+            void* alloc(const size_t& size) noexcept;
+            void* at(const size_t& index);
 
-            void* alloc(const size_t& size) noexcept {
-                void* ptr = data.alloc(size);
-                void** indexPtr = static_cast<void**>(indices.alloc(sizeof(void*)));
+            void clear() noexcept;
 
-                *indexPtr = ptr;
-
-                return ptr;
-            }
-
-            void clear() noexcept {
-                data.clear();
-                indices.clear();
-            }
-
-            [[nodiscard]] size_t size() const noexcept {
-                return indices.allocated() / sizeof(void*);
-            }
-
-            [[nodiscard]] size_t allocated() const noexcept {
-                return data.allocated() + indices.allocated();
-            }
-
-            [[nodiscard]] size_t capacity() const noexcept {
-                return data.allocated() + indices.allocated();
-            }
-
-            void* at(const size_t& index) {
-                void **ptr = static_cast<void**>(indices.data());
-                return ptr[index];
-            }
+            [[nodiscard]] size_t size() const noexcept;
+            [[nodiscard]] size_t allocated() const noexcept;
+            [[nodiscard]] size_t capacity() const noexcept;
     };
 }
 

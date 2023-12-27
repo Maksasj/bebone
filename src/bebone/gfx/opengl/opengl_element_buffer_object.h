@@ -6,8 +6,9 @@
 namespace bebone::gfx::opengl {
     class GLElementBufferObject final : public GLBufferObject {
         public:
-            GLElementBufferObject(const GLuint* indices, const size_t& size);
-            GLElementBufferObject(const GLuint* indices, const size_t& size, const GLenum& usage);
+            GLElementBufferObject(const void* indices, const size_t& size);
+            GLElementBufferObject(const void* indices, const size_t& size, const GLenum& usage);
+
             ~GLElementBufferObject();
 
             void buffer_sub_data(GLintptr offset, GLsizeiptr size, const void* data);

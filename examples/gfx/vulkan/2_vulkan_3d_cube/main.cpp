@@ -1,6 +1,3 @@
-#include <iostream>
-#include <fstream>
-
 #define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
 #define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
@@ -8,10 +5,10 @@
 using namespace bebone::gfx;
 using namespace bebone::core;
 
-struct Vertex {
-    Vec3f pos;
-    Vec3f color;
-};
+struct Vertex { Vec3f pos, color; };
+struct Handles { u32 cameraHandle, transformHandle; };
+struct CameraTransform { Mat4f view, proj; };
+struct Transform { Mat4f transform, scale, rotation; };
 
 const std::vector<Vertex> vertices = {
     {{-1.0, -1.0, -1.0}, {0.0f, 1.0f, 1.0f}},
@@ -33,153 +30,125 @@ const std::vector<int> indices = {
     3, 2, 6, 6, 7, 3
 };
 
-struct Handles {
-    u32 cameraHandle;
-    u32 transformHandle;
-};
-
-struct CameraTransform {
-    Mat4f view;
-    Mat4f proj;
-};
-
-struct Transform {
-    Mat4f transform;
-    Mat4f scale;
-    Mat4f rotation;
-};
-
-std::string read_file(const std::string& path);
-
-Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up);
+// Todo move view matrix to omni_types
+Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up);
 
 int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
-    auto renderer = VulkanRenderer(window);
 
-    auto resourceManager = renderer.create_gpu_resource_manager();
-    auto resourceSet = resourceManager
-        .create_resource_set()
-        .add_uniform_buffer_resource(0)
-        .add_uniform_buffer_resource(1)
-        .build();
+    auto instance = VulkanInstance::create_instance();
+    auto device = instance->create_device(window);
+    auto swapChain = device->create_swap_chain(window);
 
-    auto pipelineLayout = renderer
-        .create_pipeline_layout_builder()
-        .set_constant_range(0, sizeof(Handles))
-        .build(resourceManager);
+    auto descriptorPool = device->create_descriptor_pool();
+    auto descriptorSetLayout = device->create_descriptor_set_layouts({
+        VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
+        VulkanDescriptorSetLayoutBinding::bindless_uniform(1)
+    });
+    auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
 
-    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
-    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
+    auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {
+        VulkanConstRange::common(sizeof(Handles), 0)
+    });
+    auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
-    {   // Compiling glsl vertex shader code;
-        SpirVShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl"),
-            ShaderTypes::VERTEX_SHADER
-        ));
-        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
-    }
+    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
+    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
-    {   // Compiling glsl fragment shader code;
-        SpirVShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl"),
-            ShaderTypes::FRAGMENT_SHADER
-        ));
-        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
-    }
+    auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
+    auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
+    descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2});
+    descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5});
 
-    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
-    // auto vertexBuffer = device.create_buffer(sizeof(Vertex) * vertices.size());
-
-    auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
-
-    auto transformUBO = UniformBuffer<Transform>(resourceManager.create_uniform_buffer_impl<Transform>(resourceSet, 0));
-    auto cameraUBO = UniformBuffer<CameraTransform>(resourceManager.create_uniform_buffer_impl<CameraTransform>(resourceSet, 1));
-
-    auto cameraTransform = CameraTransform{
-        getViewMatrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, -1.0f, 0.0f)),
+    auto cameraTransform = CameraTransform {
+        get_view_matrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
-    auto transform = Transform{
+    auto transform = Transform {
         Mat4f::translation(Vec3f::splat(0.0f)),
         Mat4f::scale(1.0f),
         Mat4f::identity()
     };
 
     f32 t = 0.0f;
+
     while (!window->closing()) {
         glfwPollEvents();
 
-        auto frame = renderer.get_frame();
+        uint32_t frame;
+        auto result = swapChain->acquire_next_image(device, &frame);
 
-        if(!frame.valid())
+        if(!result.is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
-        ++t;
 
-        auto handles = Handles {
-            static_cast<u32>(cameraUBO.get_handle(frame.frameIndex).index),
-            static_cast<u32>(transformUBO.get_handle(frame.frameIndex).index)
-        };
-        
-        auto& cmd = frame.get_command_buffer();
+        transformUBO[frame].memory->upload_data(device, &transform, sizeof(Transform));
+        cameraUBO[frame].memory->upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
-        cmd.begin_record();
-            cmd.begin_render_pass(renderer, frame.frameIndex);
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+        auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
-            cmd.bind_pipeline(pipeline);
-            resourceSet.bind(cmd, pipelineLayout);
+        auto& cmd = commandBuffers[frame];
 
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
+        cmd->begin_record()
+            .begin_render_pass(swapChain, frame)
+            .set_viewport(0, 0, window->get_width(), window->get_height())
+            .bind_pipeline(*pipeline)
+            .bind_descriptor_set(pipelineLayout, descriptors, frame)
+            .bind_vertex_buffer(vertexBuffer.buffer)
+            .bind_index_buffer(indexBuffer.buffer)
+            .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
+            .draw_indexed(indices.size())
+            .end_render_pass()
+            .end_record();
 
-            transformUBO.set_data(frame, transform);
-            cameraUBO.set_data(frame, cameraTransform);
+        result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-            cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
-
-            cmd.draw_indexed(indices.size());
-
-            cmd.end_render_pass();
-        cmd.end_record();
-
-        cmd.submit();
-
-        renderer.present(frame);
+        if(!result.is_ok() || window->is_resized())
+            continue;
     }
 
-    vkDeviceWaitIdle(renderer.device->device());
+    device->wait_idle();
 
+    device->destroy_all(commandBuffers);
+    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+
+    for(auto& b : transformUBO)
+        device->destroy_all(b.buffer, b.memory);
+
+    for(auto& b : cameraUBO)
+        device->destroy_all(b.buffer, b.memory);
+
+    device->destroy_all(descriptorSetLayout);
+    device->destroy_all(descriptors);
+    device->destroy_all(descriptorPool, vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+
+    device->destroy();
+    instance->destroy();
+
+    // Todo move all glfw things to glfw context static class
     glfwTerminate();
 
     return 0;
 }
 
-std::string read_file(const std::string& path) {
-    std::ifstream file(path);
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
-}
+Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up) {
+    const auto w = direction.normalize();
+    const auto u = w.cross(up).normalize();
+    const auto v = w.cross(u);
 
-Mat4f getViewMatrix(Vec3f position, Vec3f direction, Vec3f up) {
-    const Vec3f w = direction.normalize();
-    const Vec3f u = w.cross(up).normalize();
-    const Vec3f v = w.cross(u);
-
-    Mat4f viewMatrix = Mat4f::identity();
+    auto viewMatrix = Mat4f::identity();
     viewMatrix[0 * 4 + 0] = u.x;
     viewMatrix[1 * 4 + 0] = u.y;
     viewMatrix[2 * 4 + 0] = u.z;

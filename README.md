@@ -19,9 +19,15 @@
 ## Roadmap
 
 ### 0.1v Release (This year)
-1. **Graphics abstraction layer**. General OpenGL and Vulkan abstractions. Window, Monitor apis.
-2. **Asset management system**. Basic abstractions for creating/editing image/mesh/*sound* data.
-3. **Input system**.
+1. **Graphics abstraction layer**. General OpenGL. Window, Monitor apis.
+2. **Event system**. Generic event system
+3. **Input system**. Event based input system
+
+### 0.1.1v
+1. **Asset system**. Basic abstractions for creating/editing image data.
+
+### 0.1.2v
+1. **Profiler** General bebone profiler
 
 ### 0.2v ...
 1. *Scripting*.
@@ -46,5 +52,5 @@ build\tests\unit\ctest
 ```
 
 ## License
-Bebone is free, open source game. All code in this repository FOR NOW is licensed under
+Bebone is free, open source game development framework. All code in this repository FOR NOW is licensed under
 - MIT License ([LICENSE.md](https://github.com/Maksasj/bebone/blob/master/LICENSE.md) or https://opensource.org/license/mit/)

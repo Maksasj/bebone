@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     class VulkanInstance;
 
-    class VulkanDebugMessenger {
+    class VulkanDebugMessenger : private core::NonCopyable {
         private:
             VulkanInstance& vulkanInstance;
 

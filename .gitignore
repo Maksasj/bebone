@@ -3,3 +3,4 @@ build
 /.idea/
 make.bat
 test.bat
+imgui.ini

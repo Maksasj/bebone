@@ -1,3 +1,0 @@
-file(GLOB_RECURSE BEBONE_SOUND_SRC_FILES "*.cpp")
-
-add_library(bebone_sound STATIC ${BEBONE_SOUND_SRC_FILES})

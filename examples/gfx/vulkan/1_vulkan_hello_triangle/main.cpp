@@ -1,6 +1,3 @@
-#include <iostream>
-#include <fstream>
-
 #include "bebone/bebone.h"
 
 using namespace bebone::gfx;
@@ -12,96 +9,72 @@ struct Vertex {
 };
 
 const std::vector<Vertex> vertices = {
-    {{0.5f, 0.5f, 0.0f},  {1.0f, 1.0f, 1.0f}},
-    {{0.0f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}},
+    {{0.5f, 0.5f, 0.0f},  {1.0f, 0.0f, 0.0f}},
+    {{0.0f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+    {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
 };
 
-const std::vector<int> indices = {
-    0, 1, 2
-};
-
-std::string read_file(const std::string& path);
+const std::vector<int> indices = { 0, 1, 2 };
 
 int main() {
     RenderingEngine::preinit();
 
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
-    auto renderer = VulkanRenderer(window);
-    
-    auto resourceManager = renderer.create_gpu_resource_manager();
 
-    auto pipelineLayout = renderer
-        .create_pipeline_layout_builder()
-        .build(resourceManager);
+    auto instance = VulkanInstance::create_instance();
+    auto device = instance->create_device(window);
+    auto swapChain = device->create_swap_chain(window);
 
-    ShaderCode vertexShaderCode(ShaderTypes::VERTEX_SHADER);
-    ShaderCode fragmentShaderCode(ShaderTypes::FRAGMENT_SHADER);
+    auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto pipelineLayout = device->create_pipeline_layout({}, {});
+    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
 
-    {   // Compiling glsl vertex shader code;
-        SpirVShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/vert.glsl"),
-            ShaderTypes::VERTEX_SHADER
-        ));
-        vertexShaderCode = shaderCompiler.compile(ShaderTypes::VERTEX_SHADER);
-    }
+    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
+    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
-    {   // Compiling glsl fragment shader code;
-        SpirVShaderCompiler shaderCompiler;
-        
-        shaderCompiler.add_shader_source(ShaderSource(
-            read_file("examples/assets/gfx/vulkan/1_vulkan_hello_triangle/frag.glsl"),
-            ShaderTypes::FRAGMENT_SHADER
-        ));
-        fragmentShaderCode = shaderCompiler.compile(ShaderTypes::FRAGMENT_SHADER);
-    }
-
-    auto pipeline = renderer.create_pipeline(pipelineLayout, vertexShaderCode, fragmentShaderCode);
-
-    auto vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    auto indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     while (!window->closing()) {
         glfwPollEvents();
 
-        auto frame = renderer.get_frame();
+        uint32_t frame;
+        auto result = swapChain->acquire_next_image(device, &frame);
 
-        if(!frame.valid())
+        if(!result.is_ok())
             continue;
 
-        auto& cmd = frame.get_command_buffer();
+        auto& cmd = commandBuffers[frame];
 
-        cmd.begin_record();
-            cmd.begin_render_pass(renderer, frame.frameIndex);
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+        cmd->begin_record()
+            .begin_render_pass(swapChain, frame)
+            .set_viewport(0, 0, window->get_width(), window->get_height())
+            .bind_pipeline(*pipeline)
+            .bind_vertex_buffer(vertexBuffer.buffer)
+            .bind_index_buffer(indexBuffer.buffer)
+            .draw_indexed(indices.size())
+            .end_render_pass()
+            .end_record();
 
-            cmd.bind_pipeline(pipeline);
+        result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
-
-            cmd.draw_indexed(indices.size());
-
-            cmd.end_render_pass();
-        cmd.end_record();
-
-        cmd.submit();
-
-        renderer.present(frame);
+        if(!result.is_ok() || window->is_resized())
+            continue;
     }
 
-    vkDeviceWaitIdle(renderer.device->device());
+    device->wait_idle();
+
+    device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
+    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+    device->destroy_all(vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+
+    device->destroy();
+    instance->destroy();
 
     glfwTerminate();
 
     return 0;
-}
-
-std::string read_file(const std::string& path) {
-    std::ifstream file(path);
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
 }

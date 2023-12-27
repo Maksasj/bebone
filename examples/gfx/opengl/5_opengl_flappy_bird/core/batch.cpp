@@ -13,7 +13,7 @@ namespace game::core {
 
         vao->bind();
             vbo = make_shared<GLVertexBufferObject>(nullptr, vertexLimit * sizeof(ShaderVertex), GL_DYNAMIC_DRAW);
-            ebo = make_shared<GLElementBufferObject>(nullptr, indexLimit * sizeof(unsigned int), GL_DYNAMIC_DRAW);
+            ebo = make_shared<GLElementBufferObject>(nullptr, indexLimit * sizeof(u32), GL_DYNAMIC_DRAW);
 
             vao->link_attributes(*vbo, 0, 3, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, position));
             vao->link_attributes(*vbo, 1, 2, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, textureCoordinates));

@@ -18,44 +18,18 @@ namespace bebone::core {
             size_t _allocated;
 
         public:
-            explicit ArenaAllocator(const size_t& size) : _capacity(size), _allocated(0) {
-                _data = malloc(size);
-            }
+            explicit ArenaAllocator(const size_t& size);
+            explicit ArenaAllocator(const size_t& size, void* buffer);
 
-            explicit ArenaAllocator(const size_t& size, void* buffer) : _capacity(size), _allocated(0) {
-                _data = buffer;
-            }
+            ~ArenaAllocator();
 
-            ~ArenaAllocator() {
-                free(_data);
-            }
+            void* alloc(const size_t& size) noexcept;
+            void* data() noexcept;
 
-            void* alloc(const size_t& size) noexcept {
-                if(_allocated + size > _capacity) {
-                    return nullptr;
-                }
+            void clear() noexcept;
 
-                const size_t allocated = _allocated;
-                _allocated += size;
-
-                return static_cast<char*>(_data) + allocated;
-            }
-
-            void clear() noexcept {
-                _allocated = 0;
-            }
-
-            [[nodiscard]] const size_t& allocated() const noexcept {
-                return _allocated;
-            }
-
-            [[nodiscard]] const size_t& capacity() const noexcept {
-                return _capacity;
-            }
-
-            void* data() noexcept {
-                return _data;
-            }
+            [[nodiscard]] const size_t& allocated() const noexcept;
+            [[nodiscard]] const size_t& capacity() const noexcept;
     };
 }
 

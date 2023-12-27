@@ -1,6 +1,6 @@
-#include "bebone/bebone.h"
-
 #include <vector>
+
+#include "bebone/bebone.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -8,22 +8,15 @@ const unsigned int SCR_HEIGHT = 600;
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
-const std::vector<GLfloat> vertices = {
-    -0.5f, -0.5f, 0.0f, // left  
-    0.5f, -0.5f, 0.0f, // right 
-    0.0f,  0.5f, 0.0f  // top   
+const std::vector<Vec3f> vertices = {
+    {-0.5f, -0.5f, 0.0f},
+    {0.5f, -0.5f, 0.0f},
+    {0.0f,  0.5f, 0.0f}
 };
 
-const std::vector<GLuint> indices = {
+const std::vector<u32> indices = {
 	0, 1, 2,
 };
-
-std::string read_file(const std::string& path) {
-    std::ifstream file(path);
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
-}
 
 int main() {
     glfwInit();
@@ -43,16 +36,16 @@ int main() {
     GLVertexArrayObject vao;
     vao.bind();
 
-    GLVertexBufferObject vbo(vertices.data(), vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
-    GLElementBufferObject ebo(indices.data(), indices.size(), GL_STATIC_DRAW);
+    GLVertexBufferObject vbo(vertices.data(), vertices.size() * sizeof(Vec3f));
+    GLElementBufferObject ebo(indices.data(), indices.size() * sizeof(u32));
 
-    vao.link_attributes(vbo, 0, 3, GL_FLOAT, 3 * (sizeof(float)), (void*)0);
+    vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vec3f), nullptr);
 
     vao.unbind();
 	vbo.unbind();
 	ebo.unbind();
 
-    while (!window->closing()) {
+    while(!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
