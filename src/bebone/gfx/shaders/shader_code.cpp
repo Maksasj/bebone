@@ -12,6 +12,10 @@ namespace bebone::gfx {
 
     }
 
+    const ShaderType& ShaderCode::get_shader_type() const {
+        return m_shaderType;
+    }
+
     const RawSpirVByteCode& ShaderCode::get_byte_code() const {
         return m_spirVCode;
     }

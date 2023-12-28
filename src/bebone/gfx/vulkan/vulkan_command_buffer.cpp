@@ -89,6 +89,12 @@ namespace bebone::gfx {
         return *this;
     }
 
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(std::shared_ptr<VulkanPipeline>& pipeline) {
+        vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->backend);
+
+        return *this;
+    }
+
     VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer) {
         VkBuffer buffers[] = {buffer->backend};
         VkDeviceSize offset[] = {0};

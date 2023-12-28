@@ -2,7 +2,7 @@
 
 namespace bebone::gfx {
     VulkanCommandBufferPool::VulkanCommandBufferPool(VulkanDevice& device) {
-        QueueFamilyIndices queueFamilyIndices = device.findPhysicalQueueFamilies();
+        QueueFamilyIndices queueFamilyIndices = device.find_physical_queue_families();
 
         VkCommandPoolCreateInfo poolInfo = {};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;

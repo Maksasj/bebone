@@ -21,6 +21,17 @@ const std::vector<Vertex> vertices = {
     {{-1.0,  1.0,  1.0}, {1.0f, 0.0f, 0.0f}},
 };
 
+// Todo make this nicer
+const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
+    .bindingDescriptions = {
+        { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
+    },
+    .attributeDescriptions = {
+        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
+        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
+    }
+};
+
 const std::vector<int> indices = {
     0, 1, 2, 2, 3, 0,
     1, 5, 6, 6, 2, 1,
@@ -54,7 +65,9 @@ int main() {
     });
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
-    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, vertShaderModule, fragShaderModule);
+    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
+        .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
+    });
 
     auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
     auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
@@ -104,7 +117,7 @@ int main() {
         cmd->begin_record()
             .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_pipeline(*pipeline)
+            .bind_pipeline(pipeline)
             .bind_descriptor_set(pipelineLayout, descriptors, frame)
             .bind_vertex_buffer(vertexBuffer.buffer)
             .bind_index_buffer(indexBuffer.buffer)
