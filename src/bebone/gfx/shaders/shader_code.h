@@ -7,6 +7,7 @@
 #include "../gfx_backend.h"
 
 #include "shader_type.h"
+#include "shader_source.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;

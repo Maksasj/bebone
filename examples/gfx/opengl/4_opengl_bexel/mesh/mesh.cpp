@@ -6,7 +6,7 @@ namespace bexel {
         m_vao->bind();
 
         m_vbo = make_unique<GLVertexBufferObject>(m_vertices.data(), m_vertices.size() * sizeof(Vertex));
-        m_ebo = make_unique<GLElementBufferObject>(m_indices);
+        m_ebo = make_unique<GLElementBufferObject>(m_indices.data(), m_indices.size() * sizeof(u32));
 
         m_vao->link_attributes(*m_vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, pos));
         m_vao->link_attributes(*m_vbo, 1, 2, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, tex));

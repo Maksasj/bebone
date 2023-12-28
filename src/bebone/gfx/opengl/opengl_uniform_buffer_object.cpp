@@ -1,10 +1,14 @@
 #include "opengl_uniform_buffer_object.h"
 
 namespace bebone::gfx::opengl {
-    GLUniformBufferObject::GLUniformBufferObject(const i64& _size) : GLBufferObject(), size(_size) {
+    GLUniformBufferObject::GLUniformBufferObject(const u64& _size) : GLBufferObject(), size(_size) {
         bind();
 
         glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+    }
+
+    GLUniformBufferObject::~GLUniformBufferObject() {
+        destroy();
     }
 
     void GLUniformBufferObject::bind_buffer_base(const i32& binding) const {

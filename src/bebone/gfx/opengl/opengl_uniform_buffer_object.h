@@ -9,12 +9,11 @@ namespace bebone::gfx::opengl {
 
     class GLUniformBufferObject final : public GLBufferObject {
         private:
-            i64 size;
+            u64 size;
 
         public:
-            GLUniformBufferObject(const i64& _size);
-
-            // Todo lets write destructor
+            GLUniformBufferObject(const u64& _size);
+            ~GLUniformBufferObject();
 
             void bind_buffer_base(const i32& binding) const;
 
