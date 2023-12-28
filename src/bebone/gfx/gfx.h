@@ -13,6 +13,7 @@
 #include "shaders/spirv_shader_compiler.h"
 
 #include "render_target.h"
-#include "rendering_engine.h"
+
+#include "glfw_context.h"
 
 #endif

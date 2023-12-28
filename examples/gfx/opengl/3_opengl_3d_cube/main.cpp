@@ -108,8 +108,8 @@ int main() {
 
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
-        glfwSwapBuffers(window->get_backend());
-        glfwPollEvents();
+        GLFWContext::swap_buffers(*window);
+        GLFWContext::pool_events();
     }
 
     transformUbo.unmap();
@@ -120,7 +120,7 @@ int main() {
     ebo.destroy();
     shaderProgram.destroy();
 
-    glfwTerminate();
+    GLFWContext::terminate();
 
     return 0;
 }

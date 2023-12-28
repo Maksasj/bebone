@@ -19,9 +19,9 @@ int main() {
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window->get_backend());
-        glfwPollEvents();
+        GLFWContext::pool_events();
     }
 
-    glfwTerminate();
+    GLFWContext::terminate();
     return 0;
 }
