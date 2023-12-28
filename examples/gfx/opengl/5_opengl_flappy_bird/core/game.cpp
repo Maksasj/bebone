@@ -22,11 +22,11 @@ namespace game::core {
  
         const auto shaderFlags = ENABLE_UNIFORMS;
 
-        auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/5_opengl_flappy_bird/vertex.glsl", ShaderTypes::VERTEX_SHADER, shaderFlags);
-        auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/5_opengl_flappy_bird/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shaderFlags);
+        auto vertexShader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::VERTEX_SHADER, shaderFlags);
+        auto fragmentShader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shaderFlags);
         auto shaderProgram = make_shared<GLShaderProgram>(vertexShader, fragmentShader);
 
-        TextureLoader::load_textures("examples\\assets\\gfx\\opengl\\5_opengl_flappy_bird\\gfx\\");
+        TextureLoader::load_textures("assets/gfx");
         
         batch = make_shared<Batch>(shaderProgram, camera, 1024);
 

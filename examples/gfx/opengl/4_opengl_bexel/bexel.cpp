@@ -17,15 +17,15 @@ namespace bexel {
     void Bexel::load() {
         const auto shaderFlags = ENABLE_UNIFORMS;
 
-        auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/4_opengl_bexel/vertex.glsl", ShaderTypes::VERTEX_SHADER, shaderFlags);
-        auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/4_opengl_bexel/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shaderFlags);
+        auto vertexShader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::VERTEX_SHADER, shaderFlags);
+        auto fragmentShader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shaderFlags);
 
         m_shader = make_unique<GLShaderProgram>(vertexShader, fragmentShader);
 
         m_camera = make_unique<Camera>(Vec3f(0.0, -24.0f, 0.0f), 12);
         m_world = make_unique<World>();
 
-        m_texture = make_unique<GLTexture>("examples/assets/gfx/opengl/4_opengl_bexel/texture.png", GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+        m_texture = make_unique<GLTexture>("assets/texture.png", GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
     }
 
     void Bexel::run() {

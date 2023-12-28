@@ -34,8 +34,8 @@ int main() {
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    auto vertexShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/2_opengl_texture/vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragmentShader = GLShaderFactory::create_shader("examples/assets/gfx/opengl/2_opengl_texture/fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();
@@ -55,8 +55,7 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    GLTexture texture("examples/assets/gfx/opengl/2_opengl_texture/awesomeface.png",
-        GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+    GLTexture texture("awesomeface.png",GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
 
     shaderProgram.set_uniform("ourTexture", 0);
 

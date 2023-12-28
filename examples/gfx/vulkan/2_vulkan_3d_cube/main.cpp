@@ -63,8 +63,8 @@ int main() {
     auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {
         VulkanConstRange::common(sizeof(Handles), 0)
     });
-    auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::FRAGMENT_SHADER);
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
         .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
