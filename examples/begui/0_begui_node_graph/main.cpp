@@ -1,7 +1,3 @@
-#define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
-#define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
-#include "bebone/bebone.h"
-
 #include "imgui_node_graph_test.cpp"
 
 const unsigned int SCR_WIDTH = 800;
