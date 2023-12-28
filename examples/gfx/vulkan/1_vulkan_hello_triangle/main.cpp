@@ -17,11 +17,11 @@ const std::vector<Vertex> vertices = {
 // Todo make this nicer
 const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
     .bindingDescriptions = {
-        { 0,sizeof(Vec3f) * 2, VK_VERTEX_INPUT_RATE_VERTEX }
+        { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
     .attributeDescriptions = {
-        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0 },
-        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, sizeof(Vec3f) },
+        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
+        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
     }
 };
 

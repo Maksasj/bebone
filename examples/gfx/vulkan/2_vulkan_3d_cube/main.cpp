@@ -24,11 +24,11 @@ const std::vector<Vertex> vertices = {
 // Todo make this nicer
 const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
     .bindingDescriptions = {
-        { 0,sizeof(Vec3f) * 2, VK_VERTEX_INPUT_RATE_VERTEX }
+        { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
     .attributeDescriptions = {
-        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0 },
-        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, sizeof(Vec3f) },
+        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
+        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
     }
 };
 
@@ -66,7 +66,7 @@ int main() {
     auto vertShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("examples/assets/gfx/vulkan/2_vulkan_3d_cube/frag.glsl", ShaderTypes::FRAGMENT_SHADER);
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
-            .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
+        .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
 
     auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
