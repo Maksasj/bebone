@@ -1,20 +1,11 @@
-file(GLOB_RECURSE SRC_FILES "*.cpp")
+# Subdirectories
+add_subdirectory(core)
+add_subdirectory(gfx)
 
-find_package(Vulkan REQUIRED)
+# Source files
+file(GLOB BEBONE_SRC_FILE bebone.cpp)
+add_library(bebone STATIC ${BEBONE_SRC_FILE})
 
-include_directories("../../3dparty/glad/include")
-include_directories("../../3dparty/glfw/include")
-include_directories("../../3dparty/Vulkan-Headers/include")
-include_directories("../../3dparty/omni_types/src")
-
-include_directories("./")
-
-add_library(bebone STATIC ${SRC_FILES})
-
-target_link_libraries(bebone glfw)
-target_link_libraries(bebone glad)
-target_link_libraries(bebone glslang)
-target_link_libraries(bebone SPIRV)
-target_link_libraries(bebone glslang-default-resource-limits)
-
-target_link_libraries(bebone ${Vulkan_LIBRARIES})
+# Library linking
+target_link_libraries(bebone bebone_core)
+target_link_libraries(bebone bebone_gfx)

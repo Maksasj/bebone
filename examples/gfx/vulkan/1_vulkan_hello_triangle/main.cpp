@@ -1,88 +1,91 @@
-#include <iostream>
-#include <fstream>
-
 #include "bebone/bebone.h"
 
 using namespace bebone::gfx;
 using namespace bebone::core;
 
+struct Vertex {
+    Vec3f pos;
+    Vec3f color;
+};
+
 const std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-    {{0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-    
+    {{0.5f, 0.5f, 0.0f},  {1.0f, 0.0f, 0.0f}},
+    {{0.0f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+    {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
 };
 
-const std::vector<int> indices = {
-    0, 1, 2
+// Todo make this nicer
+const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
+    .bindingDescriptions = {
+        { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
+    },
+    .attributeDescriptions = {
+        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
+        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
+    }
 };
 
-std::string read_file(const std::string& path) {
-    std::ifstream file(path);
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
-}
+const std::vector<int> indices = { 0, 1, 2 };
 
 int main() {
     RenderingEngine::preinit();
 
-    Window window("Vulkan window", 800, 600);
+    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
 
-    VulkanRenderer renderer = VulkanRenderer(window);
-    
-    GPUResourceManager resourceManager = renderer.create_gpu_resource_manager();
-    GPUResourceSet resourceSet = resourceManager
-        .create_resource_set()
-        .set_uniform_buffer_resource(0)
-        .build();
+    auto instance = VulkanInstance::create_instance();
+    auto device = instance->create_device(window);
+    auto swapChain = device->create_swap_chain(window);
 
-    PipelineLayout pipelineLayout = renderer
-        .create_pipeline_layout_builder()
-        .build(resourceManager);
+    auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto pipelineLayout = device->create_pipeline_layout({}, {});
+    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
+        .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
+    });
 
-    std::vector<unsigned int> vertexSpirvCode;
-    std::vector<unsigned int> fragmentSpirvCode;
+    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
+    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
+    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
+    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
-    ShaderCompiler::compile_shader(read_file("assets/vert.glsl").c_str(), EShLangVertex, vertexSpirvCode);
-    ShaderCompiler::compile_shader(read_file("assets/frag.glsl").c_str(), EShLangFragment, fragmentSpirvCode);
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
-    Pipeline pipeline = renderer.create_pipeline(pipelineLayout, vertexSpirvCode, fragmentSpirvCode);
-
-    VulkanCommandBufferPool& commandBufferPool = renderer.get_command_buffer_pool();
-
-    VertexBuffer vertexBuffer = VertexBuffer(renderer.create_vertex_buffer_impl(vertices));
-    IndexBuffer indexBuffer = IndexBuffer(renderer.create_index_buffer_impl(indices));
-
-    while (!window.closing()) {
+    while (!window->closing()) {
         glfwPollEvents();
 
-        uint32_t frame = renderer.get_frame();
-        if(frame == 9999)
+        uint32_t frame;
+        auto result = swapChain->acquire_next_image(device, &frame);
+
+        if(!result.is_ok())
             continue;
 
-        VulkanCommandBuffer& cmd = commandBufferPool.get_command_buffer(frame);
+        auto& cmd = commandBuffers[frame];
 
-        cmd.begin_record();
-            cmd.begin_render_pass(renderer, frame);
-            cmd.set_viewport(0, 0, window.get_width(), window.get_height());
+        cmd->begin_record()
+            .begin_render_pass(swapChain, frame)
+            .set_viewport(0, 0, window->get_width(), window->get_height())
+            .bind_pipeline(pipeline)
+            .bind_vertex_buffer(vertexBuffer.buffer)
+            .bind_index_buffer(indexBuffer.buffer)
+            .draw_indexed(indices.size())
+            .end_render_pass()
+            .end_record();
 
-            cmd.bind_pipeline(pipeline);
-            resourceSet.bind(cmd, pipelineLayout);
+        result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-            cmd.bind_vertex_buffer(vertexBuffer);
-            cmd.bind_index_buffer(indexBuffer);
-            cmd.draw_indexed(indices.size());
-
-            cmd.end_render_pass();
-        cmd.end_record();
-
-        cmd.submit();
-
-        renderer.present(frame);
+        if(!result.is_ok() || window->is_resized())
+            continue;
     }
 
-    vkDeviceWaitIdle(renderer.device->device());
+    device->wait_idle();
+
+    device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
+    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+    device->destroy_all(vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+
+    device->destroy();
+    instance->destroy();
 
     glfwTerminate();
 

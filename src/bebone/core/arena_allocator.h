@@ -3,61 +3,33 @@
 
 #include <memory>
 
+#include "noncopyable.h"
+
 #define _BEBONE_MEMORY_BYTES_1KB_ 1024
 #define _BEBONE_MEMORY_BYTES_2KB_ 2048
 #define _BEBONE_MEMORY_BYTES_4KB_ 4096
 #define _BEBONE_MEMORY_BYTES_8KB_ 8192
 
 namespace bebone::core {
-    class ArenaAllocator {
+    class ArenaAllocator : private core::NonCopyable {
         private:
             void *_data;
             const size_t _capacity;
             size_t _allocated;
 
         public:
-            ArenaAllocator(const size_t& size) : _capacity(size), _allocated(0) {
-                _data = malloc(size);
-            }
+            explicit ArenaAllocator(const size_t& size);
+            explicit ArenaAllocator(const size_t& size, void* buffer);
 
-            ArenaAllocator(const size_t& size, void* buffer) : _capacity(size), _allocated(0) {
-                _data = buffer;
-            }
+            ~ArenaAllocator();
 
-            ~ArenaAllocator() {
-                free(_data);
-            }
+            void* alloc(const size_t& size) noexcept;
+            void* data() noexcept;
 
-            ArenaAllocator(const ArenaAllocator&) = delete;
-            void operator=(const ArenaAllocator&) = delete;
-            ArenaAllocator &operator=(ArenaAllocator&) = delete;
+            void clear() noexcept;
 
-            void* alloc(const size_t& size) noexcept {
-                if(_allocated + size > _capacity) {
-                    return nullptr;
-                }
-
-                const size_t allocated = _allocated;
-                _allocated += size;
-
-                return static_cast<char*>(_data) + allocated;
-            }
-
-            void clear() noexcept {
-                _allocated = 0;
-            }
-
-            size_t allocated() const noexcept {
-                return _allocated;
-            }
-
-            size_t capacity() const noexcept {
-                return _capacity;
-            }
-
-            void* data() noexcept {
-                return _data;
-            }
+            [[nodiscard]] const size_t& allocated() const noexcept;
+            [[nodiscard]] const size_t& capacity() const noexcept;
     };
 }
 

@@ -14,32 +14,26 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Setup Ninja
-      uses: ashutoshvarma/setup-ninja@v1.1
-      
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2
+    - name: Install Vulkan SDK
+      uses: jakoch/install-vulkan-sdk-action@v1.0.0
       with:
-        install: make mingw-w64-x86_64-clang
+        vulkan_version: 1.3.231.1
+        optional_components: com.lunarg.vulkan.vma
+        install_runtime: true
+        cache: true
+        stripdown: true
 
-    - name: Prepare Vulkan SDK
-      uses: humbletim/setup-vulkan-sdk@v1.2.0
-      with:
-        vulkan-query-version: 1.3.204.0
-        vulkan-components: Vulkan-Headers, Vulkan-Loader
-        vulkan-use-cache: true  
-    
     - uses: actions/checkout@v1
       with:
         submodules: recursive
 
-    - name: Configure the project
+    - name: Configure CMake
       uses: threeal/cmake-action@v1.3.0
       with:
         generator: Ninja
         c-compiler: clang
         cxx-compiler: clang++
-        build-dir: submodules/build
+        build-dir: build
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

@@ -1,8 +1,10 @@
 #ifndef _BEBONE_GFX_RENDERING_ENGINE_H_
 #define _BEBONE_GFX_RENDERING_ENGINE_H_
 
-#include "gfx_backend.h"
 #include <iostream>
+
+#include "gfx_backend.h"
+#include "window/window.h"
 
 namespace bebone::gfx {
     class RenderingEngine {
@@ -12,6 +14,7 @@ namespace bebone::gfx {
             }
 
             static void init() {
+                // Todo move this to GLContext class
                 if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
                     std::cout << "Failed to initialize GLAD" << std::endl;
                     exit(1);
