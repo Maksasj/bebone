@@ -48,20 +48,12 @@ namespace game::core {
         auto groundSprite = ground1->get_component<SpriteRenderer>()->get_sprite();
 
         Vec3f ground2Position = ground1Transform->get_position();
-        ground2Position.x -= groundSprite->get_unit_width() + ground1Transform->get_scale();
+        ground2Position.x = groundSprite->get_unit_width();
 
         auto ground2 = instantiate("Ground2", ground2Position);
         add_renderer_component(ground2, "ground", 32);
         batch->add(ground2);
         ground2->get_transform()->set_scale(0.5f);
-
-        Vec3f ground3Position = ground1Transform->get_position();
-        ground3Position.x += groundSprite->get_unit_width() + ground1Transform->get_scale();
-
-        auto ground3 = instantiate("Ground3", ground3Position);
-        add_renderer_component(ground3, "ground", 32);
-        batch->add(ground3);
-        ground3->get_transform()->set_scale(0.5f);
 
         auto pipe1 = instantiate("Pipe1");
         add_renderer_component(pipe1, "pipes", 32);

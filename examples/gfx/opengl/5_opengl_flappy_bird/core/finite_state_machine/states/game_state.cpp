@@ -17,7 +17,6 @@ namespace game::core::fsm {
     GameState::GameState(shared_ptr<GameObject> flappyBird) : endGameState(nullptr), flappyBird(flappyBird) {
         ground1 = Game::find_game_object_by_name("Ground1");
         ground2 = Game::find_game_object_by_name("Ground2");
-        ground3 = Game::find_game_object_by_name("Ground3");
         pipe1 = Game::find_game_object_by_name("Pipe1");
         pipe2 = Game::find_game_object_by_name("Pipe2");
 
@@ -28,7 +27,6 @@ namespace game::core::fsm {
 
         ground1->add_component<CyclicMovement>(endPoint, startPoint)->disable();
         ground2->add_component<CyclicMovement>(endPoint, startPoint)->disable();
-        ground3->add_component<CyclicMovement>(endPoint, startPoint)->disable();
 
         pipe1->add_component<CyclicMovement>(-6.2f, 6.2f, true)->disable();
         pipe2->add_component<CyclicMovement>(-6.2f, 6.2f, true)->disable();
@@ -73,7 +71,6 @@ namespace game::core::fsm {
 
         ground1->get_component<CyclicMovement>()->enable();
         ground2->get_component<CyclicMovement>()->enable();
-        ground3->get_component<CyclicMovement>()->enable();
 
         pipe1->get_component<CyclicMovement>()->enable();
         pipe2->get_component<CyclicMovement>()->enable();
@@ -131,7 +128,6 @@ namespace game::core::fsm {
         flappyBird->get_component<Flying>()->disable();
         ground1->get_component<CyclicMovement>()->disable();
         ground2->get_component<CyclicMovement>()->disable();
-        ground3->get_component<CyclicMovement>()->disable();
         pipe1->get_component<CyclicMovement>()->disable();
         pipe2->get_component<CyclicMovement>()->disable();
     }
