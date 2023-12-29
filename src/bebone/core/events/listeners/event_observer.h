@@ -9,16 +9,32 @@
 #include "event.h"
 
 namespace bebone::core {
+    template <typename T>
     class EventObserver {
     private:
-        vector<shared_ptr<EventListener>> listeners;
+        vector<shared_ptr<EventListener<T>>> listeners;
     public:
-        EventObserver();
+        EventObserver() : listeners(vector<shared_ptr<EventListener<T>>>()) {
+            static_assert(std::is_base_of<Event, T>::value, "T must be a bebone::core::Event derivative");
+        }
 
-        void add_listener(shared_ptr<EventListener> eventListener);
-        void remove_listener(shared_ptr<EventListener> eventListener);
+        void add_listener(shared_ptr<EventListener<T>> eventListener) {
+            listeners.push_back(eventListener);
+        }
 
-        void fire_event(shared_ptr<Event> event);
+        void remove_listener(shared_ptr<EventListener<T>> eventListener) {
+            auto it = find(listeners.begin(), listeners.end(), eventListener);
+
+            if (it != listeners.end()) {
+                listeners.erase(it);
+            }
+        }
+
+        void fire_event(shared_ptr<T> event) {
+            for (const auto& listener : listeners) {
+                listener->handle_event(event);
+            }
+        }
     };
 }
 

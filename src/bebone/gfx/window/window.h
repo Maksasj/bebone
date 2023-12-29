@@ -8,10 +8,12 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx {
-    using namespace core;   
+#include "bebone/gfx/window/events/window_event.h"
 
-    class Window : private NonCopyable, public EventObserver {
+namespace bebone::gfx {
+    using namespace core;
+
+    class Window : private NonCopyable, public EventObserver<WindowEvent> {
         private:
             GLFWwindow* window;
             int width;
@@ -26,7 +28,7 @@ namespace bebone::gfx {
             
             void reset_resize_flag();
 
-            bool is_resized();
+            bool is_resized() const;
             bool closing() const;
 
             int get_width() const;
