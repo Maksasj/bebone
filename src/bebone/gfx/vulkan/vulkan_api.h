@@ -31,6 +31,7 @@
 #include "vulkan_shader_module.h"
 
 #include "vulkan_swap_chain.h"
+#include "vulkan_render_target.h"
 
 #include "vulkan_const_range.h"
 
