@@ -1,5 +1,5 @@
-#ifndef _VULKAN_WINDOW_H_
-#define _VULKAN_WINDOW_H_
+#ifndef _BEBONE_GFX_WINDOW_VULKAN_WINDOW_H_
+#define _BEBONE_GFX_WINDOW_VULKAN_WINDOW_H_
 
 #include "window.h"
 

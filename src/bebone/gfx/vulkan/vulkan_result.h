@@ -1,5 +1,5 @@
-#ifndef BEBONE_VULKAN_RESULT_H
-#define BEBONE_VULKAN_RESULT_H
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_RESULT_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_RESULT_H_
 
 #include "../gfx_backend.h"
 

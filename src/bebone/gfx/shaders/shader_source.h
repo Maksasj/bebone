@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_SHADER_SOURCE_H_
-#define _BEBONE_GFX_SHADER_SOURCE_H_
+#ifndef _BEBONE_GFX_SHADERS_SHADER_SOURCE_H_
+#define _BEBONE_GFX_SHADERS_SHADER_SOURCE_H_
 
 #include "../../core/core.h"
 #include "../gfx_backend.h"

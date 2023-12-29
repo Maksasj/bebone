@@ -1,5 +1,5 @@
-#ifndef DEVICE_H
-#define DEVICE_H
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_DEVICE_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_DEVICE_H_
 
 #include <iostream>
 #include <set>

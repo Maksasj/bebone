@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_SHADER_CODE_H_
-#define _BEBONE_GFX_SHADER_CODE_H_
+#ifndef _BEBONE_GFX_SHADERS_SHADER_CODE_H_
+#define _BEBONE_GFX_SHADERS_SHADER_CODE_H_
 
 #include <vector>
 

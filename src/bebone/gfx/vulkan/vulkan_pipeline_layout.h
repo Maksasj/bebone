@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_vulkan_pipeline_layoutEMENTATION_H_
-#define _BEBONE_GFX_vulkan_pipeline_layoutEMENTATION_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_LAYOUT_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_LAYOUT_H_
 
 #include "../gfx_backend.h"
 
