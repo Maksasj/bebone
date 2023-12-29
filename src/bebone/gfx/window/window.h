@@ -11,7 +11,7 @@
 namespace bebone::gfx {
     using namespace core;   
 
-    class Window : private NonCopyable {
+    class Window : private NonCopyable, public EventObserver {
         private:
             GLFWwindow* window;
             int width;
