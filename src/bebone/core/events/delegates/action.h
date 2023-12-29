@@ -15,8 +15,8 @@ namespace bebone::core {
     public:
         Action();
 
-        void subscribe(shared_ptr<VoidFunction> function);
-        void unsubscribe(shared_ptr<VoidFunction> function);
+        void subscribe(const shared_ptr<VoidFunction>& function);
+        void unsubscribe(const shared_ptr<VoidFunction>& function);
         void invoke();
     };
 }

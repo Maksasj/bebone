@@ -3,11 +3,11 @@
 namespace bebone::core {
     Action::Action() : functions(vector<shared_ptr<VoidFunction>>()) { }
 
-    void Action::subscribe(shared_ptr<bebone::core::VoidFunction> function) {
+    void Action::subscribe(const shared_ptr<VoidFunction>& function) {
         functions.push_back(function);
     }
 
-    void Action::unsubscribe(shared_ptr<bebone::core::VoidFunction> function) {
+    void Action::unsubscribe(const shared_ptr<VoidFunction>& function) {
         auto it = find(functions.begin(), functions.end(), function);
 
         if (it != functions.end()) {

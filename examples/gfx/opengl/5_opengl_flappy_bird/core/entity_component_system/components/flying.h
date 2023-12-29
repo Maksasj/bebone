@@ -23,17 +23,18 @@ namespace game::core::ecs {
             float rotZAlterationSpeed = -550.0f;
             float minRotZ = -85.0f;
             float maxRotZ = 25.0f;
+
+            shared_ptr<VoidFunction> flyFunction;
             
         public:
-            Flying(const float& flyForce);
+            explicit Flying(const float& flyForce);
 
-            void update();
+            void update() override;
 
-            float get_velocity() const;
             void set_velocity(const float& velocity);
 
-            void enable();
-            void disable();
+            void enable() override;
+            void disable() override;
     };
 }
 

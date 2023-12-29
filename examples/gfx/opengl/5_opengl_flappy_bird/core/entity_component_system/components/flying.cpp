@@ -4,7 +4,13 @@
 #include "../../input_system/input.h"
 
 namespace game::core::ecs {
-    Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) { }
+    Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) {
+        auto fly = [this]() {
+            set_velocity(this->flyForce);
+        };
+
+        flyFunction = make_shared<VoidFunction>(fly);
+    }
 
     void Flying::update() {
         velocityY += Time::deltaTime * -gravity;
@@ -22,10 +28,6 @@ namespace game::core::ecs {
         }
     }
 
-    float Flying::get_velocity() const {
-        return velocityY;
-    }
-
     void Flying::set_velocity(const float& velocity) {
         velocityY = velocity;
         get_transform()->set_rotation(this->maxRotZ);
@@ -35,18 +37,13 @@ namespace game::core::ecs {
         using namespace game::core::input_system;
 
         Component::enable();
-
-        auto flyFunction = [this]() {
-            set_velocity(this->flyForce);
-        };
-        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(flyFunction));
+        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, flyFunction);
     }
 
     void Flying::disable() {
         using namespace game::core::input_system;
 
         Component::disable();
-
-        Input::remove_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON);
+        Input::remove_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, flyFunction);
     }
 }

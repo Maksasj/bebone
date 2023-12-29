@@ -8,7 +8,7 @@ namespace bebone::core {
     private:
         std::function<void()> function;
     public:
-        VoidFunction(const std::function<void()>& function);
+        explicit VoidFunction(const std::function<void()>& function);
 
         void execute();
     };

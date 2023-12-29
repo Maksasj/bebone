@@ -14,7 +14,6 @@ namespace game::core::ecs {
 
     class CyclicMovement : public Component {
         private:
-            Vec3f direction = Vec3f(-1.0f, 0.0f, 0.0f);
             float speed = 2.5f;
 
             bool randomizeY = false;
@@ -27,7 +26,7 @@ namespace game::core::ecs {
         public:
             CyclicMovement(const float& endXPoint, const float& startXPoint, const bool& randomizeY = false);
 
-            void update();
+            void update() override;
     };
 }
 
