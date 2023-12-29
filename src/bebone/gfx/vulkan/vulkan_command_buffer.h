@@ -10,7 +10,7 @@
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDevice;

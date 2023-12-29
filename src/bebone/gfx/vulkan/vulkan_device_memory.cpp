@@ -5,7 +5,7 @@
 #include "vulkan_buffer.h"
 #include "vulkan_image.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     VulkanDeviceMemory::VulkanDeviceMemory(VulkanDevice& device, VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties) {
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;

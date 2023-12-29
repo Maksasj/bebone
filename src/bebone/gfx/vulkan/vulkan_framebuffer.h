@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_FRAMEBUFFER_H_
-#define _BEBONE_GFX_VULKAN_FRAMEBUFFER_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_FRAMEBUFFER_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_FRAMEBUFFER_H_
 
 #include <vector>
 
@@ -8,7 +8,7 @@
 
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDevice;

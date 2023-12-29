@@ -1,5 +1,5 @@
-#ifndef _BEBONE_CORE_H_
-#define _BEBONE_CORE_H_
+#ifndef _BEBONE_CORE_CORE_H_
+#define _BEBONE_CORE_CORE_H_
 
 #include "types.h"
 

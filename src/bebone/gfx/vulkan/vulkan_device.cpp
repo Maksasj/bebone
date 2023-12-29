@@ -12,7 +12,7 @@
 
 #include "../shaders/spirv_shader_compiler.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     std::string vulkan_device_read_file(const std::string& path) {
         std::ifstream file(path);
         std::stringstream ss;
@@ -123,7 +123,7 @@ namespace bebone::gfx {
             type
         ));
 
-        ShaderCode shadeCode = shaderCompiler.compile(type);
+        gfx::ShaderCode shadeCode = shaderCompiler.compile(type);
 
         return std::make_shared<VulkanShaderModule>(*this, shadeCode);
     }

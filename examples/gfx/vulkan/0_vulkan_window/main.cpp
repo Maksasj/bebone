@@ -1,6 +1,8 @@
 #include "bebone/bebone.h"
 
+using namespace bebone::core;
 using namespace bebone::gfx;
+using namespace bebone::gfx::vulkan;
 
 int main() {
     RenderingEngine::preinit();

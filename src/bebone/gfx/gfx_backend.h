@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_BACKEND_H_
-#define _BEBONE_GFX_BACKEND_H_
+#ifndef _BEBONE_GFX_GFX_BACKEND_H_
+#define _BEBONE_GFX_GFX_BACKEND_H_
 
 #include <glad/glad.h>
 

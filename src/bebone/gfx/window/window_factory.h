@@ -1,5 +1,5 @@
-#ifndef _WINDOW_FACTORY_H_
-#define _WINDOW_FACTORY_H_
+#ifndef _BEBONE_GFX_WINDOW_WINDOW_FACTORY_H_
+#define _BEBONE_GFX_WINDOW_WINDOW_FACTORY_H_
 
 #include <memory>
 #include <string>

@@ -1,5 +1,5 @@
-#ifndef _OPENGL_TEXTURE_H_
-#define _OPENGL_TEXTURE_H_
+#ifndef _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_H_
+#define _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_H_
 
 #include "../gfx_backend.h"
 

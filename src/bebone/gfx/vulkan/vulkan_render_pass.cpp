@@ -1,6 +1,6 @@
 #include "vulkan_render_pass.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, VkFormat colorAttachmentImageFormat) {
         VkAttachmentDescription depthAttachment{};
         depthAttachment.format = device.find_depth_format();

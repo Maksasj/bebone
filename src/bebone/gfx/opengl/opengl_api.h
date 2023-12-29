@@ -1,5 +1,5 @@
-#ifndef _OPENGL_API_H_
-#define _OPENGL_API_H_
+#ifndef _BEBONE_GFX_OPENGL_OPENGL_API_H_
+#define _BEBONE_GFX_OPENGL_OPENGL_API_H_
 
 #include "opengl_context.h"
 #include "opengl_gpu_properties.h"

@@ -1,5 +1,5 @@
-#ifndef _BEBONE_BEGUI_H_
-#define _BEBONE_BEGUI_H_
+#ifndef _BEBONE_BEGUI_BEGUI_H_
+#define _BEBONE_BEGUI_BEGUI_H_
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>

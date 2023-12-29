@@ -7,7 +7,7 @@
 #include "../window/vulkan_window.h"
 #include "vulkan_debug_messenger.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanDevice;
 
     class VulkanInstance : private core::NonCopyable {

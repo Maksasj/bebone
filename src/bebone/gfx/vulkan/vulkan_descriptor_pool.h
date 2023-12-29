@@ -7,7 +7,7 @@
 
 #include "vulkan_command_buffer.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanDescriptorSet;
     class VulkanDescriptorSetLayout;
 

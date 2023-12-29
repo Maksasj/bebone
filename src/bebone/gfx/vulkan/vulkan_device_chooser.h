@@ -1,9 +1,9 @@
-#ifndef _BEBONE_VULKAN_PHYSICAL_DEVICE_CHOOSER_H_
-#define _BEBONE_VULKAN_PHYSICAL_DEVICE_CHOOSER_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_DEVICE_CHOOSER_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_DEVICE_CHOOSER_H_
 
 #include "vulkan_instance.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     struct SwapChainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
         std::vector<VkSurfaceFormatKHR> formats;

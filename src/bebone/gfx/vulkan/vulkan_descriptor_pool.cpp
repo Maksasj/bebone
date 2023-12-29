@@ -3,7 +3,7 @@
 #include "vulkan_device.h"
 #include "vulkan_descriptor_set.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) {
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         std::vector<VkDescriptorPoolSize> poolSizes = {
