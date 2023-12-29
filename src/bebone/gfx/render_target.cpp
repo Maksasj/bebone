@@ -5,7 +5,7 @@
 #include "vulkan/vulkan_device_memory.h"
 #include "vulkan/vulkan_swap_chain.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     RenderTarget::RenderTarget(
         VulkanDevice& device,
         std::vector<VulkanSwapChainImageTuple>& swapChainImages,

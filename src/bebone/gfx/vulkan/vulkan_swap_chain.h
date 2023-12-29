@@ -16,7 +16,7 @@
 #include "../render_target.h"
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanResult;
     class VulkanCommandBuffer;
 

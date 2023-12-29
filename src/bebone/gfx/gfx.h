@@ -10,6 +10,10 @@
 #include "window/window.h"
 #include "window/window_factory.h"
 
+#include "shaders/shader_code.h"
+#include "shaders/shader_compiler.h"
+#include "shaders/shader_source.h"
+#include "shaders/shader_type.h"
 #include "shaders/spirv_shader_compiler.h"
 
 #include "render_target.h"

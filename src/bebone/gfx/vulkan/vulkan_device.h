@@ -8,6 +8,9 @@
 #include "../gfx_backend.h"
 #include "../window/window.h"
 
+#include "../shaders/shader_type.h"
+#include "../shaders/shader_code.h"
+
 #include "vulkan_wrapper.tpp"
 #include "vulkan_instance.h"
 #include "vulkan_device_chooser.h"
@@ -17,10 +20,9 @@
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanSwapChain;
     class VulkanPipeline;
-    class ShaderCode;
     class VulkanDescriptorPool;
     class VulkanCommandBufferPool;
     class VulkanShaderModule;
@@ -28,8 +30,6 @@ namespace bebone::gfx {
     class VulkanDescriptorSetLayout;
     class VulkanDescriptorSetLayoutBinding;
     class VulkanConstRange;
-
-    struct ShaderType;
 
     class VulkanDevice : private core::NonCopyable {
         private:

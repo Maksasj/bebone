@@ -8,7 +8,7 @@
 
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDevice;

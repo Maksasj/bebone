@@ -5,7 +5,7 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     // VkPipelineVertexInputStateCreateInfo
     struct VulkanPipelineVertexInputStateConfig : core::NonCopyable {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

@@ -1,7 +1,7 @@
 #ifndef _BEBONE_GFX_VULKAN_VULKAN_WRAPPER_TPP_
 #define _BEBONE_GFX_VULKAN_VULKAN_WRAPPER_TPP_
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanDevice;
 
     template<class T>

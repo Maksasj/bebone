@@ -3,7 +3,7 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanInstance;
 
     class VulkanDebugMessenger : private core::NonCopyable {

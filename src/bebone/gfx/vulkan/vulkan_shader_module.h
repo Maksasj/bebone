@@ -3,10 +3,15 @@
 
 #include "../gfx_backend.h"
 
-#include "../shaders/shader_code.h"
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx {
+#include "../shaders/shader_code.h"
+#include "../shaders/shader_compiler.h"
+#include "../shaders/shader_source.h"
+#include "../shaders/shader_type.h"
+#include "../shaders/spirv_shader_compiler.h"
+
+namespace bebone::gfx::vulkan {
     class VulkanDevice;
 
     class VulkanShaderModule : public VulkanWrapper<VkShaderModule>, private core::NonCopyable {

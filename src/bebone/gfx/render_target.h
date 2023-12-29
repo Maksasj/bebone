@@ -10,7 +10,7 @@
 #include "vulkan/vulkan_image.h"
 #include "vulkan/vulkan_framebuffer.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanImage;
 
     class RenderTarget {

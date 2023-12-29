@@ -3,7 +3,7 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDescriptorSetLayoutBinding {

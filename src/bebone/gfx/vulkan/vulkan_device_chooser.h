@@ -3,7 +3,7 @@
 
 #include "vulkan_instance.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     struct SwapChainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
         std::vector<VkSurfaceFormatKHR> formats;

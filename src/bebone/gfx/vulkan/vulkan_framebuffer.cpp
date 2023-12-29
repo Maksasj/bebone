@@ -4,7 +4,7 @@
 #include "vulkan_image_view.h"
 #include "vulkan_render_pass.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     VulkanFramebuffer::VulkanFramebuffer(VulkanDevice& device, std::vector<std::shared_ptr<VulkanImageView>>& attachmentViews, std::shared_ptr<VulkanRenderPass>& renderPass, VkExtent2D extent) {
@@ -26,7 +26,7 @@ namespace bebone::gfx {
         }
     }
 
-    void VulkanFramebuffer::destroy(bebone::gfx::VulkanDevice &device) {
+    void VulkanFramebuffer::destroy(VulkanDevice &device) {
         vkDestroyFramebuffer(device.device(), backend, nullptr);
     }
 }

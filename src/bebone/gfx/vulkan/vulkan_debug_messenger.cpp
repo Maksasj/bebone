@@ -1,7 +1,7 @@
 #include "vulkan_debug_messenger.h"
 #include "vulkan_instance.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData) {
         std::ignore = messageSeverity;
         std::ignore = messageType;

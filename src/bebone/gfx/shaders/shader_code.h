@@ -24,7 +24,6 @@ namespace bebone::gfx {
             ShaderCode(const RawSpirVByteCode& p_spirVByteCode, const ShaderType& p_shaderType) ;
 
             const ShaderType& get_shader_type() const;
-
             const RawSpirVByteCode& get_byte_code() const;
     };
 }

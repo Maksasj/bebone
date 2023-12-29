@@ -6,7 +6,7 @@
 #include "vulkan_device.h"
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanRenderPass : public VulkanWrapper<VkRenderPass> {
         public:
             VulkanRenderPass(VulkanDevice& _device, VkFormat colorAttachmentImageFormat);

@@ -9,7 +9,7 @@
 #include "vulkan_wrapper.tpp"
 #include "vulkan_device_memory.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDevice;
