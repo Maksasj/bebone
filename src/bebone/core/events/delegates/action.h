@@ -13,7 +13,7 @@ namespace bebone::core {
     private:
         std::vector<Function> functions;
     public:
-        Action() : functions(vector<Function>()) { };
+        Action() : functions(std::vector<Function>()) { };
 
         void operator+=(const Function& function) {
             functions.push_back(function);
