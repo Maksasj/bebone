@@ -14,13 +14,15 @@ namespace game::core::input_system {
     using namespace std;
 
     class Input {
+        using Action = Action<>;
+
         private:
-            static map<MouseKeyCode, shared_ptr<Action>> mouseActions;
+            static map<MouseKeyCode, Action> mouseActions;
             static queue<MouseKeyCode> queuedMouseClicks;
 
         public:
-            static void register_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<VoidFunction>& function);
-            static void remove_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<VoidFunction>& function);
+            static void register_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function);
+            static void remove_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function);
             static void send_button_to_the_queue(const MouseKeyCode& keyCode);
             static void execute_pooled_actions();
     };

@@ -8,7 +8,7 @@
 
 #include "../gfx_backend.h"
 
-#include "bebone/gfx/window/events/window_event.h"
+#include "events/window_event.h"
 
 namespace bebone::gfx {
     using namespace core;

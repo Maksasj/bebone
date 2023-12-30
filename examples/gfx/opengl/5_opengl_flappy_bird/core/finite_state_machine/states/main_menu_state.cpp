@@ -10,11 +10,9 @@ namespace game::core::fsm {
     using namespace input_system;
 
     MainMenuState::MainMenuState(shared_ptr<GameObject> flappyBird) : gameState(nullptr), flappyBird(std::move(flappyBird)) {
-        auto transition = [this]() {
+        transitionFunction = make_shared<std::function<void()>>([this]() {
             StateMachine::set_state(gameState);
-        };
-
-        transitionFunction = make_shared<VoidFunction>(transition);
+        });
     }
     
     MainMenuState::~MainMenuState() {

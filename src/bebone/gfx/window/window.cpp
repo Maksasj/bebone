@@ -4,9 +4,6 @@
 namespace bebone::gfx {
     Window::Window(const std::string& title, const int& width, const int& height) : width(width), height(height), windowResized(false) {
         window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-        glfwSetWindowUserPointer(window, this);
-        glfwSetFramebufferSizeCallback(window, window_resize_callback);
-        glfwSetMouseButtonCallback(window, mouse_button_callback);
     }
 
     Window::~Window() {
