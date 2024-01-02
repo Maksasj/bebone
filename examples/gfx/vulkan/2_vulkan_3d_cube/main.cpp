@@ -88,7 +88,7 @@ int main() {
     };
 
     auto transform = Transform {
-        Mat4f::translation(Vec3f::splat(0.0f)),
+        Mat4f::translation(Vec3f::zero),
         Mat4f::scale(1.0f),
         Mat4f::identity()
     };
