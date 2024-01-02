@@ -26,7 +26,7 @@ namespace bexel {
             meshBuilder.append(
             WallMesh<UP>{},
             get_up_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
             });
         }
 
@@ -34,7 +34,7 @@ namespace bexel {
             meshBuilder.append(
             WallMesh<DOWN>{},
             get_down_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
             });
         }
 
@@ -42,7 +42,7 @@ namespace bexel {
             meshBuilder.append(
             WallMesh<LEFT>{},
             get_left_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
             });
         }
 
@@ -50,7 +50,7 @@ namespace bexel {
             meshBuilder.append(
             WallMesh<RIGHT>{},
             get_right_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
             });
         }
 
@@ -58,7 +58,7 @@ namespace bexel {
             meshBuilder.append(
             WallMesh<FORWARD>{},
             get_forward_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
             });
         }
 
@@ -66,7 +66,7 @@ namespace bexel {
             meshBuilder.append(
             WallMesh<BACK>{},
             get_back_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
             });
         }
     }

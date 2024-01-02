@@ -2,6 +2,8 @@
 #include "opengl_window.h"
 #include "vulkan_window.h"
 
+#include "../glfw_context.h"
+
 namespace bebone::gfx {
     std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI) {
         std::shared_ptr<Window> window;
@@ -21,7 +23,7 @@ namespace bebone::gfx {
         }
 
         if (window->get_backend() == nullptr) {
-            glfwTerminate();
+            GLFWContext::terminate();
             throw std::runtime_error("Failed to create GLFW window");
         }
 

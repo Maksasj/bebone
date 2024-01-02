@@ -7,7 +7,7 @@ using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
 int main() {
-    glfwInit();
+    GLFWContext::init();
 
     auto window = WindowFactory::create_window("0. Begui Node graph example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
@@ -48,13 +48,13 @@ int main() {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        glfwSwapBuffers(window->get_backend());
-        glfwPollEvents();
+        GLFWContext::swap_buffers(*window); // Todo make this not a reference
+        GLFWContext::pool_events();
     }
 
     shaderProgram.destroy();
 
-    glfwTerminate();
+    GLFWContext::terminate();
 
     return 0;
 }

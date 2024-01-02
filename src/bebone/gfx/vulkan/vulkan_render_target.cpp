@@ -1,9 +1,9 @@
-#include "render_target.h"
+#include "vulkan_render_target.h"
 
-#include "vulkan/vulkan_image.h"
-#include "vulkan/vulkan_image_view.h"
-#include "vulkan/vulkan_device_memory.h"
-#include "vulkan/vulkan_swap_chain.h"
+#include "vulkan_image.h"
+#include "vulkan_image_view.h"
+#include "vulkan_device_memory.h"
+#include "vulkan_swap_chain.h"
 
 namespace bebone::gfx {
     RenderTarget::RenderTarget(

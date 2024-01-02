@@ -5,8 +5,8 @@ namespace bexel {
         m_renderDistance = renderDistance;
 
         m_position = position;
-        m_rotation = Vec3f::splat(0.0f);
-        m_direction = Vec3f::splat(0.0f);
+        m_rotation = Vec3f::zero;
+        m_direction = Vec3f::zero;
 
         m_mouseLocked = true;
 

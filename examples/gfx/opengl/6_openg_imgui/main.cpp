@@ -47,7 +47,7 @@ struct Camera {
 };
 
 int main() {
-    glfwInit();
+    GLFWContext::init();
 
     auto window = WindowFactory::create_window("6. OpenGL Imgui example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
@@ -131,7 +131,7 @@ int main() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window->get_backend());
-        glfwPollEvents();
+        GLFWContext::pool_events();
     }
 
     transformUbo.unmap();
@@ -142,7 +142,7 @@ int main() {
     ebo.destroy();
     shaderProgram.destroy();
 
-    glfwTerminate();
+    GLFWContext::terminate();
 
     return 0;
 }

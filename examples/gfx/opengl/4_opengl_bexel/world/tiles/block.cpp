@@ -24,38 +24,38 @@ namespace bexel {
 
         if(upBlock != SOLID)
             meshBuilder.append(
-                WallMesh<UP>{},
-                Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
-            });
+            WallMesh<UP>{},
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one}
+        );
 
         if(downBlock != SOLID)
             meshBuilder.append(
-                WallMesh<DOWN>{},
-                Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
-            });
+            WallMesh<DOWN>{},
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one}
+        );
 
         if(leftBlock != SOLID)
             meshBuilder.append(
             WallMesh<LEFT>{},
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
-            });
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one}
+        );
 
         if(rightBlock != SOLID)
             meshBuilder.append(
             WallMesh<RIGHT>{},
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
-            });
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one}
+        );
 
         if(forwardBlock != SOLID)
             meshBuilder.append(
             WallMesh<FORWARD>{},
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
-            });
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one}
+        );
 
         if(backBlock != SOLID)
             meshBuilder.append(
             WallMesh<BACK>{},
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::splat(1.0f)
-            });
+            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one}
+        );
     }
 }

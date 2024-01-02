@@ -6,7 +6,7 @@ namespace bexel {
     }
 
     void Bexel::init() {
-        glfwInit();
+        GLFWContext::init();
 
         m_window = WindowFactory::create_window("4. Opengl Bexel example", GAME_WIDTH, GAME_HEIGHT, GfxAPI::OPENGL);
 
@@ -51,8 +51,8 @@ namespace bexel {
             m_camera->bind(m_shader);
             m_world->render(m_shader);
 
-            glfwSwapBuffers(m_window->get_backend());
-            glfwPollEvents();
+            GLFWContext::swap_buffers(*m_window);
+            GLFWContext::pool_events();
         }
     }
 
@@ -62,6 +62,6 @@ namespace bexel {
 
         m_shader->destroy();
 
-        glfwTerminate();
+        GLFWContext::terminate();
     }
 }
