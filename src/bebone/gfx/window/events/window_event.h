@@ -1,7 +1,7 @@
 #ifndef BEBONE_WINDOW_EVENT_H
 #define BEBONE_WINDOW_EVENT_H
 
-#include "../../../core/events/listeners/event.h"
+#include "../../../core/events/listeners/event.tpp"
 
 namespace bebone::gfx {
     enum WindowEvent {
