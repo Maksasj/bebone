@@ -19,7 +19,7 @@ namespace game::core::fsm {
             shared_ptr<State> menuState;
             shared_ptr<GameObject> flappyBird;
 
-            shared_ptr<std::function<void()>> transitionFunction;
+            std::function<void()> transitionFunction;
         public:
             EndGameState(shared_ptr<GameObject> flappyBird);
             ~EndGameState() override;
@@ -29,7 +29,6 @@ namespace game::core::fsm {
             void exit() override;
 
             void set_menu_state(shared_ptr<State> menuState);
-
     };
 }
 

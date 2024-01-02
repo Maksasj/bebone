@@ -8,7 +8,7 @@ namespace game::core::input_system {
     map<MouseKeyCode, Action> Input::mouseActions = map<MouseKeyCode, Action>();
     queue<MouseKeyCode> Input::queuedMouseClicks = queue<MouseKeyCode>();
 
-    void Input::register_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function) {
+    void Input::register_mouse_action(const MouseKeyCode& keyCode, std::function<void()>& function) {
         if (mouseActions.find(keyCode) == mouseActions.end()) {
             mouseActions[keyCode] = Action();
         }
@@ -20,7 +20,7 @@ namespace game::core::input_system {
         queuedMouseClicks.push(keyCode);
     }
 
-    void Input::remove_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function) {
+    void Input::remove_mouse_action(const MouseKeyCode& keyCode, std::function<void()>& function) {
         if (mouseActions.find(keyCode) == mouseActions.end()) {
             return;
         }

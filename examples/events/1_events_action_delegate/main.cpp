@@ -10,28 +10,34 @@ void another_function(int x) {
     std::cout << "Another Function: " << x + 40 << std::endl;
 }
 
+void meme(int x) {
+    std::cout << "emem" << x + 32445 / 23 << std::endl;
+}
+
 int main() {
+
     Action<int> action;
+    std::function<void(int)> func = example_function;
+    std::function<void(int)> func2 = another_function;
+    std::function<void(int)> func3 = meme;
 
-    auto exampleFunction = std::make_shared<std::function<void(int)>>(example_function);
-    auto anotherFunction = std::make_shared<std::function<void(int)>>(another_function);
-    auto lambdaFunction = std::make_shared<std::function<void(int)>>([](int x) {
-        std::cout << "Lambda Function: " << x << std::endl;
-    });
+    action += func;
+    action += func2;
 
-    action += exampleFunction;
-    action += anotherFunction;
-    action += lambdaFunction;
-    action(42);
+    action(5);
 
-    action -= exampleFunction;
+    action -= func;
+    action += func3;
+
+    action(4);
+
+    action -= func2;
+
     action(0);
 
-    action -= anotherFunction;
-    action(34);
+    action -= func3;
 
-    action -= lambdaFunction;
-    action(21);
+    action(324);
 
     return 0;
 }

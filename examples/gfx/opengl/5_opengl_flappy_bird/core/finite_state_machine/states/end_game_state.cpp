@@ -9,9 +9,9 @@ namespace game::core::fsm {
     using namespace input_system;
 
     EndGameState::EndGameState(shared_ptr<GameObject> flappyBird) : menuState(nullptr), flappyBird(std::move(flappyBird)) {
-        transitionFunction = make_shared<std::function<void()>>([this]() {
+        transitionFunction = [this]() {
             StateMachine::set_state(menuState);
-        });
+        };
     }
 
     EndGameState::~EndGameState() {

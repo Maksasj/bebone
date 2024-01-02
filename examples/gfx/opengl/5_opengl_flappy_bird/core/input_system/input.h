@@ -21,8 +21,8 @@ namespace game::core::input_system {
             static queue<MouseKeyCode> queuedMouseClicks;
 
         public:
-            static void register_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function);
-            static void remove_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function);
+            static void register_mouse_action(const MouseKeyCode& keyCode, std::function<void()>& function);
+            static void remove_mouse_action(const MouseKeyCode& keyCode, std::function<void()>& function);
             static void send_button_to_the_queue(const MouseKeyCode& keyCode);
             static void execute_pooled_actions();
     };

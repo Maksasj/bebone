@@ -24,7 +24,7 @@ namespace game::core::ecs {
             float minRotZ = -85.0f;
             float maxRotZ = 25.0f;
 
-            shared_ptr<std::function<void()>> flyFunction;
+            std::function<void()> flyFunction;
             
         public:
             explicit Flying(const float& flyForce);

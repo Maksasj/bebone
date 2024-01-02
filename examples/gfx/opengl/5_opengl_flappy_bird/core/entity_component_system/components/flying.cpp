@@ -5,7 +5,7 @@
 
 namespace game::core::ecs {
     Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) {
-        flyFunction = make_shared<std::function<void()>>([this]() {
+        flyFunction = std::function<void()>([this]() {
             set_velocity(this->flyForce);
         });
     }
