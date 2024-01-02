@@ -5,7 +5,7 @@ namespace bexel {
     Chunk::Chunk(const Vec3f& pos) : m_mesh(nullptr) {
         m_transform.translation = pos;
         m_transform.rotation = Mat4f::identity();
-        m_transform.scale = Vec3f::splat(1.0f);
+        m_transform.scale = Vec3f::one;
     }
 
     Chunk::~Chunk() {
