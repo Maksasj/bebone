@@ -4,6 +4,8 @@
 #include "../../../core/events/listeners/event.tpp"
 
 namespace bebone::gfx {
+    using namespace bebone::core;
+
     enum WindowEvent {
         WINDOW_POS,
         WINDOW_SIZE,
@@ -16,40 +18,58 @@ namespace bebone::gfx {
         WINDOW_CONTENT_SCALE
     };
 
-    struct WindowPosEvent : core::Event<WindowEvent, WINDOW_POS> {
+    struct WindowPosEvent : public Event<WindowEvent, WINDOW_POS> {
+        i32 xPos;
+        i32 yPos;
+
+        WindowPosEvent(const i32& xPos, const i32& yPos) : xPos(xPos), yPos(yPos) {}
+    };
+
+    struct WindowSizeEvent : public Event<WindowEvent, WINDOW_SIZE> {
+        i32 width;
+        i32 height;
+
+        WindowSizeEvent(const i32& width, const i32& height) : width(width), height(height) {}
+    };
+
+    struct WindowCloseEvent : public Event<WindowEvent, WINDOW_CLOSE> {
 
     };
 
-    struct WindowSizeEvent : core::Event<WindowEvent, WINDOW_SIZE> {
+    struct WindowRefreshEvent : public Event<WindowEvent, WINDOW_REFRESH> {
 
     };
 
-    struct WindowCloseEvent : core::Event<WindowEvent, WINDOW_CLOSE> {
+    struct WindowFocusEvent : public Event<WindowEvent, WINDOW_FOCUS> {
+        i32 focused;
 
+        WindowFocusEvent(const i32& focused) : focused(focused) {}
     };
 
-    struct WindowRefreshEvent : core::Event<WindowEvent, WINDOW_REFRESH> {
+    struct WindowIconifyEvent : public Event<WindowEvent, WINDOW_ICONIFY> {
+        i32 iconified;
 
+        WindowIconifyEvent(const i32& iconified) : iconified(iconified) {}
     };
 
-    struct WindowFocusEvent : core::Event<WindowEvent, WINDOW_FOCUS> {
+    struct WindowMaximizeEvent : public Event<WindowEvent, WINDOW_MAXIMIZE> {
+        i32 maximized;
 
+        WindowMaximizeEvent(const i32& maximized) : maximized(maximized) {}
     };
 
-    struct WindowIconifyEvent : core::Event<WindowEvent, WINDOW_ICONIFY> {
+    struct FrameBufferSizeEvent : public Event<WindowEvent, FRAMEBUFFERS_SIZE> {
+        i32 width;
+        i32 height;
 
+        FrameBufferSizeEvent(const i32& width, const i32& height) : width(width), height(height) {}
     };
 
-    struct WindowMaximizeEvent : core::Event<WindowEvent, WINDOW_MAXIMIZE> {
+    struct WindowContentScaleEvent : public Event<WindowEvent, WINDOW_CONTENT_SCALE> {
+        f32 xScale;
+        f32 yScale;
 
-    };
-
-    struct FrameBufferSizeEvent : core::Event<WindowEvent, FRAMEBUFFERS_SIZE> {
-
-    };
-
-    struct WindowContentScaleEvent : core::Event<WindowEvent, WINDOW_CONTENT_SCALE> {
-
+        WindowContentScaleEvent(const f32& xScale, const f32& yScale) : xScale(xScale), yScale(yScale) {}
     };
 }
 

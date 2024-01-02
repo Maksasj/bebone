@@ -1,5 +1,5 @@
-#ifndef _EVENT_OBSERVER_H_
-#define _EVENT_OBSERVER_H_
+#ifndef _BEBONE_CORE_EVENTS_LISTENERS_EVENT_DISPATCHER_H_
+#define _BEBONE_CORE_EVENTS_LISTENERS_EVENT_DISPATCHER_H_
 
 #include <map>
 #include <functional>
@@ -37,7 +37,7 @@ namespace bebone::core {
 
             template<typename Listener>
             void add_listener(Listener listener) {
-                using EventType = function_traits<Listener>::template argument<0>;
+                using EventType = typename function_traits<Listener>::template argument<0>;
 
                 auto ptr = std::make_shared<std::function<void(EventType)>>(listener);
 

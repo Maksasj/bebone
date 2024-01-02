@@ -1,5 +1,7 @@
-#ifndef _EVENT_H_
-#define _EVENT_H_
+#ifndef _BEBONE_CORE_EVENTS_LISTENERS_EVENT_H_
+#define _BEBONE_CORE_EVENTS_LISTENERS_EVENT_H_
+
+#include "../../types.h"
 
 namespace bebone::core {
     template<class EventCategoryType, EventCategoryType eventType>

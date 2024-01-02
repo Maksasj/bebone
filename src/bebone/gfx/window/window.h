@@ -21,16 +21,10 @@ namespace bebone::gfx {
             int width;
             int height;
 
-            // Lets maybe implement this in some sort of bit flag and funstion should be like get_window_flags();
-            bool windowResized;
-
         public:
             Window(const std::string& title, const int& width, const int& height);
             ~Window();
             
-            void reset_resize_flag();
-
-            const bool& is_resized() const;
             bool closing() const;
 
             const int& get_width() const;
@@ -40,7 +34,7 @@ namespace bebone::gfx {
 
         private:
             // Window callbacks
-            static void glfw_window_pos_callback(GLFWwindow* glfwWindow, int xpos, int ypos);
+            static void glfw_window_pos_callback(GLFWwindow* glfwWindow, int xPos, int yPos);
             static void glfw_window_size_callback(GLFWwindow* glfwWindow, int width, int height);
             static void glfw_window_close_callback(GLFWwindow* handle);
             static void glfw_window_refresh_callback(GLFWwindow* handle);
@@ -48,7 +42,7 @@ namespace bebone::gfx {
             static void glfw_window_iconify_callback(GLFWwindow* handle, int iconified);
             static void glfw_window_maximize_callback(GLFWwindow* handle, int maximized);
             static void glfw_framebuffer_size_callback(GLFWwindow* glfwWindow, int width, int height);
-            static void glfw_window_content_scale_callback(GLFWwindow* handle, float xscale, float yscale);
+            static void glfw_window_content_scale_callback(GLFWwindow* handle, float xScale, float yScale);
 
             // Mouse callbacks
             // static void glfw_mouse_button_callback(GLFWwindow* glfwWindow, int button, int action, int mods);
