@@ -13,16 +13,16 @@ namespace game::core::ecs {
 
         public:
             SpriteRenderer();
-            SpriteRenderer(const shared_ptr<Sprite>& sprite);
-            ~SpriteRenderer();
+            explicit SpriteRenderer(const shared_ptr<Sprite>& sprite);
+            ~SpriteRenderer() override;
 
-            const shared_ptr<Sprite>& get_sprite() const;
+            [[nodiscard]] const shared_ptr<Sprite>& get_sprite() const;
             void set_sprite(const shared_ptr<Sprite>& sprite);
 
-            void update() { }
+            void update() override { }
 
-            void enable();
-            void disable();
+            void enable() override;
+            void disable() override;
     };
 }
 

@@ -18,16 +18,16 @@ namespace game::core::ecs {
 
         public:
             Collider(const Vec2f& localTopLeft, const Vec2f& localBottomRight, const bool& isTrigger = false);
-            void update() { }
+            void update() override { }
 
-            Vec2f get_top_left() const;
-            Vec2f get_bottom_right() const;
-            
-            bool is_trigger() const;
+            [[nodiscard]] Vec2f get_top_left() const;
+            [[nodiscard]] Vec2f get_bottom_right() const;
+
+            [[nodiscard]] bool is_trigger() const;
 
             void enter_trigger();
             void exit_trigger();
-            bool is_triggered() const;
+            [[nodiscard]] bool is_triggered() const;
     };
 }
 

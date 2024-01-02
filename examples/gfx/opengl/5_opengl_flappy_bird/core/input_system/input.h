@@ -3,21 +3,26 @@
 
 #include <map>
 #include <queue>
+#include <memory>
+
+#include "bebone/bebone.h"
 
 #include "key_codes.h"
-#include "action.h"
 
 namespace game::core::input_system {
+    using namespace bebone::core;
     using namespace std;
 
     class Input {
+        using Action = Action<>;
+
         private:
             static map<MouseKeyCode, Action> mouseActions;
             static queue<MouseKeyCode> queuedMouseClicks;
 
         public:
-            static void register_mouse_action(const MouseKeyCode& keyCode, const Action& action);
-            static void remove_mouse_action(const MouseKeyCode& keyCode);
+            static void register_mouse_action(const MouseKeyCode& keyCode, std::function<void()>& function);
+            static void remove_mouse_action(const MouseKeyCode& keyCode, std::function<void()>& function);
             static void send_button_to_the_queue(const MouseKeyCode& keyCode);
             static void execute_pooled_actions();
     };

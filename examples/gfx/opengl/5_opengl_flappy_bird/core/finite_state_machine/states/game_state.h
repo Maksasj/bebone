@@ -27,16 +27,17 @@ namespace game::core::fsm {
 
             bool pipe_player_collision_check(shared_ptr<GameObject> gameObject) const;
 
+            void transition_to_end_game_state();
         public:
-            GameState(shared_ptr<GameObject> flappyBird);
-            ~GameState();
+            explicit GameState(const shared_ptr<GameObject>& flappyBird);
+            ~GameState() override;
 
-            void enter();
-            void update();
-            void exit();
+            void enter() override;
+            void update() override;
+            void exit() override;
 
             void set_end_game_state(shared_ptr<State> endGameState);
-            void transition_to_end_game_state();
+
     };
 }
 
