@@ -6,23 +6,27 @@ const unsigned int SCR_HEIGHT = 600;
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
-/*
- * This will not compile
+void window_resize_event_listener(WindowSizeEvent event) {
+    std::cout << "Window resize event !\n";
+}
 
-  class NotEvent {
-
-  };
-
-  class BadEventListener : EventListener<NotEvent> {
-  public:
-      void handle_event(shared_ptr<NotEvent> event) override { }
-  };
-*/
+struct WindowPosEventListener : EventListener<WindowPosEvent> {
+    void operator()(WindowPosEvent event) {
+        std::cout << "Window pos event !\n";
+    }
+};
 
 int main() {
     glfwInit();
-    
-    auto window = WindowFactory::create_window("0. Event Listener example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+
+    auto window = WindowFactory::create_window("0. OpenGL window example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+
+    WindowPosEventListener listener;
+    window->add_listener(listener);
+    window->add_listener(window_resize_event_listener);
+    window->add_listener([](WindowFocusEvent event) {
+        std::cout << "Window focus event !\n";
+    });
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

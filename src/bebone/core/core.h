@@ -8,7 +8,7 @@
 #include "arena_allocator.h"
 #include "arena_container.h"
 
-#include "events/listeners/event_observer.h"
+#include "events/listeners/event_dispatcher.h"
 #include "events/delegates/action.h"
 
 #endif

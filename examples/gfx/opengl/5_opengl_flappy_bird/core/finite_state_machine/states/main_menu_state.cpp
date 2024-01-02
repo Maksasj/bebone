@@ -23,7 +23,7 @@ namespace game::core::fsm {
     }
 
     void MainMenuState::enter() {
-        flappyBird->get_transform()->set_position(Vec3f(0.0f, 0.0f, 0.0f));
+        flappyBird->get_transform()->set_position(Vec3f::splat(0.0f));
         flappyBird->get_transform()->set_rotation(0.0f);
 
         Game::find_game_object_by_name("Pipe1")->get_transform()->set_position(Vec3f(6.2f, Random::rand(-3.0f, 4.5f), 2.0f));

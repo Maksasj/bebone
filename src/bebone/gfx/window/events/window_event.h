@@ -1,18 +1,55 @@
-#ifndef _WINDOW_EVENT_H_
-#define _WINDOW_EVENT_H_
+#ifndef BEBONE_WINDOW_EVENT_H
+#define BEBONE_WINDOW_EVENT_H
 
-#include "../../../core/core.h"
-#include "../../gfx_backend.h"
+#include "../../../core/events/listeners/event.h"
 
 namespace bebone::gfx {
-    using namespace core;
+    enum WindowEvent {
+        WINDOW_POS,
+        WINDOW_SIZE,
+        WINDOW_CLOSE,
+        WINDOW_REFRESH,
+        WINDOW_FOCUS,
+        WINDOW_ICONIFY,
+        WINDOW_MAXIMIZE,
+        FRAMEBUFFERS_SIZE,
+        WINDOW_CONTENT_SCALE
+    };
 
-    class WindowEvent : public Event {
-    public:
-        GLFWwindow* window;
+    struct WindowPosEvent : core::Event<WindowEvent, WINDOW_POS> {
 
-        WindowEvent(GLFWwindow* window);
-        ~WindowEvent();
+    };
+
+    struct WindowSizeEvent : core::Event<WindowEvent, WINDOW_SIZE> {
+
+    };
+
+    struct WindowCloseEvent : core::Event<WindowEvent, WINDOW_CLOSE> {
+
+    };
+
+    struct WindowRefreshEvent : core::Event<WindowEvent, WINDOW_REFRESH> {
+
+    };
+
+    struct WindowFocusEvent : core::Event<WindowEvent, WINDOW_FOCUS> {
+
+    };
+
+    struct WindowIconifyEvent : core::Event<WindowEvent, WINDOW_ICONIFY> {
+
+    };
+
+    struct WindowMaximizeEvent : core::Event<WindowEvent, WINDOW_MAXIMIZE> {
+
+    };
+
+    struct FrameBufferSizeEvent : core::Event<WindowEvent, FRAMEBUFFERS_SIZE> {
+
+    };
+
+    struct WindowContentScaleEvent : core::Event<WindowEvent, WINDOW_CONTENT_SCALE> {
+
     };
 }
 

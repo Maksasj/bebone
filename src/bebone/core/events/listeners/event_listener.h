@@ -8,14 +8,9 @@
 namespace bebone::core {
     using namespace std;
 
-    template <typename T>
-    class EventListener {
-    public:
-        EventListener() {
-            static_assert(std::is_base_of<Event, T>::value, "T must be a bebone::core::Event derivative");
-        }
-
-        virtual void handle_event(shared_ptr<T> event) = 0;
+    template<class EventType>
+    struct EventListener {
+        virtual void operator()(EventType) = 0;
     };
 }
 
