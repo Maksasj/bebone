@@ -3,21 +3,35 @@
 
 #include <memory>
 #include <vector>
-
-#include "void_function.h"
+#include <functional>
 
 namespace bebone::core {
-    using namespace std;
-
+    template <typename... Args>
     class Action {
-    private:
-        vector<shared_ptr<VoidFunction>> functions;
-    public:
-        Action();
+        using Function = std::shared_ptr<std::function<void(Args...)>>;
 
-        void subscribe(const shared_ptr<VoidFunction>& function);
-        void unsubscribe(const shared_ptr<VoidFunction>& function);
-        void invoke();
+    private:
+        std::vector<Function> functions;
+    public:
+        Action() : functions(std::vector<Function>()) { };
+
+        void operator+=(const Function& function) {
+            functions.push_back(function);
+        }
+
+        void operator-=(const Function& function) {
+            auto it = std::find(functions.begin(), functions.end(), function);
+
+            if (it != functions.end()) {
+                functions.erase(it);
+            }
+        }
+
+        void operator()(Args... args) const {
+            for (const auto& function : functions) {
+                (*function)(args...);
+            }
+        }
     };
 }
 

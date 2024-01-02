@@ -5,11 +5,9 @@
 
 namespace game::core::ecs {
     Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) {
-        auto fly = [this]() {
+        flyFunction = make_shared<std::function<void()>>([this]() {
             set_velocity(this->flyForce);
-        };
-
-        flyFunction = make_shared<VoidFunction>(fly);
+        });
     }
 
     void Flying::update() {

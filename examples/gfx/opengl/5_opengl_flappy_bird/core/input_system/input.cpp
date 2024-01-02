@@ -3,33 +3,29 @@
 #include <utility>
 
 namespace game::core::input_system {
-    map<MouseKeyCode, shared_ptr<Action>> Input::mouseActions = map<MouseKeyCode, shared_ptr<Action>>();
+    using Action = Action<>;
+
+    map<MouseKeyCode, Action> Input::mouseActions = map<MouseKeyCode, Action>();
     queue<MouseKeyCode> Input::queuedMouseClicks = queue<MouseKeyCode>();
 
-    void Input::register_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<VoidFunction>& function) {
-        if (mouseActions[keyCode] == nullptr) {
-            mouseActions[keyCode] = make_shared<Action>();
+    void Input::register_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function) {
+        if (mouseActions.find(keyCode) == mouseActions.end()) {
+            mouseActions[keyCode] = Action();
         }
 
-        auto action = mouseActions[keyCode];
-
-        if (action != nullptr) {
-            action->subscribe(function);
-        }
+        mouseActions[keyCode] += function;
     }
 
     void Input::send_button_to_the_queue(const MouseKeyCode& keyCode) {
         queuedMouseClicks.push(keyCode);
     }
 
-    void Input::remove_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<VoidFunction>& function) {
-        auto action = mouseActions[keyCode];
-
-        if (action == nullptr) {
+    void Input::remove_mouse_action(const MouseKeyCode& keyCode, const shared_ptr<std::function<void()>>& function) {
+        if (mouseActions.find(keyCode) == mouseActions.end()) {
             return;
         }
 
-        action->unsubscribe(function);
+        mouseActions[keyCode] -= function;
     }
 
     void Input::execute_pooled_actions() {
@@ -37,10 +33,8 @@ namespace game::core::input_system {
             MouseKeyCode mouseKeyCode = queuedMouseClicks.front();
             queuedMouseClicks.pop();
 
-            auto action = mouseActions[mouseKeyCode];
-
-            if (action != nullptr) {
-                action->invoke();
+            if (mouseActions.find(mouseKeyCode) != mouseActions.end()) {
+                mouseActions[mouseKeyCode]();
             }
         }
     }
