@@ -20,12 +20,11 @@ namespace bebone::core {
         map<Key, Action> keyActions;
         queue<Key> queuedKeys;
 
-        Input() {}
+        Input() = default;
 
         void queue_key(const KeyCode& keyCode, const InputType& inputType);
         void execute_queued_actions();
 
-        // TODO: friend class (for example, window will queue the keys using callbacks and will execute queued keys before draw calls)
     public:
         Input(const Input& obj) = delete;
         void operator=(Input const& obj) = delete;
@@ -34,6 +33,10 @@ namespace bebone::core {
 
         void register_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
         void remove_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
+
+        friend class InputHandler;
+        friend struct KeyListener;
+        friend struct MouseListener;
     };
 }
 

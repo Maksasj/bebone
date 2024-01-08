@@ -17,7 +17,11 @@ namespace bebone::gfx {
         glfwSetWindowContentScaleCallback(window, glfw_window_content_scale_callback);
 
         // Mouse callbacks
-        // glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
+        glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
+        glfwSetKeyCallback(window, glfw_key_callback);
+
+        EventDispatcher<InputEvent>::add_listener(inputHandler.get_key_listener());
+        EventDispatcher<InputEvent>::add_listener(inputHandler.get_mouse_listener());
     }
 
     Window::~Window() {
@@ -69,13 +73,15 @@ namespace bebone::gfx {
         eventDispatcher->fire(WindowContentScaleEvent(xscale, yscale));
     }
 
-    /*
     void Window::glfw_mouse_button_callback(GLFWwindow* glfwWindow, int button, int action, int mods) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        // Todo there we need to fire necessary events
-        eventDispatcher->fire(MousePressEvent());
+        auto* eventDispatcher = reinterpret_cast<EventDispatcher<InputEvent>*>(glfwGetWindowUserPointer(glfwWindow));
+        eventDispatcher->fire(InputMouseButtonEvent(button, action, mods));
     }
-    */
+
+    void Window::glfw_key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
+        auto* eventDispatcher = reinterpret_cast<EventDispatcher<InputEvent>*>(glfwGetWindowUserPointer(glfwWindow));
+        eventDispatcher->fire(InputKeyEvent(key, scancode, action, mods));
+    }
 
     GLFWwindow* Window::get_backend() const {
         return window;
@@ -95,5 +101,9 @@ namespace bebone::gfx {
 
     f32 Window::get_aspect() const {
         return static_cast<f32>(width) / static_cast<f32>(height);
+    }
+
+    void Window::execute_input_actions() const {
+        inputHandler.execute_input_actions();
     }
 }

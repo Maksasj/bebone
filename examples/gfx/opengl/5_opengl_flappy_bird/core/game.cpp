@@ -2,7 +2,6 @@
 #include "texture_loader.h"
 #include "entity_component_system/components/sprite_renderer.h"
 #include "entity_component_system/game_object.h"
-#include "input_system/input.h"
 
 #include "rng.h"
 
@@ -11,7 +10,6 @@ namespace game::core {
     using namespace std;
     using namespace ecs;
     using namespace fsm;
-    using namespace input_system;
 
     vector<shared_ptr<GameObject>> Game::gameObjects = vector<shared_ptr<GameObject>>();
 
@@ -89,8 +87,6 @@ namespace game::core {
     }
 
     void Game::update() {
-        Input::execute_pooled_actions();
-
         StateMachine::update_current_state();
         update_game_objects();
 

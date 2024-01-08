@@ -1,7 +1,6 @@
 #include "flying.h"
 
 #include <cmath>
-#include "../../input_system/input.h"
 
 namespace game::core::ecs {
     Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) {
@@ -32,16 +31,12 @@ namespace game::core::ecs {
     }
 
     void Flying::enable() {
-        using namespace game::core::input_system;
-
         Component::enable();
-        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, flyFunction);
+        Input::get_instance().register_key_action(KeyCode::MOUSE_BUTTON_LEFT, flyFunction);
     }
 
     void Flying::disable() {
-        using namespace game::core::input_system;
-
         Component::disable();
-        Input::remove_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, flyFunction);
+        Input::get_instance().remove_key_action(KeyCode::MOUSE_BUTTON_LEFT, flyFunction);
     }
 }
