@@ -1,7 +1,7 @@
 #include "window.h"
 
 namespace bebone::gfx {
-    Window::Window(const std::string& title, const int& width, const int& height) : width(width), height(height), windowResized(false) {
+    Window::Window(const std::string& title, const int& width, const int& height) : width(width), height(height) {
         window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
 
@@ -24,22 +24,14 @@ namespace bebone::gfx {
         glfwDestroyWindow(window);
     }
 
-    const bool& Window::is_resized() const {
-        return windowResized;
-    }
-
-    void Window::reset_resize_flag() {
-        windowResized = false;
-    }
-
-    void Window::glfw_window_pos_callback(GLFWwindow* glfwWindow, int xpos, int ypos) {
+    void Window::glfw_window_pos_callback(GLFWwindow* glfwWindow, int xPos, int yPos) {
         auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowPosEvent());
+        eventDispatcher->fire(WindowPosEvent(xPos, yPos));
     }
 
     void Window::glfw_window_size_callback(GLFWwindow* glfwWindow, int width, int height) {
         auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowSizeEvent());
+        eventDispatcher->fire(WindowSizeEvent(width, height));
     }
 
     void Window::glfw_window_close_callback(GLFWwindow* glfwWindow) {
@@ -54,27 +46,27 @@ namespace bebone::gfx {
 
     void Window::glfw_window_focus_callback(GLFWwindow* glfwWindow, int focused) {
         auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowFocusEvent());
+        eventDispatcher->fire(WindowFocusEvent(focused));
     }
 
     void Window::glfw_window_iconify_callback(GLFWwindow* glfwWindow, int iconified) {
         auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowIconifyEvent());
+        eventDispatcher->fire(WindowIconifyEvent(iconified));
     }
 
     void Window::glfw_window_maximize_callback(GLFWwindow* glfwWindow, int maximized) {
         auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowMaximizeEvent());
+        eventDispatcher->fire(WindowMaximizeEvent(maximized));
     }
 
     void Window::glfw_framebuffer_size_callback(GLFWwindow* glfwWindow, int width, int height) {
         auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(FrameBufferSizeEvent());
+        eventDispatcher->fire(FrameBufferSizeEvent(width, height));
     }
 
     void Window::glfw_window_content_scale_callback(GLFWwindow* glfwWindow, float xscale, float yscale) {
         auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowContentScaleEvent());
+        eventDispatcher->fire(WindowContentScaleEvent(xscale, yscale));
     }
 
     /*

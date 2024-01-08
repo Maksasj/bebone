@@ -6,12 +6,12 @@ const unsigned int SCR_HEIGHT = 600;
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
-void window_resize_event_listener(WindowSizeEvent event) {
+void window_resize_event_listener(WindowSizeEvent& event) {
     std::cout << "Window resize event !\n";
 }
 
 struct WindowPosEventListener : EventListener<WindowPosEvent> {
-    void operator()(WindowPosEvent event) {
+    void operator()(WindowPosEvent& event) {
         std::cout << "Window pos event !\n";
     }
 };
@@ -24,7 +24,7 @@ int main() {
     WindowPosEventListener listener;
     window->add_listener(listener);
     window->add_listener(window_resize_event_listener);
-    window->add_listener([](WindowFocusEvent event) {
+    window->add_listener([](WindowFocusEvent& event) {
         std::cout << "Window focus event !\n";
     });
 
