@@ -1,7 +1,7 @@
 
-## Graphics module
+# Graphics module
 
-### Window Creation
+## Window Creation
 To create a window with specified resolution and api you need to use the create_window method from the WindowFactory static class
 ```c++
 static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI);
@@ -47,7 +47,7 @@ int main() {
 In this example, you can see the usage of the WindowFactory and GLContext.
 To use these classes and other Bebone features you need to include "bebone/bebone.h".
 
-## Buffer Objects
+### Buffer Objects
 Bebone supports these OpenGL buffer objects:
 * VAO — GLVertexArrayObject
 * VBO — GLVertexBufferObject
@@ -111,7 +111,7 @@ cameraUbo.unbind();
 ```
 After, you need to bind your UBO to specific shader binding using `shaderProgram.bind_buffer()`, after you can map buffer. Buffer `.map()` method returns void* pointer to mapped memory region. After, this void pointer can be used for uploading any data to yours UBO. After you done with all data, you can simply unmap and unbind your buffer.
 
-## Shaders
+### Shaders
 To use shaders in OpenGL Bebone you will need to use the GLShaderFactory, GLShader, GLShaderProgram classes.
 
 ### GLShaderFactory
@@ -224,7 +224,7 @@ int main() {
 }
 ```
 
-## Textures
+### Textures
 To create and load textures using OpenGL Bebone you will need to use GLTexture class. Texture creation is simple:
 ```c++
 GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);

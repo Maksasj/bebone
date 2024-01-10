@@ -1,6 +1,6 @@
-## Core module
+# Core module
 
-### Action delegate(C# style)
+## Action delegate(C# style)
 Action delegate is a function object container which can subscribe to the specific functions or unsubscribe from them. Also, it can execute all functions to which action is subscribed. Action delegate can subscribe only to those functions who have void return type and some arguments (or without arguments) Action delegate is similar to the C# Action.
 
 Example usage:
@@ -62,7 +62,7 @@ In this example, ```Action``` can store function objects with one ```int``` argu
 * ```void operator-=(Function& function)``` — action unsubscribes from the function object
 * ```void operator()(Args... args)``` — action executes all functions to which it subscribed
 
-### Event system (Java style)
+## Event system (Java style)
 Bebone supports java style event system, there is three basic classes
 * **Event**<br> 
   Base class for all events. Lets create simple event, firstly we need to create event category enum:
