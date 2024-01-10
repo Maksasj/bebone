@@ -9,6 +9,8 @@ namespace bebone::gfx::vulkan {
         public:
             T backend;
 
+            virtual ~VulkanWrapper() = default;
+
             virtual void destroy(VulkanDevice& device) = 0;
     };
 }
