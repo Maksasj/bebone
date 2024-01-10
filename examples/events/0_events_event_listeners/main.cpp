@@ -22,11 +22,15 @@ int main() {
     auto window = WindowFactory::create_window("0. OpenGL window example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
     WindowPosEventListener listener;
-    window->EventDispatcher<WindowEvent>::add_listener(listener);
-    window->EventDispatcher<WindowEvent>::add_listener(window_resize_event_listener);
-    window->EventDispatcher<WindowEvent>::add_listener([](WindowFocusEvent& event) {
+    window->add_listener(listener);
+
+    window->add_listener(listener);
+    window->add_listener(window_resize_event_listener);
+    window->add_listener([](WindowFocusEvent& event) {
         std::cout << "Window focus event !\n";
     });
+
+    window->fire(WindowPosEvent(0, 0));
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

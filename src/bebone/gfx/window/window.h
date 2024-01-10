@@ -23,6 +23,12 @@ namespace bebone::gfx {
             InputHandler inputHandler;
 
         public:
+            using EventDispatcher<WindowEvent>::add_listener;
+            using EventDispatcher<WindowEvent>::fire;
+
+            using EventDispatcher<InputEvent>::add_listener;
+            using EventDispatcher<InputEvent>::fire;
+
             Window(const std::string& title, const int& width, const int& height);
             ~Window();
             
