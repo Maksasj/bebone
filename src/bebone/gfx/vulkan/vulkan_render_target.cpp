@@ -5,8 +5,8 @@
 #include "vulkan_device_memory.h"
 #include "vulkan_swap_chain.h"
 
-namespace bebone::gfx {
-    RenderTarget::RenderTarget(
+namespace bebone::gfx::vulkan {
+    VulkanRenderTarget::VulkanRenderTarget(
         VulkanDevice& device,
         std::vector<VulkanSwapChainImageTuple>& swapChainImages,
         VkFormat imageFormat,
@@ -45,7 +45,7 @@ namespace bebone::gfx {
         }
     }
 
-    void RenderTarget::destroy(VulkanDevice& device) {
+    void VulkanRenderTarget::destroy(VulkanDevice& device) {
         renderPass->destroy(device);
 
         for(auto& image : swapChainImages)

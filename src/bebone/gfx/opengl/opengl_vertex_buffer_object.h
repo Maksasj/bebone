@@ -1,5 +1,5 @@
-#ifndef _OPENGL_VERTEX_BUFFER_OBJECT_H_
-#define _OPENGL_VERTEX_BUFFER_OBJECT_H_
+#ifndef _BEBONE_GFX_OPENGL_OPENGL_VERTEX_BUFFER_OBJECT_H_
+#define _BEBONE_GFX_OPENGL_OPENGL_VERTEX_BUFFER_OBJECT_H_
 
 #include "opengl_buffer_object.h"
 #include <vector>

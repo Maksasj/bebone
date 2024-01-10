@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_H_
-#define _BEBONE_GFX_H_
+#ifndef _BEBONE_GFX_GFX_H_
+#define _BEBONE_GFX_GFX_H_
 
 #include "gfx_backend.h"
 #include "begui/begui.h"
@@ -10,6 +10,10 @@
 #include "window/window.h"
 #include "window/window_factory.h"
 
+#include "shaders/shader_code.h"
+#include "shaders/shader_compiler.h"
+#include "shaders/shader_source.h"
+#include "shaders/shader_type.h"
 #include "shaders/spirv_shader_compiler.h"
 
 #include "glfw_context.h"

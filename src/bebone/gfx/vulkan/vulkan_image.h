@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_IMAGE_IMPLEMENTATION_H_
-#define _BEBONE_GFX_VULKAN_IMAGE_IMPLEMENTATION_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_IMAGE_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_IMAGE_H_
 
 #include <vector>
 
@@ -9,7 +9,7 @@
 #include "vulkan_wrapper.tpp"
 #include "vulkan_device_memory.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDevice;

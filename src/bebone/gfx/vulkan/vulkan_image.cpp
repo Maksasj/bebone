@@ -3,7 +3,7 @@
 #include "vulkan_device.h"
 #include "vulkan_image_view.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     VulkanImage::VulkanImage(const VkImage& image) {
@@ -40,7 +40,7 @@ namespace bebone::gfx {
         return memRequirements;
     }
 
-    void VulkanImage::destroy(bebone::gfx::VulkanDevice &device) {
+    void VulkanImage::destroy(VulkanDevice &device) {
         vkDestroyImage(device.device(), backend, nullptr);
     }
 }

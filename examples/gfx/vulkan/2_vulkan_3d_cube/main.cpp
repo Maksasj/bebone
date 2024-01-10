@@ -2,8 +2,9 @@
 #define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
-using namespace bebone::gfx;
 using namespace bebone::core;
+using namespace bebone::gfx;
+using namespace bebone::gfx::vulkan;
 
 struct Vertex { Vec3f pos, color; };
 struct Handles { u32 cameraHandle, transformHandle; };

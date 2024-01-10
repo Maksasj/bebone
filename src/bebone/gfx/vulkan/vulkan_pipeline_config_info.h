@@ -1,11 +1,11 @@
-#ifndef _BEBONE_GFX_VULKAN_PIPELINE_CONFIG_INFO_H_
-#define _BEBONE_GFX_VULKAN_PIPELINE_CONFIG_INFO_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_CONFIG_INFO_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_CONFIG_INFO_H_
 
 #include <vector>
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     // VkPipelineVertexInputStateCreateInfo
     struct VulkanPipelineVertexInputStateConfig : core::NonCopyable {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

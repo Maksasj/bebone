@@ -1,5 +1,5 @@
-#ifndef _BEBONE_SHADER_COMPILER_H_
-#define _BEBONE_SHADER_COMPILER_H_
+#ifndef _BEBONE_SHADERS_SHADER_COMPILER_H_
+#define _BEBONE_SHADERS_SHADER_COMPILER_H_
 
 #include <cstring>
 #include <fstream>

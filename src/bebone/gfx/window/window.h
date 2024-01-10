@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_WINDOW_H_
-#define _BEBONE_GFX_WINDOW_H_
+#ifndef _BEBONE_GFX_WINDOW_WINDOW_H_
+#define _BEBONE_GFX_WINDOW_WINDOW_H_
 
 #include <iostream>
 #include <exception>
