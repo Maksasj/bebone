@@ -3,10 +3,7 @@
 #include "bebone/bebone.h"
 
 #include "core/game.h"
-#include "core/sprite.h"
 #include "core/game_time.h"
-
-#include "core/input_system/input.h"
 
 const unsigned int SCR_WIDTH = 600;
 const unsigned int SCR_HEIGHT = 800;
@@ -15,17 +12,6 @@ using namespace bebone::core;
 using namespace bebone::gfx;
 
 using namespace game::core;
-
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-    using namespace input_system;
-    std::ignore = window;
-    std::ignore = mods;
-
-    if (action == GLFW_PRESS) {
-        auto mouseKeyCode = static_cast<MouseKeyCode>(button);
-        Input::send_button_to_the_queue(mouseKeyCode);
-    }
-}
 
 int main() {
     glfwInit();
@@ -43,13 +29,14 @@ int main() {
 
     Game game(SCR_WIDTH, SCR_HEIGHT);
 
-    glfwSetMouseButtonCallback(window->get_backend(), mouse_button_callback);
     double beginTime = Time::get_time();
     double endTime;
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        window->execute_input_actions();
 
         if (Time::deltaTime >= 0) {
             game.update();

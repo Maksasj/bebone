@@ -11,4 +11,7 @@
 #include "events/listeners/event_dispatcher.tpp"
 #include "events/delegates/action.h"
 
+#include "input/input.h"
+#include "input/input_handler.h"
+
 #endif

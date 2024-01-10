@@ -17,7 +17,11 @@ namespace bebone::gfx {
         glfwSetWindowContentScaleCallback(window, glfw_window_content_scale_callback);
 
         // Mouse callbacks
-        // glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
+        glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
+        glfwSetKeyCallback(window, glfw_key_callback);
+
+        EventDispatcher<InputEvent>::add_listener(inputHandler.get_key_listener());
+        EventDispatcher<InputEvent>::add_listener(inputHandler.get_mouse_listener());
     }
 
     Window::~Window() {
@@ -25,57 +29,59 @@ namespace bebone::gfx {
     }
 
     void Window::glfw_window_pos_callback(GLFWwindow* glfwWindow, int xPos, int yPos) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowPosEvent(xPos, yPos));
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowPosEvent(xPos, yPos));
     }
 
     void Window::glfw_window_size_callback(GLFWwindow* glfwWindow, int width, int height) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowSizeEvent(width, height));
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowSizeEvent(width, height));
     }
 
     void Window::glfw_window_close_callback(GLFWwindow* glfwWindow) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowCloseEvent());
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowCloseEvent());
     }
 
     void Window::glfw_window_refresh_callback(GLFWwindow* glfwWindow) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowRefreshEvent());
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowRefreshEvent());
     }
 
     void Window::glfw_window_focus_callback(GLFWwindow* glfwWindow, int focused) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowFocusEvent(focused));
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowFocusEvent(focused));
     }
 
     void Window::glfw_window_iconify_callback(GLFWwindow* glfwWindow, int iconified) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowIconifyEvent(iconified));
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowIconifyEvent(iconified));
     }
 
     void Window::glfw_window_maximize_callback(GLFWwindow* glfwWindow, int maximized) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowMaximizeEvent(maximized));
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowMaximizeEvent(maximized));
     }
 
     void Window::glfw_framebuffer_size_callback(GLFWwindow* glfwWindow, int width, int height) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(FrameBufferSizeEvent(width, height));
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(FrameBufferSizeEvent(width, height));
     }
 
     void Window::glfw_window_content_scale_callback(GLFWwindow* glfwWindow, float xscale, float yscale) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        eventDispatcher->fire(WindowContentScaleEvent(xscale, yscale));
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<WindowEvent>::fire(WindowContentScaleEvent(xscale, yscale));
     }
 
-    /*
     void Window::glfw_mouse_button_callback(GLFWwindow* glfwWindow, int button, int action, int mods) {
-        auto* eventDispatcher = reinterpret_cast<EventDispatcher<WindowEvent>*>(glfwGetWindowUserPointer(glfwWindow));
-        // Todo there we need to fire necessary events
-        eventDispatcher->fire(MousePressEvent());
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<InputEvent>::fire(InputMouseButtonEvent(button, action, mods));
     }
-    */
+
+    void Window::glfw_key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->EventDispatcher<InputEvent>::fire(InputKeyEvent(key, scancode, action, mods));
+    }
 
     GLFWwindow* Window::get_backend() const {
         return window;
@@ -95,5 +101,9 @@ namespace bebone::gfx {
 
     f32 Window::get_aspect() const {
         return static_cast<f32>(width) / static_cast<f32>(height);
+    }
+
+    void Window::execute_input_actions() const {
+        inputHandler.execute_input_actions();
     }
 }

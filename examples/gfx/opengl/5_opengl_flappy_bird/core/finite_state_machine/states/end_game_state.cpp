@@ -3,11 +3,8 @@
 #include <utility>
 
 #include "../../score.h"
-#include "../../input_system/input.h"
 
 namespace game::core::fsm {
-    using namespace input_system;
-
     EndGameState::EndGameState(shared_ptr<GameObject> flappyBird) : menuState(nullptr), flappyBird(std::move(flappyBird)) {
         transitionFunction = [this]() {
             StateMachine::set_state(menuState);
@@ -23,11 +20,11 @@ namespace game::core::fsm {
         cout << "Game Over" << endl;
         cout << "Your score: " << Score::get_score() << endl;
 
-        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, transitionFunction);
+        Input::get_instance().register_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
     }
 
     void EndGameState::exit() {
-        Input::remove_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, transitionFunction);
+        Input::get_instance().remove_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
         Score::clear();
     }
 
