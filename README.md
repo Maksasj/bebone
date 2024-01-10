@@ -103,7 +103,7 @@ You can find other examples in [examples](https://github.com/Maksasj/bebone/tree
 
 ## Documentation
   - [Core module](https://github.com/Maksasj/bebone/blob/master/docs/Core.md)
-  - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/Core.md)
+  - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/Gfx.md)
 
 ## License
 Bebone is free, open source game development framework. All code in this repository FOR NOW is licensed under
