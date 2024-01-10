@@ -13,7 +13,7 @@ namespace bebone::core {
     using namespace gfx;
 
     struct KeyListener : EventListener<InputKeyEvent> {
-        void operator()(InputKeyEvent& event) {
+        void operator()(InputKeyEvent& event) override {
             Input& input = Input::get_instance();
 
             KeyCode keyCode = static_cast<KeyCode>(event.key);

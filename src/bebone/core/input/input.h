@@ -14,29 +14,29 @@ namespace bebone::core {
     using namespace std;
 
     class Input {
-        using Action = Action<>;
+        private:
+            using Action = Action<>;
 
-    private:
-        map<Key, Action> keyActions;
-        queue<Key> queuedKeys;
+            map<Key, Action> keyActions;
+            queue<Key> queuedKeys;
 
-        Input() = default;
+            Input() = default;
 
-        void queue_key(const KeyCode& keyCode, const InputType& inputType);
-        void execute_queued_actions();
+            void queue_key(const KeyCode& keyCode, const InputType& inputType);
+            void execute_queued_actions();
 
-    public:
-        Input(const Input& obj) = delete;
-        void operator=(Input const& obj) = delete;
+        public:
+            Input(const Input& obj) = delete;
+            void operator=(Input const& obj) = delete;
 
-        static Input& get_instance();
+            static Input& get_instance();
 
-        void register_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
-        void remove_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
+            void register_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
+            void remove_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
 
-        friend class InputHandler;
-        friend struct KeyListener;
-        friend struct MouseListener;
+            friend class InputHandler;
+            friend struct KeyListener;
+            friend struct MouseListener;
     };
 }
 

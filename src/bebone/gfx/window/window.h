@@ -14,8 +14,6 @@
 namespace bebone::gfx {
     using namespace core;
 
-
-
     class Window : private NonCopyable, public EventDispatcher<WindowEvent>, public EventDispatcher<InputEvent> {
         private:
             GLFWwindow* window;

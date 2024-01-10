@@ -11,7 +11,7 @@ namespace bebone::core {
     using namespace gfx;
 
     struct MouseListener : EventListener<InputMouseButtonEvent> {
-        void operator()(InputMouseButtonEvent& event) {
+        void operator()(InputMouseButtonEvent& event) override {
             Input& input = Input::get_instance();
 
             KeyCode keyCode = static_cast<KeyCode>(event.button);
