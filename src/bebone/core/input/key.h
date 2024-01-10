@@ -5,6 +5,7 @@
 #include "input_type.h"
 
 namespace bebone::core {
+    /// Key data type, which holds the key code and input type
     struct Key {
         KeyCode keyCode;
         InputType inputType;

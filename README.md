@@ -17,12 +17,12 @@ Cool looking widgets
   * Types library
   * Event submodule
     * Listener system (Java style)
-    * Action system (C# style)
+    * Action delegate (C# style)
   * Input system
   * Meta programming module
 * Graphics module
   * OpenGL abstraction layer
-  * Vulkan abstraction layer(in development)
+  * Vulkan abstraction layer (in development)
   * Shaders
   * Window
   * Begui (Dear ImGui abstraction layer)
@@ -65,6 +65,77 @@ At the moment, bebone is only dependent on these libraries:
   - [imgui](https://github.com/Maksasj/imgui/tree/master) *(Debug gui library)* 
   - [omni_types](https://github.com/Maksasj/omni_types/tree/master) *(Type library)* 
   - [stb](https://github.com/Maksasj/stb/tree/master) *(Image management library and others)* 
+
+# Core module
+
+## Event System
+
+### Action delegate
+Action delegate is a function object container which can subscribe to the specific functions or unsubscribe from them. Also, it can execute all functions to which action is subscribed. Action delegate can subscribe only to those functions who have void return type and some arguments (or without arguments) Action delegate is similar to the C# Action.
+
+Example usage:
+```c++
+#include "bebone/bebone.h"
+
+using namespace bebone::core;
+
+void example_function(int x) {
+    std::cout << "Example function: " << x << std::endl;
+}
+
+void another_function(int x) {
+    std::cout << "Another Function: " << x + 40 << std::endl;
+}
+
+void meme(int x) {
+    std::cout << "meme function" << x + 32445 / 23 << std::endl;
+}
+
+int main() {
+
+    Action<int> action;
+    std::function<void(int)> func = example_function;
+    std::function<void(int)> func2 = another_function;
+    std::function<void(int)> func3 = meme;
+
+    action += func;
+    action += func2;
+
+    // subscribed functions: func, func2
+
+    action(5);
+
+    action -= func;
+    action += func3;
+
+    // subscribed functions: func2, func3
+
+    action(4);
+
+    action -= func2;
+
+    // subscribed functions: func3
+
+    action(0);
+
+    action -= func3;
+
+    // subscribed functions: none
+
+    action(324);
+
+    return 0;
+}
+```
+In this example, ```Action``` can store function objects with one ```int``` argument. Overloaded operators:
+* ```void operator+=(Function& function)``` — action subscribes to the function object
+* ```void operator-=(Function& function)``` — action unsubscribes from the function object
+* ```void operator()(Args... args)``` — action executes all functions to which it subscribed
+
+## Input System
+In Bebone you can use event-based input system to add some actions to your keys. Input class — is a singleton class. So, you can get instance of it from anywhere in your code. 
+
+# Graphics module
 
 ## Window Creation
 To create a window with specified resolution and api you need to use the create_window method from the WindowFactory static class
@@ -122,16 +193,16 @@ Bebone supports these OpenGL buffer objects:
 All of them are inherited from the abstract GLBufferObject class, that lets to bind, unbind and to destroy buffer objects
 ```c++
 class GLBufferObject : private core::NonCopyable {
-        protected:
-            GLuint id;
+    protected:
+        GLuint id;
 
-        public:
-            GLBufferObject();
+    public:
+        GLBufferObject();
 
-            virtual void bind() = 0;
-            virtual void unbind() = 0;
-            virtual void destroy() = 0;
-    };
+        virtual void bind() = 0;
+        virtual void unbind() = 0;
+        virtual void destroy() = 0;
+};
 ```
 
 We will now discuss each buffer object separately
@@ -284,18 +355,120 @@ int main() {
         GLFWContext::poll_events();
     }
 
-    vao.destroy();
-    vbo.destroy();
-    ebo.destroy();
-    shaderProgram.destroy();
-
     GLFWContext::terminate();
     return 0;
 }
 ```
 
 ## Textures
-To create and load textures using OpenGL Bebone you will need to use GLTexture class.
+To create and load textures using OpenGL Bebone you will need to use GLTexture class. Texture creation is simple:
+```c++
+GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);
+```
+You only need to specify the image path, texture type (1D/2D/3D), RGB format and pixel type (data type). You can bind/unbind/destroy the texture in the same way like with buffer objects.
+
+Also, there are some helper functions:
+```c++
+void bind_texture_unit(const GLuint& textureUnit);
+
+// in pixels
+int get_width() const;
+int get_height() const;
+```
+If you want to bind texture to the specific texture unit you can use bind_texture_unit method.
+
+Example usage for thess methods you can find in the "Flappy Bird example".
+
+### Texture example
+```c++
+#include "bebone/bebone.h"
+
+#include <vector>
+
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+using namespace bebone::gfx;
+using namespace bebone::gfx::opengl;
+
+struct Vertex {
+    Vec3f pos;
+    Vec3f color;
+    Vec2f texCord;
+};
+
+const std::vector<Vertex> vertices {
+    {{0.5f,  0.5f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
+    {{0.5f, -0.5f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
+    {{-0.5f, -0.5f, 0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
+    {{-0.5f,  0.5f, 0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
+};
+
+const std::vector<u32> indices {
+    0, 1, 3,
+    1, 2, 3
+};
+
+int main() {
+    GLFWContext::init();
+
+    auto window = WindowFactory::create_window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+
+    GLContext::load_opengl();
+    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    GLShaderProgram shaderProgram(vertexShader, fragmentShader);
+
+    vertexShader.destroy();
+    fragmentShader.destroy();
+    
+    GLVertexArrayObject vao;
+    vao.bind();
+
+    GLVertexBufferObject vbo(vertices.data(), vertices.size() * sizeof(Vertex));
+    GLElementBufferObject ebo(indices.data(), indices.size() * sizeof(u32));
+
+    vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, pos));
+    vao.link_attributes(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
+    vao.link_attributes(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, texCord));
+
+    vao.unbind();
+	vbo.unbind();
+	ebo.unbind();
+
+    GLTexture texture("awesomeface.png",GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+
+    shaderProgram.set_uniform("ourTexture", 0);
+
+    GLContext::enable(GL_CULL_FACE);
+    GLContext::cull_face(GL_BACK);
+    GLContext::front_face(GL_CW);
+
+    while (!window->closing()) {
+        GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
+        GLContext::clear(GL_COLOR_BUFFER_BIT);
+
+        shaderProgram.enable();
+
+        texture.bind();
+        vao.bind();
+
+        GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
+
+        glfwSwapBuffers(window->get_backend());
+        GLFWContext::poll_events();
+    }
+
+    GLFWContext::terminate();
+
+    return 0;
+}
+```
+
+## Other examples
+You can find other OpenGL examples in examples/gfx/opengl
 
 ## Vulkan
 *This section is still in development.*

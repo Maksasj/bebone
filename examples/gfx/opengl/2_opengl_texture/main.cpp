@@ -78,12 +78,6 @@ int main() {
         GLFWContext::poll_events();
     }
 
-    vao.destroy();
-    vbo.destroy();
-    ebo.destroy();
-    shaderProgram.destroy();
-    texture.destroy();
-
     GLFWContext::terminate();
 
     return 0;
