@@ -27,7 +27,7 @@ const std::vector<u32> indices {
 };
 
 int main() {
-    glfwInit();
+    GLFWContext::init();
 
     auto window = WindowFactory::create_window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 

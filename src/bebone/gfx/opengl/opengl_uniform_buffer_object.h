@@ -7,6 +7,7 @@
 namespace bebone::gfx::opengl {
     using namespace bebone::core;
 
+    /// UBO
     class GLUniformBufferObject final : public GLBufferObject {
         private:
             u64 size;
@@ -20,8 +21,13 @@ namespace bebone::gfx::opengl {
             void* map() const;
             void unmap() const;
 
+            /// Binds UBO
             void bind();
+
+            /// Unbinds UBO
             void unbind();
+
+            /// Destroys UBO. Calls automatically in the destructor
             void destroy();
     };
 }

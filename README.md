@@ -85,13 +85,137 @@ class GLBufferObject : private core::NonCopyable {
 ```
 
 We will now discuss each buffer object separately
+
 ### GLVertexArrayObject
 To link vertex attributes you will need to use the link_attributes method:
 ```c++
 void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, const u64& offset);
 void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
 ```
-VBO is referenced here, to automatically bind and unbind it.
+VBO is referenced here to automatically bind and unbind it.
+
+### GLVertexBufferObject and GLElementBufferObject
+In the VBO/EBO constructor you can specify the data and the buffer object usage. Usage specifies the expected usage pattern of the data store. Only GL_STATIC_DRAW and GL_DYNAMIC_DRAW have been tested. Other symbolic constants like GL_STATIC_READ, GL_STATIC_COPY, GL_DYNAMIC_READ, etc. have not been tested yet.
+```c++
+GLVertexBufferObject(const void* vertices, const GLsizeiptr& size, const GLenum& usage = GL_STATIC_DRAW);
+GLElementBufferObject(const void* indices, const GLsizeiptr& size, const GLenum& usage = GL_STATIC_DRAW);
+```
+From the usage depends could you call the buffer_sub_data in the VBO/EBO or not.
+```c++
+void buffer_sub_data(const GLintptr& offset, const GLsizeiptr& size, const void* data);
+```
+This function calls glBufferSubData and works accordingly
+
+### GLUniformBufferObject
+TODO
+
+## Shaders
+To use shaders in OpenGL Bebone you will need to use the GLShaderFactory, GLShader, GLShaderProgram classes.
+
+### GLShaderFactory
+GLShaderFactory creates shader objects (GLShader) which later need to be assigned to the shader program (GLShaderProgram). GLShaderFactory has only one public method for shader creation:
+```c++
+static GLShader create_shader(const std::string& path, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+```
+You need to specify the path to the glsl shader, it's type (vertex/fragment shader) and other properties (enable uniforms or not)
+
+Simple example usage:
+```c++
+GLShader vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
+GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+```
+
+### GLShader
+TODO
+
+### GLShaderProgram
+To create a shader program you need to create vertex and fragment shaders with GLShaderFactory.
+```c++
+GLShaderProgram shaderProgram(vertexShader, fragmentShader);
+```
+You can enable/destroy it and set uniforms. To set uniforms you will need to call the set_uniform method. Bebone supports only these uniforms now:
+```c++
+void set_uniform(const char* uniformName, const i32& value) const;
+void set_uniform(const char* uniformName, const GLsizei& size, const i32* value) const;
+void set_uniform(const char* uniformName, const u32& value) const;
+void set_uniform(const char* uniformName, const f32& value) const;
+void set_uniform(const char* uniformName, const Mat4f& value) const;
+```
+
+### "Hello, Triangle!" example
+Using all aforementioned API, you can display your first triangle as follows:
+```c++
+#include <vector>
+
+#include "bebone/bebone.h"
+
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+using namespace bebone::gfx;
+using namespace bebone::gfx::opengl;
+
+const std::vector<Vec3f> vertices = {
+    {-0.5f, -0.5f, 0.0f},
+    {0.5f, -0.5f, 0.0f},
+    {0.0f,  0.5f, 0.0f}
+};
+
+const std::vector<u32> indices = {
+	0, 1, 2,
+};
+
+int main() {
+    GLFWContext::init();
+
+    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+
+    GLContext::load_opengl();
+    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+    GLShader vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
+    GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    GLShaderProgram shaderProgram(vertexShader, fragmentShader);
+
+    vertexShader.destroy();
+    fragmentShader.destroy();
+    
+    GLVertexArrayObject vao;
+    vao.bind();
+
+    GLVertexBufferObject vbo(vertices.data(), vertices.size() * sizeof(Vec3f));
+    GLElementBufferObject ebo(indices.data(), indices.size() * sizeof(u32));
+
+    vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vec3f), nullptr);
+
+    vao.unbind();
+	vbo.unbind();
+	ebo.unbind();
+
+    while(!window->closing()) {
+        GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
+        GLContext::clear(GL_COLOR_BUFFER_BIT);
+
+        shaderProgram.enable();
+        vao.bind();
+        GLContext::draw_arrays(GL_TRIANGLES, 0, 3);
+
+        glfwSwapBuffers(window->get_backend());
+        GLFWContext::poll_events();
+    }
+
+    vao.destroy();
+    vbo.destroy();
+    ebo.destroy();
+    shaderProgram.destroy();
+
+    GLFWContext::terminate();
+    return 0;
+}
+```
+
+## Textures
+To create and load textures using OpenGL Bebone you will need to use GLTexture class.
 
 # Vulkan
 
