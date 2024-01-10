@@ -80,7 +80,7 @@ int main() {
     transformUbo.bind();
     shaderProgram.bind_buffer("Transform", 0, transformUbo);
     auto transformPtr = static_cast<Transform*>(transformUbo.map());
-        transformPtr->translation = Mat4f::translation(Vec3f::splat(0));
+        transformPtr->translation = Mat4f::translation(Vec3f::zero);
         transformPtr->scale = Mat4f::identity();
 
     cameraUbo.bind();
@@ -108,8 +108,8 @@ int main() {
 
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
-        glfwSwapBuffers(window->get_backend());
-        glfwPollEvents();
+        GLFWContext::swap_buffers(*window);
+        GLFWContext::pool_events();
     }
 
     transformUbo.unmap();
@@ -120,7 +120,7 @@ int main() {
     ebo.destroy();
     shaderProgram.destroy();
 
-    glfwTerminate();
+    GLFWContext::terminate();
 
     return 0;
 }

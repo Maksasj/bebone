@@ -13,7 +13,7 @@ namespace bebone::gfx::vulkan {
         create_swap_chain(device);
 
         auto images = create_swap_chain_images(device, surfaceFormat.format);
-        renderTarget = std::make_unique<RenderTarget>(device, images, surfaceFormat.format, extent);
+        renderTarget = std::make_unique<VulkanRenderTarget>(device, images, surfaceFormat.format, extent);
 
         create_sync_objects(device);
     }

@@ -13,7 +13,7 @@
 #include <numeric>
 
 #include "vulkan_device.h"
-#include "../render_target.h"
+#include "vulkan_render_target.h"
 #include "vulkan_wrapper.tpp"
 
 namespace bebone::gfx::vulkan {
@@ -42,7 +42,7 @@ namespace bebone::gfx::vulkan {
             std::vector<VkFence> inFlightFences;
             std::vector<VkFence> imagesInFlight;
 
-            std::unique_ptr<RenderTarget> renderTarget;
+            std::unique_ptr<VulkanRenderTarget> renderTarget;
 
             VulkanSwapChain(VulkanDevice &device, VkExtent2D windowExtent);
 

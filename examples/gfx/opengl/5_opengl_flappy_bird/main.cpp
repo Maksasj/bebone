@@ -56,13 +56,13 @@ int main() {
         }
 
         glfwSwapBuffers(window->get_backend());
-        glfwPollEvents();
+        GLFWContext::pool_events();
 
         endTime = Time::get_time();
         Time::deltaTime = endTime - beginTime;
         beginTime = endTime;
     }
     
-    glfwTerminate();
+    GLFWContext::terminate();
     return 0;
 }

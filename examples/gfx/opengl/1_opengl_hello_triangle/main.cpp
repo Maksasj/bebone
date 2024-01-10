@@ -54,7 +54,7 @@ int main() {
         GLContext::draw_arrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window->get_backend());
-        glfwPollEvents();
+        GLFWContext::pool_events();
     }
 
     vao.destroy();
@@ -62,7 +62,7 @@ int main() {
     ebo.destroy();
     shaderProgram.destroy();
 
-    glfwTerminate();
+    GLFWContext::terminate();
     return 0;
 }
 
