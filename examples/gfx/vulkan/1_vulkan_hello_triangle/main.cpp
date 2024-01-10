@@ -16,7 +16,7 @@ const std::vector<Vertex> vertices = {
 };
 
 // Todo make this nicer
-const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
+const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
     .bindingDescriptions = {
         { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },

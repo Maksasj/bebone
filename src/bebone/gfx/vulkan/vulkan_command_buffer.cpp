@@ -158,7 +158,7 @@ namespace bebone::gfx::vulkan {
         return *this;
     }
 
-    void VulkanCommandBuffer::destroy(VulkanDevice& device) {
+    void VulkanCommandBuffer::destroy(VulkanDevice&) {
 
     }
 }

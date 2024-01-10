@@ -33,7 +33,7 @@ namespace bebone::gfx::vulkan {
         }
     }
 
-    void VulkanDescriptorSet::destroy(VulkanDevice& device) {
+    void VulkanDescriptorSet::destroy(VulkanDevice&) {
 
     }
 }

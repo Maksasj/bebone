@@ -23,7 +23,7 @@ const std::vector<Vertex> vertices = {
 };
 
 // Todo make this nicer
-const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
+const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
     .bindingDescriptions = {
         { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
@@ -97,6 +97,8 @@ int main() {
     f32 t = 0.0f;
 
     while (!window->closing()) {
+        ++t;
+
         GLFWContext::pool_events();
 
         uint32_t frame;
@@ -105,7 +107,7 @@ int main() {
         if(!result.is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
         transformUBO[frame].memory->upload_data(device, &transform, sizeof(Transform));
