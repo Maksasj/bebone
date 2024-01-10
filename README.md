@@ -66,11 +66,9 @@ At the moment, bebone is only dependent on these libraries:
   - [omni_types](https://github.com/Maksasj/omni_types/tree/master) *(Type library)* 
   - [stb](https://github.com/Maksasj/stb/tree/master) *(Image management library and others)* 
 
-# Core module
+## Core module
 
-## Event System
-
-### Action delegate
+### Action delegate(C# style)
 Action delegate is a function object container which can subscribe to the specific functions or unsubscribe from them. Also, it can execute all functions to which action is subscribed. Action delegate can subscribe only to those functions who have void return type and some arguments (or without arguments) Action delegate is similar to the C# Action.
 
 Example usage:
@@ -132,12 +130,66 @@ In this example, ```Action``` can store function objects with one ```int``` argu
 * ```void operator-=(Function& function)``` — action unsubscribes from the function object
 * ```void operator()(Args... args)``` — action executes all functions to which it subscribed
 
-## Input System
+### Event system (Java style)
+Bebone supports java style event system, there is three basic classes
+* **Event**<br> 
+  Base class for all events. Lets create simple event, firstly we need to create event category enum:
+  ```c++
+  enum SomeEventCategory {
+    COOL_EVENT,
+    NOT_COOL_EVENT
+  }
+  ```
+  Next, lets create two event classes for each event type:
+  ```c++
+  struct CoolEvent : public Event<SomeEventCategory, COOL_EVENT> {};
+  struct NotCoolEvent : public Event<SomeEventCategory, NOT_COOL_EVENT> {};
+  ```
+  Note, that event can have it own methods or member variables. After event class declaration you can easelly use in **EventListener** or **EventDispatcher**.
+* **EventListener**<br>
+  Next, let's take a look at event listeneres. It is very easy to create your own event listeren, you just need dervice a class from 
+  EventListener class using your desired event type as template argument.
+  ```c++
+  struct CoolEventListener : EventListener<CoolEvent> {
+    void operator()(CoolEvent&) {
+        std::cout << "Yea cool event !";
+    }
+  };
+  ```
+  Note that not only event listener class object can be used as listener, but also a c++ style lambda and regular functions.
+* **EventDispatcher**<br>
+  Last but not least, EventDispatcher class. This class stores list of all added listeners and sends fired event to needed listeners. Lets take a look:
+  ```c++
+  EventDispatcher<SomeEventCategory> dispatcher;
+
+  dispatcher.add_listener([](CoolEvent&) {
+    std::cout << "This is cool event";
+  });
+  dispatcher.add_listener([](NotCoolEvent&) {
+    std::cout << "This is not cool event";
+  });
+  ```
+  As you see, in this example we added two listeners to our dispatcher. One that listens for **CoolEvent**, and one that listens for **NotCoolEvent**.
+
+  After you can simply fire desired event:
+  ```c++
+  dispatcher.fire(CoolEvent());
+  dispatcher.fire(NotCoolEvent());
+  ```
+
+  Dispatcher after receiving an event will automatically send it to listeners that are listening specifically for **THIS** event type. As a result we will get:
+
+  ```bash
+  This is cool event
+  This is not cool event
+  ```
+
+### Input System
 In Bebone you can use event-based input system to add some actions to your keys. Input class — is a singleton class. So, you can get instance of it from anywhere in your code. 
 
-# Graphics module
+## Graphics module
 
-## Window Creation
+### Window Creation
 To create a window with specified resolution and api you need to use the create_window method from the WindowFactory static class
 ```c++
 static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI);
@@ -467,8 +519,8 @@ int main() {
 }
 ```
 
-## Other examples
-You can find other OpenGL examples in examples/gfx/opengl
+## Examples
+You can find other OpenGL examples in [examples/gfx/opengl](https://github.com/Maksasj/bebone/tree/docs/examples) directory.
 
 ## Vulkan
 *This section is still in development.*
