@@ -2,7 +2,7 @@
 
 namespace game::core::ecs {
     Transform::Transform() : 
-        position(Vec3f::splat(0.0f)), rotation(0.0f), scale(1.0f) { }
+        position(Vec3f::zero), rotation(0.0f), scale(1.0f) { }
 
     Transform::Transform(const Vec3f& position) : 
         position(position), rotation(0.0f), scale(1.0f) { }
