@@ -157,7 +157,24 @@ void buffer_sub_data(const GLintptr& offset, const GLsizeiptr& size, const void*
 This function calls glBufferSubData and works accordingly
 
 ### GLUniformBufferObject
-TODO
+GLUniformBufferObject - class used for creating an opengl uniform buffer objects. UBO is a Buffer Object that stores uniform data for a shader program. UBOs can be used to share uniforms between different programs, and to quickly switch between sets of uniforms for the same program object.
+
+Lets look onto GLUniformBufferObject constructor
+```c++
+GLUniformBufferObject(const u64& _size);
+```
+As you see UBO object require only size to be specified during object creation. If you want to upload any data to UBO, firstly you need to bind it:
+```c++
+buffer.bind();
+shaderProgram.bind_buffer("ubo", 1, buffer);
+
+int* mapped = (int*) buffer.map();
+(*mapped) = 5;
+
+cameraUbo.unmap();
+cameraUbo.unbind();
+```
+After, you need to bind your UBO to specific shader binding using `shaderProgram.bind_buffer()`, after you can map buffer. Buffer `.map()` method returns void* pointer to mapped memory region. After, this void pointer can be used for uploading any data to yours UBO. After you done with all data, you can simply unmap and unbind your buffer.
 
 ## Shaders
 To use shaders in OpenGL Bebone you will need to use the GLShaderFactory, GLShader, GLShaderProgram classes.
@@ -176,7 +193,20 @@ GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", Shader
 ```
 
 ### GLShader
-TODO
+In OpenGL, a Shader is a user-defined program designed to run on some stage of a graphics processor. Shaders provide the code for certain programmable stages of the rendering pipeline and can also be used in a slightly more limited form for general, on-GPU computation.
+
+Firstly lets create our shader. The easiest and simplest way to create a shader is to use GLShaderFactory, like this:
+```c++
+auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
+auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+```
+As you see you need only to specify path to shader source code and shader type, after this you can use your shader for creating your shader program.
+
+Second way is using GLShader constructor:
+```c++
+GLShader(const ShaderCode& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+```
+As you see there you have a bit more controll on creating your opengl shader. You can compile your opengl shader code manually using ShaderCompiler and then use shader code as input for GLShader constructor.
 
 ### GLShaderProgram
 To create a shader program you need to create vertex and fragment shaders with GLShaderFactory.
