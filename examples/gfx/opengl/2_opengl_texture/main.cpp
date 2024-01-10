@@ -75,7 +75,7 @@ int main() {
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window->get_backend());
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
     }
 
     vao.destroy();

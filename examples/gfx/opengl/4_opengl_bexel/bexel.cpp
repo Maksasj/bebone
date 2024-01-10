@@ -52,7 +52,7 @@ namespace bexel {
             m_world->render(m_shader);
 
             GLFWContext::swap_buffers(*m_window);
-            GLFWContext::pool_events();
+            GLFWContext::poll_events();
         }
     }
 

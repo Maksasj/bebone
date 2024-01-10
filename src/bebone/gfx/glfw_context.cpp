@@ -13,7 +13,7 @@ namespace bebone::gfx {
         glfwSwapBuffers(window.get_backend());
     }
 
-    void GLFWContext::pool_events() {
+    void GLFWContext::poll_events() {
         glfwPollEvents();
     }
 

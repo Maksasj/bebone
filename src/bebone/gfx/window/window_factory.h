@@ -8,8 +8,18 @@
 #include "../gfx_api.h"
 
 namespace bebone::gfx {
+    /// This class is used to create a window
     class WindowFactory : private core::NonCopyable {
         public:
+            /*!
+             * Creates a window object with specified title, resolution and graphics api
+             * @param title - window name/title
+             * @param width - window width
+             * @param height - window height
+             * @param gfxAPI - graphics API
+             *
+             * @returns Window object
+            */
             static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI);
     };
 }

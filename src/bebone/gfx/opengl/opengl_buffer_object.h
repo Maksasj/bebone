@@ -4,11 +4,13 @@
 #include "../gfx_backend.h"
 
 namespace bebone::gfx::opengl {
+    /// Abstract buffer object which can be initialized, bound, unbound and destroyed
     class GLBufferObject : private core::NonCopyable {
         protected:
             GLuint id;
 
         public:
+            /// Generates buffer object and assigns unique ID to it
             GLBufferObject();
 
             virtual void bind() = 0;

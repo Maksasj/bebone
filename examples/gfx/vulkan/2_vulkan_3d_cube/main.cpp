@@ -96,7 +96,7 @@ int main() {
     f32 t = 0.0f;
 
     while (!window->closing()) {
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
 
         uint32_t frame;
         auto result = swapChain->acquire_next_image(device, &frame);

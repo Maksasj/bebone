@@ -49,7 +49,7 @@ int main() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         GLFWContext::swap_buffers(*window); // Todo make this not a reference
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
     }
 
     shaderProgram.destroy();

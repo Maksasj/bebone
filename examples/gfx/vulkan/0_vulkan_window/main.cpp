@@ -8,7 +8,7 @@ int main() {
     auto window = WindowFactory::create_window("0. Vulkan window example", 800, 600, GfxAPI::VULKAN);
 
     while (!window->closing()) {
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
     }
 
     GLFWContext::terminate();

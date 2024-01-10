@@ -9,9 +9,19 @@ namespace bebone::gfx::opengl {
 
     class GLVertexArrayObject final : public GLBufferObject {
         public:
+            /// Generates VAO and assigns unique ID
             GLVertexArrayObject();
             ~GLVertexArrayObject();
 
+            /*!
+             * Links attributes
+             * @param vbo - vertex buffer object
+             * @param layout - vertex shader layout
+             * @param numComponents - number of components
+             * @param type - data type
+             * @param stride - byte offset
+             * @param offset
+             */
             void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, const u64& offset);
             void link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
 

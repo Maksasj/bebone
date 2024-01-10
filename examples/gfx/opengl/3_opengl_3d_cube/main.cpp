@@ -109,7 +109,7 @@ int main() {
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
         GLFWContext::swap_buffers(*window);
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
     }
 
     transformUbo.unmap();

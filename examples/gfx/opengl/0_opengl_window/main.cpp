@@ -7,7 +7,7 @@ using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
 int main() {
-    glfwInit();
+    GLFWContext::init();
     
     auto window = WindowFactory::create_window("0. OpenGL window example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
@@ -18,8 +18,8 @@ int main() {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
-        glfwSwapBuffers(window->get_backend());
-        GLFWContext::pool_events();
+        GLFWContext::swap_buffers(*window);
+        GLFWContext::poll_events();
     }
 
     GLFWContext::terminate();
