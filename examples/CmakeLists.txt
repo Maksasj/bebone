@@ -12,3 +12,5 @@ include_directories("../3dparty/imgui")
 
 add_subdirectory(gfx)
 add_subdirectory(begui)
+add_subdirectory(events)
+add_subdirectory(input)

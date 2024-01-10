@@ -1,25 +1,29 @@
-#ifndef _BEBONE_GFX_VULKAN_PIPELINE_CONFIG_INFO_H_
-#define _BEBONE_GFX_VULKAN_PIPELINE_CONFIG_INFO_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_CONFIG_INFO_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_CONFIG_INFO_H_
 
 #include <vector>
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
+    struct VulkanPipelineVertexInputStateTuple {
+        std::vector<VkVertexInputBindingDescription> bindingDescriptions = {};
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions = {};
+    };
+
+    // Todo make this structs noncopyable but also lets resolve gcc compilation warning
+
     // VkPipelineVertexInputStateCreateInfo
-    struct VulkanPipelineVertexInputStateConfig : core::NonCopyable {
+    struct VulkanPipelineVertexInputStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineVertexInputStateCreateFlags flags = 0;
 
-        struct VulkanPipelineVertexInputStateTuple {
-            std::vector<VkVertexInputBindingDescription> bindingDescriptions;
-            std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-        } vertexDescriptions;
+        VulkanPipelineVertexInputStateTuple vertexDescriptions = {};
     };
 
     // VkPipelineInputAssemblyStateCreateInfo
-    struct VulkanPipelineInputAssemblyStateConfig : core::NonCopyable {
+    struct VulkanPipelineInputAssemblyStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineInputAssemblyStateCreateFlags flags = 0;
@@ -28,7 +32,7 @@ namespace bebone::gfx {
     };
 
     // VkPipelineTessellationStateCreateInfo
-    struct VulkanPipelineTessellationStateConfig : core::NonCopyable {
+    struct VulkanPipelineTessellationStateConfig {
         VkStructureType sType;
         void* pNext;
         VkPipelineTessellationStateCreateFlags flags;
@@ -36,7 +40,7 @@ namespace bebone::gfx {
     };
 
     // VkPipelineViewportStateCreateInfo
-    struct VulkanPipelineViewportStateConfig : core::NonCopyable {
+    struct VulkanPipelineViewportStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineViewportStateCreateFlags flags = 0;
@@ -47,7 +51,7 @@ namespace bebone::gfx {
     };
 
     // VkPipelineRasterizationStateCreateInfo
-    struct VulkanPipelineRasterizationStateConfig : core::NonCopyable {
+    struct VulkanPipelineRasterizationStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineRasterizationStateCreateFlags flags = 0;
@@ -64,7 +68,7 @@ namespace bebone::gfx {
     };
 
     // VkPipelineMultisampleStateCreateInfo
-    struct VulkanPipelineMultisampleStateConfig : core::NonCopyable {
+    struct VulkanPipelineMultisampleStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineMultisampleStateCreateFlags flags = 0;
@@ -77,7 +81,7 @@ namespace bebone::gfx {
     };
     
     // VkPipelineDepthStencilStateCreateInfo
-    struct VulkanPipelineDepthStencilStateConfig : core::NonCopyable {
+    struct VulkanPipelineDepthStencilStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineDepthStencilStateCreateFlags flags = 0;
@@ -93,7 +97,7 @@ namespace bebone::gfx {
     };
 
     // VkPipelineColorBlendStateCreateInfo
-    struct VulkanPipelineColorBlendStateConfig : core::NonCopyable {
+    struct VulkanPipelineColorBlendStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineColorBlendStateCreateFlags flags = 0;
@@ -117,7 +121,7 @@ namespace bebone::gfx {
     };
 
     // VkPipelineDynamicStateCreateInfo
-    struct VulkanPipelineDynamicStateConfig : core::NonCopyable {
+    struct VulkanPipelineDynamicStateConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineDynamicStateCreateFlags flags = 0;
@@ -127,7 +131,7 @@ namespace bebone::gfx {
         };
     };
 
-    struct VulkanPipelineConfig : core::NonCopyable {
+    struct VulkanPipelineConfig {
         VkStructureType sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         void* pNext = nullptr;
         VkPipelineCreateFlags flags = 0;

@@ -5,7 +5,7 @@
 #include "vulkan_image_view.h"
 #include "vulkan_command_buffer.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     VulkanSwapChain::VulkanSwapChain(VulkanDevice &device, VkExtent2D _windowExtent) {
         SwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
         extent = choose_swap_extent(swapChainSupport.capabilities, _windowExtent);
@@ -13,7 +13,7 @@ namespace bebone::gfx {
         create_swap_chain(device);
 
         auto images = create_swap_chain_images(device, surfaceFormat.format);
-        renderTarget = std::make_unique<RenderTarget>(device, images, surfaceFormat.format, extent);
+        renderTarget = std::make_unique<VulkanRenderTarget>(device, images, surfaceFormat.format, extent);
 
         create_sync_objects(device);
     }

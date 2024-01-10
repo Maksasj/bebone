@@ -7,7 +7,7 @@
 static inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
 static inline ImVec2 operator-(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y); }
 
-static void ShowExampleAppCustomNodeGraph(bool* opened) {
+void ShowExampleAppCustomNodeGraph(bool* opened) {
     ImGui::SetNextWindowSize(ImVec2(700, 600), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Example: Custom Node Graph", opened)) {
         ImGui::End();
@@ -16,13 +16,21 @@ static void ShowExampleAppCustomNodeGraph(bool* opened) {
 
     struct Node {
         int     ID;
-        char    Name[32];
+        std::string Name;
         ImVec2  Pos, Size;
         float   Value;
         ImVec4  Color;
         int     InputsCount, OutputsCount;
 
-        Node(int id, const char* name, const ImVec2& pos, float value, const ImVec4& color, int inputs_count, int outputs_count) { ID = id; strcpy(Name, name); Pos = pos; Value = value; Color = color; InputsCount = inputs_count; OutputsCount = outputs_count; }
+        Node(int id, std::string name, const ImVec2& pos, float value, const ImVec4& color, int inputs_count, int outputs_count) {
+            ID = id;
+            Name = name;
+            Pos = pos;
+            Value = value;
+            Color = color;
+            InputsCount = inputs_count;
+            OutputsCount = outputs_count;
+        }
 
         ImVec2 GetInputSlotPos(int slot_no) const { return ImVec2(Pos.x, Pos.y + Size.y * ((float)slot_no + 1) / ((float)InputsCount + 1)); }
         ImVec2 GetOutputSlotPos(int slot_no) const { return ImVec2(Pos.x + Size.x, Pos.y + Size.y * ((float)slot_no + 1) / ((float)OutputsCount + 1)); }
@@ -64,7 +72,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened) {
     for (int node_idx = 0; node_idx < nodes.Size; node_idx++) {
         Node* node = &nodes[node_idx];
         ImGui::PushID(node->ID);
-        if (ImGui::Selectable(node->Name, node->ID == node_selected))
+        if (ImGui::Selectable(node->Name.c_str(), node->ID == node_selected))
             node_selected = node->ID;
         if (ImGui::IsItemHovered()) {
             node_hovered_in_list = node->ID;
@@ -128,7 +136,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened) {
         bool old_any_active = ImGui::IsAnyItemActive();
         ImGui::SetCursorScreenPos(node_rect_min + NODE_WINDOW_PADDING);
         ImGui::BeginGroup(); // Lock horizontal position
-        ImGui::Text("%s", node->Name);
+        ImGui::Text("%s", node->Name.c_str());
         ImGui::SliderFloat("##value", &node->Value, 0.0f, 1.0f, "Alpha %.2f");
         ImGui::ColorEdit3("##color", &node->Color.x);
         ImGui::EndGroup();
@@ -186,7 +194,7 @@ static void ShowExampleAppCustomNodeGraph(bool* opened) {
         ImVec2 scene_pos = ImGui::GetMousePosOnOpeningCurrentPopup() - offset;
 
         if (node) {
-            ImGui::Text("Node '%s'", node->Name);
+            ImGui::Text("Node '%s'", node->Name.c_str());
             ImGui::Separator();
             if (ImGui::MenuItem("Rename..", NULL, false, false)) {}
             if (ImGui::MenuItem("Delete", NULL, false, false)) {}

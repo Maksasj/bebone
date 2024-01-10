@@ -2,7 +2,7 @@
 
 #include "vulkan_device.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo bufferInfo) {//VkMemoryPropertyFlags properties) {
@@ -28,7 +28,7 @@ namespace bebone::gfx {
         return memRequirements;
     }
 
-    void VulkanBuffer::destroy(bebone::gfx::VulkanDevice &device) {
+    void VulkanBuffer::destroy(VulkanDevice &device) {
         vkDestroyBuffer(device.device(), backend, nullptr);
     }
 }

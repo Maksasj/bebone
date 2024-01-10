@@ -2,9 +2,7 @@
 
 namespace bebone::gfx {
     VulkanWindow::VulkanWindow(const std::string& title, const int& width, const int& height) : Window(title, width, height) {
-        GLFWwindow *window = get_backend();
-        glfwSetWindowUserPointer(window, this);
-        glfwSetFramebufferSizeCallback(window, window_resize_callback);
+
     }
 
     void VulkanWindow::create_window_surface(VkInstance instance, VkSurfaceKHR *surface) {

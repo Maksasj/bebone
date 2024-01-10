@@ -1,7 +1,8 @@
 #include "bebone/bebone.h"
 
-using namespace bebone::gfx;
 using namespace bebone::core;
+using namespace bebone::gfx;
+using namespace bebone::gfx::vulkan;
 
 struct Vertex {
     Vec3f pos;
@@ -15,7 +16,7 @@ const std::vector<Vertex> vertices = {
 };
 
 // Todo make this nicer
-const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
+const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
     .bindingDescriptions = {
         { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
@@ -74,7 +75,7 @@ int main() {
 
         result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-        if(!result.is_ok() || window->is_resized())
+        if(!result.is_ok()) // Todo check if window is resized
             continue;
     }
 

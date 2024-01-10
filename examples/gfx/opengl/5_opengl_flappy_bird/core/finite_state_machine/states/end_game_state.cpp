@@ -1,15 +1,15 @@
 #include "end_game_state.h"
 
+#include <utility>
+
 #include "../../score.h"
 
-#include "../../input_system/input.h"
-#include "../../input_system/action.h"
-#include "../../input_system/key_codes.h"
-
 namespace game::core::fsm {
-    using namespace input_system;
-
-    EndGameState::EndGameState(shared_ptr<GameObject> flappyBird) : menuState(nullptr), flappyBird(flappyBird) { }
+    EndGameState::EndGameState(shared_ptr<GameObject> flappyBird) : menuState(nullptr), flappyBird(std::move(flappyBird)) {
+        transitionFunction = [this]() {
+            StateMachine::set_state(menuState);
+        };
+    }
 
     EndGameState::~EndGameState() {
         menuState = nullptr;
@@ -20,22 +20,15 @@ namespace game::core::fsm {
         cout << "Game Over" << endl;
         cout << "Your score: " << Score::get_score() << endl;
 
-        auto enterMenuFuction = [this]() {
-            transition_to_menu_state();
-        };
-        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(enterMenuFuction));
+        Input::get_instance().register_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
     }
 
     void EndGameState::exit() {
-        Input::remove_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON);
+        Input::get_instance().remove_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
         Score::clear();
     }
 
     void EndGameState::set_menu_state(shared_ptr<State> menuState) {
-        this->menuState = menuState;
-    }
-
-    void EndGameState::transition_to_menu_state() {
-        StateMachine::set_state(menuState);
+        this->menuState = std::move(menuState);
     }
 }

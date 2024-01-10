@@ -1,11 +1,11 @@
-#ifndef BEBONE_VULKAN_DESCRIPTOR_SET_LAYOUT
-#define BEBONE_VULKAN_DESCRIPTOR_SET_LAYOUT
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_DESCRIPTOR_SET_LAYOUT_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_DESCRIPTOR_SET_LAYOUT_H_
 
 #include "../gfx_backend.h"
 
 #include "vulkan_descriptor_pool.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanDevice;
     class VulkanDescriptorSetLayoutBinding;
 

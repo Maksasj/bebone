@@ -1,4 +1,4 @@
-#include "imgui_node_graph_test.cpp"
+#include "imgui_node_graph_test.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;

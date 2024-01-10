@@ -2,8 +2,9 @@
 #define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
-using namespace bebone::gfx;
 using namespace bebone::core;
+using namespace bebone::gfx;
+using namespace bebone::gfx::vulkan;
 
 struct Vertex { Vec3f pos, color; };
 struct Handles { u32 cameraHandle, transformHandle; };
@@ -22,7 +23,7 @@ const std::vector<Vertex> vertices = {
 };
 
 // Todo make this nicer
-const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipelineVertexInputStateTuple {
+const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
     .bindingDescriptions = {
         { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
@@ -96,7 +97,9 @@ int main() {
     f32 t = 0.0f;
 
     while (!window->closing()) {
-        GLFWContext::poll_events();
+        ++t;
+
+        GLFWContext::pool_events();
 
         uint32_t frame;
         auto result = swapChain->acquire_next_image(device, &frame);
@@ -104,7 +107,7 @@ int main() {
         if(!result.is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (++t) * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
         transformUBO[frame].memory->upload_data(device, &transform, sizeof(Transform));
@@ -128,7 +131,7 @@ int main() {
 
         result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-        if(!result.is_ok() || window->is_resized())
+        if(!result.is_ok()) // Todo check if window is resized
             continue;
     }
 

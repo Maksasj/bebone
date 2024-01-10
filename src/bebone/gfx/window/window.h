@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_WINDOW_H_
-#define _BEBONE_GFX_WINDOW_H_
+#ifndef _BEBONE_GFX_WINDOW_WINDOW_H_
+#define _BEBONE_GFX_WINDOW_WINDOW_H_
 
 #include <iostream>
 #include <exception>
@@ -8,33 +8,55 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx {
-    using namespace core;   
+#include "events/window_event.h"
+#include "events/input_event.h"
 
-    class Window : private NonCopyable {
+namespace bebone::gfx {
+    using namespace core;
+
+    class Window : private NonCopyable, public EventDispatcher<WindowEvent>, public EventDispatcher<InputEvent> {
         private:
             GLFWwindow* window;
             int width;
             int height;
 
-            // Lets maybe implement this in some sort of bit flag and funstion should be like get_window_flags();
-            bool windowResized;
+            InputHandler inputHandler;
 
         public:
+            using EventDispatcher<WindowEvent>::add_listener;
+            using EventDispatcher<WindowEvent>::fire;
+
+            using EventDispatcher<InputEvent>::add_listener;
+            using EventDispatcher<InputEvent>::fire;
+
             Window(const std::string& title, const int& width, const int& height);
             ~Window();
             
-            void reset_resize_flag();
-
-            bool is_resized();
             bool closing() const;
 
-            int get_width() const;
-            int get_height() const;
+            const int& get_width() const;
+            const int& get_height() const;
             f32 get_aspect() const;
             GLFWwindow* get_backend() const;
 
-            static void window_resize_callback(GLFWwindow* glfwWindow, int width, int height);
+            void execute_input_actions() const;
+
+        private:
+            // Window callbacks
+            static void glfw_window_pos_callback(GLFWwindow* glfwWindow, int xPos, int yPos);
+            static void glfw_window_size_callback(GLFWwindow* glfwWindow, int width, int height);
+            static void glfw_window_close_callback(GLFWwindow* handle);
+            static void glfw_window_refresh_callback(GLFWwindow* handle);
+            static void glfw_window_focus_callback(GLFWwindow* handle, int focused);
+            static void glfw_window_iconify_callback(GLFWwindow* handle, int iconified);
+            static void glfw_window_maximize_callback(GLFWwindow* handle, int maximized);
+            static void glfw_framebuffer_size_callback(GLFWwindow* glfwWindow, int width, int height);
+            static void glfw_window_content_scale_callback(GLFWwindow* handle, float xScale, float yScale);
+
+            // Input callbacks
+            static void glfw_mouse_button_callback(GLFWwindow* glfwWindow, int button, int action, int mods);
+            static void glfw_key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods);
+
     };
 }
 #endif

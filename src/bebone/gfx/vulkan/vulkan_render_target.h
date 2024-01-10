@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_RENDER_TARGET_H_
-#define _BEBONE_GFX_RENDER_TARGET_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_RENDER_TARGET_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_RENDER_TARGET_H_
 
 #include <array>
 
@@ -10,10 +10,10 @@
 #include "vulkan_image.h"
 #include "vulkan_framebuffer.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanImage;
 
-    class RenderTarget {
+    class VulkanRenderTarget {
         public:
             std::shared_ptr<VulkanRenderPass> renderPass;
 
@@ -21,7 +21,7 @@ namespace bebone::gfx {
             std::vector<VulkanDepthImageTuple> depthImages;
             std::vector<VulkanSwapChainImageTuple> swapChainImages;
 
-            RenderTarget(
+            VulkanRenderTarget(
                 VulkanDevice& device,
                 std::vector<VulkanSwapChainImageTuple>& swapChainImages,
                 VkFormat imageFormat,
