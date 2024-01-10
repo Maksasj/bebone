@@ -6,9 +6,10 @@
 namespace bebone::gfx::opengl {
     using namespace bebone::core;
 
+    /// OpenGL context wrapper
     struct GLContext {
         static void inline load_opengl() {
-            // Todo, we need to check if load successful
+            // TODO we need to check if load successful
             gladLoadGL();
         }
 

@@ -53,7 +53,7 @@ int main() {
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     while (!window->closing()) {
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
 
         uint32_t frame;
         auto result = swapChain->acquire_next_image(device, &frame);

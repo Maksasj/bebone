@@ -12,16 +12,35 @@ namespace bebone::gfx::opengl {
             int height;
 
         public:
-            GLTexture(const char* image, GLenum textureType, GLenum format, GLenum pixelType);
+            /*!
+             * Creates texture using stb library
+             * @param image - path to the image file
+             * @param textureType - specifies the texture (1D/2D/3D)
+             * @param format - specifies the RGB format
+             * @param pixelType - specifies the data type
+             */
+            GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);
             ~GLTexture();
 
+            /*!
+             * Binds texture to the specified texture unit
+             * @param textureUnit - texture unit, to which texture should be bound to
+             */
             void bind_texture_unit(const GLuint& textureUnit);
 
+            /// Binds texture
             void bind();
+
+            /// Unbinds texture
             void unbind();
+
+            /// Destroys texture. Calls automatically in the destructor
             void destroy();
 
+            /// Get texture width in pixels
             int get_width() const;
+
+            /// Get texture height in pixels
             int get_height() const;
     };
 }

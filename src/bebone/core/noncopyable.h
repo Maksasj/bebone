@@ -2,6 +2,7 @@
 #define _BEBONE_CORE_NONCOPYABLE_H_
 
 namespace bebone::core {
+    /// Class that prohibits copying a derived class
     struct NonCopyable {
         NonCopyable() = default;
 

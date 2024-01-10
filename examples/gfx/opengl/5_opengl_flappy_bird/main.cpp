@@ -43,7 +43,7 @@ int main() {
         }
 
         glfwSwapBuffers(window->get_backend());
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
 
         endTime = Time::get_time();
         Time::deltaTime = endTime - beginTime;

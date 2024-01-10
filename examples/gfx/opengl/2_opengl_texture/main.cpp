@@ -27,7 +27,7 @@ const std::vector<u32> indices {
 };
 
 int main() {
-    glfwInit();
+    GLFWContext::init();
 
     auto window = WindowFactory::create_window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
@@ -75,14 +75,8 @@ int main() {
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window->get_backend());
-        GLFWContext::pool_events();
+        GLFWContext::poll_events();
     }
-
-    vao.destroy();
-    vbo.destroy();
-    ebo.destroy();
-    shaderProgram.destroy();
-    texture.destroy();
 
     GLFWContext::terminate();
 

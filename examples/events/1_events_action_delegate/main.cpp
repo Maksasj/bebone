@@ -11,7 +11,7 @@ void another_function(int x) {
 }
 
 void meme(int x) {
-    std::cout << "emem" << x + 32445 / 23 << std::endl;
+    std::cout << "meme function" << x + 32445 / 23 << std::endl;
 }
 
 int main() {

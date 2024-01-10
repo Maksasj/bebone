@@ -2,6 +2,7 @@
 #define _KEY_CODE_H_
 
 namespace bebone::core {
+    /// Specifies the mouse and keyboard buttons. All values are taken from GLFW
     enum KeyCode {
         MOUSE_BUTTON_LEFT,
         MOUSE_BUTTON_RIGHT,
