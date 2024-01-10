@@ -1,6 +1,6 @@
 #include "vulkan_const_range.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     VulkanConstRange::VulkanConstRange(const VkPushConstantRange& range) : range(range) {

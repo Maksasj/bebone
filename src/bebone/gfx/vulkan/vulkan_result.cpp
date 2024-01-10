@@ -1,6 +1,6 @@
 #include "vulkan_result.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     VulkanResult::VulkanResult(const VkResult& result) : result(result) {
 
     }

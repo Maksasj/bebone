@@ -1,7 +1,8 @@
 #include "bebone/bebone.h"
 
-using namespace bebone::gfx;
 using namespace bebone::core;
+using namespace bebone::gfx;
+using namespace bebone::gfx::vulkan;
 
 struct Vertex {
     Vec3f pos;
@@ -28,7 +29,7 @@ const auto vertexDescriptions = VulkanPipelineVertexInputStateConfig::VulkanPipe
 const std::vector<int> indices = { 0, 1, 2 };
 
 int main() {
-    RenderingEngine::preinit();
+    GLFWContext::init();
 
     auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
 
@@ -52,7 +53,7 @@ int main() {
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     while (!window->closing()) {
-        glfwPollEvents();
+        GLFWContext::pool_events();
 
         uint32_t frame;
         auto result = swapChain->acquire_next_image(device, &frame);
@@ -87,7 +88,7 @@ int main() {
     device->destroy();
     instance->destroy();
 
-    glfwTerminate();
+    GLFWContext::terminate();
 
     return 0;
 }

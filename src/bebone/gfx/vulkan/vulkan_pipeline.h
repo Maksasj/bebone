@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
-#define _BEBONE_GFX_VULKAN_PIPELINE_IMPLEMENTATION_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_H_
 
 #include "../shaders/shader_code.h"
 
@@ -7,7 +7,7 @@
 #include "vulkan_shader_module.h"
 #include "vulkan_pipeline_config_info.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanSwapChain;
     class VulkanShaderModule;
     class VulkanPipelineLayout;

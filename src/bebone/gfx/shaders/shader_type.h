@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_SHADER_TYPE_H_
-#define _BEBONE_GFX_SHADER_TYPE_H_
+#ifndef _BEBONE_GFX_SHADERS_SHADER_TYPE_H_
+#define _BEBONE_GFX_SHADERS_SHADER_TYPE_H_
 
 #include "../gfx_backend.h"
 #include "../../core/core.h"

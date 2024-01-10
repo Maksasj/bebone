@@ -2,8 +2,9 @@
 #define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
-using namespace bebone::gfx;
 using namespace bebone::core;
+using namespace bebone::gfx;
+using namespace bebone::gfx::vulkan;
 
 struct Vertex { Vec3f pos, color; };
 struct Handles { u32 cameraHandle, transformHandle; };
@@ -45,7 +46,7 @@ const std::vector<int> indices = {
 Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up);
 
 int main() {
-    RenderingEngine::preinit();
+    GLFWContext::init();
 
     auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
 
@@ -88,7 +89,7 @@ int main() {
     };
 
     auto transform = Transform {
-        Mat4f::translation(Vec3f::splat(0.0f)),
+        Mat4f::translation(Vec3f::zero),
         Mat4f::scale(1.0f),
         Mat4f::identity()
     };
@@ -96,7 +97,7 @@ int main() {
     f32 t = 0.0f;
 
     while (!window->closing()) {
-        glfwPollEvents();
+        GLFWContext::pool_events();
 
         uint32_t frame;
         auto result = swapChain->acquire_next_image(device, &frame);
@@ -151,7 +152,7 @@ int main() {
     instance->destroy();
 
     // Todo move all glfw things to glfw context static class
-    glfwTerminate();
+    GLFWContext::terminate();
 
     return 0;
 }

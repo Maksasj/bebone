@@ -1,12 +1,12 @@
-#ifndef _BEBONE_GFX_vulkan_pipeline_layoutEMENTATION_H_
-#define _BEBONE_GFX_vulkan_pipeline_layoutEMENTATION_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_LAYOUT_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_LAYOUT_H_
 
 #include "../gfx_backend.h"
 
 #include "vulkan_device.h"
 #include "vulkan_descriptor_pool.h"
 
-namespace bebone::gfx {
+namespace bebone::gfx::vulkan {
     class VulkanConstRange;
 
     class VulkanPipelineLayout : public VulkanWrapper<VkPipelineLayout>, private core::NonCopyable {

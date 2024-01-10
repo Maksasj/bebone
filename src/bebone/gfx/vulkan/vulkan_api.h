@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_API_H_
-#define _BEBONE_GFX_VULKAN_API_H_
+#ifndef _BEBONE_GFX_VULKAN_VULKAN_API_H_
+#define _BEBONE_GFX_VULKAN_VULKAN_API_H_
 
 #include "vulkan_buffer.h"
 #include "vulkan_image.h"
@@ -31,6 +31,7 @@
 #include "vulkan_shader_module.h"
 
 #include "vulkan_swap_chain.h"
+#include "vulkan_render_target.h"
 
 #include "vulkan_const_range.h"
 

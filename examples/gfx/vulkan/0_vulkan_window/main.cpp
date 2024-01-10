@@ -1,17 +1,19 @@
 #include "bebone/bebone.h"
 
+using namespace bebone::core;
 using namespace bebone::gfx;
+using namespace bebone::gfx::vulkan;
 
 int main() {
-    RenderingEngine::preinit();
+    GLFWContext::init();
 
     auto window = WindowFactory::create_window("0. Vulkan window example", 800, 600, GfxAPI::VULKAN);
 
     while (!window->closing()) {
-        glfwPollEvents();
+        GLFWContext::pool_events();
     }
 
-    glfwTerminate();
+    GLFWContext::terminate();
 
     return 0;
 }
