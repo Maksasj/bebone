@@ -6,6 +6,10 @@
 namespace bebone::core {
     using namespace std;
 
+    /*!
+     * Base class for all event listeners
+     * @tparam EventType event to listen
+    */
     template<class EventType>
     class EventListener {
         private:

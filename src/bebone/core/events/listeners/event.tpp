@@ -4,6 +4,11 @@
 #include "../../types.h"
 
 namespace bebone::core {
+    /*!
+     * Base class for all events
+     * @tparam EventCategoryType - enumeration that specifies set of possible events
+     * @tparam eventType - specific event type
+    */
     template<class EventCategoryType, EventCategoryType eventType>
     class Event {
         private:
@@ -12,10 +17,18 @@ namespace bebone::core {
         public:
             virtual ~Event() = default;
 
+            /*!
+             * Function used to setting is event handled or not
+             * @param value - value to be set
+            */
             void set_handled(const bool& value) {
                 handled = value;
             }
 
+            /*!
+             * Check if event is handled or not
+             * @return - true if event handled, false if not
+            */
             const bool& is_handled() const {
                 return handled;
             }
