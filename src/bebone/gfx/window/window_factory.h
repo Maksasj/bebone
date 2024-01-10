@@ -18,7 +18,7 @@ namespace bebone::gfx {
              * @param height - window height
              * @param gfxAPI - graphics API
              *
-             * @returns Window object
+             * @return Window object
             */
             static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI);
     };

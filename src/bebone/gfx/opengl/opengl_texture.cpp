@@ -1,7 +1,7 @@
 #include "opengl_texture.h"
 
 namespace bebone::gfx::opengl {
-    GLTexture::GLTexture(const char* image, GLenum textureType, GLenum format, GLenum pixelType) : textureType(textureType) {
+    GLTexture::GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType) : textureType(textureType) {
         int colorChannelNumber;
 
         stbi_set_flip_vertically_on_load(true);
