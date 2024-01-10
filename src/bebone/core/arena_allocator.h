@@ -19,7 +19,17 @@ namespace bebone::core {
             size_t _allocated;
 
         public:
+            /*!
+             * Default constructor
+             * @param size - desired arena size
+            */
             explicit ArenaAllocator(const size_t& size);
+
+            /*!
+             * Default constructor
+             * @param size - desired arena size
+             * @param buffer - target arena buffer
+            */
             explicit ArenaAllocator(const size_t& size, void* buffer);
 
             ~ArenaAllocator();

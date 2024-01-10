@@ -12,13 +12,17 @@ namespace bebone::core {
             ArenaAllocator indices;
 
         public:
+            /*!
+             * Default constructor
+             * @param size - desired arena size
+            */
             explicit ArenaContainer(const size_t& size);
 
             /*!
              * Function that allocated a memory segment of given size
              * @param size - size of desired memory segment
              * @return Pointer to allocated memory segment
-             */
+            */
             void* alloc(const size_t& size) noexcept;
 
             /*!
