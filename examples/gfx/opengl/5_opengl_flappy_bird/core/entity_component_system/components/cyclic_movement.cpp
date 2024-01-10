@@ -8,7 +8,7 @@ namespace game::core::ecs {
         randomizeY(randomizeY), endXPoint(endXPoint), startXPoint(startXPoint) { }
 
     void CyclicMovement::update() {
-        Vec3f movement = direction * speed * Time::deltaTime;
+        Vec3f movement = Vec3f::left * speed * Time::deltaTime;
         auto& transform = get_transform();
 
         if (transform->get_position().x + movement.x < endXPoint) {

@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "bebone/bebone.h"
+
 #include "state.h"
 #include "../state_machine.h"
 
@@ -17,16 +19,16 @@ namespace game::core::fsm {
             shared_ptr<State> gameState;
             shared_ptr<GameObject> flappyBird;
 
+            std::function<void()> transitionFunction;
         public:
             MainMenuState(shared_ptr<GameObject> flappyBird);
-            ~MainMenuState();
+            ~MainMenuState() override;
 
-            void enter();
-            void update() {};
-            void exit();
+            void enter() override;
+            void update() override {};
+            void exit() override;
             
             void set_game_state(shared_ptr<State> gameState);
-            void transition_to_game_state();
     };
 }
 

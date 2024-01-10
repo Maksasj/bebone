@@ -23,11 +23,11 @@ namespace game::core::ecs {
             vector<shared_ptr<Component>>& get_component_vector(const type_index& type);
 
         public:
-            GameObject(const string& name);
+            explicit GameObject(const string& name);
             GameObject(const string& name, const Vec3f& position);
 
             shared_ptr<Transform>& get_transform();
-            string get_name() const;
+            [[nodiscard]] string get_name() const;
             
             void update();
 
@@ -63,8 +63,8 @@ namespace game::core::ecs {
                 auto v = components[typeid(T)];
                 auto vOut = vector<shared_ptr<T>>();
                 
-                for (auto it = v.begin(); it != v.end(); ++it) {
-                    vOut.push_back(dynamic_pointer_cast<T>(*it));
+                for (auto & it : v) {
+                    vOut.push_back(dynamic_pointer_cast<T>(it));
                 }
 
                 return vOut;
@@ -72,6 +72,7 @@ namespace game::core::ecs {
     };
 
     class Component : private bebone::core::NonCopyable {
+        friend class GameObject;
         private:
             shared_ptr<Transform> transform;
             bool enabled;
@@ -79,17 +80,17 @@ namespace game::core::ecs {
             void set_transform(shared_ptr<Transform> transform);
 
         public:
-            virtual ~Component() { }
+            virtual ~Component() = default;
             virtual void update() = 0;
 
             shared_ptr<Transform>& get_transform();
 
-            void disable();
-            void enable();
+            virtual void disable();
+            virtual void enable();
 
             bool is_enabled();
 
-            friend class GameObject;
+
     };
 }
 

@@ -1,10 +1,13 @@
 #include "flying.h"
 
 #include <cmath>
-#include "../../input_system/input.h"
 
 namespace game::core::ecs {
-    Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) { }
+    Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) {
+        flyFunction = std::function<void()>([this]() {
+            set_velocity(this->flyForce);
+        });
+    }
 
     void Flying::update() {
         velocityY += Time::deltaTime * -gravity;
@@ -22,31 +25,18 @@ namespace game::core::ecs {
         }
     }
 
-    float Flying::get_velocity() const {
-        return velocityY;
-    }
-
     void Flying::set_velocity(const float& velocity) {
         velocityY = velocity;
         get_transform()->set_rotation(this->maxRotZ);
     }
 
     void Flying::enable() {
-        using namespace game::core::input_system;
-
         Component::enable();
-
-        auto flyFunction = [this]() {
-            set_velocity(this->flyForce);
-        };
-        Input::register_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON, Action(flyFunction));
+        Input::get_instance().register_key_action(KeyCode::MOUSE_BUTTON_LEFT, flyFunction);
     }
 
     void Flying::disable() {
-        using namespace game::core::input_system;
-
         Component::disable();
-
-        Input::remove_mouse_action(MouseKeyCode::LEFT_MOUSE_BUTTON);
+        Input::get_instance().remove_key_action(KeyCode::MOUSE_BUTTON_LEFT, flyFunction);
     }
 }

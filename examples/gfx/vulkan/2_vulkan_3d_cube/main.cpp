@@ -129,7 +129,7 @@ int main() {
 
         result = swapChain->submit_command_buffers(device, cmd, &frame);
 
-        if(!result.is_ok() || window->is_resized())
+        if(!result.is_ok()) // Todo check if window is resized
             continue;
     }
 

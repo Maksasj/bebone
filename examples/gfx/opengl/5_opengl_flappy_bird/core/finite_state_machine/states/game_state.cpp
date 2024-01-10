@@ -1,6 +1,6 @@
 #include "game_state.h"
 
-#include "../../input_system/input.h"
+#include <utility>
 
 #include "../../entity_component_system/components/flying.h"
 #include "../../entity_component_system/components/cyclic_movement.h"
@@ -10,11 +10,9 @@
 #include "../../score.h"
 
 namespace game::core::fsm {
-    using namespace input_system;
-
     #define FLY_FORCE 0.06f
 
-    GameState::GameState(shared_ptr<GameObject> flappyBird) : endGameState(nullptr), flappyBird(flappyBird) {
+    GameState::GameState(const shared_ptr<GameObject>& flappyBird) : endGameState(nullptr), flappyBird(flappyBird) {
         ground1 = Game::find_game_object_by_name("Ground1");
         ground2 = Game::find_game_object_by_name("Ground2");
         pipe1 = Game::find_game_object_by_name("Pipe1");
@@ -100,9 +98,7 @@ namespace game::core::fsm {
         Vec2f playerTopLeft = playerCollider->get_top_left() + playerTransform->get_position();
         Vec2f playerBottomRight = playerCollider->get_bottom_right() + playerTransform->get_position();
         
-        for (auto it = objColliders.begin(); it != objColliders.end(); ++it) {
-            auto collider = *it;
-
+        for (const auto& collider : objColliders) {
             Vec2f objTopLeft = collider->get_top_left() + objTransform->get_position();
             Vec2f objBottomRight = collider->get_bottom_right() + objTransform->get_position();
 
@@ -133,7 +129,7 @@ namespace game::core::fsm {
     }
 
     void GameState::set_end_game_state(shared_ptr<State> endGameState) {
-        this->endGameState = endGameState;
+        this->endGameState = std::move(endGameState);
     }
 
     void GameState::transition_to_end_game_state() {
