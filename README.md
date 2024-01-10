@@ -10,7 +10,7 @@ Cool looking widgets
 <img src="https://img.shields.io/github/actions/workflow/status/Maksasj/bebone/clang_build_win.yml" alt="build">
 <img src="https://img.shields.io/github/license/Maksasj/bebone" alt="build">
 
-## Features <img src="https://img.shields.io/github/license/Maksasj/bebone" alt="build">
+## Features
 * Core module
   * Arena allocator & container
   * Logger
