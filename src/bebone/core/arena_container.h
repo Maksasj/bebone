@@ -47,13 +47,13 @@ namespace bebone::core {
              * Function that returns how much memory is already allocated in arena
              * @return Bytes allocated
             */
-            [[nodiscard]] const size_t& allocated() const noexcept;
+            [[nodiscard]] size_t allocated() const noexcept;
 
             /*!
              * Function that returns a total capacity of arena
              * @return Bytes capacity
             */
-            [[nodiscard]] const size_t& capacity() const noexcept;
+            [[nodiscard]] size_t capacity() const noexcept;
     };
 }
 
