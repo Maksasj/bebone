@@ -99,11 +99,11 @@ int main() {
 
 ```
 
-You can find other OpenGL examples in [examples/gfx/opengl](https://github.com/Maksasj/bebone/tree/docs/examples) directory.
+You can find other examples in [examples](https://github.com/Maksasj/bebone/tree/master/examples) directory.
 
 ## Documentation
-  - [Core module]()
-  - [GFX module]()
+  - [Core module](https://github.com/Maksasj/bebone/blob/master/docs/Core.md)
+  - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/Core.md)
 
 ## License
 Bebone is free, open source game development framework. All code in this repository FOR NOW is licensed under
