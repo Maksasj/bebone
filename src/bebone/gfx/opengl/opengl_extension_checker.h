@@ -7,19 +7,27 @@
 #include <string>
 
 namespace bebone::gfx::opengl {
+    /// Class used fort checking if specific opengl gl extension is available on device
     class GLExtensionChecker : private core::NonCopyable {
-    private:
-        std::set<std::string> m_extensions;
+        private:
+            std::set<std::string> m_extensions;
 
-        GLExtensionChecker();
+            /// Default constructor
+            GLExtensionChecker();
 
-        void update_extension_set();
+            /// Function that updates extension set
+            void update_extension_set();
 
-        bool check(const std::string& extension) const;
+            /// Internal function that checks if extension is available
+            bool check(const std::string& extension) const;
 
-    public:
-
-        static bool available(const std::string& extension);
+        public:
+            /*!
+             * Static method that checks if extension is available on the device
+             * @param extension - extension string representations
+             * @return True if device is available, false if not
+            */
+            static bool available(const std::string& extension);
     };
 }
 
