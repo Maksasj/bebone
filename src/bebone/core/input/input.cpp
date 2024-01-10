@@ -17,7 +17,7 @@ namespace bebone::core {
         keyActions[key] += action;
     }
 
-    void Input::remove_key_action(const bebone::core::KeyCode &keyCode, std::function<void()> &action, const bebone::core::InputType &inputType) {
+    void Input::remove_key_action(const KeyCode &keyCode, std::function<void()> &action, const InputType &inputType) {
         Key key(keyCode, inputType);
 
         if (keyActions.find(key) == keyActions.end()) {
@@ -27,7 +27,7 @@ namespace bebone::core {
         keyActions[key] -= action;
     }
 
-    void Input::queue_key(const bebone::core::KeyCode &keyCode, const bebone::core::InputType &inputType) {
+    void Input::queue_key(const KeyCode &keyCode, const InputType &inputType) {
         queuedKeys.push(Key(keyCode, inputType));
     }
 

@@ -8,6 +8,6 @@ namespace bebone::core {
     }
 
     bool Key::operator<(const bebone::core::Key &other) const {
-        return keyCode < other.keyCode && inputType < other.inputType;
+        return keyCode < other.keyCode;
     }
 }
