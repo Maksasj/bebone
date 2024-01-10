@@ -13,12 +13,27 @@ namespace bebone::gfx::opengl {
             u64 size;
 
         public:
+            /*!
+             * Default constructor
+             * @param _size - desired buffer size
+            */
             GLUniformBufferObject(const u64& _size);
+
             ~GLUniformBufferObject();
 
+            /*!
+             * Binds buffer to specific binding
+             * @param binding - binding index
+            */
             void bind_buffer_base(const i32& binding) const;
 
+            /*!
+             * Maps buffer to accessible memory region
+             * @return - pointer to mapped memory region
+            */
             void* map() const;
+
+            /// Unmaps uniform buffer
             void unmap() const;
 
             /// Binds UBO
