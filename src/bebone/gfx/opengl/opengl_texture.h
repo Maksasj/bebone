@@ -1,9 +1,13 @@
 #ifndef _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_H_
 #define _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_H_
 
+#include "../../assets/image/image.h"
+
 #include "../gfx_backend.h"
 
 namespace bebone::gfx::opengl {
+    using namespace bebone::assets;
+
     class GLTexture : private core::NonCopyable {
         private:
             GLuint id;
@@ -20,6 +24,8 @@ namespace bebone::gfx::opengl {
              * @param pixelType - specifies the data type
              */
             GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);
+            GLTexture(const std::shared_ptr<Image>& image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);
+
             ~GLTexture();
 
             /*!

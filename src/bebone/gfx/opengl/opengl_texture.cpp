@@ -1,12 +1,12 @@
 #include "opengl_texture.h"
 
 namespace bebone::gfx::opengl {
-    GLTexture::GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType) : textureType(textureType) {
+    GLTexture::GLTexture(const char* filePath, const GLenum& textureType, const GLenum& format, const GLenum& pixelType) : textureType(textureType) {
         int colorChannelNumber;
 
         stbi_set_flip_vertically_on_load(true);
 
-        unsigned char* bytes = stbi_load(image, &width, &height, &colorChannelNumber, 0);
+        unsigned char* bytes = stbi_load(filePath, &width, &height, &colorChannelNumber, 0);
 
         glGenTextures(1, &id);
         glBindTexture(textureType, id);
@@ -21,6 +21,31 @@ namespace bebone::gfx::opengl {
         glGenerateMipmap(textureType);
 
         stbi_image_free(bytes);
+        glBindTexture(textureType, 0);
+    }
+
+    GLTexture::GLTexture(const std::shared_ptr<Image>& image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType)
+        : textureType(textureType), width(image->get_width()), height(image->get_height()) {
+
+        // int colorChannelNumber;
+
+        // stbi_set_flip_vertically_on_load(true);
+
+        // unsigned char* bytes = stbi_load(image, &width, &height, &colorChannelNumber, 0);
+
+        glGenTextures(1, &id);
+        glBindTexture(textureType, id);
+
+        glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_NEAREST);
+        glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_NEAREST);
+
+        glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, format, pixelType, image->data());
+        glGenerateMipmap(textureType);
+
+        // stbi_image_free(bytes);
         glBindTexture(textureType, 0);
     }
 

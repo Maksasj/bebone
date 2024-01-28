@@ -1,0 +1,7 @@
+file(GLOB_RECURSE BEBONE_EXAMPLE_ASSETS_0_IMAGE *.cpp)
+
+include_directories("../../src")
+include_directories("./")
+
+add_executable(Bebone_Example_Assets_0_Image ${BEBONE_EXAMPLE_ASSETS_0_IMAGE})
+target_link_libraries(Bebone_Example_Assets_0_Image bebone)

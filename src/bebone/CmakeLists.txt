@@ -1,5 +1,6 @@
 # Subdirectories
 add_subdirectory(core)
+add_subdirectory(assets)
 add_subdirectory(gfx)
 
 # Source files
@@ -8,4 +9,5 @@ add_library(bebone STATIC ${BEBONE_SRC_FILE})
 
 # Library linking
 target_link_libraries(bebone bebone_gfx)
+target_link_libraries(bebone bebone_assets)
 target_link_libraries(bebone bebone_core)
