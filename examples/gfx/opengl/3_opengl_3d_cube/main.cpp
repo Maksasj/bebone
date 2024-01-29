@@ -12,18 +12,18 @@ using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;
-    Vec3f color;
+    Color color;
 };
 
 const std::vector<Vertex> vertices {
-    {{-1.0, -1.0,  1.0},   {1.0f, 1.0f, 1.0f}},
-    {{ 1.0, -1.0,  1.0},   {1.0f, 1.0f, 0.0f}},
-    {{ 1.0,  1.0,  1.0},   {1.0f, 0.0f, 1.0f}},
-    {{-1.0,  1.0,  1.0},   {1.0f, 0.0f, 0.0f}},
-    {{-1.0, -1.0, -1.0},   {0.0f, 1.0f, 1.0f}},
-    {{ 1.0, -1.0, -1.0},   {0.0f, 1.0f, 0.0f}},
-    {{ 1.0,  1.0, -1.0},   {0.0f, 0.0f, 1.0f}},
-    {{-1.0,  1.0, -1.0},   {0.0f, 0.0f, 0.0f}}
+    {{-1.0, -1.0,  1.0},   Color::WHITE},
+    {{ 1.0, -1.0,  1.0},   Color::YELLOW},
+    {{ 1.0,  1.0,  1.0},   Color::MAGENTA},
+    {{-1.0,  1.0,  1.0},   Color::RED},
+    {{-1.0, -1.0, -1.0},   Color::CYAN},
+    {{ 1.0, -1.0, -1.0},   Color::GREEN},
+    {{ 1.0,  1.0, -1.0},   Color::BLUE},
+    {{-1.0,  1.0, -1.0},   Color::BLACK}
 };
 
 const std::vector<u32> indices {
@@ -68,7 +68,7 @@ int main() {
     GLElementBufferObject ebo(indices.data(), indices.size() * sizeof(u32));
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, pos));
-    vao.link_attributes(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
+    vao.link_attributes(vbo, 1, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
 
     vao.unbind();
 	vbo.unbind();
