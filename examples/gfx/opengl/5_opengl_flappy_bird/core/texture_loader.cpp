@@ -8,7 +8,7 @@ namespace game::core {
         TextureLoader::assetsPath = assetsPath;
 
         for (const auto& entry : std::filesystem::directory_iterator(assetsPath)) {
-            std::shared_ptr<GLTexture> texture = std::make_shared<GLTexture>(entry.path().string().c_str(), GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+            std::shared_ptr<GLTexture> texture = std::make_shared<GLTexture>(entry.path().string().c_str(), GL_TEXTURE_2D);
 
             std::string fileName = entry.path().stem().string();
             loadedTextures[fileName] = texture;

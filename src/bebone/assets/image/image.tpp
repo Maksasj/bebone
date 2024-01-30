@@ -21,19 +21,20 @@ namespace bebone::assets {
 
             int width;
             int height;
-            int channels;
 
         public:
-            Image(const std::vector<_Color>& data, const size_t& width, const size_t& height, const size_t& channels)
-                : width(width),
-                  height(height),
-                  channels(channels)
+            Image(const std::vector<_Color>& data, const size_t& width, const size_t& height)
+                : width(width), height(height)
             {
                 color = data;
             }
 
-            void* data() {
+            _Color* data() {
                 return color.data();
+            }
+
+            std::shared_ptr<Image<_Color>> clone() const {
+                return std::make_shared<Image<_Color>>(color, width, height);
             }
 
             const int& get_width() const {
@@ -44,11 +45,13 @@ namespace bebone::assets {
                 return height;
             }
 
-            const int& get_channels() const {
-                return channels;
+            const size_t& get_channels() const {
+                return _Color::get_channels();
             }
 
             static std::shared_ptr<Image<_Color>> load_from_file(const std::string& filePath) {
+                stbi_set_flip_vertically_on_load(true);
+
                 int width, height, channels;
                 void* bytes = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
 
@@ -64,7 +67,7 @@ namespace bebone::assets {
 
                     stbi_image_free(bytes);
 
-                    return std::make_shared<Image>(color, width, height, channels);
+                    return std::make_shared<Image>(color, width, height);
                 } else if(channels == 4) {
                     auto* b = static_cast<ColorRGBA32*>(bytes);
 
@@ -75,7 +78,7 @@ namespace bebone::assets {
 
                     stbi_image_free(bytes);
 
-                    return std::make_shared<Image>(color, width, height, channels);
+                    return std::make_shared<Image>(color, width, height);
                 }
 
                 throw std::runtime_error("Unsupported color format " + filePath);

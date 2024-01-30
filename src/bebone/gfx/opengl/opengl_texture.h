@@ -15,33 +15,21 @@ namespace bebone::gfx::opengl {
             int width;
             int height;
 
+            void create_gl_texture(void* data, const GLenum& format, const GLenum& pixelType);
+
         public:
             /*!
-             * Creates texture using stb library
+             * Loads image from file and creates opengl texture
              * @param image - path to the image file
              * @param textureType - specifies the texture (1D/2D/3D)
-             * @param format - specifies the RGB format
-             * @param pixelType - specifies the data type
-             */
-            GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);
+            */
+            GLTexture(const std::string& filePath, const GLenum& textureType);
 
             template<typename _Color>
-            GLTexture(const std::shared_ptr<Image<_Color>>& image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType)
+            GLTexture(const std::shared_ptr<Image<_Color>>& image, const GLenum& textureType)
                 : textureType(textureType), width(image->get_width()), height(image->get_height()) {
 
-                glGenTextures(1, &id);
-                glBindTexture(textureType, id);
-
-                glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-                glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_NEAREST);
-                glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_NEAREST);
-
-                glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, format, pixelType, image->data());
-                glGenerateMipmap(textureType);
-
-                glBindTexture(textureType, 0);
+                create_gl_texture(image->data(), GL_RGBA, GL_FLOAT);
             }
 
             ~GLTexture();
@@ -62,10 +50,10 @@ namespace bebone::gfx::opengl {
             void destroy();
 
             /// Get texture width in pixels
-            int get_width() const;
+            const int& get_width() const;
 
             /// Get texture height in pixels
-            int get_height() const;
+            const int& get_height() const;
     };
 }
 

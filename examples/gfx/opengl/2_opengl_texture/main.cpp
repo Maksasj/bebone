@@ -55,7 +55,7 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    GLTexture texture("awesomeface.png",GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+    GLTexture texture("awesomeface.png",GL_TEXTURE_2D);
 
     shaderProgram.set_uniform("ourTexture", 0);
 
