@@ -31,11 +31,13 @@ namespace bebone::assets {
                  const size_t height = targetImage->get_height();
 
                  for(f32 x = -radius; x < radius; ++x) {
-                     for(f32 y = -radius; y < radius; ++y) {
-                         if(x*x + y*y > r2) continue;
+                     const f32 x2 = x*x;
 
-                         const size_t xCord = std::clamp((size_t) (xPos + x), (size_t) 0, width);
-                         const size_t yCord = std::clamp((size_t) (yPos + y), (size_t) 0, height);
+                     for(f32 y = -radius; y < radius; ++y) {
+                         if(x2 + y*y > r2) continue;
+
+                         const size_t xCord = std::clamp((size_t) (xPos + x), (size_t) 0, width - 1);
+                         const size_t yCord = std::clamp((size_t) (yPos + y), (size_t) 0, height - 1);
 
                          targetImage->at(xCord, height - yCord) = color;
                      }
@@ -48,8 +50,8 @@ namespace bebone::assets {
 
                  for(f32 x = -sqWidth; x < sqWidth; ++x) {
                      for(f32 y = -sqHeight; y < sqHeight; ++y) {
-                         const size_t xCord = std::clamp((size_t) (xPos + x), (size_t) 0, width);
-                         const size_t yCord = std::clamp((size_t) (yPos + y), (size_t) 0, height);
+                         const size_t xCord = std::clamp((size_t) (xPos + x), (size_t) 0, width - 1);
+                         const size_t yCord = std::clamp((size_t) (yPos + y), (size_t) 0, height - 1);
 
                          targetImage->at(xCord, height - yCord) = color;
                      }
