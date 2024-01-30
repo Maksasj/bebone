@@ -56,7 +56,7 @@ int main() {
 	ebo.unbind();
 
     auto image = Image<ColorRGBA>::load_from_file("awesomeface.png");
-    GLTexture texture(image, GL_TEXTURE_2D);
+    GLTexture2D texture(image);
 
     shaderProgram.set_uniform("ourTexture", 0);
 

@@ -13,7 +13,7 @@ namespace bexel {
         shared_ptr<Window> m_window;
 
         unique_ptr<GLShaderProgram> m_shader;
-        unique_ptr<GLTexture> m_texture;
+        unique_ptr<GLTexture2D> m_texture;
 
         unique_ptr<Camera> m_camera;
         unique_ptr<World> m_world;
