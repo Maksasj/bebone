@@ -37,6 +37,14 @@ namespace bebone::assets {
                 return std::make_shared<Image<_Color>>(color, width, height);
             }
 
+            inline _Color& at(const size_t& offset) {
+                return color[offset];
+            }
+
+            inline _Color& at(const size_t& x, const size_t& y) {
+                return at(x + y * width);
+            }
+
             const int& get_width() const {
                 return width;
             }

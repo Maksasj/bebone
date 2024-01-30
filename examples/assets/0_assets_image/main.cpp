@@ -2,23 +2,22 @@
 
 #include <vector>
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 512;
+const unsigned int SCR_HEIGHT = 512;
 
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;
-    Vec3f color;
     Vec2f texCord;
 };
 
 const std::vector<Vertex> vertices {
-    {{0.5f,  0.5f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
-    {{0.5f, -0.5f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
-    {{-0.5f, -0.5f, 0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
-    {{-0.5f,  0.5f, 0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
+    {{1.0f,  1.0f, 0.0f},  {1.0f, 1.0f}},
+    {{1.0f, -1.0f, 0.0f},  {1.0f, 0.0f}},
+    {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
+    {{-1.0f,  1.0f, 0.0f}, {0.0f, 1.0f}}
 };
 
 const std::vector<u32> indices {
@@ -48,15 +47,32 @@ int main() {
     GLElementBufferObject ebo(indices.data(), indices.size() * sizeof(u32));
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, pos));
-    vao.link_attributes(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
-    vao.link_attributes(vbo, 2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, texCord));
+    vao.link_attributes(vbo, 1, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, texCord));
 
     vao.unbind();
 	vbo.unbind();
 	ebo.unbind();
 
     auto image = Image<ColorRGBA>::load_from_file("awesomeface.png");
-    GLTexture2D texture(image);
+    auto texture = make_shared<GLTexture2D>(image);
+
+    window->add_listener([&](InputMouseButtonEvent& event) {
+        if(event.button == GLFW_MOUSE_BUTTON_LEFT) {
+            double xPos, yPos;
+            glfwGetCursorPos(window->get_backend(), &xPos, &yPos);
+
+            for(int x = -5; x < 5; ++x) {
+                for(int y = -5; y < 5; ++y) {
+                    const size_t xCord = clamp((size_t) (xPos + x), (size_t) 0, (size_t) SCR_WIDTH);
+                    const size_t yCord = clamp((size_t) (yPos + y), (size_t) 0, (size_t) SCR_HEIGHT);
+
+                    image->at(xCord, SCR_HEIGHT - yCord) = ColorRGBA::RED;
+                }
+            }
+
+            texture = make_shared<GLTexture2D>(image);
+        }
+    });
 
     shaderProgram.set_uniform("ourTexture", 0);
 
@@ -70,7 +86,7 @@ int main() {
 
         shaderProgram.enable();
 
-        texture.bind();
+        texture->bind();
         vao.bind();
 
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
