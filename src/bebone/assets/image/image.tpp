@@ -23,9 +23,7 @@ namespace bebone::assets {
             int height;
 
         public:
-            Image(const std::vector<_Color>& data, const size_t& width, const size_t& height)
-                : width(width), height(height)
-            {
+            Image(const std::vector<_Color>& data, const size_t& width, const size_t& height) : width(width), height(height) {
                 color = data;
             }
 

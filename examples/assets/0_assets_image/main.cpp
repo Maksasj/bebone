@@ -5,6 +5,7 @@
 const unsigned int SCR_WIDTH = 512;
 const unsigned int SCR_HEIGHT = 512;
 
+using namespace bebone::assets;
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
@@ -54,22 +55,19 @@ int main() {
 	ebo.unbind();
 
     auto image = Image<ColorRGBA>::load_from_file("awesomeface.png");
+    auto painter = ImagePainter<ColorRGBA>::from_image(image);
+
     auto texture = make_shared<GLTexture2D>(image);
 
     window->add_listener([&](InputMouseButtonEvent& event) {
+        double xPos, yPos;
+        glfwGetCursorPos(window->get_backend(), &xPos, &yPos);
+
         if(event.button == GLFW_MOUSE_BUTTON_LEFT) {
-            double xPos, yPos;
-            glfwGetCursorPos(window->get_backend(), &xPos, &yPos);
-
-            for(int x = -5; x < 5; ++x) {
-                for(int y = -5; y < 5; ++y) {
-                    const size_t xCord = clamp((size_t) (xPos + x), (size_t) 0, (size_t) SCR_WIDTH);
-                    const size_t yCord = clamp((size_t) (yPos + y), (size_t) 0, (size_t) SCR_HEIGHT);
-
-                    image->at(xCord, SCR_HEIGHT - yCord) = ColorRGBA::RED;
-                }
-            }
-
+            painter.paint_circle(xPos, yPos, 20, ColorRGBA::RED);
+            texture = make_shared<GLTexture2D>(image);
+        } else if(event.button == GLFW_MOUSE_BUTTON_RIGHT) {
+            painter.paint_square(xPos, yPos, 5, 5, ColorRGBA::BLUE);
             texture = make_shared<GLTexture2D>(image);
         }
     });
