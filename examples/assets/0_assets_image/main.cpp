@@ -55,8 +55,8 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    auto image = Image::load_from_file("awesomeface.png");
-    GLTexture texture(image,GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+    auto image = Image<ColorRGBA>::load_from_file("awesomeface.png");
+    GLTexture texture(image,GL_TEXTURE_2D, GL_RGBA, GL_FLOAT);
 
     shaderProgram.set_uniform("ourTexture", 0);
 

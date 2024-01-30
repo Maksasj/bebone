@@ -12,18 +12,18 @@ using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;
-    Color color;
+    ColorRGBA color;
 };
 
 const std::vector<Vertex> vertices {
-    {{-1.0, -1.0,  1.0},   Color::WHITE},
-    {{ 1.0, -1.0,  1.0},   Color::YELLOW},
-    {{ 1.0,  1.0,  1.0},   Color::MAGENTA},
-    {{-1.0,  1.0,  1.0},   Color::RED},
-    {{-1.0, -1.0, -1.0},   Color::CYAN},
-    {{ 1.0, -1.0, -1.0},   Color::GREEN},
-    {{ 1.0,  1.0, -1.0},   Color::BLUE},
-    {{-1.0,  1.0, -1.0},   Color::BLACK}
+    {{-1.0, -1.0,  1.0},   ColorRGBA::WHITE},
+    {{ 1.0, -1.0,  1.0},   ColorRGBA::YELLOW},
+    {{ 1.0,  1.0,  1.0},   ColorRGBA::MAGENTA},
+    {{-1.0,  1.0,  1.0},   ColorRGBA::RED},
+    {{-1.0, -1.0, -1.0},   ColorRGBA::CYAN},
+    {{ 1.0, -1.0, -1.0},   ColorRGBA::GREEN},
+    {{ 1.0,  1.0, -1.0},   ColorRGBA::BLUE},
+    {{-1.0,  1.0, -1.0},   ColorRGBA::BLACK}
 };
 
 const std::vector<u32> indices {

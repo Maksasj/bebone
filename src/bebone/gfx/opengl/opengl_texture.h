@@ -1,7 +1,7 @@
 #ifndef _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_H_
 #define _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_H_
 
-#include "../../assets/image/image.h"
+#include "../../assets/image/image.tpp"
 
 #include "../gfx_backend.h"
 
@@ -24,7 +24,25 @@ namespace bebone::gfx::opengl {
              * @param pixelType - specifies the data type
              */
             GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);
-            GLTexture(const std::shared_ptr<Image>& image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType);
+
+            template<typename _Color>
+            GLTexture(const std::shared_ptr<Image<_Color>>& image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType)
+                : textureType(textureType), width(image->get_width()), height(image->get_height()) {
+
+                glGenTextures(1, &id);
+                glBindTexture(textureType, id);
+
+                glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+                glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_NEAREST);
+                glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_NEAREST);
+
+                glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, format, pixelType, image->data());
+                glGenerateMipmap(textureType);
+
+                glBindTexture(textureType, 0);
+            }
 
             ~GLTexture();
 

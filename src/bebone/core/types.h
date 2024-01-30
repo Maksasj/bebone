@@ -30,15 +30,15 @@ namespace bebone::core {
 
     using ColorFormat = omni::types::ColorFormat;
 
-    // template<ColorFormat _Format>
-    // using Color = omni::types::Color<_Format>;
+    template<ColorFormat _Format>
+    using Color = omni::types::Color<_Format>;
 
     using ColorRGB24 = omni::types::ColorRGB24;
     using ColorRGBA32 = omni::types::ColorRGBA32;
     using ColorRGBA32f = omni::types::ColorRGBA32f;
 
     // Default color types is R32G32B32A32_FLOAT
-    using Color = ColorRGBA32f;
+    using ColorRGBA = ColorRGBA32f;
 }
 
 #endif
