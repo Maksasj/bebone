@@ -4,8 +4,6 @@
 #include <iostream>
 #include <exception>
 
-#include "../../core/core.h"
-
 #include "../gfx_backend.h"
 
 #include "events/window_event.h"

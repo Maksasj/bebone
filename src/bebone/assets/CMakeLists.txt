@@ -1,6 +1,5 @@
 file(GLOB_RECURSE BEBONE_ASSETS_SRC_FILES "*.cpp")
 
-
 include_directories("../../../3dparty/stb")
 include_directories("../../../3dparty/omni_types/src")
 

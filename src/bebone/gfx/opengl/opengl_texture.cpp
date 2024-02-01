@@ -9,7 +9,7 @@ namespace bebone::gfx::opengl {
         width = image->get_width();
         height = image->get_height();
 
-        create_gl_texture(image->data(), GL_RGBA, GL_FLOAT);
+        create_gl_texture(image->data(), ColorRGBA::get_gl_format(), ColorRGBA::get_gl_type());
     }
 
     GLTexture::~GLTexture() {

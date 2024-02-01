@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <memory>
 
-#include "../../core/core.h"
+#include "../gfx_backend.h"
 
 #include "vulkan_wrapper.tpp"
 #include "vulkan_swap_chain.h"

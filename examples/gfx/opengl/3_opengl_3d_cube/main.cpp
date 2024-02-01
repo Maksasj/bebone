@@ -16,14 +16,14 @@ struct Vertex {
 };
 
 const std::vector<Vertex> vertices {
-    {{-1.0, -1.0,  1.0},   ColorRGBA::WHITE},
-    {{ 1.0, -1.0,  1.0},   ColorRGBA::YELLOW},
+    {{-1.0, -1.0,  1.0},   ColorRGBA::WHITE  },
+    {{ 1.0, -1.0,  1.0},   ColorRGBA::YELLOW },
     {{ 1.0,  1.0,  1.0},   ColorRGBA::MAGENTA},
-    {{-1.0,  1.0,  1.0},   ColorRGBA::RED},
-    {{-1.0, -1.0, -1.0},   ColorRGBA::CYAN},
-    {{ 1.0, -1.0, -1.0},   ColorRGBA::GREEN},
-    {{ 1.0,  1.0, -1.0},   ColorRGBA::BLUE},
-    {{-1.0,  1.0, -1.0},   ColorRGBA::BLACK}
+    {{-1.0,  1.0,  1.0},   ColorRGBA::RED    },
+    {{-1.0, -1.0, -1.0},   ColorRGBA::CYAN   },
+    {{ 1.0, -1.0, -1.0},   ColorRGBA::GREEN  },
+    {{ 1.0,  1.0, -1.0},   ColorRGBA::BLUE   },
+    {{-1.0,  1.0, -1.0},   ColorRGBA::BLACK  }
 };
 
 const std::vector<u32> indices {

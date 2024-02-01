@@ -2,7 +2,6 @@
 #define _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_H_
 
 #include "../../assets/image/image.tpp"
-
 #include "../gfx_backend.h"
 
 namespace bebone::gfx::opengl {
@@ -29,7 +28,7 @@ namespace bebone::gfx::opengl {
             GLTexture(const std::shared_ptr<Image<_Color>>& image, const GLenum& textureType)
                 : textureType(textureType), width(image->get_width()), height(image->get_height()) {
 
-                create_gl_texture(image->data(), GL_RGBA, GL_FLOAT);
+                create_gl_texture(image->data(), _Color::get_gl_format(), _Color::get_gl_type());
             }
 
             ~GLTexture();
