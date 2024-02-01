@@ -73,6 +73,12 @@ int main() {
         }
     });
 
+    window->add_listener([&](InputKeyEvent& event) {
+        if(event.key == GLFW_KEY_ENTER && event.action == GLFW_RELEASE) {
+            image->export_to_file("result.png");
+        }
+    });
+
     GLContext::enable(GL_CULL_FACE);
     GLContext::cull_face(GL_BACK);
     GLContext::front_face(GL_CW);

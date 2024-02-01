@@ -10,6 +10,7 @@
 #include "../../core/noncopyable.h"
 
 #include <stb_image.h>
+#include <stb_image_write.h>
 
 namespace bebone::assets {
     using namespace bebone::core;
@@ -51,8 +52,20 @@ namespace bebone::assets {
                 return height;
             }
 
-            const size_t& get_channels() const {
+            size_t get_channels() const {
                 return _Color::get_channels();
+            }
+
+            template<typename _DesiredColor>
+            std::shared_ptr<Image<_DesiredColor>> to() const {
+                std::vector<_DesiredColor> newColor(width * height);
+
+                const auto size = width * height;
+
+                for(auto i = 0; i < size; ++i)
+                    newColor[i] = color[i].template to<_DesiredColor>();
+
+                return std::make_shared<Image<_DesiredColor>>(newColor, width, height);
             }
 
             std::shared_ptr<Image<_Color>> clone() const {
@@ -92,6 +105,19 @@ namespace bebone::assets {
                 }
 
                 throw std::runtime_error("Unsupported color format " + filePath);
+            }
+
+            void export_to_file(const std::string& fileName) {
+                if(_Color::get_format() & OMNI_TYPES_COLOR_FLOAT) {
+                    auto image = to<ColorRGBA32>();
+                    const auto channels = image->get_channels();
+
+                    stbi_write_png(fileName.c_str(), width, height, channels, image->data(), width*channels);
+                } else {
+                    const auto channels = get_channels();
+
+                    stbi_write_png(fileName.c_str(), width, height, channels, data(), width*channels);
+                }
             }
     };
 }
