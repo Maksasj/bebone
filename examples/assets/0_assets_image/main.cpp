@@ -37,6 +37,7 @@ int main() {
     auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
+    shaderProgram.set_uniform("ourTexture", 0);
 
     vertexShader.destroy();
     fragmentShader.destroy();
@@ -71,8 +72,6 @@ int main() {
             texture = make_shared<GLTexture2D>(image);
         }
     });
-
-    shaderProgram.set_uniform("ourTexture", 0);
 
     GLContext::enable(GL_CULL_FACE);
     GLContext::cull_face(GL_BACK);

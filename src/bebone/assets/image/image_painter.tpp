@@ -21,7 +21,8 @@ namespace bebone::assets {
              }
          public:
              inline void paint_pixel(const size_t& xPos, const size_t& yPos, const _Color& color) {
-                 targetImage->at(xPos, yPos) = color;
+                 const size_t height = targetImage->get_height();
+                 targetImage->at(xPos, height - yPos) = color;
              }
 
              inline void paint_circle(const size_t& xPos, const size_t& yPos, const f32& radius, const _Color& color) {

@@ -27,12 +27,12 @@ namespace bebone::assets {
 
             }
 
-            _Color* data() {
-                return color.data();
+            Image(const size_t& width, const size_t& height, const _Color& color = _Color::WHITE) : color(width * height, color), width(width), height(height) {
+
             }
 
-            std::shared_ptr<Image<_Color>> clone() const {
-                return std::make_shared<Image<_Color>>(color, width, height);
+            _Color* data() {
+                return color.data();
             }
 
             inline _Color& at(const size_t& offset) {
@@ -43,16 +43,20 @@ namespace bebone::assets {
                 return at(x + y * width);
             }
 
-            int get_width() const {
+            const int& get_width() const {
                 return width;
             }
 
-            int get_height() const {
+            const int& get_height() const {
                 return height;
             }
 
             const size_t& get_channels() const {
                 return _Color::get_channels();
+            }
+
+            std::shared_ptr<Image<_Color>> clone() const {
+                return std::make_shared<Image<_Color>>(color, width, height);
             }
 
             static std::shared_ptr<Image<_Color>> load_from_file(const std::string& filePath) {
