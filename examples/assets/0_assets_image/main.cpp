@@ -55,8 +55,12 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
+    // auto image = Image<ColorRGBA>::from_color(512, 512, ColorRGBA::GREEN);
+    // auto image = Image<ColorRGBA>::from_white_noise(512, 512);
     auto image = Image<ColorRGBA>::load_from_file("image.png");
+
     auto painter = ImagePainter<ColorRGBA>::from_image(image);
+
     auto texture = make_shared<GLTexture2D>(image);
 
     window->add_listener([&](InputMouseButtonEvent& event) {

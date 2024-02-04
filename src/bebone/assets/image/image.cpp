@@ -66,17 +66,16 @@ namespace bebone::assets {
         return std::make_shared<Image<_Color>>(std::vector<_Color>(width * height, color), width, height);
     }
 
-    // template<typename _Color>
-    // std::shared_ptr<Image<_Color>> Image<_Color>::from_white_noise(const size_t& width, const size_t & height) {
-    //     const auto size = width * height;
-//
-    //     std::vector<_Color> color(size);
-    //     for(auto i = 0; i < size; ++i) {
-    //         color[i] =
-    //     }
-//
-    //     return std::make_shared<Image<_Color>>(color, width, height);
-    // }
+    template<typename _Color>
+    std::shared_ptr<Image<_Color>> Image<_Color>::from_white_noise(const size_t& width, const size_t & height) {
+        const auto size = width * height;
+
+        std::vector<_Color> color(size);
+        for(auto i = 0; i < size; ++i)
+            color[i] = ColorRGB24::monochrome(rand() % 255).to<_Color>();
+
+        return std::make_shared<Image<_Color>>(color, width, height);
+    }
 
     template<typename _Color>
     std::shared_ptr<Image<_Color>> Image<_Color>::load_from_file(const std::string& filePath) {
