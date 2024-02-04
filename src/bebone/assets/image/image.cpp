@@ -71,7 +71,7 @@ namespace bebone::assets {
         const auto size = width * height;
 
         std::vector<_Color> color(size);
-        for(auto i = 0; i < size; ++i)
+        for(size_t i = 0; i < size; ++i)
             color[i] = ColorRGB24::monochrome(rand() % 255).to<_Color>();
 
         return std::make_shared<Image<_Color>>(color, width, height);
