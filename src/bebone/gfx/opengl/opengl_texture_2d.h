@@ -1,7 +1,7 @@
 #ifndef _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_2D_H_
 #define _BEBONE_GFX_OPENGL_OPENGL_TEXTURE_2D_H_
 
-#include "../../assets/image/image.tpp"
+#include "../../assets/image/image.h"
 
 #include "../gfx_backend.h"
 
