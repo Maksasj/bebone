@@ -86,7 +86,29 @@ namespace bebone::assets {
 
     template<typename _Color>
     void ImagePainter<_Color>::resize(const size_t& width, const size_t& height) {
+        std::vector<_Color> color(width * height);
 
+        const size_t startW = targetImage->get_width() - 1;
+        const size_t startH = targetImage->get_height() - 1;
+
+        auto index = 0;
+
+        for(size_t x = 0; x < width; ++x) {
+            for (size_t y = 0; y < height; ++y) {
+                const auto uvX = static_cast<f32>(x) / static_cast<f32>(width);
+                const auto uvY = static_cast<f32>(y) / static_cast<f32>(height);
+
+                const size_t pixelX = round(uvX * startW);
+                const size_t pixelY = round(uvY * startH);
+
+                color[index] = targetImage->at(pixelX, pixelY);
+                ++index;
+            }
+        }
+
+        targetImage->color = color;
+        targetImage->width = width;
+        targetImage->height = height;
     }
 
     template<typename _Color>
