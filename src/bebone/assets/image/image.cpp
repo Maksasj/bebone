@@ -14,6 +14,11 @@ namespace bebone::assets {
     }
 
     template<typename _Color>
+    std::vector<_Color>& Image<_Color>::get_data() {
+        return color;
+    }
+
+    template<typename _Color>
     _Color& Image<_Color>::at(const size_t& offset) {
         return color[offset];
     }

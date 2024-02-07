@@ -26,7 +26,7 @@ namespace bebone::assets {
             void flip_vertical();
             void flip_horizontal();
             void resize(const size_t& width, const size_t& height);
-            void crop(const size_t& x, const size_t& y, const size_t& width, const size_t& height);
+            void crop(const size_t& startX, const size_t& startY, const size_t& width, const size_t& height);
 
             static ImagePainter<_Color> from_image(const std::shared_ptr<Image<_Color>>& targetImage);
     };

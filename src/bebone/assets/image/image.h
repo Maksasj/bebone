@@ -24,9 +24,13 @@ namespace bebone::assets {
             int height;
 
         public:
+            template<typename Color>
+            friend class ImagePainter;
+
             Image(const std::vector<_Color>& data, const size_t& width, const size_t& height);
 
             _Color* data();
+            std::vector<_Color>& get_data();
 
             _Color& at(const size_t& offset);
             _Color& at(const size_t& x, const size_t& y);

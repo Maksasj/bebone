@@ -90,8 +90,24 @@ namespace bebone::assets {
     }
 
     template<typename _Color>
-    void ImagePainter<_Color>::crop(const size_t& x, const size_t& y, const size_t& width, const size_t& height) {
+    void ImagePainter<_Color>::crop(const size_t& startX, const size_t& startY, const size_t& width, const size_t& height) {
+        const auto endX = startX + width;
+        const auto endY = startY + height;
 
+        std::vector<_Color> color(width * height);
+
+        auto index = 0;
+
+        for(size_t x = startX; x < endX; ++x) {
+            for (size_t y = startY; y < endY; ++y) {
+                color[index] = targetImage->at(x, y);
+                ++index;
+            }
+        }
+
+        targetImage->color = color;
+        targetImage->width = width;
+        targetImage->height = height;
     }
 
     template<typename _Color>

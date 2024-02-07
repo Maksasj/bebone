@@ -60,6 +60,7 @@ int main() {
 
     painter.flip_vertical();
     painter.flip_horizontal();
+    painter.crop(0, 0, 256, 256);
 
     auto texture = make_shared<GLTexture2D>(image);
 
