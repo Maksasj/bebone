@@ -79,6 +79,7 @@ namespace bebone::assets {
 
     template<typename _Color>
     std::shared_ptr<Image<_Color>> Image<_Color>::load_from_file(const std::string& filePath) {
+        // Todo auto stbi vertical flip
         stbi_set_flip_vertically_on_load(true);
 
         int width, height, channels;

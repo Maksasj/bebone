@@ -13,17 +13,22 @@ namespace bebone::assets {
 
     template<typename _Color>
     class ImagePainter {
-         private:
-             std::shared_ptr<Image<_Color>> targetImage;
+        private:
+            std::shared_ptr<Image<_Color>> targetImage;
 
-             explicit ImagePainter(const std::shared_ptr<Image<_Color>>& targetImage);
+            explicit ImagePainter(const std::shared_ptr<Image<_Color>>& targetImage);
         public:
-             void paint_pixel(const size_t& xPos, const size_t& yPos, const _Color& color);
+            void paint_pixel(const size_t& xPos, const size_t& yPos, const _Color& color);
 
-             void paint_circle(const size_t& xPos, const size_t& yPos, const f32& radius, const _Color& color);
-             void paint_square(const size_t& xPos, const size_t& yPos, const f32& sqWidth, const f32& sqHeight, const _Color& color);
+            void paint_circle(const size_t& xPos, const size_t& yPos, const f32& radius, const _Color& color);
+            void paint_square(const size_t& xPos, const size_t& yPos, const f32& sqWidth, const f32& sqHeight, const _Color& color);
 
-             static ImagePainter<_Color> from_image(const std::shared_ptr<Image<_Color>>& targetImage);
+            void flip_vertical();
+            void flip_horizontal();
+            void resize(const size_t& width, const size_t& height);
+            void crop(const size_t& x, const size_t& y, const size_t& width, const size_t& height);
+
+            static ImagePainter<_Color> from_image(const std::shared_ptr<Image<_Color>>& targetImage);
     };
 }
 

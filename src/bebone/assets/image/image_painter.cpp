@@ -51,6 +51,50 @@ namespace bebone::assets {
     }
 
     template<typename _Color>
+    void ImagePainter<_Color>::flip_vertical() {
+        const size_t width = targetImage->get_width() - 1;
+        const size_t height = targetImage->get_height() - 1;
+
+        const size_t hWidth = width / 2;
+
+        for(size_t x = 0; x <= hWidth; ++x) {
+            for (size_t y = 0; y <= height; ++y) {
+                auto& pl = targetImage->at(x, y);
+                auto& pr = targetImage->at(width - x, y);
+
+                std::swap(pl, pr);
+            }
+        }
+    }
+
+    template<typename _Color>
+    void ImagePainter<_Color>::flip_horizontal() {
+        const size_t width = targetImage->get_width() - 1;
+        const size_t height = targetImage->get_height() - 1;
+
+        const size_t hHeight = height / 2;
+
+        for(size_t x = 0; x <= width; ++x) {
+            for (size_t y = 0; y <= hHeight; ++y) {
+                auto& pl = targetImage->at(x, y);
+                auto& pr = targetImage->at(x, height - y);
+
+                std::swap(pl, pr);
+            }
+        }
+    }
+
+    template<typename _Color>
+    void ImagePainter<_Color>::resize(const size_t& width, const size_t& height) {
+
+    }
+
+    template<typename _Color>
+    void ImagePainter<_Color>::crop(const size_t& x, const size_t& y, const size_t& width, const size_t& height) {
+
+    }
+
+    template<typename _Color>
     ImagePainter<_Color> ImagePainter<_Color>::from_image(const std::shared_ptr<Image<_Color>>& targetImage) {
         return ImagePainter<_Color>(targetImage);
     }
