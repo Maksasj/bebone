@@ -5,7 +5,7 @@
 using namespace bexel;
 
 int main() {
-    PROFILE_RECORD(BEXEL_MAIN)
+    BEBONE_PROFILE_RECORD(BEXEL_MAIN)
 
     Bexel bexel;
 
@@ -14,9 +14,9 @@ int main() {
     bexel.run();
     bexel.unload();
 
-    PROFILE_STOP(BEXEL_MAIN)
+    BEBONE_PROFILE_STOP(BEXEL_MAIN)
 
-    bebone::core::Profiler::SumUp();
+    bebone::core::Profiler::sumup();
 
     return 0;
 }

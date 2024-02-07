@@ -6,7 +6,7 @@ namespace bexel {
     }
 
     void Bexel::init() {
-        PROFILE_RECORD(BEXEL_INIT)
+        BEBONE_PROFILE_RECORD(BEXEL_INIT)
 
         GLFWContext::init();
 
@@ -15,11 +15,11 @@ namespace bexel {
         GLContext::load_opengl();
         glfwSwapInterval(0);
 
-        PROFILE_STOP(BEXEL_INIT)
+        BEBONE_PROFILE_STOP(BEXEL_INIT)
     }
 
     void Bexel::load() {
-        PROFILE_RECORD(BEXEL_LOAD)
+        BEBONE_PROFILE_RECORD(BEXEL_LOAD)
 
         const auto shaderFlags = ENABLE_UNIFORMS;
 
@@ -33,11 +33,11 @@ namespace bexel {
 
         m_texture = make_unique<GLTexture>("assets/texture.png", GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
 
-        PROFILE_STOP(BEXEL_LOAD)
+        BEBONE_PROFILE_STOP(BEXEL_LOAD)
     }
 
     void Bexel::run() {
-        PROFILE_RECORD(BEXEL_RUN)
+        BEBONE_PROFILE_RECORD(BEXEL_RUN)
 
         GLContext::enable(GL_DEPTH_TEST);
         GLContext::enable(GL_CULL_FACE);
@@ -47,7 +47,7 @@ namespace bexel {
         m_shader->set_uniform("inTexture", 0);
 
         while (!m_window->closing()) {
-            PROFILE_RECORD(BEXEL_UPDATE_LOOP)
+            BEBONE_PROFILE_RECORD(BEXEL_UPDATE_LOOP)
 
             GLContext::set_viewport(0, 0, m_window->get_width(), m_window->get_height());
             GLContext::clear_color(0.47f, 0.65f, 1.0f, 1.0f);
@@ -66,10 +66,10 @@ namespace bexel {
             GLFWContext::swap_buffers(*m_window);
             GLFWContext::poll_events();
 
-            PROFILE_STOP(BEXEL_UPDATE_LOOP)
+            BEBONE_PROFILE_STOP(BEXEL_UPDATE_LOOP)
         }
 
-        PROFILE_STOP(BEXEL_RUN)
+        BEBONE_PROFILE_STOP(BEXEL_RUN)
     }
 
     void Bexel::unload() {

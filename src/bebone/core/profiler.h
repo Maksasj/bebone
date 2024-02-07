@@ -26,11 +26,11 @@ namespace bebone::core {
 
             Profile(std::string label);
 
-            void Record();
-            void PushChildProfile(Profile *profile);
-            unsigned long CountChildProfiles();
-            std::pair<std::vector<bebone::core::Profile*>::iterator, std::vector<bebone::core::Profile*>::iterator> GetChilds();
-            void Stop();
+            void record();
+            void push_child_profile(Profile *profile);
+            unsigned long count_child_profiles();
+            std::pair<std::vector<bebone::core::Profile*>::iterator, std::vector<bebone::core::Profile*>::iterator> get_childs();
+            void stop();
     };
 
     struct ProfilerCloser {
@@ -43,15 +43,15 @@ namespace bebone::core {
             static std::vector<Profile*> entryPoints;
 
         public:
-            static void BindTopProfile(Profile *profile);
-            static void UnBindTopProfile();
-            static void SumUp();
+            static void bind_top_profile(Profile *profile);
+            static void unbind_top_profile();
+            static void sumup();
     };
 
-    void traceProfiles(std::stringstream *ss, bebone::core::Profile *profile, bebone::core::Profile *parent, unsigned long depth);
+    void trace_profiles(std::stringstream *ss, bebone::core::Profile *profile, bebone::core::Profile *parent, unsigned long depth);
 }
 
-#define PROFILE_RECORD(LABEL) static bebone::core::Profile LABEL(#LABEL); LABEL.Record();
-#define PROFILE_STOP(LABEL) static bebone::core::ProfilerCloser LABEL ## _CLOSER; LABEL.Stop();
+#define BEBONE_PROFILE_RECORD(LABEL) static bebone::core::Profile LABEL(#LABEL); LABEL.record();
+#define BEBONE_PROFILE_STOP(LABEL) static bebone::core::ProfilerCloser LABEL ## _CLOSER; LABEL.stop();
 
 #endif
