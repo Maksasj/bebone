@@ -23,7 +23,6 @@ namespace bebone::assets {
             int width;
             int height;
 
-
         public:
             Image(const std::vector<_Color>& data, const size_t& width, const size_t& height);
 
@@ -35,6 +34,8 @@ namespace bebone::assets {
             const int& get_width() const;
             const int& get_height() const;
             size_t get_channels() const;
+
+            size_t get_size() const;
 
             template<typename _DesiredColor>
             std::shared_ptr<Image<_DesiredColor>> to() const;

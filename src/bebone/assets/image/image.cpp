@@ -8,11 +8,6 @@ namespace bebone::assets {
 
     }
 
-    // template<typename _Color>
-    // Image<_Color>::Image(const size_t& width, const size_t& height, const _Color& color) : color(width * height, color), width(width), height(height) {
-
-    // }
-
     template<typename _Color>
     _Color* Image<_Color>::data() {
         return color.data();
@@ -41,6 +36,11 @@ namespace bebone::assets {
     template<typename _Color>
     size_t Image<_Color>::get_channels() const {
         return _Color::get_channels();
+    }
+
+    template<typename _Color>
+    size_t Image<_Color>::get_size() const {
+        return sizeof(_Color) * color.size();
     }
 
     template<typename _Color>

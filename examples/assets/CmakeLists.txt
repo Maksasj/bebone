@@ -1,1 +1,1 @@
-add_subdirectory(0_assets_image)
+add_subdirectory(0_assets_image_basic)
