@@ -7,6 +7,8 @@ using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
 
 int main() {
+    BEBONE_PROFILE_RECORD(MAIN)
+
     GLFWContext::init();
 
     auto window = WindowFactory::create_window("0. Begui Node graph example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
@@ -24,37 +26,36 @@ int main() {
 
     GLContext::enable(GL_DEPTH_TEST);
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_None;
-
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window->get_backend(), true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    BeGUI::init(window);
 
     while (!window->closing()) {
+        BEBONE_PROFILE_RECORD(LOOP)
+
+        BEBONE_PROFILE_RECORD(CLEAR)
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        BEBONE_PROFILE_STOP(CLEAR)
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        ShowExampleAppCustomNodeGraph(nullptr);
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        BEBONE_PROFILE_RECORD(BEGUI)
+        BeGUI::begin();
+            ShowExampleAppCustomNodeGraph(nullptr);
+            ImGui::ShowDemoWindow();
+            BeGUI::show_profiler();
+        BeGUI::end();
+        BEBONE_PROFILE_STOP(BEGUI)
 
         GLFWContext::swap_buffers(*window); // Todo make this not a reference
         GLFWContext::poll_events();
+
+        BEBONE_PROFILE_STOP(LOOP)
     }
 
     shaderProgram.destroy();
 
     GLFWContext::terminate();
+
+    BEBONE_PROFILE_STOP(MAIN)
+    Profiler::sumup();
 
     return 0;
 }

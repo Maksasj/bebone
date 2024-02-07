@@ -4,9 +4,7 @@ namespace bebone::core {
     std::vector<Profile*> Profiler::stack;
     std::vector<Profile*> Profiler::entryPoints;
 
-    Profile::Profile(std::string label) {
-        _label = label;
-
+    Profile::Profile(const std::string& label) : label(label) {
         Profiler::bind_top_profile(this);
     }
 
@@ -23,9 +21,9 @@ namespace bebone::core {
     }
 
     void Profile::record() {
-        ++_execution_times;
+        ++executionTimes;
 
-        record_start_timestamp = std::chrono::high_resolution_clock::now();
+        recordStartTimestamp = std::chrono::high_resolution_clock::now();
     }
 
     void Profile::push_child_profile(Profile *profile) {
@@ -34,8 +32,8 @@ namespace bebone::core {
 
     void Profile::stop() {
         auto record_stop_timestamp = std::chrono::high_resolution_clock::now();
-        double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(record_stop_timestamp - record_start_timestamp).count();
-        _exception_time += duration;
+        double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(record_stop_timestamp - recordStartTimestamp).count();
+        exceptionTime += duration;
     }
 
     void Profiler::bind_top_profile(Profile *profile) {
@@ -52,16 +50,13 @@ namespace bebone::core {
         stack.pop_back();
     }
 
-    void trace_profiles(std::stringstream *ss, Profile *profile, Profile *parent, unsigned long depth) {
+    void trace_profiles(Profile *profile, Profile *parent, unsigned long depth, const std::function<void(Profile*)>& lamda) {
         auto childs = profile->get_childs();
 
         for(auto i = childs.first; i < childs.second; ++i) {
-            for(auto k = 0; k < depth; ++k)
-                (*ss) << "    ";
+            lamda(*i);
 
-            (*ss) << "Profile: '"<<(*i)->_label << "' executed " << (*i)->_execution_times << " times, total execution time: " << (*i)->_exception_time / 1000000.0 << "ms, " << 100.0*((*i)->_exception_time / profile->_exception_time) << "% | " << 100.0*((*i)->_exception_time / parent->_exception_time) << "% \n";
-
-            trace_profiles(ss, (*i), profile, depth + 1);
+            trace_profiles((*i), profile, depth + 1, lamda);
         }
     }
 
@@ -69,12 +64,17 @@ namespace bebone::core {
         for(auto profile : entryPoints) {
             std::stringstream ss;
 
-            ss  << "Profile: '"<<profile->_label
-                << "' executed " << profile->_execution_times << " times, total execution time: "
-                << profile->_exception_time / 1000000.0 << "ms, "
+            ss  << "Profile: '"<<profile->label
+                << "' executed " << profile->executionTimes << " times, total execution time: "
+                << profile->exceptionTime / 1000000.0 << "ms, "
                 << "100% \n";
 
-            trace_profiles(&ss, profile, profile, 1);
+            trace_profiles(profile, profile, 1, [&](Profile* pp) {
+                ss  << "Profile: '"<< pp->label
+                    << "' executed " << pp->executionTimes << " times, total execution time: "
+                    << pp->exceptionTime / 1000000.0 << "ms, "
+                    << "100% \n";
+            });
 
             std::cout << ss.str();
         }
