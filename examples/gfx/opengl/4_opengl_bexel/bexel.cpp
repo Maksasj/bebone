@@ -31,7 +31,7 @@ namespace bexel {
         m_camera = make_unique<Camera>(Vec3f(0.0, -24.0f, 0.0f), 12);
         m_world = make_unique<World>();
 
-        m_texture = make_unique<GLTexture>("assets/texture.png", GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE);
+        m_texture = make_unique<GLTexture2D>("assets/texture.png");
 
         BEBONE_PROFILE_STOP(BEXEL_LOAD)
     }

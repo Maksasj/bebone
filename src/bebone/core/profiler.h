@@ -31,7 +31,7 @@ namespace bebone::core {
             f64 minExecutionTime;
             f64 maxExecutionTime;
 
-            Profile(const char* label);
+            explicit Profile(const char* label);
 
             void record();
             void stop();
