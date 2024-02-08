@@ -14,6 +14,8 @@
 
 #include <functional>
 
+#include "types.h"
+
 namespace bebone::core {
     struct Profile {
         private:
@@ -21,19 +23,23 @@ namespace bebone::core {
             std::vector<Profile*> childs;
 
         public:
-            unsigned long long executionTimes;
-            double exceptionTime;
+            const char* label;
 
-            std::string label;
+            u64 executionCount;
 
-            Profile(const std::string& label);
+            f64 totalExecutionTime;
+            f64 minExecutionTime;
+            f64 maxExecutionTime;
+
+            Profile(const char* label);
 
             void record();
             void stop();
 
             void push_child_profile(Profile *profile);
-            unsigned long count_child_profiles();
-            std::pair<std::vector<bebone::core::Profile*>::iterator, std::vector<bebone::core::Profile*>::iterator> get_childs();
+            u32 count_child_profiles();
+
+            std::vector<Profile*>& get_childs();
     };
 
     struct ProfilerCloser {
@@ -42,12 +48,14 @@ namespace bebone::core {
 
     class Profiler {
         public:
-            static std::vector<Profile*> stack;
-            static std::vector<Profile*> entryPoints;
+            std::vector<Profile*> stack;
+            std::vector<Profile*> entryPoints;
 
-            static void bind_top_profile(Profile *profile);
-            static void unbind_top_profile();
-            static void sumup();
+            void bind_top_profile(Profile *profile);
+            void unbind_top_profile();
+            void sumup();
+
+            static Profiler& get_instance();
     };
 
     void trace_profiles(Profile *profile, Profile *parent, unsigned long depth, const std::function<void(Profile*)>& lamda);

@@ -55,7 +55,7 @@ int main() {
     GLFWContext::terminate();
 
     BEBONE_PROFILE_STOP(MAIN)
-    Profiler::sumup();
+    Profiler::get_instance().sumup();
 
     return 0;
 }
