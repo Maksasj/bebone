@@ -40,8 +40,8 @@ namespace game::core {
             map<shared_ptr<GameObject>, shared_ptr<SpriteRenderer>> gameObjectsToDraw;
             map<shared_ptr<GameObject>, shared_ptr<SpriteRenderer>>::iterator gameObjectsToDrawIterator;
 
-            map<shared_ptr<GLTexture>, int> cachedTextureUnits;
-            vector<shared_ptr<GLTexture>> texturesToDraw;
+            map<shared_ptr<GLTexture2D>, int> cachedTextureUnits;
+            vector<shared_ptr<GLTexture2D>> texturesToDraw;
             int currentTextureUnitIndex;
 
             size_t indicesSize;
@@ -58,7 +58,7 @@ namespace game::core {
             void add_indices();
             void upload_textures();
             Vec2f rotateVertex(const Vec2f& v, const f32& angle) const;
-            bool try_cache_texture(const shared_ptr<GLTexture>& texture);
+            bool try_cache_texture(const shared_ptr<GLTexture2D>& texture);
         public:
             Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit);
             ~Batch();

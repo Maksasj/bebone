@@ -15,7 +15,6 @@ void meme(int x) {
 }
 
 int main() {
-
     Action<int> action;
     std::function<void(int)> func = example_function;
     std::function<void(int)> func2 = another_function;

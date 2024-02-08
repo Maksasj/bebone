@@ -14,7 +14,10 @@
 #include <glslang/Public/ResourceLimits.h>
 
 // Bebone things
-#include "../core/noncopyable.h"
-#include "../core/types.h"
+#ifndef OMNI_GLAD_INTEGRATION
+    #define OMNI_GLAD_INTEGRATION
+#endif
+
+#include "../core/core.h"
 
 #endif
