@@ -1,4 +1,4 @@
-name: Build, mingw g++ win
+name: Ubuntu build
 
 on:
   push:
