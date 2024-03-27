@@ -12,7 +12,7 @@ namespace game::core {
 
     class Sprite : private NonCopyable {
         private:
-            shared_ptr<GLTexture> texture;
+            shared_ptr<GLTexture2D> texture;
             unsigned int pixelsPerUnit;
 
             float unitWidth;
@@ -21,7 +21,7 @@ namespace game::core {
             Sprite();
             Sprite(const std::string& textureName, const unsigned int& pixelsPerUnit);
 
-            const shared_ptr<GLTexture>& get_texture() const;
+            const shared_ptr<GLTexture2D>& get_texture() const;
             void set_texture(const std::string& textureName);
             
             int get_height() const;

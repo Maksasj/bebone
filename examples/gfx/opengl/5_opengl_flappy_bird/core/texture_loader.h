@@ -16,12 +16,12 @@ namespace game::core {
 
     class TextureLoader : private NonCopyable {
         private:
-            static std::map<const std::string, std::shared_ptr<GLTexture>> loadedTextures;
+            static std::map<const std::string, std::shared_ptr<GLTexture2D>> loadedTextures;
             static std::string assetsPath;
 
         public:
             static void load_textures(const std::string& assetsPath);
-            static std::shared_ptr<GLTexture> get_texture(const std::string& fileName);
+            static std::shared_ptr<GLTexture2D> get_texture(const std::string& fileName);
     };
 }
 

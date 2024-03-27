@@ -2,7 +2,7 @@
 
 namespace game::core {
     Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit) :
-        camera(camera), shaderProgram(shaderProgram), cachedTextureUnits(map<shared_ptr<GLTexture>, int>()), texturesToDraw(vector<shared_ptr<GLTexture>>()), currentTextureUnitIndex(0), indicesSize(0), quadSize(0), quadLimit(quadLimit) {
+        camera(camera), shaderProgram(shaderProgram), cachedTextureUnits(map<shared_ptr<GLTexture2D>, int>()), texturesToDraw(vector<shared_ptr<GLTexture2D>>()), currentTextureUnitIndex(0), indicesSize(0), quadSize(0), quadLimit(quadLimit) {
         
         textureUnitCapacity = min({GLGpuProperties::texture_unit_capacity(), MAX_TEXTURE_UNITS});
 
@@ -124,7 +124,7 @@ namespace game::core {
         }
     }
 
-    bool Batch::try_cache_texture(const shared_ptr<GLTexture>& texture) {
+    bool Batch::try_cache_texture(const shared_ptr<GLTexture2D>& texture) {
         if (currentTextureUnitIndex >= textureUnitCapacity) {
             return false;
         }
