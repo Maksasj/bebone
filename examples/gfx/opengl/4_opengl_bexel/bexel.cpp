@@ -6,15 +6,21 @@ namespace bexel {
     }
 
     void Bexel::init() {
+        BEBONE_PROFILE_RECORD(BEXEL_INIT)
+
         GLFWContext::init();
 
         m_window = WindowFactory::create_window("4. Opengl Bexel example", GAME_WIDTH, GAME_HEIGHT, GfxAPI::OPENGL);
 
         GLContext::load_opengl();
         glfwSwapInterval(0);
+
+        BEBONE_PROFILE_STOP(BEXEL_INIT)
     }
 
     void Bexel::load() {
+        BEBONE_PROFILE_RECORD(BEXEL_LOAD)
+
         const auto shaderFlags = ENABLE_UNIFORMS;
 
         auto vertexShader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::VERTEX_SHADER, shaderFlags);
@@ -26,9 +32,13 @@ namespace bexel {
         m_world = make_unique<World>();
 
         m_texture = make_unique<GLTexture2D>("assets/texture.png");
+
+        BEBONE_PROFILE_STOP(BEXEL_LOAD)
     }
 
     void Bexel::run() {
+        BEBONE_PROFILE_RECORD(BEXEL_RUN)
+
         GLContext::enable(GL_DEPTH_TEST);
         GLContext::enable(GL_CULL_FACE);
         GLContext::cull_face(GL_BACK);
@@ -37,6 +47,8 @@ namespace bexel {
         m_shader->set_uniform("inTexture", 0);
 
         while (!m_window->closing()) {
+            BEBONE_PROFILE_RECORD(BEXEL_UPDATE_LOOP)
+
             GLContext::set_viewport(0, 0, m_window->get_width(), m_window->get_height());
             GLContext::clear_color(0.47f, 0.65f, 1.0f, 1.0f);
             GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,7 +65,11 @@ namespace bexel {
 
             GLFWContext::swap_buffers(*m_window);
             GLFWContext::poll_events();
+
+            BEBONE_PROFILE_STOP(BEXEL_UPDATE_LOOP)
         }
+
+        BEBONE_PROFILE_STOP(BEXEL_RUN)
     }
 
     void Bexel::unload() {

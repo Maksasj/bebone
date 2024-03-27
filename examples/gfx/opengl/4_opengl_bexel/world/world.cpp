@@ -14,6 +14,8 @@ namespace bexel {
     }
 
     void World::update(unique_ptr<Camera>& camera) {
+        BEBONE_PROFILE_RECORD(BEXEL_WORLD_UPDATE)
+
         const auto pos = camera->get_position();
         const auto camChunkPos = Vec2i(
             static_cast<i32>(pos.x) / CHUNK_SIZE_X,
@@ -45,12 +47,18 @@ namespace bexel {
                 m_chunks[toCheck]->generate_mesh(*this);
             }
         }
+
+        BEBONE_PROFILE_STOP(BEXEL_WORLD_UPDATE)
     }
 
     void World::render(unique_ptr<GLShaderProgram>& shader) {
+        BEBONE_PROFILE_RECORD(BEXEL_WORLD_RENDER)
+
         for_each(m_chunks.begin(), m_chunks.end(), [&](const auto& tuple) {
             const auto& chunk = tuple.second;
             chunk->render(shader);
         });
+
+        BEBONE_PROFILE_STOP(BEXEL_WORLD_RENDER)
     };
 }

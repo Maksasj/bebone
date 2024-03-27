@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include "logger.tpp"
+#include "profiler.h"
 
 #include "arena_allocator.h"
 #include "arena_container.h"
