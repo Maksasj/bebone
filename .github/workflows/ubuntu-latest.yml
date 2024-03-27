@@ -28,7 +28,7 @@ jobs:
         submodules: recursive
 
     - name: Install prerequisites
-      run: sudo apt-get update && sudo apt-get install libxrandr-dev
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev xorg-dev
 
     - name: Configure CMake
       uses: threeal/cmake-action@v1.3.0
