@@ -69,10 +69,10 @@ namespace bebone::core {
     }
 
     void Profiler::sumup() {
-        for(auto profile : entryPoints) {
+        for(auto& profile : entryPoints) {
             std::stringstream ss;
 
-            ss  << "Profile: '"<<profile->label
+            ss  << "Profile: '"<< profile->label
                 << "' executed " << profile->executionCount << " times, total execution time: "
                 << profile->totalExecutionTime / 1000000.0 << "ms, "
                 << "100% \n";
