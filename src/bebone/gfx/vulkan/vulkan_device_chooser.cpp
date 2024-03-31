@@ -36,7 +36,7 @@ namespace bebone::gfx::vulkan {
         VkPhysicalDeviceFeatures supportedFeatures;
         vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
 
-        return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
+        return indices.is_complete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
     }
 
     SwapChainSupportDetails VulkanDeviceChooser::query_swap_chain_support(VkPhysicalDevice device, VkSurfaceKHR& surface) {
@@ -86,7 +86,7 @@ namespace bebone::gfx::vulkan {
                 indices.presentFamilyHasValue = true;
             }
 
-            if (indices.isComplete()) {
+            if (indices.is_complete()) {
                 break;
             }
 
