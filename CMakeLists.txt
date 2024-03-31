@@ -8,14 +8,7 @@ set(BEBONE_VERSION_PATCH 1 CACHE STRING "Bebone patch version")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DDEBUG)
-endif()
-
-if(CMAKE_BUILD_TYPE MATCHES Release)
-    add_definitions(-DNDEBUG)
-endif()
+set(CMAKE_BUILD_TYPE release)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX")
