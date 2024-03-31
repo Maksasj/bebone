@@ -13,6 +13,16 @@ int main() {
 
     auto window = WindowFactory::create_window("0. Begui Node graph example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
 
+    window->add_listener([&](InputKeyEvent& event) {
+        if(event.key == GLFW_KEY_ENTER && event.action == GLFW_RELEASE) {
+            BEBONE_PROFILE_RECORD(EVENT)
+
+            std::cout << "Called event !\n";
+
+            BEBONE_PROFILE_STOP(EVENT)
+        }
+    });
+
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glfwSwapInterval(0);
@@ -55,7 +65,7 @@ int main() {
     GLFWContext::terminate();
 
     BEBONE_PROFILE_STOP(MAIN)
-    Profiler::get_instance().sumup();
+    std::cout << BEBONE_PROFILER_SUM_UP();
 
     return 0;
 }

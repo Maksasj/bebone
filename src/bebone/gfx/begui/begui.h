@@ -19,7 +19,7 @@ namespace bebone::gfx {
             static void end();
 
         private:
-            static void profiler_trace_profiles(Profile* profile);
+            static void profiler_trace_profiles(Profile* parent);
 
         public:
             static void show_profiler();

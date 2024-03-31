@@ -11,7 +11,7 @@ namespace bebone::gfx {
         ImGui::CreateContext();
 
         //ImGui::StyleColorsDark();
-        apply_default_bebone_theme();
+        apply_default_bebone_imgui_theme();
 
         ImGui_ImplGlfw_InitForOpenGL(window->get_backend(), true);
         ImGui_ImplOpenGL3_Init("#version 330");
@@ -28,11 +28,11 @@ namespace bebone::gfx {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void BeGUI::profiler_trace_profiles(Profile* profile) {
-        const auto& childs = profile->get_childs();
+    void BeGUI::profiler_trace_profiles(Profile* parent) {
+        const auto& childs = parent->get_childs();
 
         for(const auto& profile : childs) {
-            if (ImGui::TreeNode(profile->label)) {
+            if (ImGui::TreeNode(profile->label.c_str())) {
                 const f64 totalExecutionTime = profile->totalExecutionTime / 1000000.0;
 
                 const f64 maxExecutionTime = profile->maxExecutionTime / 1000000.0;
@@ -55,8 +55,10 @@ namespace bebone::gfx {
     void BeGUI::show_profiler() {
         ImGui::Begin("Bebone profiler");
 
-        for(const auto& profile : Profiler::get_instance().entryPoints) {
-            if (ImGui::TreeNode(profile->label)) {
+        const auto& entryPoints = Profiler::get_instance().get_entry_points();
+
+        for(const auto& profile : entryPoints) {
+            if (ImGui::TreeNode(profile->label.c_str())) {
                 profiler_trace_profiles(profile);
 
                 ImGui::TreePop();

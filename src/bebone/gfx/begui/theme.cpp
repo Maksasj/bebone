@@ -1,7 +1,7 @@
 #include "theme.h"
 
 namespace bebone::gfx {
-    void apply_default_bebone_theme() {
+    void apply_default_bebone_imgui_theme() {
         /* Source: https://github.com/ocornut/imgui/issues/707#issuecomment-917151020 */
 
         ImVec4* colors = ImGui::GetStyle().Colors;

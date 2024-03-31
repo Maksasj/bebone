@@ -9,7 +9,7 @@
 #include "../../core/core.h"
 
 namespace bebone::gfx {
-    void apply_default_bebone_theme();
+    void apply_default_bebone_imgui_theme();
 };
 
 #endif

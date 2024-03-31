@@ -16,7 +16,7 @@ int main() {
 
     BEBONE_PROFILE_STOP(BEXEL_MAIN)
 
-    bebone::core::Profiler::get_instance().sumup();
+    bebone::core::Profiler::get_instance().sum_up();
 
     return 0;
 }
