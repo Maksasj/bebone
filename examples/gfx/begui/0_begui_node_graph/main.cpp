@@ -65,7 +65,7 @@ int main() {
     GLFWContext::terminate();
 
     BEBONE_PROFILE_STOP(MAIN)
-    std::cout << BEBONE_PROFILER_SUM_UP();
+    std::cout << BEBONE_PROFILER_SUM_UP() << "\n";
 
     return 0;
 }

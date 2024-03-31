@@ -79,11 +79,11 @@ namespace bebone::core {
 #ifdef DEBUG
     #define BEBONE_PROFILE_RECORD(LABEL) static bebone::core::Profile LABEL(#LABEL); LABEL.record();
     #define BEBONE_PROFILE_STOP(LABEL) LABEL.stop();
-    #define BEBONE_PROFILER_SUM_UP() Profiler::get_instance().sum_up();
+    #define BEBONE_PROFILER_SUM_UP() Profiler::get_instance().sum_up()
 #else
     #define BEBONE_PROFILE_RECORD(LABEL)
     #define BEBONE_PROFILE_STOP(LABEL)
-    #define BEBONE_PROFILER_SUM_UP()
+    #define BEBONE_PROFILER_SUM_UP() ""
 #endif
 
 #endif
