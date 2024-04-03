@@ -9,6 +9,7 @@
 #include "events/window_event.h"
 #include "events/input_event.h"
 
+#include "window_properties.h"
 #include "window_handler.h"
 
 namespace bebone::gfx {
@@ -41,7 +42,7 @@ namespace bebone::gfx {
              * @param width - window width
              * @param height - window height
             */
-            Window(const std::string& title, const int& width, const int& height);
+            Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties = {});
             ~Window();
 
             /*!

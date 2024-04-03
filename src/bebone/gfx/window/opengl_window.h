@@ -13,7 +13,7 @@ namespace bebone::gfx {
              * @param width - desired window width
              * @param height - desired window height
             */
-            GLWindow(const std::string& title, const int& width, const int& height);
+            GLWindow(const std::string& title, const int& width, const int& height, const WindowProperties& properties = {});
     };
 }
 

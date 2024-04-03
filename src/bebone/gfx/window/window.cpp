@@ -1,14 +1,18 @@
 #include "window.h"
 
 namespace bebone::gfx {
-    Window::Window(const std::string& title, const int& width, const int& height)
+    Window::Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties)
         : windowHandler(this),
           width(width),
           height(height)
-
     {
+        if(properties.enableResize)
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        else
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+
         glfwSetWindowUserPointer(window, this);
 
         // Window callbacks

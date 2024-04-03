@@ -1,7 +1,7 @@
 #include "vulkan_window.h"
 
 namespace bebone::gfx {
-    VulkanWindow::VulkanWindow(const std::string& title, const int& width, const int& height) : Window(title, width, height) {
+    VulkanWindow::VulkanWindow(const std::string& title, const int& width, const int& height, const WindowProperties& properties) : Window(title, width, height, properties) {
 
     }
 
