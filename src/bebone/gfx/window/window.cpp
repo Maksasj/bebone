@@ -1,7 +1,13 @@
 #include "window.h"
 
 namespace bebone::gfx {
-    Window::Window(const std::string& title, const int& width, const int& height) : width(width), height(height) {
+    Window::Window(const std::string& title, const int& width, const int& height)
+        : windowHandler(this),
+          width(width),
+          height(height)
+
+    {
+
         window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
 
@@ -22,6 +28,8 @@ namespace bebone::gfx {
 
         add_listener(inputHandler.get_key_listener());
         add_listener(inputHandler.get_mouse_listener());
+
+        add_listener(windowHandler.get_window_size_listener());
     }
 
     Window::~Window() {
