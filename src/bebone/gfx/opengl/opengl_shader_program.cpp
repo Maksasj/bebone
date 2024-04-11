@@ -73,6 +73,27 @@ namespace bebone::gfx::opengl {
         }
     }
 
+    void GLShaderProgram::set_uniform(const char* uniformName, const Vec2f& value) const {
+        if(m_properties & ENABLE_UNIFORMS) {
+            const auto uniform = get_uniform_location(uniformName);
+            glUniform2f(uniform, value.x, value.y);
+        }
+    }
+
+    void GLShaderProgram::set_uniform(const char* uniformName, const Vec3f& value) const {
+        if(m_properties & ENABLE_UNIFORMS) {
+            const auto uniform = get_uniform_location(uniformName);
+            glUniform3f(uniform, value.x, value.y, value.z);
+        }
+    }
+
+    void GLShaderProgram::set_uniform(const char* uniformName, const Vec4f& value) const {
+        if(m_properties & ENABLE_UNIFORMS) {
+            const auto uniform = get_uniform_location(uniformName);
+            glUniform4f(uniform, value.x, value.y, value.z, value.w);
+        }
+    }
+
     void GLShaderProgram::set_uniform(const char* uniformName, const Mat4f& value) const {
         if(m_properties & ENABLE_UNIFORMS) {
             const auto uniform = get_uniform_location(uniformName);
