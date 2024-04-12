@@ -17,6 +17,7 @@ namespace bebone::gfx::opengl {
             void create_gl_texture(void* data, const GLenum& format, const GLenum& pixelType);
 
         public:
+        
             /*!
              * Loads image from file and creates opengl texture
              * @param image - path to the image file
