@@ -49,7 +49,7 @@ namespace bebone::assets {
             static std::shared_ptr<Image<_Color>> from_color(const size_t& width, const size_t& height, const _Color& color = _Color::WHITE);
             static std::shared_ptr<Image<_Color>> from_white_noise(const size_t& width, const size_t & height);
 
-            static std::shared_ptr<Image<_Color>> load_from_file(const std::string& filePath);
+            static std::shared_ptr<Image<_Color>> load_from_file(const std::string& filePath, const bool& vFlip = true);
 
             void export_to_file(const std::string& fileName);
     };
