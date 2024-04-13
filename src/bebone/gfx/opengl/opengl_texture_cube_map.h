@@ -37,7 +37,7 @@ namespace bebone::gfx::opengl {
             }
 
         public:
-            GLTextureCubeMap(const std::vector<std::string> filePaths) : GLTexture(GL_TEXTURE_CUBE_MAP) {
+            GLTextureCubeMap(const std::vector<std::string>& filePaths) : GLTexture(GL_TEXTURE_CUBE_MAP) {
                 std::array<std::shared_ptr<Image<ColorRGBA>>, 6> images = {
                     Image<ColorRGBA>::load_from_file(filePaths[0]),
                     Image<ColorRGBA>::load_from_file(filePaths[1]),
