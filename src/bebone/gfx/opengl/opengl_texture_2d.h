@@ -15,6 +15,22 @@ namespace bebone::gfx::opengl {
             int width;
             int height;
 
+            void create_gl_texture() {
+                const auto format = ColorRGBA::get_gl_format();
+                const auto type = ColorRGBA::get_gl_type();
+
+                bind();
+                glTexImage2D(
+                        get_texture_type(),
+                        0, format, width, height, 0,
+                        format, type, nullptr);
+
+                const GLTextureParameters parameters;
+                configure_gl_texture(parameters);
+                generate_mipmap();
+                unbind();
+            }
+
             template<typename _Color>
             void create_gl_texture(const std::shared_ptr<Image<_Color>>& image) {
                 width = image->get_width();
@@ -36,6 +52,14 @@ namespace bebone::gfx::opengl {
             }
 
         public:
+            GLTexture2D(const int& width, const int& height)
+                    : GLTexture(GL_TEXTURE_2D),
+                      width(width),
+                      height(height)
+            {
+                create_gl_texture();
+            }
+
             GLTexture2D(const std::string& filePath)
                 : GLTexture(GL_TEXTURE_2D),
                   width(0),

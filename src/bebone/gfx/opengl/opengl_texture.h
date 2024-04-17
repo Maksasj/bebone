@@ -29,6 +29,7 @@ namespace bebone::gfx::opengl {
             GLTexture(const GLenum& textureType);
             ~GLTexture();
 
+            const GLuint& get_id() const;
             const GLenum& get_texture_type() const;
 
             /*!

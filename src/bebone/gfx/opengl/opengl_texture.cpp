@@ -18,6 +18,10 @@ namespace bebone::gfx::opengl {
         glGenerateMipmap(textureType);
     }
 
+    const GLuint& GLTexture::get_id() const {
+        return id;
+    }
+
     const GLenum& GLTexture::get_texture_type() const {
         return textureType;
     }
