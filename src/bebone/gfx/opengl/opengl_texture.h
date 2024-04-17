@@ -7,32 +7,30 @@
 namespace bebone::gfx::opengl {
     using namespace bebone::assets;
 
+    struct GLTextureParameters {
+        vector<pair<GLenum, GLint>> parameters = {
+            {GL_TEXTURE_MIN_FILTER, GL_NEAREST},
+            {GL_TEXTURE_MAG_FILTER, GL_NEAREST},
+            {GL_TEXTURE_WRAP_S, GL_NEAREST},
+            {GL_TEXTURE_WRAP_T, GL_NEAREST},
+        };
+    };
+
     class GLTexture : private core::NonCopyable {
         private:
             GLuint id;
             GLenum textureType;
-            int width;
-            int height;
 
-            void create_gl_texture(void* data, const GLenum& format, const GLenum& pixelType);
+        protected:
+            void configure_gl_texture(const GLTextureParameters& parameters);
+            void generate_mipmap();
 
         public:
-        
-            /*!
-             * Loads image from file and creates opengl texture
-             * @param image - path to the image file
-             * @param textureType - specifies the texture (1D/2D/3D)
-            */
-            GLTexture(const std::string& filePath, const GLenum& textureType);
-
-            template<typename _Color>
-            GLTexture(const std::shared_ptr<Image<_Color>>& image, const GLenum& textureType)
-                : textureType(textureType), width(image->get_width()), height(image->get_height()) {
-
-                create_gl_texture(image->data(), _Color::get_gl_format(), _Color::get_gl_type());
-            }
-
+            GLTexture(const GLenum& textureType);
             ~GLTexture();
+
+            const GLuint& get_id() const;
+            const GLenum& get_texture_type() const;
 
             /*!
              * Binds texture to the specified texture unit
@@ -48,12 +46,6 @@ namespace bebone::gfx::opengl {
 
             /// Destroys texture. Calls automatically in the destructor
             void destroy();
-
-            /// Get texture width in pixels
-            const int& get_width() const;
-
-            /// Get texture height in pixels
-            const int& get_height() const;
     };
 }
 

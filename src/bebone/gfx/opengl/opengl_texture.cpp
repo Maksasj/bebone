@@ -1,35 +1,29 @@
 #include "opengl_texture.h"
 
 namespace bebone::gfx::opengl {
-    GLTexture::GLTexture(const std::string& filePath, const GLenum& textureType)
-        : textureType(textureType)
-    {
-        auto image = Image<ColorRGBA>::load_from_file(filePath);
-
-        width = image->get_width();
-        height = image->get_height();
-
-        create_gl_texture(image->data(), ColorRGBA::get_gl_format(), ColorRGBA::get_gl_type());
+    GLTexture::GLTexture(const GLenum& textureType) : textureType(textureType) {
+        glGenTextures(1, &id);
     }
 
     GLTexture::~GLTexture() {
         destroy();
     }
 
-    void GLTexture::create_gl_texture(void* data, const GLenum& format, const GLenum& pixelType) {
-        glGenTextures(1, &id);
-        glBindTexture(textureType, id);
+    void GLTexture::configure_gl_texture(const GLTextureParameters& parameters) {
+        for(auto& param : parameters.parameters)
+            glTexParameteri(textureType, param.first, param.second);
+    };
 
-        glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_NEAREST);
-        glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_NEAREST);
-
-        glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, format, pixelType, data);
+    void GLTexture::generate_mipmap() {
         glGenerateMipmap(textureType);
+    }
 
-        glBindTexture(textureType, 0);
+    const GLuint& GLTexture::get_id() const {
+        return id;
+    }
+
+    const GLenum& GLTexture::get_texture_type() const {
+        return textureType;
     }
 
     void GLTexture::bind_texture_unit(const GLuint& textureUnit) {
@@ -48,6 +42,7 @@ namespace bebone::gfx::opengl {
         glDeleteTextures(1, &id);
     }
 
+    /*
     const int& GLTexture::get_width() const {
         return width;
     }
@@ -55,4 +50,5 @@ namespace bebone::gfx::opengl {
     const int& GLTexture::get_height() const {
         return height;
     }
+    */
 }

@@ -12,16 +12,23 @@ namespace bebone::gfx::opengl {
 
     class GLTexture2D : public GLTexture {
         private:
+            int width;
+            int height;
 
-        public:
-            GLTexture2D(const std::string& filePath) : GLTexture(filePath, GL_TEXTURE_2D) {
-
-            }
+            void create_gl_texture();
 
             template<typename _Color>
-            GLTexture2D(const std::shared_ptr<Image<_Color>>& image) : GLTexture(image, GL_TEXTURE_2D) {
+            void create_gl_texture(const std::shared_ptr<Image<_Color>>& image);
 
-            }
+        public:
+            GLTexture2D(const int& width, const int& height);
+            GLTexture2D(const std::string& filePath);
+
+            template<typename _Color>
+            GLTexture2D(const std::shared_ptr<Image<_Color>>& image);
+
+            const int& get_width() const;
+            const int& get_height() const;
     };
 }
 
