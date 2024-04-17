@@ -10,21 +10,13 @@
 namespace bebone::gfx::opengl {
     using namespace bebone::assets;
 
+    // Todo need testing
     class GLTexture1D : public GLTexture {
         private:
             int width;
 
         public:
-            /*
-            GLTexture1D(const std::string& filePath) : GLTexture(filePath, GL_TEXTURE_2D) {
-
-            }
-
-            template<typename _Color>
-            GLTexture1D(const std::shared_ptr<Image<_Color>>& image) : GLTexture(image, GL_TEXTURE_2D) {
-
-            }
-            */
+            GLTexture1D(const int& w, void* data);
 
             const int& get_width() const;
     };
