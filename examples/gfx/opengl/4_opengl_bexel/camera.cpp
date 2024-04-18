@@ -39,6 +39,8 @@ namespace bexel {
     }
 
     void Camera::update(shared_ptr<Window>& window) {
+        BEBONE_PROFILE_RECORD(BEXEL_CAMERA_UPDATE)
+
         const f32 speed = 0.5f;
 
         if (glfwGetKey(window->get_backend(), 'W') == GLFW_PRESS)
@@ -93,6 +95,8 @@ namespace bexel {
 
         m_viewMatrix = calculate_view_matrix();
         m_projMatrix = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 2000.0f);
+
+        BEBONE_PROFILE_STOP(BEXEL_CAMERA_UPDATE)
     }
 
     void Camera::bind(unique_ptr<GLShaderProgram>& shader) {

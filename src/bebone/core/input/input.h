@@ -16,9 +16,9 @@ namespace bebone::core {
     /// Singleton Input System class. Works with Action delegates
     class Input {
         private:
-            using Action = Action<>;
+            using BeboneAction = Action<>;
 
-            map<Key, Action> keyActions;
+            map<Key, BeboneAction> keyActions;
             queue<Key> queuedKeys;
 
             Input() = default;

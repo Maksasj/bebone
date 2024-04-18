@@ -1,6 +1,8 @@
 #ifndef _BEBONE_GFX_VULKAN_VULKAN_DEVICE_CHOOSER_H_
 #define _BEBONE_GFX_VULKAN_VULKAN_DEVICE_CHOOSER_H_
 
+#include <set>
+
 #include "vulkan_instance.h"
 
 namespace bebone::gfx::vulkan {
@@ -15,7 +17,7 @@ namespace bebone::gfx::vulkan {
         uint32_t presentFamily;
         bool graphicsFamilyHasValue = false;
         bool presentFamilyHasValue = false;
-        bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
+        bool is_complete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
     };
 
     class VulkanDeviceChooser {

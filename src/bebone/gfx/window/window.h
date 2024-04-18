@@ -4,12 +4,13 @@
 #include <iostream>
 #include <exception>
 
-#include "../../core/core.h"
-
 #include "../gfx_backend.h"
 
 #include "events/window_event.h"
 #include "events/input_event.h"
+
+#include "window_properties.h"
+#include "window_handler.h"
 
 namespace bebone::gfx {
     using namespace core;
@@ -18,10 +19,15 @@ namespace bebone::gfx {
     class Window : private NonCopyable, public EventDispatcher<WindowEvent>, public EventDispatcher<InputEvent> {
         private:
             GLFWwindow* window;
+
+            InputHandler inputHandler;
+            WindowHandler windowHandler;
+
+        protected:
             int width;
             int height;
 
-            InputHandler inputHandler;
+            friend class WindowSizeListener;
 
         public:
             using EventDispatcher<WindowEvent>::add_listener;
@@ -36,7 +42,7 @@ namespace bebone::gfx {
              * @param width - window width
              * @param height - window height
             */
-            Window(const std::string& title, const int& width, const int& height);
+            Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties = {});
             ~Window();
 
             /*!

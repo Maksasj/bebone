@@ -15,4 +15,9 @@
 
 #include "opengl_texture.h"
 
+#include "opengl_texture_1d.h"
+#include "opengl_texture_2d.h"
+#include "opengl_texture_3d.h"
+#include "opengl_texture_cube_map.h"
+
 #endif

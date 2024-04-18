@@ -58,12 +58,39 @@ namespace bebone::gfx::opengl {
             void set_uniform(const char* uniformName, const f32& value) const;
 
             /*!
+            * glUniform2f
+            * @param uniformName - uniform name from the shader
+            * @param value - the value to be assigned to the uniform
+            */
+            void set_uniform(const char* uniformName, const Vec2f& value) const;
+
+            /*!
+            * glUniform3f
+            * @param uniformName - uniform name from the shader
+            * @param value - the value to be assigned to the uniform
+            */
+            void set_uniform(const char* uniformName, const Vec3f& value) const;
+
+            /*!
+            * glUniform4f
+            * @param uniformName - uniform name from the shader
+            * @param value - the value to be assigned to the uniform
+            */
+            void set_uniform(const char* uniformName, const Vec4f& value) const;
+
+            /*!
              * glUniformMatrix4fv
              * @param uniformName - uniform name from the shader
              * @param value - the value to be assigned to the uniform
              */
             void set_uniform(const char* uniformName, const Mat4f& value) const;
 
+            /*!
+            * Binds uniform buffer object to shader program
+            * @param uniformBufferName - uniform buffer name
+            * @param binding - uniform buffer binding
+            * @param buffer - GLUniformBufferObject object
+            */
             void bind_buffer(const char* uniformBufferName, const i32& binding, const GLUniformBufferObject& buffer) const;
 
             /// Enables shader program

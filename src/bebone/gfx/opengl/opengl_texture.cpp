@@ -1,31 +1,29 @@
 #include "opengl_texture.h"
 
 namespace bebone::gfx::opengl {
-    GLTexture::GLTexture(const char* image, const GLenum& textureType, const GLenum& format, const GLenum& pixelType) : textureType(textureType) {
-        int colorChannelNumber;
-
-        stbi_set_flip_vertically_on_load(true);
-
-        unsigned char* bytes = stbi_load(image, &width, &height, &colorChannelNumber, 0);
-
+    GLTexture::GLTexture(const GLenum& textureType) : textureType(textureType) {
         glGenTextures(1, &id);
-        glBindTexture(textureType, id);
-
-        glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_NEAREST);
-        glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_NEAREST);
-
-        glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, format, pixelType, bytes);
-        glGenerateMipmap(textureType);
-
-        stbi_image_free(bytes);
-        glBindTexture(textureType, 0);
     }
 
     GLTexture::~GLTexture() {
         destroy();
+    }
+
+    void GLTexture::configure_gl_texture(const GLTextureParameters& parameters) {
+        for(auto& param : parameters.parameters)
+            glTexParameteri(textureType, param.first, param.second);
+    };
+
+    void GLTexture::generate_mipmap() {
+        glGenerateMipmap(textureType);
+    }
+
+    const GLuint& GLTexture::get_id() const {
+        return id;
+    }
+
+    const GLenum& GLTexture::get_texture_type() const {
+        return textureType;
     }
 
     void GLTexture::bind_texture_unit(const GLuint& textureUnit) {
@@ -44,11 +42,13 @@ namespace bebone::gfx::opengl {
         glDeleteTextures(1, &id);
     }
 
-    int GLTexture::get_width() const {
+    /*
+    const int& GLTexture::get_width() const {
         return width;
     }
-    
-    int GLTexture::get_height() const {
+
+    const int& GLTexture::get_height() const {
         return height;
     }
+    */
 }

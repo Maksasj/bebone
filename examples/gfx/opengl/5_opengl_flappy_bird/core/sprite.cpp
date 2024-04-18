@@ -13,7 +13,7 @@ namespace game::core {
         unitHeight = get_height() / (float)pixelsPerUnit;
     }
 
-    const shared_ptr<GLTexture>& Sprite::get_texture() const {
+    const shared_ptr<GLTexture2D>& Sprite::get_texture() const {
         return texture;
     }
 

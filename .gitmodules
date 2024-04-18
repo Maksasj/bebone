@@ -7,9 +7,6 @@
 [submodule "3dparty/Vulkan-Headers"]
 	path = 3dparty/Vulkan-Headers
 	url = https://github.com/Maksasj/Vulkan-Headers.git
-[submodule "3dparty/glslang"]
-	path = 3dparty/glslang
-	url = https://github.com/KhronosGroup/glslang
 [submodule "3dparty/omni_types"]
 	path = 3dparty/omni_types
 	url = https://github.com/Maksasj/omni_types
@@ -20,3 +17,6 @@
 [submodule "3dparty/imgui"]
 	path = 3dparty/imgui
 	url = https://github.com/Maksasj/imgui
+[submodule "3dparty/glslang"]
+	path = 3dparty/glslang
+	url = https://github.com/Maksasj/glslang

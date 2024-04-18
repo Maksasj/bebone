@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "../../core/core.h"
 #include "../gfx_backend.h"
 
 #include "shader_type.h"

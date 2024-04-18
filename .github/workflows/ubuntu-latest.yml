@@ -1,0 +1,45 @@
+name: Ubuntu Build
+
+on:
+  push:
+    branches: [ "master", "dev" ]
+  pull_request:
+    branches: [ "master", "dev" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
+    - name: Install prerequisites
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev xorg-dev
+
+    - name: Install Vulkan 0
+      run: wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+
+    - name: Install Vulkan 1
+      run: sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list http://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
+
+    - name: Install Vulkan 2
+      run: sudo apt update
+
+    - name: Install Vulkan 3
+      run: sudo apt install vulkan-sdk
+
+    - name: Configure CMake
+      uses: threeal/cmake-action@v1.3.0
+      with:
+        generator: Ninja
+        c-compiler: gcc
+        cxx-compiler: g++
+        build-dir: build
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

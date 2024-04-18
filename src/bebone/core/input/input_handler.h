@@ -6,15 +6,21 @@
 #include "mouse_listener.h"
 
 namespace bebone::core {
+    // Input handler class
     class InputHandler {
-    private:
-        KeyListener keyListener;
-        MouseListener mouseListener;
-    public:
-        const KeyListener& get_key_listener() const;
-        const MouseListener& get_mouse_listener() const;
+        private:
+            KeyListener keyListener;
+            MouseListener mouseListener;
 
-        void execute_input_actions() const;
+        public:
+            // Getter for key listener
+            const KeyListener& get_key_listener() const;
+
+            // Getter for mouse listener
+            const MouseListener& get_mouse_listener() const;
+
+            // Executes all input actions
+            void execute_input_actions() const;
     };
 }
 
