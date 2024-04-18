@@ -29,6 +29,11 @@ namespace bebone::assets {
     }
 
     template<typename _Color>
+    _Color& Image<_Color>::at(const Vec2i& pos) {
+        return at(pos.x, pos.y);
+    }
+
+    template<typename _Color>
     const int& Image<_Color>::get_width() const {
         return width;
     }
