@@ -123,7 +123,7 @@ namespace bebone::core {
         Profile *profile,
         Profile *parent,
         unsigned long depth,
-        const std::function<void(Profile*, unsigned int depth)>& lamda
+        const std::function<void(Profile* profile, Profile* parent, unsigned int depth)>& lamda
     );
 }
 

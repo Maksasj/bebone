@@ -84,14 +84,14 @@ namespace bebone::core {
         Profile *profile,
         Profile *parent,
         unsigned long depth,
-        const std::function<void(Profile*, unsigned int depth)>& lamda
+        const std::function<void(Profile* profile, Profile* parent, unsigned int depth)>& lamda
     ) {
         std::ignore = parent;
 
         const auto& childs = profile->get_childs();
 
         for(auto& pp : childs) {
-            lamda(pp, depth + 1);
+            lamda(pp, profile, depth + 1);
 
             trace_profiles(pp, profile, depth + 1, lamda);
         }
@@ -113,15 +113,15 @@ namespace bebone::core {
         std::stringstream ss;
 
         for(auto& profile : entryPoints) {
-
             ss << "Profile: '" << profile->label << "' ("
                << "times = " << profile->executionCount << ", "
                << "total = " << profile->totalExecutionTime / 1000000.0 << " ms, "
                << "min = " << profile->minExecutionTime / 1000000.0 << " ms, "
                << "max = " << profile->maxExecutionTime / 1000000.0 << " ms, "
-               << "avg = " << (profile->totalExecutionTime / profile->executionCount) / 1000000.0 << " ms) \n";
+               << "avg = " << (profile->totalExecutionTime / profile->executionCount) / 1000000.0 << " ms, "
+               << "perc = 100.0 %) \n";
 
-            trace_profiles(profile, profile, 1, [&](Profile* pp, unsigned int depth) {
+            trace_profiles(profile, profile, 1, [&](Profile* pp, Profile* parent, unsigned int depth) {
                 for(unsigned int i = 0; i < depth; ++i)
                     ss << "    ";
 
@@ -130,9 +130,9 @@ namespace bebone::core {
                     << "total = " << pp->totalExecutionTime / 1000000.0 << " ms, "
                     << "min = " << pp->minExecutionTime / 1000000.0 << " ms, "
                     << "max = " << pp->maxExecutionTime / 1000000.0 << " ms, "
-                    << "avg = " << (pp->totalExecutionTime / pp->executionCount) / 1000000.0 << " ms) \n";
+                    << "avg = " << (pp->totalExecutionTime / pp->executionCount) / 1000000.0 << " ms, "
+                    << "perc = " << (pp->totalExecutionTime / parent->totalExecutionTime) * 100.0 << "%) \n";
             });
-
         }
 
         return ss.str();
