@@ -3,8 +3,8 @@ project(Bebone)
 
 # Bebone versions
 set(BEBONE_VERSION_MAJOR 0 CACHE STRING "Bebone major version")
-set(BEBONE_VERSION_MINOR 1 CACHE STRING "Bebone minor version")
-set(BEBONE_VERSION_PATCH 1 CACHE STRING "Bebone patch version")
+set(BEBONE_VERSION_MINOR 2 CACHE STRING "Bebone minor version")
+set(BEBONE_VERSION_PATCH 0 CACHE STRING "Bebone patch version")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
