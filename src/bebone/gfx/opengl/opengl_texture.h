@@ -26,10 +26,17 @@ namespace bebone::gfx::opengl {
             void generate_mipmap();
 
         public:
+            /*!
+            * Default GLTexture constructor
+            * @param textureType - opengl texture type
+            */
             GLTexture(const GLenum& textureType);
             ~GLTexture();
 
+            // Getter for opengl texture handle
             const GLuint& get_id() const;
+
+            // Getter for texture type
             const GLenum& get_texture_type() const;
 
             /*!

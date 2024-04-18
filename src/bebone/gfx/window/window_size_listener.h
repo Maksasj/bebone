@@ -11,14 +11,23 @@
 namespace bebone::gfx {
     class Window;
 
+    // Window resize listener class
     class WindowSizeListener : EventListener<WindowSizeEvent> {
         private:
             Window* window;
 
         public:
+            /*!
+            * Default constructor
+            * @param win - pointer to window
+            */
             WindowSizeListener(Window* win);
 
-            void operator()(WindowSizeEvent& event);
+            /*!
+            * Event execution method
+            * @param event - event object
+            */
+            void operator()(WindowSizeEvent& event) override;
     };
 }
 

@@ -16,8 +16,14 @@ namespace bebone::gfx::opengl {
             int width;
 
         public:
+            /*!
+            * Default GLTexture1D constructor
+            * @param w - Texture width
+            * @param data - Pointer to pixel data
+            */
             GLTexture1D(const int& w, void* data);
 
+            // Getter for image width
             const int& get_width() const;
     };
 }

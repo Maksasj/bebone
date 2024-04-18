@@ -85,6 +85,12 @@ namespace bebone::gfx::opengl {
              */
             void set_uniform(const char* uniformName, const Mat4f& value) const;
 
+            /*!
+            * Binds uniform buffer object to shader program
+            * @param uniformBufferName - uniform buffer name
+            * @param binding - uniform buffer binding
+            * @param buffer - GLUniformBufferObject object
+            */
             void bind_buffer(const char* uniformBufferName, const i32& binding, const GLUniformBufferObject& buffer) const;
 
             /// Enables shader program

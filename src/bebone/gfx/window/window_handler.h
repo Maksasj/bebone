@@ -14,8 +14,14 @@ namespace bebone::gfx {
             WindowSizeListener windowSizeListener;
 
         public:
+    public:
+            /*!
+            * Default constructor
+            * @param window - pointer to window
+            */
             WindowHandler(Window* window);
 
+            // Getter for window size listener
             const WindowSizeListener& get_window_size_listener() const;
     };
 }

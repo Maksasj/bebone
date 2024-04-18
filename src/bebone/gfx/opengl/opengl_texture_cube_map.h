@@ -12,12 +12,21 @@ namespace bebone::gfx::opengl {
 
     class GLTextureCubeMap : public GLTexture {
         private:
+            // Function that creates cube map from image array
             template<typename _Color>
             void create_cube_map_texture(const std::array<std::shared_ptr<Image<_Color>>, 6>& images);
 
         public:
+            /*!
+            * Constructor
+            * @param filePaths - container with file paths for cube map texture, 6 textures required
+            */
             GLTextureCubeMap(const std::vector<std::string>& filePaths);
 
+            /*!
+            * Constructor
+            * @param images - 6 element array, with image for each cube side
+            */
             template<typename _Color>
             GLTextureCubeMap(const std::array<std::shared_ptr<Image<_Color>>, 6>& images);
     };
