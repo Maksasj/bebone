@@ -109,7 +109,7 @@ namespace bebone::core {
         return entryPoints;
     }
 
-    std::string Profiler::sum_up() const {
+    std::string Profiler::result() const {
         std::stringstream ss;
 
         for(auto& profile : entryPoints) {
