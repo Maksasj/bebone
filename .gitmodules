@@ -20,3 +20,6 @@
 [submodule "3dparty/glslang"]
 	path = 3dparty/glslang
 	url = https://github.com/Maksasj/glslang
+[submodule "3dparty/miniaudio"]
+	path = 3dparty/miniaudio
+	url = https://github.com/Maksasj/miniaudio
