@@ -15,6 +15,8 @@ namespace bebone::core {
         private:
 
         public:
+            virtual ~EventListener() = default;
+            
             virtual void operator()(EventType&) = 0;
     };
 }
