@@ -43,7 +43,7 @@ namespace bebone::gfx {
                 if(parent != nullptr)
                     parentRationTime = (profile->totalExecutionTime / parent->totalExecutionTime) * 100.0;
 
-                ImGui::Text("executed %lu times, total execution time %f ms", profile->executionCount, totalExecutionTime);
+                ImGui::Text("executed %llu times, total execution time %f ms", profile->executionCount, totalExecutionTime);
 
                 ImGui::Text("Max execution time %f ms", maxExecutionTime);
                 ImGui::Text("Min execution time %f ms", minExecutionTime);
