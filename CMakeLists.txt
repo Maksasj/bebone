@@ -29,6 +29,7 @@ endif()
 
 # Bebone build options
 option(BEBONE_EXAMPLES          "Bebone build all examples"     ON)
+option(BEBONE_TESTS             "Bebone build all tests"        ON)
 
 option(BEBONE_BUILD_CORE        "Bebone build core module"      ON)
 option(BEBONE_BUILD_ASSETS      "Bebone build assets module"    ON)
@@ -40,4 +41,8 @@ add_subdirectory(src)
 
 if(BEBONE_EXAMPLES)
     add_subdirectory(examples)
+endif()
+
+if(BEBONE_TESTS)
+    add_subdirectory(tests)
 endif()
