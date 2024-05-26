@@ -1,7 +1,7 @@
 #ifndef BEXEL_VERTEX_H
 #define BEXEL_VERTEX_H
 
-#include "bebone.h"
+#include "bebone/bebone.h"
 
 namespace bexel {
     using namespace bebone::core;

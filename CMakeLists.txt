@@ -36,7 +36,6 @@ option(BEBONE_BUILD_ASSETS      "Bebone build assets module"    ON)
 option(BEBONE_BUILD_GFX         "Bebone build gfx module"       ON)
 
 add_subdirectory(3dparty)
-
 add_subdirectory(src)
 
 if(BEBONE_EXAMPLES)
