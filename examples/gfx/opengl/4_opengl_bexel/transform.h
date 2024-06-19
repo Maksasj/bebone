@@ -1,7 +1,7 @@
 #ifndef BEXEL_TRANSFORM_H
 #define BEXEL_TRANSFORM_H
 
-#include "gfx/opengl/4_opengl_bexel/mesh/vertex.h"
+#include "mesh/vertex.h"
 
 namespace bexel {
     struct Transform {

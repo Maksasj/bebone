@@ -1,7 +1,7 @@
 #ifndef BEXEL_CAMERA_H
 #define BEXEL_CAMERA_H
 
-#include "gfx/opengl/4_opengl_bexel/mesh/vertex.h"
+#include "mesh/vertex.h"
 
 namespace bexel {
     class Camera : private core::NonCopyable {

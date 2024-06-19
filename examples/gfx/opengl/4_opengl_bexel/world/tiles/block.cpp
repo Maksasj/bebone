@@ -1,7 +1,7 @@
 #include "block.h"
 
-#include "gfx/opengl/4_opengl_bexel/world/chunk.h"
-#include "gfx/opengl/4_opengl_bexel/world/world.h"
+#include "world/chunk.h"
+#include "world/world.h"
 
 namespace bexel {
     Block::Block(const Vec3f& chunkPosition) : TileBlock(false), m_chunkPosition(chunkPosition) {

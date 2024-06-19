@@ -9,7 +9,7 @@
 #include "../transform.h"
 
 #include "world_generator.h"
-#include "gfx/opengl/4_opengl_bexel/world/tiles/tile_block.h"
+#include "world/tiles/tile_block.h"
 
 #define CHUNK_SIZE_X 16
 #define CHUNK_SIZE_Y 32

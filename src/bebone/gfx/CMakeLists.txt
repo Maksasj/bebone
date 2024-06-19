@@ -1,27 +1,36 @@
 file(GLOB_RECURSE BEBONE_GFX_SRC_FILES "*.cpp")
 
-include_directories("../../../3dparty/glad/include")
-include_directories("../../../3dparty/glfw/include")
-include_directories("../../../3dparty/Vulkan-Headers/include")
-
 add_compile_definitions(OMNI_GLAD_INTEGRATION)
-include_directories("../../../3dparty/omni_types/src")
 
-include_directories("../../../3dparty/stb")
-include_directories("../../../3dparty/glfw/include")
-include_directories("../../../3dparty/imgui")
+set(BEBONE_GFX_INCLUDES "${CMAKE_SOURCE_DIR}/src/bebone/gfx" )
 
-include_directories("./")
+list(APPEND BEBONE_GFX_INCLUDES 
+    "${CMAKE_SOURCE_DIR}/3dparty/glad/include"
+    "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"
+    "${CMAKE_SOURCE_DIR}/3dparty/Vulkan-Headers/include"
 
-add_library(bebone_gfx STATIC ${BEBONE_GFX_SRC_FILES})
+    "${CMAKE_SOURCE_DIR}/3dparty/omni_types/src"
+
+    "${CMAKE_SOURCE_DIR}/3dparty/stb"
+    "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"
+    "${CMAKE_SOURCE_DIR}/3dparty/imgui"
+)   
 
 find_package(Vulkan REQUIRED)
 
-target_link_libraries(bebone_gfx glfw)
-target_link_libraries(bebone_gfx stb_image)
-target_link_libraries(bebone_gfx glad)
-target_link_libraries(bebone_gfx glslang)
-target_link_libraries(bebone_gfx SPIRV)
-target_link_libraries(bebone_gfx glslang-default-resource-limits)
-target_link_libraries(bebone_gfx ${Vulkan_LIBRARIES})
-target_link_libraries(bebone_gfx imgui)
+set(BEBONE_GFX_LIBRARIES 
+    glfw
+    stb_image
+    glad
+    glslang
+    SPIRV
+    glslang-default-resource-limits
+    ${Vulkan_LIBRARIES}
+    imgui
+)
+
+set(BEBONE_GFX_INCLUDES "${BEBONE_GFX_INCLUDES}" CACHE INTERNAL "")
+include_directories(${BEBONE_GFX_INCLUDES})
+
+add_library(bebone_gfx STATIC ${BEBONE_GFX_SRC_FILES})
+target_link_libraries(bebone_gfx ${BEBONE_GFX_LIBRARIES})
