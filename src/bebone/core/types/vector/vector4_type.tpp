@@ -1,16 +1,5 @@
-/**
- * @file 
- * vector4_type.tpp
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_VECTOR_4_TYPE_TPP_
-#define _OMNI_TYPES_VECTOR_4_TYPE_TPP_
+#ifndef _BEBONE_CORE_TYPES_VECTOR_4_TYPE_TPP_
+#define _BEBONE_CORE_TYPES_VECTOR_4_TYPE_TPP_
 
 #include "vector3_type.tpp"
 

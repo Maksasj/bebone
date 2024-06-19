@@ -1,16 +1,5 @@
-/**
- * @file 
- * matrix_types.h
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_MATRIX_TYPES_H_
-#define _OMNI_TYPES_MATRIX_TYPES_H_
+#ifndef _BEBONE_CORE_TYPES_MATRIX_TYPES_H_
+#define _BEBONE_CORE_TYPES_MATRIX_TYPES_H_
 
 #include "../primitive_types.h"
 

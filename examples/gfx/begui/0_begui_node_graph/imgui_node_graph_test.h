@@ -1,7 +1,7 @@
 #include <math.h>
 
-#define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
-#define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
+#define BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+#define BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
 static inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }

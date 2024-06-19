@@ -1,16 +1,5 @@
-/**
- * @file
- * fixed_point.tpp
- *
- * @author
- * Maksim Jaroslavcevas radioboos@gmail.com
- *
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_FIXED_POINT_TYPE_TPP_
-#define _OMNI_TYPES_FIXED_POINT_TYPE_TPP_
+#ifndef _BEBONE_CORE_TYPES_FIXED_POINT_TYPE_TPP_
+#define _BEBONE_CORE_TYPES_FIXED_POINT_TYPE_TPP_
 
 #include "primitive_types.h"
 

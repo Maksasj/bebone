@@ -1,16 +1,5 @@
-/**
- * @file 
- * uuid.tpp
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_UUID_TYPE_H_
-#define _OMNI_TYPES_UUID_TYPE_H_
+#ifndef _BEBONE_CORE_TYPES_UUID_TYPE_H_
+#define _BEBONE_CORE_TYPES_UUID_TYPE_H_
 
 #include "../primitive_types.h"
 

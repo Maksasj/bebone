@@ -1,5 +1,5 @@
-#ifndef _OMNI_TYPES_QUATERNION_TPP_
-#define _OMNI_TYPES_QUATERNION_TPP_
+#ifndef _BEBONE_CORE_TYPES_QUATERNION_TPP_
+#define _BEBONE_CORE_TYPES_QUATERNION_TPP_
 
 #include "../primitive_types.h"
 

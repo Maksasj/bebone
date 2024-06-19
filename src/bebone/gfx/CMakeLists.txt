@@ -1,16 +1,11 @@
 file(GLOB_RECURSE BEBONE_GFX_SRC_FILES "*.cpp")
 
-add_compile_definitions(OMNI_GLAD_INTEGRATION)
-
 set(BEBONE_GFX_INCLUDES "${CMAKE_SOURCE_DIR}/src/bebone/gfx" )
 
 list(APPEND BEBONE_GFX_INCLUDES 
     "${CMAKE_SOURCE_DIR}/3dparty/glad/include"
     "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"
     "${CMAKE_SOURCE_DIR}/3dparty/Vulkan-Headers/include"
-
-    # "${CMAKE_SOURCE_DIR}/3dparty/omni_types/src"
-
     "${CMAKE_SOURCE_DIR}/3dparty/stb"
     "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"
     "${CMAKE_SOURCE_DIR}/3dparty/imgui"

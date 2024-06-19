@@ -1,16 +1,5 @@
-/**
- * @file
- * color_rgba32f.tpp
- *
- * @author
- * Maksim Jaroslavcevas radioboos@gmail.com
- *
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_COLOR_R32G32B32A32_FLOAT_TPP_
-#define _OMNI_TYPES_COLOR_R32G32B32A32_FLOAT_TPP_
+#ifndef _BEBONE_CORE_TYPES_COLOR_R32G32B32A32_FLOAT_TPP_
+#define _BEBONE_CORE_TYPES_COLOR_R32G32B32A32_FLOAT_TPP_
 
 #include "color.tpp"
 #include "color_format.h"
@@ -50,7 +39,6 @@ namespace bebone::core {
             return splat(v);
         }
 
-        #ifdef OMNI_GLAD_INTEGRATION
         static inline constexpr GLuint get_gl_format() {
             return GL_RGBA;
         }
@@ -58,13 +46,12 @@ namespace bebone::core {
         static inline constexpr GLuint get_gl_type() {
             return GL_FLOAT;
         }
-        #endif
 
         static inline Color<R32G32B32A32_FLOAT> random() {
             return { 
-                static_cast<f32>(static_cast<u8>(OMNI_TYPES_RAND % 255)) / 255.0f, 
-                static_cast<f32>(static_cast<u8>(OMNI_TYPES_RAND % 255)) / 255.0f, 
-                static_cast<f32>(static_cast<u8>(OMNI_TYPES_RAND % 255)) / 255.0f,
+                static_cast<f32>(static_cast<u8>(BEBONE_TYPES_RAND % 255)) / 255.0f, 
+                static_cast<f32>(static_cast<u8>(BEBONE_TYPES_RAND % 255)) / 255.0f, 
+                static_cast<f32>(static_cast<u8>(BEBONE_TYPES_RAND % 255)) / 255.0f,
                 1.0f
             };
         }

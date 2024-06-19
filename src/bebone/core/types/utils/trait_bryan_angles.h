@@ -1,16 +1,5 @@
-/**
- * @file 
- * trait_bryan_angles.h
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_TRAIT_BRYAN_ANGLES_
-#define _OMNI_TYPES_TRAIT_BRYAN_ANGLES_
+#ifndef _BEBONE_CORE_TYPES_TRAIT_BRYAN_ANGLES_
+#define _BEBONE_CORE_TYPES_TRAIT_BRYAN_ANGLES_
 
 #include "../matrix/matrix_4x4.tpp"
 
@@ -23,7 +12,7 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
                 return {{
                     c2*c3,              -s2,    c2*s3,                  0.0f,
                     s1*s3 + c1*c3*s2,   c1*c2,  c1*s2*s3 - c3*s1,       0.0f,
@@ -48,7 +37,7 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
                 return {{
                     c2*c3,              -c2*s3,             s2,         0.0f,
                     c1*s3 + c3*s1*s2,   c1*c3 - s1*s2*s3,   -c2*s1,     0.0f,
@@ -73,7 +62,7 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
                 return {{
                     c1*c3 + s1*s2*s3,   c3*s1*s2 - c1*s3,   c2*s1,      0.0f,
                     c2*s3,              c2*c3,              -s2,        0.0f,
@@ -98,7 +87,7 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
                 return {{
                     c1*c2,      s1*s3 - c1*c3*c2,   c3*s1 + c1*s2*s3,   0.0f,
                     s2,         c2*c3,               -c2*s3,             0.0f,
@@ -123,7 +112,7 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
                 return {{
                     c1*c2,      c1*s2*s3 - c3*s1,   s1*s3 + c1*c3*s2,   0.0f,
                     c2*s1,      c1*c3 + s1*s2*s3,   c3*s1*s2 - c1*s3,   0.0f,
@@ -148,7 +137,7 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
                 return {{
                     c1*c3 - s1*s2*s3,   -c2*s1,     c1*s3 + c3*s1*s2,   0.0f,
                     c3*s1 + c1*s2*s3,   c1*c2,      s1*s3 - c1*c3*s2,   0.0f,

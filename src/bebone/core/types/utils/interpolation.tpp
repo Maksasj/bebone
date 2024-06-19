@@ -1,16 +1,5 @@
-/**
- * @file 
- * interpolation.tpp
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_INTERPOLATION_TPP_
-#define _OMNI_TYPES_INTERPOLATION_TPP_
+#ifndef _BEBONE_CORE_TYPES_INTERPOLATION_TPP_
+#define _BEBONE_CORE_TYPES_INTERPOLATION_TPP_
 
 #include "../primitive_types.h"
 

@@ -1,16 +1,5 @@
-/**
- * @file 
- * proper_euler_angles.h
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_PROPER_EULER_ANGLES_
-#define _OMNI_TYPES_PROPER_EULER_ANGLES_
+#ifndef _BEBONE_CORE_TYPES_PROPER_EULER_ANGLES_
+#define _BEBONE_CORE_TYPES_PROPER_EULER_ANGLES_
 
 #include "../matrix/matrix_4x4.tpp"
 

@@ -1,16 +1,5 @@
-/**
- * @file 
- * matrix_2x2.tpp
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_MATRIX_2X2_TPP_
-#define _OMNI_TYPES_MATRIX_2X2_TPP_
+#ifndef _BEBONE_CORE_TYPES_MATRIX_2X2_TPP_
+#define _BEBONE_CORE_TYPES_MATRIX_2X2_TPP_
 
 #include "matrix.tpp"
 

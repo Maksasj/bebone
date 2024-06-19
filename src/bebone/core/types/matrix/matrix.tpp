@@ -1,16 +1,5 @@
-/**
- * @file 
- * matrix.tpp
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_MATRIX_TPP_
-#define _OMNI_TYPES_MATRIX_TPP_
+#ifndef _BEBONE_CORE_TYPES_MATRIX_TPP_
+#define _BEBONE_CORE_TYPES_MATRIX_TPP_
 
 #include "../vector/vector_types.h"
 #include "../primitive_types.h"

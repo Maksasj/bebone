@@ -1,16 +1,5 @@
-/**
- * @file
- * colors.h
- *
- * @author
- * Maksim Jaroslavcevas radioboos@gmail.com
- *
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_COLORS_H_
-#define _OMNI_TYPES_COLORS_H_
+#ifndef _BEBONE_CORE_TYPES_COLORS_H_
+#define _BEBONE_CORE_TYPES_COLORS_H_
 
 #include "color.tpp"
 #include "color_format.h"

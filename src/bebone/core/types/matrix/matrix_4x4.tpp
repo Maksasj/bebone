@@ -1,16 +1,5 @@
-/**
- * @file 
- * matrix_4x4.tpp
- * 
- * @author 
- * Maksim Jaroslavcevas radioboos@gmail.com
- * 
- * @copyright
- * see LICENSE.md file
-*/
-
-#ifndef _OMNI_TYPES_MATRIX_4X4_TPP_
-#define _OMNI_TYPES_MATRIX_4X4_TPP_
+#ifndef _BEBONE_CORE_TYPES_MATRIX_4X4_TPP_
+#define _BEBONE_CORE_TYPES_MATRIX_4X4_TPP_
 
 #include "matrix.tpp"
 
@@ -103,7 +92,7 @@ namespace bebone::core {
 
 
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::translation(const Vec3<f32>& vector) {
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
         return {{
             1.0f, 0.0f, 0.0f, vector.x,
             0.0f, 1.0f, 0.0f, vector.y,
@@ -130,7 +119,7 @@ namespace bebone::core {
     }
 
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far) {
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
         return {{
             2.0f / (right - left), 0.0f, 0.0f, 0.0f,
             0.0f, 2.0f / (bottom - top), 0.0f, 0.0f,
@@ -138,7 +127,7 @@ namespace bebone::core {
             - (right + left) / (right - left), - (bottom + top) / (bottom - top), near / (near - far), 1.0f
         }};
         #else
-            #ifndef OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
+            #ifndef BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
                 return {{
                     2.0f / (right - left), 0.0f, 0.0f, - (right + left) / (right - left),
                     0.0f, 2.0f / (bottom - top), 0.0f, - (bottom + top) / (bottom - top),
@@ -159,7 +148,7 @@ namespace bebone::core {
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::perspective(const f32& fovy, const f32& aspect, const f32& near, const f32& far) {
         const f32 tanHalfFovy = std::tan(fovy / 2.f);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
         return {{
             1.f / (aspect * tanHalfFovy), 0.0f, 0.0f, 0.0f,
             0.0f, 1.f / (tanHalfFovy), 0.0f, 0.0f,
@@ -167,7 +156,7 @@ namespace bebone::core {
             0.0f, 0.0f, 1.0f, 0.0f
         }};
         #else
-            #ifndef OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
+            #ifndef BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
                 return {{
                     1.f / (aspect * tanHalfFovy), 0.0f, 0.0f, 0.0f,
                     0.0f, 1.f / (tanHalfFovy), 0.0f, 0.0f,
@@ -270,7 +259,7 @@ namespace bebone::core {
         const f32 cos0 = std::cos(angle);
         const f32 sin0 = std::sin(angle);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
         return {{
             1.0f, 0.0f,  0.0f, 0.0f,
             0.0f, cos0, -sin0, 0.0f,
@@ -291,7 +280,7 @@ namespace bebone::core {
         const f32 cos0 = std::cos(angle);
         const f32 sin0 = std::sin(angle);
 
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
         return {{
                 cos0, 0.0f, sin0, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
@@ -312,7 +301,7 @@ namespace bebone::core {
         const f32 cos0 = std::cos(angle);
         const f32 sin0 = std::sin(angle);
         
-        #ifndef OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
+        #ifndef BEBONE_TYPES_MATRIX_COLLUM_MAJOR_ORDER
         return {{
             cos0, -sin0, 0.0f, 0.0f,
             sin0,  cos0, 0.0f, 0.0f,
