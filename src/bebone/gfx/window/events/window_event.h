@@ -1,7 +1,7 @@
 #ifndef BEBONE_WINDOW_EVENT_H
 #define BEBONE_WINDOW_EVENT_H
 
-#include "../../../core/events/listeners/event.tpp"
+#include "../../../core/core.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;

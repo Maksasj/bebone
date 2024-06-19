@@ -9,7 +9,7 @@ list(APPEND BEBONE_GFX_INCLUDES
     "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"
     "${CMAKE_SOURCE_DIR}/3dparty/Vulkan-Headers/include"
 
-    "${CMAKE_SOURCE_DIR}/3dparty/omni_types/src"
+    # "${CMAKE_SOURCE_DIR}/3dparty/omni_types/src"
 
     "${CMAKE_SOURCE_DIR}/3dparty/stb"
     "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"

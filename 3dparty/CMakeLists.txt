@@ -1,8 +1,8 @@
 add_subdirectory(glad)
 
-set(OMNI_GLAD_INTEGRATION ON)
-include_directories("glad/include")
-add_subdirectory(omni_types)
+# set(OMNI_GLAD_INTEGRATION ON)
+# include_directories("glad/include")
+# add_subdirectory(omni_types)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL  "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL  "" FORCE)

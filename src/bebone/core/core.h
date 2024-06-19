@@ -1,7 +1,7 @@
 #ifndef _BEBONE_CORE_CORE_H_
 #define _BEBONE_CORE_CORE_H_
 
-#include "types.h"
+#include "types/types.h"
 
 #include "logger.tpp"
 #include "profiler.h"

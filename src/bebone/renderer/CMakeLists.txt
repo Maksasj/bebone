@@ -4,8 +4,8 @@ include_directories("../../../3dparty/glad/include")
 include_directories("../../../3dparty/glfw/include")
 include_directories("../../../3dparty/Vulkan-Headers/include")
 
-add_compile_definitions(OMNI_GLAD_INTEGRATION)
-include_directories("../../../3dparty/omni_types/src")
+# add_compile_definitions(OMNI_GLAD_INTEGRATION)
+# include_directories("../../../3dparty/omni_types/src")
 
 include_directories("../../../3dparty/stb")
 include_directories("../../../3dparty/glfw/include")

@@ -1,7 +1,7 @@
 file(GLOB_RECURSE BEBONE_ASSETS_SRC_FILES "*.cpp")
 
 include_directories("../../../3dparty/stb")
-include_directories("../../../3dparty/omni_types/src")
+# include_directories("../../../3dparty/omni_types/src")
 
 add_library(bebone_assets STATIC ${BEBONE_ASSETS_SRC_FILES})
 
