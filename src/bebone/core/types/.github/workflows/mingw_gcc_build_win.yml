@@ -1,0 +1,30 @@
+name: Build, mingw g++ win
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      uses: threeal/cmake-action@v1.3.0
+      with:
+        generator: Ninja
+        c-compiler: gcc
+        cxx-compiler: g++
+        build-dir: build
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
