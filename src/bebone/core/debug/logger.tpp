@@ -1,8 +1,8 @@
 #ifndef _BEBONE_CORE_LOGGER_TPP_
 #define _BEBONE_CORE_LOGGER_TPP_
 
-#include "../../../../../../../Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.36.32532/include/iostream"
-#include "../../../../../../../Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.36.32532/include/ostream"
+#include <iostream>
+#include <ostream>
 
 #include "../memory/noncopyable.h"
 
