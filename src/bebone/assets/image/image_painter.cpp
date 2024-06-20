@@ -3,23 +3,23 @@
 namespace bebone::assets {
     using namespace bebone::core;
 
-    template<typename _Color>
-    ImagePainter<_Color>::ImagePainter(const std::shared_ptr<Image<_Color>>& targetImage) : targetImage(targetImage) {
+    template<typename Color>
+    ImagePainter<Color>::ImagePainter(const std::shared_ptr<Image<Color>>& target_image) : target_image(target_image) {
 
     }
 
-    template<typename _Color>
-    void ImagePainter<_Color>::paint_pixel(const size_t& xPos, const size_t& yPos, const _Color& color) {
-        const size_t height = targetImage->get_height();
-        targetImage->at(xPos, height - yPos) = color;
+    template<typename Color>
+    void ImagePainter<Color>::paint_pixel(const size_t& x_pos, const size_t& y_pos, const Color& color) {
+        const size_t height = target_image->get_height();
+        target_image->at(x_pos, height - y_pos) = color;
     }
 
-    template<typename _Color>
-    void ImagePainter<_Color>::paint_circle(const size_t& xPos, const size_t& yPos, const f32& radius, const _Color& color) {
+    template<typename Color>
+    void ImagePainter<Color>::paint_circle(const size_t& x_pos, const size_t& y_pos, const f32& radius, const Color& color) {
         const auto r2 = radius * radius;
 
-        const size_t width = targetImage->get_width();
-        const size_t height = targetImage->get_height();
+        const size_t width = target_image->get_width();
+        const size_t height = target_image->get_height();
 
         for(f32 x = -radius; x < radius; ++x) {
         const f32 x2 = x*x;
@@ -27,114 +27,114 @@ namespace bebone::assets {
         for(f32 y = -radius; y < radius; ++y) {
             if(x2 + y*y > r2) continue;
 
-            const size_t xCord = std::clamp((size_t) (xPos + x), (size_t) 0, width - 1);
-            const size_t yCord = std::clamp((size_t) (yPos + y), (size_t) 0, height - 1);
+            const size_t x_cord = std::clamp((size_t) (x_pos + x), (size_t) 0, width - 1);
+            const size_t y_cord = std::clamp((size_t) (y_pos + y), (size_t) 0, height - 1);
 
-            targetImage->at(xCord, height - yCord) = color;
+            target_image->at(x_cord, height - y_cord) = color;
             }
         }
     }
 
-    template<typename _Color>
-    void ImagePainter<_Color>::paint_square(const size_t& xPos, const size_t& yPos, const f32& sqWidth, const f32& sqHeight, const _Color& color) {
-        const size_t width = targetImage->get_width();
-        const size_t height = targetImage->get_height();
+    template<typename Color>
+    void ImagePainter<Color>::paint_square(const size_t& x_pos, const size_t& y_pos, const f32& sq_width, const f32& sq_height, const Color& color) {
+        const size_t width = target_image->get_width();
+        const size_t height = target_image->get_height();
 
-        for(auto x = -sqWidth; x < sqWidth; ++x) {
-            for(auto y = -sqHeight; y < sqHeight; ++y) {
-                const size_t xCord = std::clamp((size_t) (static_cast<f32>(xPos) + static_cast<f32>(x)), (size_t) 0, width - 1);
-                const size_t yCord = std::clamp((size_t) (static_cast<f32>(yPos) + static_cast<f32>(y)), (size_t) 0, height - 1);
+        for(auto x = -sq_width; x < sq_width; ++x) {
+            for(auto y = -sq_height; y < sq_height; ++y) {
+                const size_t x_cord = std::clamp((size_t) (static_cast<f32>(x_pos) + static_cast<f32>(x)), (size_t) 0, width - 1);
+                const size_t y_cord = std::clamp((size_t) (static_cast<f32>(y_pos) + static_cast<f32>(y)), (size_t) 0, height - 1);
 
-                targetImage->at(xCord, height - yCord) = color;
+                target_image->at(x_cord, height - y_cord) = color;
             }
         }
     }
 
-    template<typename _Color>
-    void ImagePainter<_Color>::flip_vertical() {
-        const size_t width = targetImage->get_width() - 1;
-        const size_t height = targetImage->get_height() - 1;
+    template<typename Color>
+    void ImagePainter<Color>::flip_vertical() {
+        const size_t width = target_image->get_width() - 1;
+        const size_t height = target_image->get_height() - 1;
 
-        const size_t hWidth = width / 2;
+        const size_t h_width = width / 2;
 
-        for(size_t x = 0; x <= hWidth; ++x) {
+        for(size_t x = 0; x <= h_width; ++x) {
             for (size_t y = 0; y <= height; ++y) {
-                auto& pl = targetImage->at(x, y);
-                auto& pr = targetImage->at(width - x, y);
+                auto& pl = target_image->at(x, y);
+                auto& pr = target_image->at(width - x, y);
 
                 std::swap(pl, pr);
             }
         }
     }
 
-    template<typename _Color>
-    void ImagePainter<_Color>::flip_horizontal() {
-        const size_t width = targetImage->get_width() - 1;
-        const size_t height = targetImage->get_height() - 1;
+    template<typename Color>
+    void ImagePainter<Color>::flip_horizontal() {
+        const size_t width = target_image->get_width() - 1;
+        const size_t height = target_image->get_height() - 1;
 
-        const size_t hHeight = height / 2;
+        const size_t h_height = height / 2;
 
         for(size_t x = 0; x <= width; ++x) {
-            for (size_t y = 0; y <= hHeight; ++y) {
-                auto& pl = targetImage->at(x, y);
-                auto& pr = targetImage->at(x, height - y);
+            for (size_t y = 0; y <= h_height; ++y) {
+                auto& pl = target_image->at(x, y);
+                auto& pr = target_image->at(x, height - y);
 
                 std::swap(pl, pr);
             }
         }
     }
 
-    template<typename _Color>
-    void ImagePainter<_Color>::resize(const size_t& width, const size_t& height) {
-        std::vector<_Color> color(width * height);
+    template<typename Color>
+    void ImagePainter<Color>::resize(const size_t& width, const size_t& height) {
+        std::vector<Color> color(width * height);
 
-        const size_t startW = targetImage->get_width() - 1;
-        const size_t startH = targetImage->get_height() - 1;
+        const size_t start_w = target_image->get_width() - 1;
+        const size_t start_h = target_image->get_height() - 1;
 
         auto index = 0;
 
         for(size_t x = 0; x < width; ++x) {
             for (size_t y = 0; y < height; ++y) {
-                const auto uvX = static_cast<f32>(x) / static_cast<f32>(width);
-                const auto uvY = static_cast<f32>(y) / static_cast<f32>(height);
+                const auto uv_x = static_cast<f32>(x) / static_cast<f32>(width);
+                const auto uv_y = static_cast<f32>(y) / static_cast<f32>(height);
 
-                const size_t pixelX = round(uvX * startW);
-                const size_t pixelY = round(uvY * startH);
+                const size_t pixel_x = round(uv_x * start_w);
+                const size_t pixel_y = round(uv_y * start_h);
 
-                color[index] = targetImage->at(pixelX, pixelY);
+                color[index] = target_image->at(pixel_x, pixel_y);
                 ++index;
             }
         }
 
-        targetImage->color = color;
-        targetImage->width = width;
-        targetImage->height = height;
+        target_image->color = color;
+        target_image->width = width;
+        target_image->height = height;
     }
 
-    template<typename _Color>
-    void ImagePainter<_Color>::crop(const size_t& startX, const size_t& startY, const size_t& width, const size_t& height) {
-        const auto endX = startX + width;
-        const auto endY = startY + height;
+    template<typename Color>
+    void ImagePainter<Color>::crop(const size_t& start_x, const size_t& start_y, const size_t& width, const size_t& height) {
+        const auto end_x = start_x + width;
+        const auto end_y = start_y + height;
 
-        std::vector<_Color> color(width * height);
+        std::vector<Color> color(width * height);
 
         auto index = 0;
 
-        for(size_t x = startX; x < endX; ++x) {
-            for (size_t y = startY; y < endY; ++y) {
-                color[index] = targetImage->at(x, y);
+        for(size_t x = start_x; x < end_x; ++x) {
+            for (size_t y = start_y; y < end_y; ++y) {
+                color[index] = target_image->at(x, y);
                 ++index;
             }
         }
 
-        targetImage->color = color;
-        targetImage->width = width;
-        targetImage->height = height;
+        target_image->color = color;
+        target_image->width = width;
+        target_image->height = height;
     }
 
-    template<typename _Color>
-    ImagePainter<_Color> ImagePainter<_Color>::from_image(const std::shared_ptr<Image<_Color>>& targetImage) {
-        return ImagePainter<_Color>(targetImage);
+    template<typename Color>
+    ImagePainter<Color> ImagePainter<Color>::from_image(const std::shared_ptr<Image<Color>>& target_image) {
+        return ImagePainter<Color>(target_image);
     }
 
     template class ImagePainter<ColorRGB24>;
