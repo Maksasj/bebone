@@ -12,42 +12,42 @@ namespace bebone::assets {
     using namespace bebone::core;
 
     // Image painter class, class used for modification of an image
-    template<typename _Color>
+    template<typename Color>
     class ImagePainter {
         private:
-            std::shared_ptr<Image<_Color>> targetImage;
+            std::shared_ptr<Image<Color>> target_image;
 
             // Hidden constructor
-            explicit ImagePainter(const std::shared_ptr<Image<_Color>>& targetImage);
+            explicit ImagePainter(const std::shared_ptr<Image<Color>>& target_image);
         public:
             // Todo, add Vec2i variants for this functions
 
             /*!
             * Sets image pixel color
-            * @param xPos - Pixel X position
-            * @param yPos - Pixel Y position
+            * @param x_pos - Pixel X position
+            * @param y_pos - Pixel Y position
             * @param color - Color to be set
             */
-            void paint_pixel(const size_t& xPos, const size_t& yPos, const _Color& color);
+            void paint_pixel(const size_t& x_pos, const size_t& y_pos, const Color& color);
 
             /*!
             * Draws circle to the image
-            * @param xPos - Circle center X position
-            * @param yPos - Circle center Y position
+            * @param x_pos - Circle center X position
+            * @param y_pos - Circle center Y position
             * @param radius - Circle radius
             * @param color - Circle color
             */
-            void paint_circle(const size_t& xPos, const size_t& yPos, const f32& radius, const _Color& color);
+            void paint_circle(const size_t& x_pos, const size_t& y_pos, const f32& radius, const Color& color);
 
             /*!
             * Draws square to the image
-            * @param xPos - Square bottom left corner X position
-            * @param yPos - Square bottom left corner Y position
-            * @param sqWidth - Square width
-            * @param sqHeight - Square height
+            * @param x_pos - Square bottom left corner X position
+            * @param y_pos - Square bottom left corner Y position
+            * @param sq_width - Square width
+            * @param sq_height - Square height
             * @param color - Square color
             */
-            void paint_square(const size_t& xPos, const size_t& yPos, const f32& sqWidth, const f32& sqHeight, const _Color& color);
+            void paint_square(const size_t& x_pos, const size_t& y_pos, const f32& sq_width, const f32& sq_height, const Color& color);
 
             // Flips image vertically
             void flip_vertical();
@@ -64,19 +64,19 @@ namespace bebone::assets {
 
             /*!
             * Crops specific image area
-            * @param startX - Bottom left corner X position
-            * @param startY - Bottom left corner Y position
+            * @param start_x - Bottom left corner X position
+            * @param start_y - Bottom left corner Y position
             * @param width - Area width
             * @param height - Area height
             */
-            void crop(const size_t& startX, const size_t& startY, const size_t& width, const size_t& height);
+            void crop(const size_t& start_x, const size_t& start_y, const size_t& width, const size_t& height);
 
             /*!
             * Creates image painter object from an image
-            * @param targetImage - Image that needs to be modified
+            * @param target_image - Image that needs to be modified
             * @return ImagePainter class instance
             */
-            static ImagePainter<_Color> from_image(const std::shared_ptr<Image<_Color>>& targetImage);
+            static ImagePainter<Color> from_image(const std::shared_ptr<Image<Color>>& target_image);
     };
 }
 
