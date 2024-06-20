@@ -18,12 +18,12 @@ namespace bebone::core {
         private:
             using BeboneAction = Action<>;
 
-            map<Key, BeboneAction> keyActions;
-            queue<Key> queuedKeys;
+            map<Key, BeboneAction> key_actions;
+            queue<Key> queued_keys;
 
             Input() = default;
 
-            void queue_key(const KeyCode& keyCode, const InputType& inputType);
+            void queue_key(const KeyCode& key_code, const InputType& input_type);
             void execute_queued_actions();
 
         public:
@@ -37,20 +37,20 @@ namespace bebone::core {
             /*!
             * Registers the key to do specific action
             * 
-            * @param keyCode - key code
+            * @param key_code - key code
             * @param action - function object, which will execute when the key will be pressed/released
-            * @param inputType - specifies the input type. By default it is set to InputType::PRESS
+            * @param input_type - specifies the input type. By default it is set to InputType::PRESS
             */
-            void register_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
+            void register_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::PRESS);
             
             /*!
             * Removes the specific action from the key
             * 
-            * @param keyCode - key code
+            * @param key_code - key code
             * @param action - function object, which will execute when the key will be pressed/released
-            * @param inputType - specifies the input type. By default it is set to InputType::PRESS
+            * @param input_type - specifies the input type. By default it is set to InputType::PRESS
             */
-            void remove_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
+            void remove_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::PRESS);
 
             friend class InputHandler;
             friend struct KeyListener;

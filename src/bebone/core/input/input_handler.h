@@ -9,8 +9,8 @@ namespace bebone::core {
     // Input handler class
     class InputHandler {
         private:
-            KeyListener keyListener;
-            MouseListener mouseListener;
+            KeyListener key_listener;
+            MouseListener mouse_listener;
 
         public:
             // Getter for key listener

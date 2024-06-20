@@ -2,11 +2,11 @@
 
 namespace bebone::core {
     const KeyListener& InputHandler::get_key_listener() const {
-        return keyListener;
+        return key_listener;
     }
 
     const MouseListener& InputHandler::get_mouse_listener() const {
-        return mouseListener;
+        return mouse_listener;
     }
 
     void InputHandler::execute_input_actions() const {
