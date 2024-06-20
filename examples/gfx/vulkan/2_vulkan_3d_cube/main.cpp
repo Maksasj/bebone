@@ -54,6 +54,7 @@ int main() {
     auto device = instance->create_device(window);
     auto swapChain = device->create_swap_chain(window);
 
+    // Pipeline manager start
     auto descriptorPool = device->create_descriptor_pool();
     auto descriptorSetLayout = device->create_descriptor_set_layouts({
         VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
@@ -69,6 +70,7 @@ int main() {
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
         .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
+    // Pipeline manager end
 
     auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
     auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
