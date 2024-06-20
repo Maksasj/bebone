@@ -22,14 +22,14 @@ namespace bebone::core {
         public:
             /// Meta function that checks if event is suitable for this event dispatcher
             template<typename EventType>
-            using is_suitable_event_type = std::enable_if_t<std::is_same<typename EventType::category, EventCategory>::value>;
+            using IsSuitableEventType = std::enable_if_t<std::is_same<typename EventType::Category, EventCategory>::value>;
 
             /*!
              * Function that sends event to desired event listeners
              * @tparam EventType - type of the event
              * @param event - event object
             */
-            template<typename EventType, typename = is_suitable_event_type<EventType>>
+            template<typename EventType, typename = IsSuitableEventType<EventType>>
             void fire(EventType event) {
                 const EventCategory event_type = EventType::type;
                 auto rng = callbacks.equal_range(event_type);
@@ -50,18 +50,18 @@ namespace bebone::core {
 
             /// Helper meta function, that extracts type of the first argument of callable type
             template<typename Listener>
-            using first_arg = typename function_traits<Listener>::template argument<0>;
+            using FirstArg = typename function_traits<Listener>::template argument<0>;
 
             /// Meta function that checks if listener is suitable for this event dispatcher
             template<typename Listener>
-            using is_suitable_listener = std::enable_if_t<std::is_same<typename std::remove_reference<first_arg<Listener>>::type::category, EventCategory>::value>;
+            using IsSuitableListener = std::enable_if_t<std::is_same<typename std::remove_reference<FirstArg<Listener>>::type::Category, EventCategory>::value>;
 
             /*!
              * Function that add listener to dispatcher
              * @tparam Listener - type of the event listener
              * @param listener - listener object
             */
-            template<typename Listener, typename = is_suitable_listener<Listener>>
+            template<typename Listener, typename = IsSuitableListener<Listener>>
             void add_listener(Listener listener) {
                 using EventType = typename function_traits<Listener>::template argument<0>;
 

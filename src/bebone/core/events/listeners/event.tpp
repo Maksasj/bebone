@@ -33,7 +33,7 @@ namespace bebone::core {
                 return handled;
             }
 
-            using category = EventCategoryType;
+            using Category = EventCategoryType;
             static constexpr const EventCategoryType type = event_type;
     };
 }
