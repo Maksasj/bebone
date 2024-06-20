@@ -31,8 +31,8 @@ namespace bebone::core {
             */
             template<typename EventType, typename = is_suitable_event_type<EventType>>
             void fire(EventType event) {
-                const EventCategory eventType = EventType::type;
-                auto rng = callbacks.equal_range(eventType);
+                const EventCategory event_type = EventType::type;
+                auto rng = callbacks.equal_range(event_type);
 
                 for (auto it = rng.first; it != rng.second; ++it) {
                     void* ptr = it->second.get();
@@ -67,8 +67,8 @@ namespace bebone::core {
 
                 auto ptr = std::make_shared<std::function<void(EventType)>>(listener);
 
-                const EventCategory eventType = std::remove_reference<EventType>::type::type;
-                callbacks.emplace(eventType, ptr);
+                const EventCategory event_type = std::remove_reference<EventType>::type::type;
+                callbacks.emplace(event_type, ptr);
             }
 
             /*!
