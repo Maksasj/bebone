@@ -19,8 +19,6 @@ namespace bebone::assets {
             // Hidden constructor
             explicit ImagePainter(const std::shared_ptr<Image<Color>>& target_image);
         public:
-            // Todo, add Vec2i variants for this functions
-
             /*!
             * Sets image pixel color
             * @param x_pos - Pixel X position

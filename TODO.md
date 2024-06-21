@@ -10,6 +10,9 @@
     - And other interfaces...
         - Model, Mesh, Material, etc.
 
+- [ ] Assets 
+    - [ ] Add Vec2i variants for ImagePainter methods
+
 - [ ] GFX
     - [ ] Vulkan part
         - [ ] Vulkan pipeline manager
