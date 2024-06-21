@@ -7,13 +7,13 @@ int main() {
     TEST_CASE {
         ArenaAllocator arena(_BEBONE_MEMORY_BYTES_1KB_);
 
-        ensure(arena.allocated() == 0);
+        ensure(arena.get_allocated() == 0);
     }
 
     TEST_CASE {
         ArenaAllocator arena(_BEBONE_MEMORY_BYTES_1KB_);
 
-        ensure(arena.capacity() == _BEBONE_MEMORY_BYTES_1KB_);
+        ensure(arena.get_capacity() == _BEBONE_MEMORY_BYTES_1KB_);
     }
 
     TEST_CASE {
