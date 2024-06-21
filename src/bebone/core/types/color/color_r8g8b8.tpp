@@ -6,36 +6,36 @@
 
 namespace bebone::core {
     template<>
-    struct Color<R8G8B8_UINT> {
+    struct Color<R8G8B8Uint> {
         u8 r, g, b;
 
-        static const Color<R8G8B8_UINT> BLACK;
-        static const Color<R8G8B8_UINT> WHITE;
-        static const Color<R8G8B8_UINT> RED;
-        static const Color<R8G8B8_UINT> BLUE;
-        static const Color<R8G8B8_UINT> GREEN;
-        static const Color<R8G8B8_UINT> YELLOW;
-        static const Color<R8G8B8_UINT> MAGENTA;
-        static const Color<R8G8B8_UINT> CYAN;
+        static const Color<R8G8B8Uint> BLACK;
+        static const Color<R8G8B8Uint> WHITE;
+        static const Color<R8G8B8Uint> RED;
+        static const Color<R8G8B8Uint> BLUE;
+        static const Color<R8G8B8Uint> GREEN;
+        static const Color<R8G8B8Uint> YELLOW;
+        static const Color<R8G8B8Uint> MAGENTA;
+        static const Color<R8G8B8Uint> CYAN;
 
         operator Vec3<u8>() const { return { r, g, b }; }
 
-        template<class _DesiredColor>
-        _DesiredColor to() const;
+        template<class DesiredColor>
+        DesiredColor to() const;
 
         static inline constexpr ColorFormat get_format() {
-            return R8G8B8_UINT;
+            return R8G8B8Uint;
         }
 
         static inline constexpr size_t get_channels() {
             return 3;
         }
 
-        static inline constexpr Color<R8G8B8_UINT> splat(const u8& v) {
+        static inline constexpr Color<R8G8B8Uint> splat(const u8& v) {
             return {v, v, v};
         }
 
-        static inline constexpr Color<R8G8B8_UINT> monochrome(const u8& v) {
+        static inline constexpr Color<R8G8B8Uint> monochrome(const u8& v) {
             return splat(v);
         }
 
@@ -47,7 +47,7 @@ namespace bebone::core {
             return GL_UNSIGNED_BYTE;
         }
 
-        static inline Color<R8G8B8_UINT> random() {
+        static inline Color<R8G8B8Uint> random() {
             return { 
                 static_cast<u8>(BEBONE_TYPES_RAND % 255), 
                 static_cast<u8>(BEBONE_TYPES_RAND % 255), 
