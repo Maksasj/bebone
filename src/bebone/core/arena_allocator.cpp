@@ -1,42 +1,42 @@
 #include "arena_allocator.h"
 
 namespace bebone::core {
-    ArenaAllocator::ArenaAllocator(const size_t& size) : _capacity(size), _allocated(0) {
-        _data = malloc(size);
+    ArenaAllocator::ArenaAllocator(const size_t& size) : capacity(size), allocated(0) {
+        data = malloc(size);
     }
 
-    ArenaAllocator::ArenaAllocator(const size_t& size, void* buffer) : _capacity(size), _allocated(0) {
-        _data = buffer;
+    ArenaAllocator::ArenaAllocator(const size_t& size, void* buffer) : capacity(size), allocated(0) {
+        data = buffer;
     }
 
     ArenaAllocator::~ArenaAllocator() {
-        free(_data);
+        free(data);
     }
 
     void* ArenaAllocator::alloc(const size_t& size) noexcept {
-        if(_allocated + size > _capacity) {
+        if(allocated + size > capacity) {
             return nullptr;
         }
 
-        const size_t allocated = _allocated;
-        _allocated += size;
+        const size_t tmp_allocated = allocated;
+        allocated += size;
 
-        return static_cast<char*>(_data) + allocated;
+        return static_cast<char*>(data) + tmp_allocated;
     }
 
-    void* ArenaAllocator::data() noexcept {
-        return _data;
+    void* ArenaAllocator::get_data() noexcept {
+        return data;
     }
 
     void ArenaAllocator::clear() noexcept {
-        _allocated = 0;
+        allocated = 0;
     }
 
-    [[nodiscard]] const size_t& ArenaAllocator::allocated() const noexcept {
-        return _allocated;
+    [[nodiscard]] const size_t& ArenaAllocator::get_allocated() const noexcept {
+        return allocated;
     }
 
-    [[nodiscard]] const size_t& ArenaAllocator::capacity() const noexcept {
-        return _capacity;
+    [[nodiscard]] const size_t& ArenaAllocator::get_capacity() const noexcept {
+        return capacity;
     }
 }
