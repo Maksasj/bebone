@@ -1,16 +1,15 @@
 #ifndef _BEBONE_H_
 #define _BEBONE_H_
 
-// First api layer
-#define OMNI_GLAD_INTEGRATION
+// First API layer
 #include "core/core.h"
 #include "assets/assets.h"
 #include "gfx/gfx.h"
 
-// Second api layer
+// Second API layer
 #include "renderer/renderer.h"
 
-// Third api layer
+// Third API layer
 // Probably app class
 
 #endif

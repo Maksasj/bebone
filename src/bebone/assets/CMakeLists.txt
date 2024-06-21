@@ -1,7 +1,9 @@
 file(GLOB_RECURSE BEBONE_ASSETS_SRC_FILES "*.cpp")
 
-include_directories("../../../3dparty/stb")
-include_directories("../../../3dparty/omni_types/src")
+include_directories(
+    "${CMAKE_SOURCE_DIR}/3dparty/stb"
+    "${CMAKE_SOURCE_DIR}/3dparty/glad/include"
+)
 
 add_library(bebone_assets STATIC ${BEBONE_ASSETS_SRC_FILES})
 
