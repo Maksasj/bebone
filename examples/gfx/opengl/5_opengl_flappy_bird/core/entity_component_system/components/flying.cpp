@@ -32,11 +32,11 @@ namespace game::core::ecs {
 
     void Flying::enable() {
         Component::enable();
-        Input::get_instance().register_key_action(KeyCode::MOUSE_BUTTON_LEFT, flyFunction);
+        Input::get_instance().register_key_action(KeyCode::MouseButtonLeft, flyFunction);
     }
 
     void Flying::disable() {
         Component::disable();
-        Input::get_instance().remove_key_action(KeyCode::MOUSE_BUTTON_LEFT, flyFunction);
+        Input::get_instance().remove_key_action(KeyCode::MouseButtonLeft, flyFunction);
     }
 }
