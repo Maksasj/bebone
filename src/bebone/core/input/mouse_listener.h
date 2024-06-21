@@ -14,8 +14,8 @@ namespace bebone::core {
         void operator()(InputMouseButtonEvent& event) override {
             Input& input = Input::get_instance();
 
-            KeyCode key_code = static_cast<KeyCode>(event.button);
-            InputType input_type = static_cast<InputType>(event.action);
+            const auto key_code = static_cast<KeyCode>(event.button);
+            const auto input_type = static_cast<InputType>(event.action);
             input.queue_key(key_code, input_type);
         }
     };
