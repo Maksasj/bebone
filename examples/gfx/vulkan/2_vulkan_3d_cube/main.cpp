@@ -95,17 +95,13 @@ int main() {
     f32 t = 0.0f;
 
     while (!window->closing()) {
-        ++t;
-
         GLFWContext::poll_events();
 
         uint32_t frame;
-        auto result = swapChain->acquire_next_image(device, &frame);
-
-        if(!result.is_ok())
+        if(!swapChain->acquire_next_image(device, &frame).is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
         auto& [_0, tmem] = transformUBO[frame];
@@ -114,6 +110,7 @@ int main() {
         auto& [_1, cmem] = cameraUBO[frame];
         cmem->upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
+        // Todo, we need to fix this
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
         auto& cmd = commandBuffers[frame];
@@ -130,9 +127,7 @@ int main() {
             .end_render_pass()
             .end_record();
 
-        result = swapChain->submit_command_buffers(device, cmd, &frame);
-
-        if(!result.is_ok()) // Todo check if window is resized
+        if(!swapChain->submit_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 

@@ -47,7 +47,9 @@ namespace bebone::gfx::vulkan {
 
         descriptorWrite.dstSet = descriptorSet->backend;
         descriptorWrite.dstBinding = binding;
-        descriptorWrite.dstArrayElement = dstArrayElement; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
+        descriptorWrite.dstArrayElement = dstArrayElement;
+        // Todo, remember that this mean \/
+        // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         descriptorWrite.descriptorCount = 1;
