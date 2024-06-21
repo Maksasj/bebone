@@ -106,11 +106,11 @@ namespace bebone::gfx::vulkan {
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-            std::shared_ptr<VulkanSwapChain>& swapChain,
-            std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
-            std::vector<std::shared_ptr<VulkanShaderModule>> shaderModules,
-            VulkanPipelineConfig configInfo
-        ) {
+        std::shared_ptr<VulkanSwapChain>& swapChain,
+        std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
+        std::vector<std::shared_ptr<VulkanShaderModule>> shaderModules,
+        VulkanPipelineConfig configInfo
+    ) {
 
         return std::make_shared<VulkanPipeline>(*this, swapChain, pipelineLayout, shaderModules, configInfo);
     }

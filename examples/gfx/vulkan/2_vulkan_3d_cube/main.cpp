@@ -56,20 +56,26 @@ int main() {
 
     // Pipeline manager start
     auto descriptorPool = device->create_descriptor_pool();
+
     auto descriptorSetLayout = device->create_descriptor_set_layouts({
         VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
         VulkanDescriptorSetLayoutBinding::bindless_uniform(1)
     });
+
     auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
 
     auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {
         VulkanConstRange::common(sizeof(Handles), 0)
     });
+
     auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
         .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
+
+    device->destroy_all(vertShaderModule, fragShaderModule);
     // Pipeline manager end
 
     auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
@@ -117,21 +123,23 @@ int main() {
 
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
-        auto& cmd = commandBuffers[frame];
+        auto& cmd = *commandBuffers[frame];
 
-        cmd->begin_record()
-            .begin_render_pass(swapChain, frame)
-            .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_pipeline(pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptors, frame)
-            .bind_vertex_buffer(vertexBuffer.buffer)
-            .bind_index_buffer(indexBuffer.buffer)
-            .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
-            .draw_indexed(indices.size())
-            .end_render_pass()
-            .end_record();
+        cmd.begin_record();
+        cmd.begin_render_pass(swapChain, frame);
+        cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
-        result = swapChain->submit_command_buffers(device, cmd, &frame);
+        cmd.bind_pipeline(pipeline);
+        cmd.bind_descriptor_set(pipelineLayout, descriptors, frame);
+
+        cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
+        cmd.bind_vertex_buffer(vertexBuffer.buffer);
+        cmd.bind_index_buffer(indexBuffer.buffer);
+        cmd.draw_indexed(indices.size());
+        cmd.end_render_pass();
+        cmd.end_record();
+
+        result = swapChain->submit_command_buffers(device, commandBuffers[frame], &frame);
 
         if(!result.is_ok()) // Todo check if window is resized
             continue;
@@ -150,12 +158,11 @@ int main() {
 
     device->destroy_all(descriptorSetLayout);
     device->destroy_all(descriptors);
-    device->destroy_all(descriptorPool, vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+    device->destroy_all(descriptorPool, pipelineLayout, pipeline, swapChain);
 
     device->destroy();
     instance->destroy();
 
-    // Todo move all glfw things to glfw context static class
     GLFWContext::terminate();
 
     return 0;

@@ -37,4 +37,7 @@
 
 #include "vulkan_wrapper.tpp"
 
+// Utils class
+#include "vulkan_pipeline_manager.h"
+
 #endif
