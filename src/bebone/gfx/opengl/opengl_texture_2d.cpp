@@ -39,7 +39,7 @@ namespace bebone::gfx::opengl {
 
     template void GLTexture2D::create_gl_texture<ColorRGB24>(const std::shared_ptr<Image<ColorRGB24>>& image);
     template void GLTexture2D::create_gl_texture<ColorRGBA32>(const std::shared_ptr<Image<ColorRGBA32>>& image);
-    template void GLTexture2D::create_gl_texture<ColorRGBA32f>(const std::shared_ptr<Image<ColorRGBA32f>>& image);
+    template void GLTexture2D::create_gl_texture<ColorRGBA32F>(const std::shared_ptr<Image<ColorRGBA32F>>& image);
 
     GLTexture2D::GLTexture2D(const int& width, const int& height)
             : GLTexture(GL_TEXTURE_2D),
@@ -69,7 +69,7 @@ namespace bebone::gfx::opengl {
 
     template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGB24>>& image);
     template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGBA32>>& image);
-    template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGBA32f>>& image);
+    template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGBA32F>>& image);
 
     const int& GLTexture2D::get_width() const {
         return width;

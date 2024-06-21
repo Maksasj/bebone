@@ -139,5 +139,5 @@ namespace bebone::assets {
 
     template class Image<ColorRGB24>;
     template class Image<ColorRGBA32>;
-    template class Image<ColorRGBA32f>;
+    template class Image<ColorRGBA32F>;
 }

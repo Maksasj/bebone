@@ -139,6 +139,6 @@ namespace bebone::assets {
 
     template class ImagePainter<ColorRGB24>;
     template class ImagePainter<ColorRGBA32>;
-    template class ImagePainter<ColorRGBA32f>;
+    template class ImagePainter<ColorRGBA32F>;
 }
 
