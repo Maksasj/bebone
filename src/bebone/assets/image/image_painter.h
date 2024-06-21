@@ -3,8 +3,7 @@
 
 #include <algorithm>
 
-#include "../../core/types.h"
-#include "../../core/noncopyable.h"
+#include "../../core/core.h"
 
 #include "image.h"
 

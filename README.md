@@ -63,7 +63,6 @@ At the moment, bebone is only dependent on these libraries:
   - [GLFW](https://github.com/Maksasj/glfw/tree/master) *(window management library)*
   - [Glslang](https://github.com/KhronosGroup/glslang/tree/main) *(SPIR-V shader compiler library)* 
   - [imgui](https://github.com/Maksasj/imgui/tree/master) *(Debug gui library)* 
-  - [omni_types](https://github.com/Maksasj/omni_types/tree/master) *(Type library)* 
   - [stb](https://github.com/Maksasj/stb/tree/master) *(Image management library and others)* 
   - [miniaudio](https://github.com/Maksasj/miniaudio/tree/master) *(Sound/Music management library)*
 

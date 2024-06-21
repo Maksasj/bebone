@@ -1,5 +1,5 @@
-#define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
-#define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
+#define BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
+#define BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
 using namespace bebone::core;
@@ -42,7 +42,7 @@ const std::vector<int> indices = {
     3, 2, 6, 6, 7, 3
 };
 
-// Todo move view matrix to omni_types
+// Todo move view matrix to BEBONE_TYPES
 Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up);
 
 int main() {

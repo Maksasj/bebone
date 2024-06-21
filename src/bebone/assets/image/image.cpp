@@ -125,7 +125,7 @@ namespace bebone::assets {
 
     template<typename Color>
     void Image<Color>::export_to_file(const std::string& file_name) {
-        if(Color::get_format() & OMNI_TYPES_COLOR_FLOAT) {
+        if(Color::get_format() & BEBONE_TYPES_COLOR_FLOAT) {
             auto image = to<ColorRGBA32>();
             const auto channels = image->get_channels();
 
