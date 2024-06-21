@@ -44,10 +44,8 @@ int main() {
         .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
 
-    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
-    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+    auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);
+    auto [ ibuffer, imemory ] = device->create_buffer_memory_from(indices);
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
@@ -56,9 +54,7 @@ int main() {
         GLFWContext::poll_events();
 
         uint32_t frame;
-        auto result = swapChain->acquire_next_image(device, &frame);
-
-        if(!result.is_ok())
+        if(!swapChain->acquire_next_image(device, &frame).is_ok())
             continue;
 
         auto& cmd = commandBuffers[frame];
@@ -67,22 +63,20 @@ int main() {
             .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(pipeline)
-            .bind_vertex_buffer(vertexBuffer.buffer)
-            .bind_index_buffer(indexBuffer.buffer)
+            .bind_vertex_buffer(vbuffer)
+            .bind_index_buffer(ibuffer)
             .draw_indexed(indices.size())
             .end_render_pass()
             .end_record();
 
-        result = swapChain->submit_command_buffers(device, cmd, &frame);
-
-        if(!result.is_ok()) // Todo check if window is resized
+        if(!swapChain->submit_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 
     device->wait_idle();
 
     device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
-    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+    device->destroy_all(vbuffer, ibuffer, vmemory, imemory, commandBufferPool);
     device->destroy_all(vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
 
     device->destroy();
