@@ -67,7 +67,14 @@ namespace bebone::gfx::vulkan {
         const size_t& binding,
         const size_t& dstArrayElement
     ) {
-        update_descriptor_set(device, tuple.buffer, size, descriptorSet, binding, dstArrayElement);
+        update_descriptor_set(
+            device,
+            std::get<std::shared_ptr<VulkanBuffer>>(tuple),
+            size,
+            descriptorSet,
+            binding,
+            dstArrayElement
+        );
     }
 
     void VulkanDescriptorPool::update_descriptor_sets(
@@ -102,7 +109,7 @@ namespace bebone::gfx::vulkan {
             throw std::runtime_error("buffer an dstArrayElements count is not matching");
 
         for(size_t i = 0; i < dstArrayElements.size(); ++i) {
-            auto& buffer = tuples[i].buffer;
+            auto& buffer = std::get<std::shared_ptr<VulkanBuffer>>(tuples[i]);
             auto& dstArrayElement = dstArrayElements[i];
             auto& descriptorSet = descriptorSets[i];
 

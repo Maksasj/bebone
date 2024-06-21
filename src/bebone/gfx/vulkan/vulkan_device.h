@@ -65,6 +65,17 @@ namespace bebone::gfx::vulkan {
                 const size_t& size,
                 VulkanBufferInfo bufferInfo = {});
 
+            template<typename T>
+            VulkanBufferMemoryTuple create_buffer_memory_from(const std::vector<T>& data, VulkanBufferInfo bufferInfo = {}) {
+                const auto size = sizeof(T) * data.size();
+                VulkanBufferMemoryTuple tuple = create_buffer_memory(size);
+                auto [ _, bmemory ] = tuple;
+
+                bmemory->upload_data(*this, data.data(), size);
+
+                return tuple;
+            }
+
             std::vector<std::shared_ptr<VulkanBuffer>> create_buffers(
                 const size_t& size,
                 const size_t& bufferCount,

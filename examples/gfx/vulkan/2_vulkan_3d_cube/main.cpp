@@ -70,10 +70,8 @@ int main() {
         .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
 
-    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
-    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+    auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);
+    auto [ ibuffer, imemory ] = device->create_buffer_memory_from(indices);
 
     auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
     auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
@@ -110,8 +108,11 @@ int main() {
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
 
-        transformUBO[frame].memory->upload_data(device, &transform, sizeof(Transform));
-        cameraUBO[frame].memory->upload_data(device, &cameraTransform, sizeof(CameraTransform));
+        auto& [_0, tmem] = transformUBO[frame];
+        tmem->upload_data(device, &transform, sizeof(Transform));
+
+        auto& [_1, cmem] = cameraUBO[frame];
+        cmem->upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
@@ -122,8 +123,8 @@ int main() {
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(pipeline)
             .bind_descriptor_set(pipelineLayout, descriptors, frame)
-            .bind_vertex_buffer(vertexBuffer.buffer)
-            .bind_index_buffer(indexBuffer.buffer)
+            .bind_vertex_buffer(vbuffer)
+            .bind_index_buffer(ibuffer)
             .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
             .draw_indexed(indices.size())
             .end_render_pass()
@@ -138,13 +139,15 @@ int main() {
     device->wait_idle();
 
     device->destroy_all(commandBuffers);
-    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+    device->destroy_all(vbuffer, ibuffer, vmemory, imemory, commandBufferPool);
 
-    for(auto& b : transformUBO)
-        device->destroy_all(b.buffer, b.memory);
+    for(auto& [buffer, memory] : transformUBO) {
+        device->destroy_all(buffer, memory);
+    }
 
-    for(auto& b : cameraUBO)
-        device->destroy_all(b.buffer, b.memory);
+    for(auto& [buffer, memory] : cameraUBO) {
+        device->destroy_all(buffer, memory);
+    }
 
     device->destroy_all(descriptorSetLayout);
     device->destroy_all(descriptors);
