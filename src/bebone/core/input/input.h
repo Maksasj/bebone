@@ -41,7 +41,7 @@ namespace bebone::core {
             * @param action - function object, which will execute when the key will be pressed/released
             * @param input_type - specifies the input type. By default it is set to InputType::PRESS
             */
-            void register_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::PRESS);
+            void register_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::Press);
             
             /*!
             * Removes the specific action from the key
@@ -50,7 +50,7 @@ namespace bebone::core {
             * @param action - function object, which will execute when the key will be pressed/released
             * @param input_type - specifies the input type. By default it is set to InputType::PRESS
             */
-            void remove_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::PRESS);
+            void remove_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::Press);
 
             friend class InputHandler;
             friend struct KeyListener;
