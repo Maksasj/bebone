@@ -42,9 +42,6 @@ const std::vector<int> indices = {
     3, 2, 6, 6, 7, 3
 };
 
-// Todo move view matrix to BEBONE_TYPES
-Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up);
-
 int main() {
     GLFWContext::init();
 
@@ -84,7 +81,7 @@ int main() {
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto cameraTransform = CameraTransform {
-        get_view_matrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
+        Mat4f::view(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
@@ -157,26 +154,4 @@ int main() {
     GLFWContext::terminate();
 
     return 0;
-}
-
-Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up) {
-    const auto w = direction.normalize();
-    const auto u = w.cross(up).normalize();
-    const auto v = w.cross(u);
-
-    auto viewMatrix = Mat4f::identity();
-    viewMatrix[0 * 4 + 0] = u.x;
-    viewMatrix[1 * 4 + 0] = u.y;
-    viewMatrix[2 * 4 + 0] = u.z;
-    viewMatrix[0 * 4 + 1] = v.x;
-    viewMatrix[1 * 4 + 1] = v.y;
-    viewMatrix[2 * 4 + 1] = v.z;
-    viewMatrix[0 * 4 + 2] = w.x;
-    viewMatrix[1 * 4 + 2] = w.y;
-    viewMatrix[2 * 4 + 2] = w.z;
-    viewMatrix[3 * 4 + 0] = -1.0f * (u).dot(position);
-    viewMatrix[3 * 4 + 1] = -1.0f * (v).dot(position);
-    viewMatrix[3 * 4 + 2] = -1.0f * (w).dot(position);
-
-    return viewMatrix;
 }
