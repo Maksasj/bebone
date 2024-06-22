@@ -2,18 +2,21 @@
 #define _BEBONE_GFX_VULKAN_VULKAN_DESCRIPTOR_SET_LAYOUT_BINDING_H_
 
 #include "../gfx_backend.h"
+#include "vulkan_wrapper.tpp"
 
 namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
-    class VulkanDescriptorSetLayoutBinding {
-        private:
+    enum VulkanDescriptorSetLayoutBindingType {
+        BindlessUniform,
+        BindlessSampler
+    };
 
+    class VulkanDescriptorSetLayoutBinding : public VulkanWrapper<VkDescriptorSetLayoutBinding> {
         public:
-            VkDescriptorSetLayoutBinding binding;
+            VulkanDescriptorSetLayoutBinding(const VulkanDescriptorSetLayoutBindingType& type, const u32& binding);
 
-            static VulkanDescriptorSetLayoutBinding bindless_uniform(const u32& binding);
-            static VulkanDescriptorSetLayoutBinding bindless_sampler2d(const u32& binding);
+            void destroy(VulkanDevice&) override;
     };
 }
 

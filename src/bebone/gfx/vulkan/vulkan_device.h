@@ -21,6 +21,7 @@
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
 #include "vulkan_texture.h"
+#include "vulkan_descriptor_set_layout_binding.h"
 
 namespace bebone::gfx::vulkan {
     class VulkanSwapChain;
@@ -30,7 +31,6 @@ namespace bebone::gfx::vulkan {
     class VulkanShaderModule;
     class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
-    class VulkanDescriptorSetLayoutBinding;
     class VulkanConstRange;
 
     class VulkanDevice : private core::NonCopyable {

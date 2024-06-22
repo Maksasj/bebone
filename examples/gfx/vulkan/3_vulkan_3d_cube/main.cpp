@@ -55,10 +55,7 @@ int main() {
     auto swapChain = device->create_swap_chain(window);
 
     auto descriptorPool = device->create_descriptor_pool();
-    auto descriptorSetLayout = device->create_descriptor_set_layouts({
-        VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
-        VulkanDescriptorSetLayoutBinding::bindless_uniform(1)
-    });
+    auto descriptorSetLayout = device->create_descriptor_set_layouts({{BindlessUniform, 0}, {BindlessUniform, 1}});
     auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
 
     auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {

@@ -9,7 +9,7 @@ namespace bebone::gfx::vulkan {
         std::vector<VkDescriptorSetLayoutBinding> bindings;
 
         for(const auto& b : allBindings)
-            bindings.push_back(b.binding);
+            bindings.push_back(b.backend);
 
         for(size_t i = 0; i < bindings.size(); ++i) {
             VkDescriptorBindingFlags bindlessFlags;

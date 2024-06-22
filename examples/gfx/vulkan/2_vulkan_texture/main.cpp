@@ -61,9 +61,7 @@ int main() {
     auto swapChain = device->create_swap_chain(window);
 
     auto descriptorPool = device->create_descriptor_pool();
-    auto descriptorSetLayout = device->create_descriptor_set_layouts({
-         VulkanDescriptorSetLayoutBinding::bindless_sampler2d(0)
-    });
+    auto descriptorSetLayout = device->create_descriptor_set_layouts({{BindlessSampler, 0}});
 
     auto descriptor = descriptorPool->create_descriptor(device, descriptorSetLayout[0]);
 
