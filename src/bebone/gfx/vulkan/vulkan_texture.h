@@ -16,7 +16,7 @@ namespace bebone::gfx::vulkan {
 
     using namespace bebone::core;
 
-    class VulkanTexture : private core::NonCopyable {
+    class VulkanTexture : public VulkanApi, private core::NonCopyable {
         public: // Todo think about this public, maybe this class should be just a struct ?
             std::shared_ptr<VulkanImage> image;
             std::shared_ptr<VulkanDeviceMemory> memory;
@@ -29,9 +29,7 @@ namespace bebone::gfx::vulkan {
                 std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
                 const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
 
-            // VulkanTexture(VulkanDevice& device);
-//
-            // void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice &device) override;
     };
 }
 

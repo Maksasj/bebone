@@ -26,6 +26,6 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanSampler::destroy(VulkanDevice &device) {
-        // Todo
+        vkDestroySampler(device.device(), backend, nullptr);
     }
 }

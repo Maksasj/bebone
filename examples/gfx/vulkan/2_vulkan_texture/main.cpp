@@ -63,7 +63,7 @@ int main() {
     auto descriptorPool = device->create_descriptor_pool();
     auto descriptorSetLayout = device->create_descriptor_set_layouts({
          VulkanDescriptorSetLayoutBinding::bindless_sampler2d(0)
-     });
+    });
 
     auto descriptor = descriptorPool->create_descriptor(device, descriptorSetLayout[0]);
 
@@ -111,8 +111,12 @@ int main() {
     device->wait_idle();
 
     device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
+    device->destroy_all(texture);
     device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
-    device->destroy_all(vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+
+    device->destroy_all(descriptorSetLayout);
+    device->destroy_all(descriptor);
+    device->destroy_all(descriptorPool, vertShaderModule, fragShaderModule, pipelineLayout, pipeline, swapChain);
 
     device->destroy();
     instance->destroy();
