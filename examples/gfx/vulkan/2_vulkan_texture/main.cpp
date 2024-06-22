@@ -83,7 +83,7 @@ int main() {
 
     auto raw = Image<ColorRGBA>::load_from_file("image.png");
 
-    auto image = device->create_image(VK_FORMAT_R8G8B8A8_SRGB, { static_cast<uint32_t>(raw->get_width()), static_cast<uint32_t>(raw->get_height()), 1}, {
+    auto image = device->create_image(VK_FORMAT_R32G32B32A32_SFLOAT, { static_cast<uint32_t>(raw->get_width()), static_cast<uint32_t>(raw->get_height()), 1}, {
         .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
     });
 
@@ -97,7 +97,7 @@ int main() {
 
     // Copy buffer to imag
 
-    auto size = raw->get_width() * raw->get_height() * raw->get_channels();
+    auto size = raw->get_width() * raw->get_height() * sizeof(ColorRGBA);
 
     auto staging = device->create_buffer_memory(size);
     staging.memory->upload_data(device, raw->data(), size);
@@ -108,10 +108,9 @@ int main() {
 
     auto sampler = device->create_sampler();
 
-    auto view = device->create_image_view(*image, VK_FORMAT_R8G8B8A8_SRGB);
+    auto view = device->create_image_view(*image, VK_FORMAT_R32G32B32A32_SFLOAT);
 
     descriptorPool->update_descriptor_set(device, sampler, view, size, descriptor, 0, 0);
-
 
     while (!window->closing()) {
         GLFWContext::poll_events();
