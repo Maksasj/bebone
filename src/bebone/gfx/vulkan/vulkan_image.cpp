@@ -36,7 +36,7 @@ namespace bebone::gfx::vulkan {
     }
 
     // Todo clear out this
-    void VulkanImage::transition_Layout(VulkanCommandBufferPool& pool, VulkanDevice& device, VkImageLayout oldLayout, VkImageLayout newLayout) {
+    void VulkanImage::transition_layout(VulkanCommandBufferPool& pool, VulkanDevice& device, VkImageLayout oldLayout, VkImageLayout newLayout) {
         VkCommandBuffer commandBuffer = pool.begin_single_time_commands(device);
 
         VkImageMemoryBarrier barrier{};

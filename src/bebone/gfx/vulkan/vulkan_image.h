@@ -57,7 +57,7 @@ namespace bebone::gfx::vulkan {
                 VkExtent3D extent,
                 VulkanImageInfo imageInfo = {});
 
-            void transition_Layout(
+            void transition_layout(
                 VulkanCommandBufferPool& pool,
                 VulkanDevice& device,
                 VkImageLayout oldLayout,

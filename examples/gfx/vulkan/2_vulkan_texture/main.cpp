@@ -81,6 +81,7 @@ int main() {
     vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
     indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
 
+    // Creating texture start
     auto raw = Image<ColorRGBA>::load_from_file("image.png");
 
     auto image = device->create_image(VK_FORMAT_R32G32B32A32_SFLOAT, { static_cast<uint32_t>(raw->get_width()), static_cast<uint32_t>(raw->get_height()), 1}, {
@@ -93,24 +94,22 @@ int main() {
     auto imageMemory = device->create_device_memory(memRequirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     imageMemory->bind_image_memory(*device, image);
 
-    image->transition_Layout(*commandBufferPool, *device, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-    // Copy buffer to imag
+    image->transition_layout(*commandBufferPool, *device, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
     auto size = raw->get_width() * raw->get_height() * sizeof(ColorRGBA);
-
     auto staging = device->create_buffer_memory(size);
     staging.memory->upload_data(device, raw->data(), size);
 
     commandBufferPool->copy_buffer_to_image(*device, staging.buffer, image, raw->get_width(), raw->get_height(), 1);
 
-    image->transition_Layout(*commandBufferPool, *device, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    image->transition_layout(*commandBufferPool, *device, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     auto sampler = device->create_sampler();
 
     auto view = device->create_image_view(*image, VK_FORMAT_R32G32B32A32_SFLOAT);
+    // Create texture end
 
-    descriptorPool->update_descriptor_set(device, sampler, view, size, descriptor, 0, 0);
+    descriptorPool->update_descriptor_set(device, sampler, view, descriptor, 0, 0);
 
     while (!window->closing()) {
         GLFWContext::poll_events();

@@ -63,7 +63,6 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanDevice>& device,
             std::shared_ptr<VulkanSampler>& sampler,
             std::shared_ptr<VulkanImageView>& view,
-            const size_t& size,
             std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
             const size_t& binding,
             const size_t& dstArrayElement
