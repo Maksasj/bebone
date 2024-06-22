@@ -9,8 +9,7 @@
 #include "vulkan_shader_module.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_const_range.h"
-
-#include "../shaders/spirv_shader_compiler.h"
+#include "vulkan_pipeline_manager.h"
 
 namespace bebone::gfx::vulkan {
     std::string vulkan_device_read_file(const std::string& path) {
@@ -126,6 +125,10 @@ namespace bebone::gfx::vulkan {
         gfx::ShaderCode shadeCode = shaderCompiler.compile(type);
 
         return std::make_shared<VulkanShaderModule>(*this, shadeCode);
+    }
+
+    std::shared_ptr<VulkanPipelineManager> VulkanDevice::create_pipeline_manager() {
+        return std::make_shared<VulkanPipelineManager>(*this);
     }
 
     void VulkanDevice::create_logical_device() {

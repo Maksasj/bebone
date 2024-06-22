@@ -30,6 +30,7 @@ namespace bebone::gfx::vulkan {
     class VulkanDescriptorSetLayout;
     class VulkanDescriptorSetLayoutBinding;
     class VulkanConstRange;
+    class VulkanPipelineManager;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -108,6 +109,8 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanShaderModule> create_shader_module(
                 const std::string& shaderCodePath,
                 const ShaderType& type);
+
+            std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 

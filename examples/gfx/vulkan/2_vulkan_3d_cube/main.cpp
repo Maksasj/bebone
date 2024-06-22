@@ -54,29 +54,13 @@ int main() {
     auto device = instance->create_device(window);
     auto swapChain = device->create_swap_chain(window);
 
-    // Pipeline manager start
-    auto descriptorPool = device->create_descriptor_pool();
+    auto pipeline_manager = device->create_pipeline_manager();
 
-    auto descriptorSetLayout = device->create_descriptor_set_layouts({
-        VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
-        VulkanDescriptorSetLayoutBinding::bindless_uniform(1)
-    });
-
-    auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
-
-    auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {
-        VulkanConstRange::common(sizeof(Handles), 0)
-    });
-
-    auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::FRAGMENT_SHADER);
-
-    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
-        .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
-    });
-
-    device->destroy_all(vertShaderModule, fragShaderModule);
-    // Pipeline manager end
+    auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
+        device, swapChain,
+        { VulkanConstRange::common(sizeof(Handles), 0) },
+        { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
+    );
 
     auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
     auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
@@ -85,8 +69,8 @@ int main() {
 
     auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
     auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
-    descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2});
-    descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5});
+    pipeline_manager->descriptor_pool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2}); // Todo fix this
+    pipeline_manager->descriptor_pool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5}); // Todo fix this
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
@@ -131,8 +115,8 @@ int main() {
 
         cmd.bind_pipeline(pipeline);
         cmd.bind_descriptor_set(pipelineLayout, descriptors, frame);
-
         cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
+
         cmd.bind_vertex_buffer(vertexBuffer.buffer);
         cmd.bind_index_buffer(indexBuffer.buffer);
         cmd.draw_indexed(indices.size());
@@ -156,9 +140,8 @@ int main() {
     for(auto& b : cameraUBO)
         device->destroy_all(b.buffer, b.memory);
 
-    device->destroy_all(descriptorSetLayout);
     device->destroy_all(descriptors);
-    device->destroy_all(descriptorPool, pipelineLayout, pipeline, swapChain);
+    device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
 
     device->destroy();
     instance->destroy();
