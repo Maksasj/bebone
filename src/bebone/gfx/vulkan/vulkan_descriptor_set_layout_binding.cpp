@@ -14,4 +14,16 @@ namespace bebone::gfx::vulkan {
             }
         };
     }
+
+    VulkanDescriptorSetLayoutBinding VulkanDescriptorSetLayoutBinding::bindless_sampler2d(const u32& binding) {
+        return {
+            .binding = {
+                .binding = binding,
+                .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                .descriptorCount = 65536,
+                .stageFlags = VK_SHADER_STAGE_ALL,
+                .pImmutableSamplers = nullptr
+            }
+        };
+    }
 }

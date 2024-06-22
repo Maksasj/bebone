@@ -40,6 +40,7 @@ namespace bebone::gfx::vulkan {
         return std::make_shared<VulkanDescriptorPool>(*this);
     }
 
+    // Todo why there is a vector ?
     std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
         return { std::make_shared<VulkanDescriptorSetLayout>(*this, bindings) };
     }

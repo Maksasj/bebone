@@ -13,6 +13,7 @@ namespace bebone::gfx::vulkan {
             VkDescriptorSetLayoutBinding binding;
 
             static VulkanDescriptorSetLayoutBinding bindless_uniform(const u32& binding);
+            static VulkanDescriptorSetLayoutBinding bindless_sampler2d(const u32& binding);
     };
 }
 
