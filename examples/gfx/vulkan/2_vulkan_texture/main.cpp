@@ -34,18 +34,6 @@ const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
     }
 };
 
-/*
-class Texture : NonCopyable {
-    shared_ptr<VulkanImage> image;
-    shared_ptr<VulkanImageView> view;
-    VkSampler sampler;
-    VkFormat imageFormat;
-    VkImageLayout imageLayout;
-
-    Texture(LveDevice &device, const std::string &filepath);
-};
-*/
-
 int main() {
     GLFWContext::init();
 
