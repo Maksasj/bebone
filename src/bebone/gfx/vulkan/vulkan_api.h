@@ -38,4 +38,6 @@
 
 #include "vulkan_wrapper.tpp"
 
+#include "vulkan_texture.h"
+
 #endif

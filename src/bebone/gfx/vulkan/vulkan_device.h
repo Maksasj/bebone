@@ -20,6 +20,7 @@
 #include "vulkan_sampler.h"
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
+#include "vulkan_texture.h"
 
 namespace bebone::gfx::vulkan {
     class VulkanSwapChain;
@@ -111,6 +112,10 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanShaderModule> create_shader_module(
                 const std::string& shaderCodePath,
                 const ShaderType& type);
+
+            std::shared_ptr<VulkanTexture> create_texture(
+                std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
+                const std::string& filePath);
 
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 
