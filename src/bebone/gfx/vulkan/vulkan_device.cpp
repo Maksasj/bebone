@@ -1,5 +1,6 @@
 #include "vulkan_device.h"
 
+#include "vulkan_sampler.h"
 #include "vulkan_swap_chain.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_descriptor_set_layout.h"
@@ -9,8 +10,6 @@
 #include "vulkan_shader_module.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_const_range.h"
-
-#include "../shaders/spirv_shader_compiler.h"
 
 namespace bebone::gfx::vulkan {
     std::string vulkan_device_read_file(const std::string& path) {
@@ -70,7 +69,7 @@ namespace bebone::gfx::vulkan {
 
         auto memRequirements = buffer->get_memory_requirements(*this);
 
-        auto memory = create_device_memory(memRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        auto memory = create_device_memory(memRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT); // Todo this should be configurable
         memory->bind_buffer_memory(*this, buffer);
 
         return { buffer, memory };
@@ -98,11 +97,16 @@ namespace bebone::gfx::vulkan {
         return std::make_shared<VulkanImage>(*this, format, extent, imageInfo);
     }
 
+    // Todo Why this function is public ?, and probably could be static
     std::shared_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
         return std::make_shared<VulkanImage>(image);
     }
 
-    std::shared_ptr<VulkanImageView> VulkanDevice::create_image_view(VulkanImage& image, VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
+    std::shared_ptr<VulkanSampler> VulkanDevice::create_sampler() {
+        return std::make_shared<VulkanSampler>(*this);
+    }
+
+    std::shared_ptr<VulkanImageView> VulkanDevice::create_image_view(VulkanImage& image, const VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
         return std::make_shared<VulkanImageView>(*this, image, imageFormat, imageViewInfo);
     }
 

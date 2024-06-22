@@ -17,6 +17,7 @@
 
 #include "vulkan_buffer.h"
 #include "vulkan_image.h"
+#include "vulkan_sampler.h"
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
 
@@ -83,9 +84,11 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanImage> create_image(
                 VkImage& image);
 
+            std::shared_ptr<VulkanSampler> create_sampler();
+
             std::shared_ptr<VulkanImageView> create_image_view(
                 VulkanImage& image,
-                VkFormat& imageFormat,
+                const VkFormat& imageFormat,
                 VulkanImageViewInfo imageViewInfo = {});
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();

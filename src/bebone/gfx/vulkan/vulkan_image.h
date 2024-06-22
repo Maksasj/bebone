@@ -12,6 +12,7 @@ namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDevice;
+    class VulkanCommandBufferPool;
 
     class VulkanImage;
     class VulkanImageView;
@@ -55,6 +56,12 @@ namespace bebone::gfx::vulkan {
                 VkFormat format,
                 VkExtent3D extent,
                 VulkanImageInfo imageInfo = {});
+
+            void transition_Layout(
+                VulkanCommandBufferPool& pool,
+                VulkanDevice& device,
+                VkImageLayout oldLayout,
+                VkImageLayout newLayout);
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
