@@ -5,19 +5,19 @@ int main() {
     using namespace bebone::core;
 
     TEST_CASE {
-        ArenaAllocator arena(_BEBONE_MEMORY_BYTES_1KB_);
+        ArenaAllocator arena(BEBONE_MEMORY_BYTES_1KB);
 
         ensure(arena.get_allocated() == 0);
     }
 
     TEST_CASE {
-        ArenaAllocator arena(_BEBONE_MEMORY_BYTES_1KB_);
+        ArenaAllocator arena(BEBONE_MEMORY_BYTES_1KB);
 
-        ensure(arena.get_capacity() == _BEBONE_MEMORY_BYTES_1KB_);
+        ensure(arena.get_capacity() == BEBONE_MEMORY_BYTES_1KB);
     }
 
     TEST_CASE {
-        ArenaAllocator arena(_BEBONE_MEMORY_BYTES_1KB_);
+        ArenaAllocator arena(BEBONE_MEMORY_BYTES_1KB);
 
         int* mem = static_cast<int*>(arena.alloc(sizeof(int)));
         *mem = 69;
@@ -26,7 +26,7 @@ int main() {
     }
 
     TEST_CASE {
-        ArenaAllocator arena(_BEBONE_MEMORY_BYTES_1KB_);
+        ArenaAllocator arena(BEBONE_MEMORY_BYTES_1KB);
 
         int* memInt = static_cast<int*>(arena.alloc(sizeof(int)));
         *memInt = 69;
@@ -40,7 +40,7 @@ int main() {
     }
 
     TEST_CASE {
-        ArenaAllocator arena(_BEBONE_MEMORY_BYTES_1KB_);
+        ArenaAllocator arena(BEBONE_MEMORY_BYTES_1KB);
 
         {
             int* memInt = static_cast<int*>(arena.alloc(sizeof(int)));

@@ -5,10 +5,10 @@
 
 #include "noncopyable.h"
 
-#define _BEBONE_MEMORY_BYTES_1KB_ 1024
-#define _BEBONE_MEMORY_BYTES_2KB_ 2048
-#define _BEBONE_MEMORY_BYTES_4KB_ 4096
-#define _BEBONE_MEMORY_BYTES_8KB_ 8192
+#define BEBONE_MEMORY_BYTES_1KB 1024
+#define BEBONE_MEMORY_BYTES_2KB 2048
+#define BEBONE_MEMORY_BYTES_4KB 4096
+#define BEBONE_MEMORY_BYTES_8KB 8192
 
 namespace bebone::core {
     /// Class used for allocating and managing an arena of memory
