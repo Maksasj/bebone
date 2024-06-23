@@ -13,7 +13,7 @@
 #include <glad/glad.h>
 
 namespace bebone::core {
-    template<ColorFormat _Format>
+    template<ColorFormat Format>
     struct Color {
 
     };

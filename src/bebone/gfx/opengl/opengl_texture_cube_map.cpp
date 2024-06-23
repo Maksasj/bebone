@@ -27,7 +27,7 @@ namespace bebone::gfx::opengl {
 
     template void GLTextureCubeMap::create_cube_map_texture<ColorRGB24>(const std::array<std::shared_ptr<Image<ColorRGB24>>, 6>& images);
     template void GLTextureCubeMap::create_cube_map_texture<ColorRGBA32>(const std::array<std::shared_ptr<Image<ColorRGBA32>>, 6>& images);
-    template void GLTextureCubeMap::create_cube_map_texture<ColorRGBA32f>(const std::array<std::shared_ptr<Image<ColorRGBA32f>>, 6>& images);
+    template void GLTextureCubeMap::create_cube_map_texture<ColorRGBA32F>(const std::array<std::shared_ptr<Image<ColorRGBA32F>>, 6>& images);
 
     GLTextureCubeMap::GLTextureCubeMap(const std::vector<std::string>& filePaths) : GLTexture(GL_TEXTURE_CUBE_MAP) {
         std::array<std::shared_ptr<Image<ColorRGBA>>, 6> images = {
@@ -49,5 +49,5 @@ namespace bebone::gfx::opengl {
 
     template GLTextureCubeMap::GLTextureCubeMap(const std::array<std::shared_ptr<Image<ColorRGB24>>, 6>& images);
     template GLTextureCubeMap::GLTextureCubeMap(const std::array<std::shared_ptr<Image<ColorRGBA32>>, 6>& images);
-    template GLTextureCubeMap::GLTextureCubeMap(const std::array<std::shared_ptr<Image<ColorRGBA32f>>, 6>& images);
+    template GLTextureCubeMap::GLTextureCubeMap(const std::array<std::shared_ptr<Image<ColorRGBA32F>>, 6>& images);
 }
