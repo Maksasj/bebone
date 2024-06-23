@@ -15,7 +15,7 @@
 
 #include <functional>
 
-#include "types/types.h"
+#include "../types/types.h"
 
 namespace bebone::core {
     // Debug profile class
