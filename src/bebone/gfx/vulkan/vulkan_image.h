@@ -47,6 +47,8 @@ namespace bebone::gfx::vulkan {
         VkImageLayout initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     };
 
+    using VulkanImageMemoryTuple = std::tuple<std::shared_ptr<VulkanImage>, std::shared_ptr<VulkanDeviceMemory>>;
+
     class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
         public:
             VulkanImage(const VkImage& image);

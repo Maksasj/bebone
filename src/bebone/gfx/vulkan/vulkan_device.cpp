@@ -97,6 +97,17 @@ namespace bebone::gfx::vulkan {
         return std::make_shared<VulkanImage>(*this, format, extent, imageInfo);
     }
 
+    VulkanImageMemoryTuple VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo imageInfo) {
+        auto image = std::make_shared<VulkanImage>(*this, format, extent, imageInfo);
+
+        auto req = image->get_memory_requirements(*this);
+
+        auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        memory->bind_image_memory(*this, image);
+
+        return make_tuple(image, memory);
+    }
+
     // Todo Why this function is public ?, and probably could be static
     std::shared_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
         return std::make_shared<VulkanImage>(image);
