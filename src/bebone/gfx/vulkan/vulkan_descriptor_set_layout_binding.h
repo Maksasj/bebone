@@ -7,8 +7,6 @@ namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
     class VulkanDescriptorSetLayoutBinding {
-        private:
-
         public:
             VkDescriptorSetLayoutBinding binding;
 

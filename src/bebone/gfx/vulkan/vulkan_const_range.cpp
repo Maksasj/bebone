@@ -11,7 +11,7 @@ namespace bebone::gfx::vulkan {
         return VulkanConstRange({
             .stageFlags = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT),
             .offset = offset,
-            .size = sizeof(size)
+            .size = static_cast<uint32_t>(size)
         });
     }
 }
