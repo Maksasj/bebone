@@ -70,7 +70,7 @@ namespace bebone::assets {
     }
 
     template<typename Color>
-    void ImagePainter<Color>::paint_square(const Vec2i& pos, const Vec2i & size, const Color& color) {
+    void ImagePainter<Color>::paint_square(const Vec2i& pos, const Vec2i& size, const Color& color) {
         paint_square(
             static_cast<size_t >(pos.x),
             static_cast<size_t >(pos.y),

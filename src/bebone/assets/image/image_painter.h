@@ -67,7 +67,7 @@ namespace bebone::assets {
             * @param size - Square size
             * @param color - Square color
             */
-            void paint_square(const Vec2i& pos, const Vec2i & size, const Color& color);
+            void paint_square(const Vec2i& pos, const Vec2i& size, const Color& color);
 
             // Flips image vertically
             void flip_vertical();
