@@ -5,17 +5,10 @@
 
 #include "vulkan_device.h"
 #include "vulkan_descriptor_pool.h"
+#include "vulkan_pipeline_tuples.h"
 
 namespace bebone::gfx::vulkan {
     class VulkanConstRange;
-
-    struct VulkanManagedPipelineTuple : public VulkanApi {
-        std::shared_ptr<VulkanPipeline> pipeline;
-        std::shared_ptr<VulkanPipelineLayout> layout;
-        std::vector<std::shared_ptr<VulkanDescriptorSet>> descriptors;
-
-        void destroy(VulkanDevice &device) override;
-    };
 
     // Todo inherit from VulkanApi
     class VulkanPipelineManager : private core::NonCopyable {

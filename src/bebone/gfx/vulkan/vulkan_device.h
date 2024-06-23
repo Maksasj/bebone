@@ -23,6 +23,9 @@
 #include "vulkan_texture.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 
+#include "vulkan_buffer_tuples.h"
+#include "vulkan_image_tuples.h"
+
 namespace bebone::gfx::vulkan {
     class VulkanSwapChain;
     class VulkanPipeline;

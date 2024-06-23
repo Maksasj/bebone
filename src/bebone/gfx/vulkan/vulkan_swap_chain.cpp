@@ -99,7 +99,7 @@ namespace bebone::gfx::vulkan {
             auto image = device.create_image(vk_image);
             auto view = device.create_image_view(*image, imageFormat);
 
-            out.push_back({image, view});
+            out.emplace_back(image, view);
         }
 
         return out;

@@ -33,7 +33,7 @@ namespace bebone::gfx::vulkan {
                 .subresourceRange = { .aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT },
             });
 
-            depthImages.push_back({image, view, memory});
+            depthImages.emplace_back(image, view, memory);
         }
 
         // Create frame buffers
