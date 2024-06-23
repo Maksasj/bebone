@@ -95,6 +95,11 @@ namespace bebone::gfx::vulkan {
         return *this;
     }
 
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_managed_pipeline(VulkanManagedPipelineTuple& tuple, const size_t& frame) {
+        auto& [pipeline, pipelineLayout, descriptors] = tuple;
+        return bind_pipeline(pipeline).bind_descriptor_set(pipelineLayout, descriptors, frame);
+    }
+
     VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer) {
         VkBuffer buffers[] = {buffer->backend};
         VkDeviceSize offset[] = {0};
@@ -108,6 +113,14 @@ namespace bebone::gfx::vulkan {
         vkCmdBindIndexBuffer(backend, indexBuffer->backend, 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(VulkanBufferMemoryTuple& tuple) {
+        return bind_vertex_buffer(tuple.buffer);
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(VulkanBufferMemoryTuple& tuple) {
+        return bind_index_buffer(tuple.buffer);
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertexCount) {

@@ -153,6 +153,11 @@ namespace bebone::gfx::vulkan {
             VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
             template <typename... Args>
+            void destroy_all(Args... args) {
+                (args.destroy(*this), ...);
+            }
+
+            template <typename... Args>
             void destroy_all(std::shared_ptr<Args>... args) {
                 (args->destroy(*this), ...);
             }
