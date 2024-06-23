@@ -18,9 +18,6 @@ namespace bebone::gfx::vulkan {
     class VulkanImageView;
     class VulkanDeviceMemory;
 
-    using VulkanSwapChainImageTuple = std::tuple<std::shared_ptr<VulkanImage>, std::shared_ptr<VulkanImageView>>;
-    using VulkanDepthImageTuple = std::tuple<std::shared_ptr<VulkanImage>, std::shared_ptr<VulkanImageView>, std::shared_ptr<VulkanDeviceMemory>>;
-
     struct VulkanImageInfo {
         // VkStructureType sType;
         // const void* pNext;
@@ -39,7 +36,21 @@ namespace bebone::gfx::vulkan {
         VkImageLayout initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     };
 
-    using VulkanImageMemoryTuple = std::tuple<std::shared_ptr<VulkanImage>, std::shared_ptr<VulkanDeviceMemory>>;
+    struct VulkanSwapChainImageTuple {
+        std::shared_ptr<VulkanImage> image;
+        std::shared_ptr<VulkanImageView> view;
+    };
+
+    struct VulkanDepthImageTuple {
+        std::shared_ptr<VulkanImage> image;
+        std::shared_ptr<VulkanImageView> view;
+        std::shared_ptr<VulkanDeviceMemory> memory;
+    };
+
+    struct VulkanImageMemoryTuple {
+        std::shared_ptr<VulkanImage> image;
+        std::shared_ptr<VulkanDeviceMemory> memory;
+    };
 
     class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
         public:

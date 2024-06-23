@@ -9,7 +9,11 @@
 namespace bebone::gfx::vulkan {
     class VulkanConstRange;
 
-    using VulkanManagedPipelineTuple = tuple<std::shared_ptr<VulkanPipeline>, std::shared_ptr<VulkanPipelineLayout>, std::vector<std::shared_ptr<VulkanDescriptorSet>>>;
+    struct VulkanManagedPipelineTuple {
+        std::shared_ptr<VulkanPipeline> pipeline;
+        std::shared_ptr<VulkanPipelineLayout> layout;
+        std::vector<std::shared_ptr<VulkanDescriptorSet>> descriptors;
+    };
 
     // Todo inherit from VulkanApi
     class VulkanPipelineManager : private core::NonCopyable {

@@ -108,7 +108,7 @@ namespace bebone::gfx::vulkan {
         auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(*this, image);
 
-        return make_tuple(image, memory);
+        return { image, memory };
     }
 
     // Todo Why this function is public ?, and probably could be static

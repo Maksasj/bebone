@@ -45,7 +45,10 @@ namespace bebone::gfx::vulkan {
         uint32_t* pQueueFamilyIndices = nullptr;
     };
 
-    using VulkanBufferMemoryTuple = std::tuple<std::shared_ptr<VulkanBuffer>, std::shared_ptr<VulkanDeviceMemory>>;
+    struct VulkanBufferMemoryTuple {
+        std::shared_ptr<VulkanBuffer> buffer;
+        std::shared_ptr<VulkanDeviceMemory> memory;
+    };
 
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
         public:
