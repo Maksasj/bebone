@@ -34,10 +34,10 @@ namespace bebone::gfx::vulkan {
 
     class VulkanImageView : public VulkanWrapper<VkImageView>, private core::NonCopyable {
         public:
-            VulkanImageView(
+            VulkanImageView( // Todo add necessary const
                 VulkanDevice& device,
                 VulkanImage& image,
-                VkFormat& imageFormat,
+                const VkFormat& imageFormat,
                 VulkanImageViewInfo imageViewInfo = {});
 
             void destroy(VulkanDevice &device) override;

@@ -43,6 +43,10 @@ namespace bebone::core {
             return GL_RGBA;
         }
 
+        static inline constexpr VkFormat get_vulkan_format() {
+            return VK_FORMAT_R32G32B32A32_SFLOAT;
+        }
+
         static inline constexpr GLuint get_gl_type() {
             return GL_FLOAT;
         }

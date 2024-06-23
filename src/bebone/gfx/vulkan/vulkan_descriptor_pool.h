@@ -13,7 +13,7 @@ namespace bebone::gfx::vulkan {
 
     class VulkanDescriptorPool : public VulkanWrapper<VkDescriptorPool>, private core::NonCopyable {
         public:
-            VulkanDescriptorPool(VulkanDevice& device);
+            VulkanDescriptorPool(VulkanDevice& device); // Todo, hide this constructor
 
             std::shared_ptr<VulkanDescriptorSet> create_descriptor(
                 std::shared_ptr<VulkanDevice>& device,
@@ -30,6 +30,23 @@ namespace bebone::gfx::vulkan {
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanBuffer>& buffer,
                 const size_t& size,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                std::shared_ptr<VulkanDevice>& device,
+                std::shared_ptr<VulkanTexture>& textures,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                std::shared_ptr<VulkanDevice>& device,
+                std::shared_ptr<VulkanSampler>& sampler,
+                std::shared_ptr<VulkanImageView>& view,
                 std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
                 const size_t& binding,
                 const size_t& dstArrayElement

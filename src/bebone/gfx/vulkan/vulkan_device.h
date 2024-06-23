@@ -17,8 +17,11 @@
 
 #include "vulkan_buffer.h"
 #include "vulkan_image.h"
+#include "vulkan_sampler.h"
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
+#include "vulkan_texture.h"
+#include "vulkan_descriptor_set_layout_binding.h"
 
 namespace bebone::gfx::vulkan {
     class VulkanSwapChain;
@@ -28,7 +31,6 @@ namespace bebone::gfx::vulkan {
     class VulkanShaderModule;
     class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
-    class VulkanDescriptorSetLayoutBinding;
     class VulkanConstRange;
     class VulkanPipelineManager;
 
@@ -92,12 +94,16 @@ namespace bebone::gfx::vulkan {
                 VkExtent3D extent,
                 VulkanImageInfo imageInfo = {});
 
+            VulkanImageMemoryTuple create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo imageInfo);
+
             std::shared_ptr<VulkanImage> create_image(
                 VkImage& image);
 
+            std::shared_ptr<VulkanSampler> create_sampler();
+
             std::shared_ptr<VulkanImageView> create_image_view(
                 VulkanImage& image,
-                VkFormat& imageFormat,
+                const VkFormat& imageFormat,
                 VulkanImageViewInfo imageViewInfo = {});
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
@@ -120,6 +126,10 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanShaderModule> create_shader_module(
                 const std::string& shaderCodePath,
                 const ShaderType& type);
+
+            std::shared_ptr<VulkanTexture> create_texture(
+                std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
+                const std::string& filePath);
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 

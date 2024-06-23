@@ -17,10 +17,7 @@ namespace bebone::gfx::vulkan {
         VulkanPipelineConfig configInfo
     ) {
         // Todo
-        auto descriptorSetLayout = device->create_descriptor_set_layouts({
-             VulkanDescriptorSetLayoutBinding::bindless_uniform(0),
-             VulkanDescriptorSetLayoutBinding::bindless_uniform(1)
-        });
+        auto descriptorSetLayout = device->create_descriptor_set_layouts({{BindlessUniform, 0}, {BindlessUniform, 1}});
 
         auto descriptors = descriptor_pool->create_descriptors(device, descriptorSetLayout[0], 3);
 

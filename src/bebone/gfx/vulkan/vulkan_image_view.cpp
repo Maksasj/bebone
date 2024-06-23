@@ -6,7 +6,7 @@
 namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
-    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
+    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
         VkImageViewCreateInfo createInfo{};
 
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;

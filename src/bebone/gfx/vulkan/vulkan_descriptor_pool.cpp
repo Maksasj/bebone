@@ -8,7 +8,7 @@ namespace bebone::gfx::vulkan {
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         std::vector<VkDescriptorPoolSize> poolSizes = {
             { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 65536 },
-            // { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, maxBindlessResources },
+            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 65536 } // Todo combined image sampler
         };
 
         VkDescriptorPoolCreateInfo poolInfo{};
@@ -56,6 +56,48 @@ namespace bebone::gfx::vulkan {
         descriptorWrite.pBufferInfo = &bufferInfo;
 
         descriptorWrite.pImageInfo = nullptr; // Optional
+        descriptorWrite.pTexelBufferView = nullptr; // Optional
+
+        vkUpdateDescriptorSets(device->device(), 1, &descriptorWrite, 0, nullptr);
+    }
+
+    void VulkanDescriptorPool::update_descriptor_set(
+            std::shared_ptr<VulkanDevice>& device,
+            std::shared_ptr<VulkanTexture>& texture,
+            std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+            const size_t& binding,
+            const size_t& dstArrayElement
+    ) {
+        auto& [image, memory, view, sampler] = *texture;
+        update_descriptor_set(device, sampler, view, descriptorSet, binding, dstArrayElement);
+    }
+
+    void VulkanDescriptorPool::update_descriptor_set(
+            std::shared_ptr<VulkanDevice>& device,
+            std::shared_ptr<VulkanSampler>& sampler,
+            std::shared_ptr<VulkanImageView>& view,
+            std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+            const size_t& binding,
+            const size_t& dstArrayElement
+    ) {
+        VkDescriptorImageInfo imageInfo{};
+        imageInfo.sampler = sampler->backend;
+        imageInfo.imageView = view->backend;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
+
+        VkWriteDescriptorSet descriptorWrite{};
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+
+        descriptorWrite.dstSet = descriptorSet->backend;
+        descriptorWrite.dstBinding = binding;
+        descriptorWrite.dstArrayElement = dstArrayElement; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
+
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrite.descriptorCount = 1;
+        // descriptorWrite.pBufferInfo = &bufferInfo;
+        descriptorWrite.pImageInfo = &imageInfo;
+
+        // descriptorWrite.pImageInfo = nullptr; // Optional
         descriptorWrite.pTexelBufferView = nullptr; // Optional
 
         vkUpdateDescriptorSets(device->device(), 1, &descriptorWrite, 0, nullptr);

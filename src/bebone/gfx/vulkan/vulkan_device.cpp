@@ -1,5 +1,6 @@
 #include "vulkan_device.h"
 
+#include "vulkan_sampler.h"
 #include "vulkan_swap_chain.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_descriptor_set_layout.h"
@@ -10,6 +11,8 @@
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_const_range.h"
 #include "vulkan_pipeline_manager.h"
+
+#include "../shaders/spirv_shader_compiler.h"
 
 namespace bebone::gfx::vulkan {
     std::string vulkan_device_read_file(const std::string& path) {
@@ -39,6 +42,7 @@ namespace bebone::gfx::vulkan {
         return std::make_shared<VulkanDescriptorPool>(*this);
     }
 
+    // Todo why there is a vector ?
     std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
         return { std::make_shared<VulkanDescriptorSetLayout>(*this, bindings) };
     }
@@ -68,7 +72,7 @@ namespace bebone::gfx::vulkan {
 
         auto memRequirements = buffer->get_memory_requirements(*this);
 
-        auto memory = create_device_memory(memRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        auto memory = create_device_memory(memRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT); // Todo this should be configurable
         memory->bind_buffer_memory(*this, buffer);
 
         return { buffer, memory };
@@ -96,11 +100,27 @@ namespace bebone::gfx::vulkan {
         return std::make_shared<VulkanImage>(*this, format, extent, imageInfo);
     }
 
+    VulkanImageMemoryTuple VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo imageInfo) {
+        auto image = std::make_shared<VulkanImage>(*this, format, extent, imageInfo);
+
+        auto req = image->get_memory_requirements(*this);
+
+        auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        memory->bind_image_memory(*this, image);
+
+        return make_tuple(image, memory);
+    }
+
+    // Todo Why this function is public ?, and probably could be static
     std::shared_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
         return std::make_shared<VulkanImage>(image);
     }
 
-    std::shared_ptr<VulkanImageView> VulkanDevice::create_image_view(VulkanImage& image, VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
+    std::shared_ptr<VulkanSampler> VulkanDevice::create_sampler() {
+        return std::make_shared<VulkanSampler>(*this);
+    }
+
+    std::shared_ptr<VulkanImageView> VulkanDevice::create_image_view(VulkanImage& image, const VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
         return std::make_shared<VulkanImageView>(*this, image, imageFormat, imageViewInfo);
     }
 
@@ -125,6 +145,14 @@ namespace bebone::gfx::vulkan {
         gfx::ShaderCode shadeCode = shaderCompiler.compile(type);
 
         return std::make_shared<VulkanShaderModule>(*this, shadeCode);
+    }
+
+    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
+            std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
+            const std::string& filePath
+    ) {
+        auto raw = assets::Image<ColorRGBA>::load_from_file(filePath);
+        return std::make_shared<VulkanTexture>(*this, commandBufferPool, raw);
     }
 
     std::shared_ptr<VulkanPipelineManager> VulkanDevice::create_pipeline_manager() {

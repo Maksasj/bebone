@@ -4,14 +4,16 @@
 namespace bebone::gfx::vulkan {
     class VulkanDevice;
 
+    class VulkanApi {
+        public:
+            virtual ~VulkanApi() = default;
+            virtual void destroy(VulkanDevice& device) = 0;
+    };
+
     template<class T>
-    class VulkanWrapper {
+    class VulkanWrapper : public VulkanApi {
         public:
             T backend;
-
-            virtual ~VulkanWrapper() = default;
-
-            virtual void destroy(VulkanDevice& device) = 0;
     };
 }
 
