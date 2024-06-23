@@ -25,8 +25,7 @@ namespace bebone::gfx::vulkan {
                 const size_t& descriptorCount);
 
             // Todo Hey any update_descriptor_set functions can be made static ?, nice !
-
-            void update_descriptor_set(
+            static void update_descriptor_set(
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanBuffer>& buffer,
                 const size_t& size,
@@ -35,7 +34,7 @@ namespace bebone::gfx::vulkan {
                 const size_t& dstArrayElement
             );
 
-            void update_descriptor_set(
+            static void update_descriptor_set(
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanTexture>& textures,
                 std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
@@ -43,7 +42,7 @@ namespace bebone::gfx::vulkan {
                 const size_t& dstArrayElement
             );
 
-            void update_descriptor_set(
+            static void update_descriptor_set(
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanSampler>& sampler,
                 std::shared_ptr<VulkanImageView>& view,
@@ -52,7 +51,7 @@ namespace bebone::gfx::vulkan {
                 const size_t& dstArrayElement
             );
 
-            void update_descriptor_set(
+            static void update_descriptor_set(
                 std::shared_ptr<VulkanDevice>& device,
                 VulkanBufferMemoryTuple& tuple,
                 const size_t& size,
@@ -61,7 +60,7 @@ namespace bebone::gfx::vulkan {
                 const size_t& dstArrayElement
             );
 
-            void update_descriptor_sets(
+            static void update_descriptor_sets(
                 std::shared_ptr<VulkanDevice>& device,
                 std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
                 const size_t& size,
@@ -70,7 +69,7 @@ namespace bebone::gfx::vulkan {
                 const std::vector<size_t>& dstArrayElements
             );
 
-            void update_descriptor_sets(
+            static void update_descriptor_sets(
                 std::shared_ptr<VulkanDevice>& device,
                 std::vector<VulkanBufferMemoryTuple>& tuples,
                 const size_t& size,
@@ -79,7 +78,7 @@ namespace bebone::gfx::vulkan {
                 const std::vector<size_t>& dstArrayElements
             );
 
-            void update_descriptor_sets(
+            static void update_descriptor_sets(
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanTexture>& texture,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
