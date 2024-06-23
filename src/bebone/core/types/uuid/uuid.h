@@ -12,7 +12,7 @@
 namespace bebone::core {
     class UUID {
         private:
-            u64 _data[2];
+            u64 data[2];
         
             UUID(const u64& data1, const u64& data2);
 

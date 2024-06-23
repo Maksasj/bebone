@@ -22,14 +22,14 @@ namespace bebone::gfx::vulkan {
         image->transition_layout(*commandBufferPool, device, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
         auto size = raw->get_width() * raw->get_height() * sizeof(ColorRGBA);
-        auto staging = device.create_buffer_memory(size);
-        staging.memory->upload_data(device, raw->data(), size);
+        auto [buffer, memory] = device.create_buffer_memory(size);
+        memory->upload_data(device, raw->data(), size);
 
         // Todo Probably uploading data to gpu need some sort of render graph api
-        commandBufferPool->copy_buffer_to_image(device, staging.buffer, image, raw->get_width(), raw->get_height(), 1);
+        commandBufferPool->copy_buffer_to_image(device, buffer, image, raw->get_width(), raw->get_height(), 1);
 
-        staging.memory->destroy(device); // Todo
-        staging.buffer->destroy(device); // Todo
+        memory->destroy(device); // Todo
+        buffer->destroy(device); // Todo
 
         image->transition_layout(*commandBufferPool, device, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 

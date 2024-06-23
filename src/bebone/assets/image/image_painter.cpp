@@ -15,6 +15,15 @@ namespace bebone::assets {
     }
 
     template<typename Color>
+    void ImagePainter<Color>::paint_pixel(const Vec2i& pos, const Color& color) {
+        paint_pixel(
+            static_cast<size_t>(pos.x),
+            static_cast<size_t>(pos.y),
+            color
+        );
+    }
+
+    template<typename Color>
     void ImagePainter<Color>::paint_circle(const size_t& x_pos, const size_t& y_pos, const f32& radius, const Color& color) {
         const auto r2 = radius * radius;
 
@@ -36,6 +45,16 @@ namespace bebone::assets {
     }
 
     template<typename Color>
+    void ImagePainter<Color>::paint_circle(const Vec2i& pos, const f32& radius, const Color& color) {
+        paint_circle(
+            static_cast<size_t>(pos.x),
+            static_cast<size_t>(pos.y),
+            radius,
+            color
+        );
+    }
+
+    template<typename Color>
     void ImagePainter<Color>::paint_square(const size_t& x_pos, const size_t& y_pos, const f32& sq_width, const f32& sq_height, const Color& color) {
         const size_t width = target_image->get_width();
         const size_t height = target_image->get_height();
@@ -48,6 +67,17 @@ namespace bebone::assets {
                 target_image->at(x_cord, height - y_cord) = color;
             }
         }
+    }
+
+    template<typename Color>
+    void ImagePainter<Color>::paint_square(const Vec2i& pos, const Vec2i& size, const Color& color) {
+        paint_square(
+            static_cast<size_t >(pos.x),
+            static_cast<size_t >(pos.y),
+            static_cast<size_t >(size.x),
+            static_cast<size_t >(size.y),
+            color
+        );
     }
 
     template<typename Color>
@@ -112,6 +142,14 @@ namespace bebone::assets {
     }
 
     template<typename Color>
+    void ImagePainter<Color>::resize(const Vec2i& size) {
+        resize(
+            static_cast<size_t>(size.x),
+            static_cast<size_t>(size.y)
+        );
+    }
+
+    template<typename Color>
     void ImagePainter<Color>::crop(const size_t& start_x, const size_t& start_y, const size_t& width, const size_t& height) {
         const auto end_x = start_x + width;
         const auto end_y = start_y + height;
@@ -130,6 +168,16 @@ namespace bebone::assets {
         target_image->color = color;
         target_image->width = width;
         target_image->height = height;
+    }
+
+    template<typename Color>
+    void ImagePainter<Color>::crop(const Vec2i& pos, const Vec2i& size) {
+        crop(
+            static_cast<size_t>(pos.x),
+            static_cast<size_t>(pos.y),
+            static_cast<size_t>(size.x),
+            static_cast<size_t>(size.y)
+        );
     }
 
     template<typename Color>

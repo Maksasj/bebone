@@ -62,10 +62,8 @@ int main() {
         .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
 
-    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
-    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+    auto [vbuffer, vmemory] = device->create_buffer_memory_from(vertices);
+    auto [ibuffer, imemory] = device->create_buffer_memory_from(indices);
 
     auto texture = device->create_texture(commandBufferPool, "image.png");
     descriptorPool->update_descriptor_set(device, texture, descriptor, 0, 0);
@@ -84,8 +82,8 @@ int main() {
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(pipeline)
             .bind_descriptor_set(pipelineLayout, descriptor)
-            .bind_vertex_buffer(vertexBuffer.buffer)
-            .bind_index_buffer(indexBuffer.buffer)
+            .bind_vertex_buffer(vbuffer)
+            .bind_index_buffer(ibuffer)
             .draw_indexed(indices.size())
             .end_render_pass()
             .end_record();
@@ -98,7 +96,7 @@ int main() {
 
     device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
     device->destroy_all(texture);
-    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+    device->destroy_all(vbuffer, vmemory, ibuffer, imemory, commandBufferPool);
 
     device->destroy_all(descriptorSetLayout);
     device->destroy_all(descriptor);

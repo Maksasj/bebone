@@ -24,11 +24,11 @@ namespace game::core::fsm {
         Game::find_game_object_by_name("Pipe1")->get_transform()->set_position(Vec3f(6.2f, Random::rand(-3.0f, 4.5f), 2.0f));
         Game::find_game_object_by_name("Pipe2")->get_transform()->set_position(Vec3f(12.0f, Random::rand(-3.0f, 4.5f), 2.0f));
 
-        Input::get_instance().register_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
+        Input::get_instance().register_key_action(KeyCode::MouseButtonLeft, transitionFunction);
     }
 
     void MainMenuState::exit() {
-        Input::get_instance().remove_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
+        Input::get_instance().remove_key_action(KeyCode::MouseButtonLeft, transitionFunction);
     }
 
     void MainMenuState::set_game_state(shared_ptr<State> gameState) {

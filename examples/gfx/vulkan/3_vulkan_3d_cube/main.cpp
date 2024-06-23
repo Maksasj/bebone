@@ -42,9 +42,6 @@ const std::vector<int> indices = {
     3, 2, 6, 6, 7, 3
 };
 
-// Todo move view matrix to BEBONE_TYPES
-Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up);
-
 int main() {
     GLFWContext::init();
 
@@ -61,27 +58,27 @@ int main() {
     auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {
         VulkanConstRange::common(sizeof(Handles), 0)
     });
+
     auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::FRAGMENT_SHADER);
+
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
         .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
     });
 
-    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
-    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+    auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);
+    auto [ ibuffer, imemory ] = device->create_buffer_memory_from(indices);
 
     auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
     auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
-    descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2});
-    descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5});
+    descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2}); // Todo, this thing is inlined
+    descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5}); // Todo, this thing is inlined
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto cameraTransform = CameraTransform {
-        get_view_matrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
+        Mat4f::view(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
@@ -92,24 +89,22 @@ int main() {
     };
 
     f32 t = 0.0f;
-
     while (!window->closing()) {
-        ++t;
-
         GLFWContext::poll_events();
 
         uint32_t frame;
-        auto result = swapChain->acquire_next_image(device, &frame);
-
-        if(!result.is_ok())
+        if(!swapChain->acquire_next_image(device, &frame).is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+        auto& [_0, tmem] = transformUBO[frame];
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+        tmem->upload_data(device, &transform, sizeof(Transform));
+
+        auto& [_1, cmem] = cameraUBO[frame];
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
+        cmem->upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
-        transformUBO[frame].memory->upload_data(device, &transform, sizeof(Transform));
-        cameraUBO[frame].memory->upload_data(device, &cameraTransform, sizeof(CameraTransform));
-
+        // Todo, we need to fix this
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
         auto& cmd = commandBuffers[frame];
@@ -119,29 +114,27 @@ int main() {
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(pipeline)
             .bind_descriptor_set(pipelineLayout, descriptors, frame)
-            .bind_vertex_buffer(vertexBuffer.buffer)
-            .bind_index_buffer(indexBuffer.buffer)
+            .bind_vertex_buffer(vbuffer)
+            .bind_index_buffer(ibuffer)
             .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
             .draw_indexed(indices.size())
             .end_render_pass()
             .end_record();
 
-        result = swapChain->submit_command_buffers(device, cmd, &frame);
-
-        if(!result.is_ok()) // Todo check if window is resized
+        if(!swapChain->submit_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 
     device->wait_idle();
 
     device->destroy_all(commandBuffers);
-    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+    device->destroy_all(vbuffer, ibuffer, vmemory, imemory, commandBufferPool);
 
-    for(auto& b : transformUBO)
-        device->destroy_all(b.buffer, b.memory);
+    for(auto& [buffer, memory] : transformUBO)
+        device->destroy_all(buffer, memory);
 
-    for(auto& b : cameraUBO)
-        device->destroy_all(b.buffer, b.memory);
+    for(auto& [buffer, memory] : cameraUBO)
+        device->destroy_all(buffer, memory);
 
     device->destroy_all(descriptorSetLayout);
     device->destroy_all(descriptors);
@@ -154,26 +147,4 @@ int main() {
     GLFWContext::terminate();
 
     return 0;
-}
-
-Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up) {
-    const auto w = direction.normalize();
-    const auto u = w.cross(up).normalize();
-    const auto v = w.cross(u);
-
-    auto viewMatrix = Mat4f::identity();
-    viewMatrix[0 * 4 + 0] = u.x;
-    viewMatrix[1 * 4 + 0] = u.y;
-    viewMatrix[2 * 4 + 0] = u.z;
-    viewMatrix[0 * 4 + 1] = v.x;
-    viewMatrix[1 * 4 + 1] = v.y;
-    viewMatrix[2 * 4 + 1] = v.z;
-    viewMatrix[0 * 4 + 2] = w.x;
-    viewMatrix[1 * 4 + 2] = w.y;
-    viewMatrix[2 * 4 + 2] = w.z;
-    viewMatrix[3 * 4 + 0] = -1.0f * (u).dot(position);
-    viewMatrix[3 * 4 + 1] = -1.0f * (v).dot(position);
-    viewMatrix[3 * 4 + 2] = -1.0f * (w).dot(position);
-
-    return viewMatrix;
 }

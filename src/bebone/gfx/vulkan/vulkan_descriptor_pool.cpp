@@ -47,7 +47,9 @@ namespace bebone::gfx::vulkan {
 
         descriptorWrite.dstSet = descriptorSet->backend;
         descriptorWrite.dstBinding = binding;
-        descriptorWrite.dstArrayElement = dstArrayElement; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
+        descriptorWrite.dstArrayElement = dstArrayElement;
+        // Todo, remember that this mean \/
+        // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         descriptorWrite.descriptorCount = 1;
@@ -109,7 +111,14 @@ namespace bebone::gfx::vulkan {
         const size_t& binding,
         const size_t& dstArrayElement
     ) {
-        update_descriptor_set(device, tuple.buffer, size, descriptorSet, binding, dstArrayElement);
+        update_descriptor_set(
+            device,
+            std::get<std::shared_ptr<VulkanBuffer>>(tuple),
+            size,
+            descriptorSet,
+            binding,
+            dstArrayElement
+        );
     }
 
     void VulkanDescriptorPool::update_descriptor_sets(
@@ -144,7 +153,7 @@ namespace bebone::gfx::vulkan {
             throw std::runtime_error("buffer an dstArrayElements count is not matching");
 
         for(size_t i = 0; i < dstArrayElements.size(); ++i) {
-            auto& buffer = tuples[i].buffer;
+            auto& buffer = std::get<std::shared_ptr<VulkanBuffer>>(tuples[i]);
             auto& dstArrayElement = dstArrayElements[i];
             auto& descriptorSet = descriptorSets[i];
 

@@ -50,7 +50,7 @@ namespace bebone::core {
 
             /// Helper meta function, that extracts type of the first argument of callable type
             template<typename Listener>
-            using FirstArg = typename function_traits<Listener>::template argument<0>;
+            using FirstArg = typename FunctionTraits<Listener>::template Argument<0>;
 
             /// Meta function that checks if listener is suitable for this event dispatcher
             template<typename Listener>
@@ -63,7 +63,7 @@ namespace bebone::core {
             */
             template<typename Listener, typename = IsSuitableListener<Listener>>
             void add_listener(Listener listener) {
-                using EventType = typename function_traits<Listener>::template argument<0>;
+                using EventType = typename FunctionTraits<Listener>::template Argument<0>;
 
                 auto ptr = std::make_shared<std::function<void(EventType)>>(listener);
 

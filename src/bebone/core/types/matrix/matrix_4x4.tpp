@@ -12,8 +12,11 @@ namespace bebone::core {
         inline static Matrix<f32, 4, 4> identity();
         inline static Matrix<f32, 4, 4> translation(const Vec3<f32>& vector);
         inline static Matrix<f32, 4, 4> scale(const f32& rate);
+        
         inline static Matrix<f32, 4, 4> orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far);
         inline static Matrix<f32, 4, 4> perspective(const f32& fovy, const f32& aspect, const f32& near, const f32& far);
+        inline static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up);
+        inline static Matrix<f32, 4, 4> look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up);
 
         inline static Matrix<f32, 4, 4> rotation_x(const f32& angle);
         inline static Matrix<f32, 4, 4> rotation_y(const f32& angle);
@@ -172,6 +175,34 @@ namespace bebone::core {
                 }};
             #endif
         #endif
+    }
+
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up) {
+        const auto w = dir.normalize();
+        const auto u = w.cross(up).normalize();
+        const auto v = w.cross(u);
+
+        auto view_matrix = identity();
+
+        view_matrix[0 * 4 + 0] = u.x;
+        view_matrix[1 * 4 + 0] = u.y;
+        view_matrix[2 * 4 + 0] = u.z;
+        view_matrix[0 * 4 + 1] = v.x;
+        view_matrix[1 * 4 + 1] = v.y;
+        view_matrix[2 * 4 + 1] = v.z;
+        view_matrix[0 * 4 + 2] = w.x;
+        view_matrix[1 * 4 + 2] = w.y;
+        view_matrix[2 * 4 + 2] = w.z;
+        view_matrix[3 * 4 + 0] = -1.0f * (u).dot(origin);
+        view_matrix[3 * 4 + 1] = -1.0f * (v).dot(origin);
+        view_matrix[3 * 4 + 2] = -1.0f * (w).dot(origin);
+
+        return view_matrix;
+    }
+
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
+        const auto dir = center - origin;
+        return view(origin, dir, up);
     }
 
     inline std::string Matrix<f32, 4, 4>::to_string() const {

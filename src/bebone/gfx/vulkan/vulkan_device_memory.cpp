@@ -41,14 +41,6 @@ namespace bebone::gfx::vulkan {
         vkUnmapMemory(device.device(), backend);
     }
 
-    void VulkanDeviceMemory::map(std::shared_ptr<VulkanDevice>& device, const size_t& size, void** data) {
-        vkMapMemory(device->device(), backend, 0, size, 0, data);
-    }
-
-    void VulkanDeviceMemory::unmap(std::shared_ptr<VulkanDevice>& device) {
-        vkUnmapMemory(device->device(), backend);
-    }
-
     void VulkanDeviceMemory::destroy(VulkanDevice &device) {
         vkFreeMemory(device.device(), backend, nullptr);
     }

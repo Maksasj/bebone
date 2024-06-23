@@ -7,37 +7,38 @@ namespace bebone::core {
         return instance;
     }
 
-    void Input::register_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType) {
-        Key key(keyCode, inputType);
+    void Input::register_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type) {
+        const Key key(key_code, input_type);
 
-        if (keyActions.find(key) == keyActions.end()) {
-            keyActions[key] = Action();
+        if (key_actions.find(key) == key_actions.end()) {
+            key_actions[key] = Action();
         }
 
-        keyActions[key] += action;
+        key_actions[key] += action;
     }
 
-    void Input::remove_key_action(const KeyCode &keyCode, std::function<void()> &action, const InputType &inputType) {
-        Key key(keyCode, inputType);
+    void Input::remove_key_action(const KeyCode &key_code, std::function<void()> &action, const InputType &input_type) {
+        const Key key(key_code, input_type);
 
-        if (keyActions.find(key) == keyActions.end()) {
+        if (key_actions.find(key) == key_actions.end()) {
             return;
         }
 
-        keyActions[key] -= action;
+        key_actions[key] -= action;
     }
 
-    void Input::queue_key(const KeyCode &keyCode, const InputType &inputType) {
-        queuedKeys.push(Key(keyCode, inputType));
+    void Input::queue_key(const KeyCode &key_code, const InputType &input_type) {
+        queued_keys.emplace(key_code, input_type);
     }
 
     void Input::execute_queued_actions() {
-        while (!queuedKeys.empty()) {
-            Key key = queuedKeys.front();
-            queuedKeys.pop();
+        while (!queued_keys.empty()) {
+            const auto key = queued_keys.front();
 
-            if (keyActions.find(key) != keyActions.end()) {
-                keyActions[key]();
+            queued_keys.pop();
+
+            if (key_actions.find(key) != key_actions.end()) {
+                key_actions[key]();
             }
         }
     }
