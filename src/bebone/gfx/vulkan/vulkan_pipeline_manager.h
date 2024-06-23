@@ -11,8 +11,7 @@ namespace bebone::gfx::vulkan {
 
     using VulkanManagedPipelineTuple = tuple<std::shared_ptr<VulkanPipeline>, std::shared_ptr<VulkanPipelineLayout>, std::vector<std::shared_ptr<VulkanDescriptorSet>>>;
 
-    // Todo inherit from VulkanApi
-    class VulkanPipelineManager : private core::NonCopyable {
+    class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {
         private:
 
         public:
@@ -27,7 +26,7 @@ namespace bebone::gfx::vulkan {
                 VulkanPipelineConfig configInfo
             );
 
-            void destroy(VulkanDevice& device);
+            void destroy(VulkanDevice& device) override;
     };
 }
 
