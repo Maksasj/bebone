@@ -147,6 +147,18 @@ namespace bebone::gfx::vulkan {
         return std::make_shared<VulkanShaderModule>(*this, shadeCode);
     }
 
+    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
+            std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
+            const std::string& filePath
+    ) {
+        auto raw = assets::Image<ColorRGBA>::load_from_file(filePath);
+        return std::make_shared<VulkanTexture>(*this, commandBufferPool, raw);
+    }
+
+    std::shared_ptr<VulkanPipelineManager> VulkanDevice::create_pipeline_manager() {
+        return std::make_shared<VulkanPipelineManager>(*this);
+    }
+
     void VulkanDevice::create_logical_device() {
         QueueFamilyIndices indices = VulkanDeviceChooser::find_queue_families(physicalDevice, surface_);
 
