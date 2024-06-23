@@ -56,6 +56,7 @@ int main() {
     auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
         device, swapChain,
         { VulkanConstRange::common(sizeof(Handles), 0) },
+        { {BindlessUniform, 0}, {BindlessUniform, 1} },
         { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
     );
 

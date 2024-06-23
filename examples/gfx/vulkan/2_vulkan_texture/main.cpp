@@ -40,33 +40,24 @@ int main() {
     auto window = WindowFactory::create_window("2. Vulkan texture example", 800, 600, GfxAPI::VULKAN);
 
     auto instance = VulkanInstance::create_instance();
-
     auto device = instance->create_device(window);
-
-    auto commandBufferPool = device->create_command_buffer_pool();
-    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
-
     auto swapChain = device->create_swap_chain(window);
 
-    auto descriptorPool = device->create_descriptor_pool();
-    auto descriptorSetLayout = device->create_descriptor_set_layouts({{BindlessSampler, 0}});
-
-    auto descriptor = descriptorPool->create_descriptor(device, descriptorSetLayout[0]);
-
-    auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::FRAGMENT_SHADER);
-
-    auto pipelineLayout = device->create_pipeline_layout({ descriptorSetLayout }, {});
-
-    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
-        .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
-    });
+    auto pipeline_manager = device->create_pipeline_manager();
+    auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
+        device, swapChain, { },
+        { {BindlessSampler, 0} },
+        { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
+    );
 
     auto [vbuffer, vmemory] = device->create_buffer_memory_from(vertices);
     auto [ibuffer, imemory] = device->create_buffer_memory_from(indices);
 
+    auto commandBufferPool = device->create_command_buffer_pool();
+    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
+
     auto texture = device->create_texture(commandBufferPool, "image.png");
-    descriptorPool->update_descriptor_set(device, texture, descriptor, 0, 0);
+    pipeline_manager->descriptor_pool->update_descriptor_sets(device, texture, descriptors, 0, {0, 0, 0});
 
     while (!window->closing()) {
         GLFWContext::poll_events();
@@ -81,7 +72,7 @@ int main() {
             .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
             .bind_pipeline(pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptor)
+            .bind_descriptor_set(pipelineLayout, descriptors, frame)
             .bind_vertex_buffer(vbuffer)
             .bind_index_buffer(ibuffer)
             .draw_indexed(indices.size())
@@ -97,10 +88,8 @@ int main() {
     device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
     device->destroy_all(texture);
     device->destroy_all(vbuffer, vmemory, ibuffer, imemory, commandBufferPool);
-
-    device->destroy_all(descriptorSetLayout);
-    device->destroy_all(descriptor);
-    device->destroy_all(descriptorPool, vertShaderModule, fragShaderModule, pipelineLayout, pipeline, swapChain);
+    device->destroy_all(descriptors);
+    device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
 
     device->destroy();
     instance->destroy();

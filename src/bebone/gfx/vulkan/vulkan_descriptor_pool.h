@@ -79,6 +79,14 @@ namespace bebone::gfx::vulkan {
                 const std::vector<size_t>& dstArrayElements
             );
 
+            void update_descriptor_sets(
+                std::shared_ptr<VulkanDevice>& device,
+                std::shared_ptr<VulkanTexture>& texture,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
+
             void destroy(VulkanDevice& device) override;
     };  
 }

@@ -161,6 +161,21 @@ namespace bebone::gfx::vulkan {
         }
     }
 
+    void VulkanDescriptorPool::update_descriptor_sets(
+            std::shared_ptr<VulkanDevice>& device,
+            std::shared_ptr<VulkanTexture>& texture,
+            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+            const size_t& binding,
+            const std::vector<size_t>& dstArrayElements
+    ) {
+        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
+            auto& dstArrayElement = dstArrayElements[i];
+            auto& descriptorSet = descriptorSets[i];
+
+            update_descriptor_set(device, texture, descriptorSet, binding, dstArrayElement);
+        }
+    }
+
     std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout) {
         return std::make_shared<VulkanDescriptorSet>(device, *this, descriptorSetLayout);
     }

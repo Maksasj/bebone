@@ -14,10 +14,11 @@ namespace bebone::gfx::vulkan {
         std::shared_ptr<VulkanDevice>& device,
         std::shared_ptr<VulkanSwapChain>& swapChain,
         const std::vector<VulkanConstRange>& constantRanges,
+        const std::vector<VulkanDescriptorSetLayoutBinding>& bindings,
         VulkanPipelineConfig configInfo
     ) {
         // Todo
-        auto descriptorSetLayout = device->create_descriptor_set_layouts({{BindlessUniform, 0}, {BindlessUniform, 1}});
+        auto descriptorSetLayout = device->create_descriptor_set_layouts(bindings);
 
         auto descriptors = descriptor_pool->create_descriptors(device, descriptorSetLayout[0], 3);
 
