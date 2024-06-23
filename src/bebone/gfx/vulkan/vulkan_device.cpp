@@ -10,6 +10,9 @@
 #include "vulkan_shader_module.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_const_range.h"
+#include "vulkan_pipeline_manager.h"
+
+#include "../shaders/spirv_shader_compiler.h"
 
 namespace bebone::gfx::vulkan {
     std::string vulkan_device_read_file(const std::string& path) {
@@ -122,11 +125,11 @@ namespace bebone::gfx::vulkan {
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-            std::shared_ptr<VulkanSwapChain>& swapChain,
-            std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
-            std::vector<std::shared_ptr<VulkanShaderModule>> shaderModules,
-            VulkanPipelineConfig configInfo
-        ) {
+        std::shared_ptr<VulkanSwapChain>& swapChain,
+        std::shared_ptr<VulkanPipelineLayout>& pipelineLayout,
+        std::vector<std::shared_ptr<VulkanShaderModule>> shaderModules,
+        VulkanPipelineConfig configInfo
+    ) {
 
         return std::make_shared<VulkanPipeline>(*this, swapChain, pipelineLayout, shaderModules, configInfo);
     }
@@ -143,15 +146,6 @@ namespace bebone::gfx::vulkan {
 
         return std::make_shared<VulkanShaderModule>(*this, shadeCode);
     }
-
-    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
-        std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
-        const std::string& filePath
-    ) {
-        auto raw = assets::Image<ColorRGBA>::load_from_file(filePath);
-        return std::make_shared<VulkanTexture>(*this, commandBufferPool, raw);
-    }
-
 
     void VulkanDevice::create_logical_device() {
         QueueFamilyIndices indices = VulkanDeviceChooser::find_queue_families(physicalDevice, surface_);

@@ -38,6 +38,8 @@
 
 #include "vulkan_wrapper.tpp"
 
+// Utils class
+#include "vulkan_pipeline_manager.h"
 #include "vulkan_texture.h"
 
 #endif

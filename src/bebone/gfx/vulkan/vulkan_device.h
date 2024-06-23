@@ -32,6 +32,7 @@ namespace bebone::gfx::vulkan {
     class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
     class VulkanConstRange;
+    class VulkanPipelineManager;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -129,6 +130,8 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanTexture> create_texture(
                 std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
                 const std::string& filePath);
+
+            std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 

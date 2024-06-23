@@ -14,8 +14,8 @@ namespace bebone::gfx::vulkan {
 
     class VulkanPipeline : public VulkanWrapper<VkPipeline>, private core::NonCopyable {
         private:
-         static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(
-             std::vector<std::shared_ptr<VulkanShaderModule>>& shaderModules);
+             static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(
+                 std::vector<std::shared_ptr<VulkanShaderModule>>& shaderModules);
 
         public:
             VulkanPipeline(

@@ -51,28 +51,21 @@ int main() {
     auto device = instance->create_device(window);
     auto swapChain = device->create_swap_chain(window);
 
-    auto descriptorPool = device->create_descriptor_pool();
-    auto descriptorSetLayout = device->create_descriptor_set_layouts({{BindlessUniform, 0}, {BindlessUniform, 1}});
-    auto descriptors = descriptorPool->create_descriptors(device, descriptorSetLayout[0], 3);
+    auto pipeline_manager = device->create_pipeline_manager();
 
-    auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, {
-        VulkanConstRange::common(sizeof(Handles), 0)
-    });
-
-    auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::FRAGMENT_SHADER);
-
-    auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
-        .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
-    });
+    auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
+        device, swapChain,
+        { VulkanConstRange::common(sizeof(Handles), 0) },
+        { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
+    );
 
     auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);
     auto [ ibuffer, imemory ] = device->create_buffer_memory_from(indices);
 
     auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
     auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
-    descriptorPool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2}); // Todo, this thing is inlined
-    descriptorPool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5}); // Todo, this thing is inlined
+    pipeline_manager->descriptor_pool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2}); // Todo fix this
+    pipeline_manager->descriptor_pool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5}); // Todo fix this
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
@@ -107,21 +100,23 @@ int main() {
         // Todo, we need to fix this
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
-        auto& cmd = commandBuffers[frame];
+        auto& cmd = *commandBuffers[frame];
 
-        cmd->begin_record()
-            .begin_render_pass(swapChain, frame)
-            .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_pipeline(pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptors, frame)
-            .bind_vertex_buffer(vbuffer)
-            .bind_index_buffer(ibuffer)
-            .push_constant(pipelineLayout, sizeof(Handles), 0, &handles)
-            .draw_indexed(indices.size())
-            .end_render_pass()
-            .end_record();
+        cmd.begin_record();
+        cmd.begin_render_pass(swapChain, frame);
+        cmd.set_viewport(0, 0, window->get_width(), window->get_height());
 
-        if(!swapChain->submit_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
+        cmd.bind_pipeline(pipeline);
+        cmd.bind_descriptor_set(pipelineLayout, descriptors, frame);
+        cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
+
+        cmd.bind_vertex_buffer(vbuffer);
+        cmd.bind_index_buffer(ibuffer);
+        cmd.draw_indexed(indices.size());
+        cmd.end_render_pass();
+        cmd.end_record();
+
+        if(!swapChain->submit_command_buffers(device, commandBuffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 
@@ -136,14 +131,12 @@ int main() {
     for(auto& [buffer, memory] : cameraUBO)
         device->destroy_all(buffer, memory);
 
-    device->destroy_all(descriptorSetLayout);
     device->destroy_all(descriptors);
-    device->destroy_all(descriptorPool, vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
+    device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
 
     device->destroy();
     instance->destroy();
 
-    // Todo move all glfw things to glfw context static class
     GLFWContext::terminate();
 
     return 0;

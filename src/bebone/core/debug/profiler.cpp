@@ -5,20 +5,20 @@
 namespace bebone::core {
     Profile::Profile(std::string label)
             : label(std::move(label)),
-              executionCount(0),
-              totalExecutionTime(0.0),
-              minExecutionTime(std::numeric_limits<f64>::max()),
-              maxExecutionTime(0.0)
+              execution_count(0),
+              total_execution_time(0.0),
+              min_execution_time(std::numeric_limits<f64>::max()),
+              max_execution_time(0.0)
     {
         Profiler::get_instance().push_profile(this);
     }
 
     Profile::Profile(const char* label)
         : label(label),
-          executionCount(0),
-          totalExecutionTime(0.0),
-          minExecutionTime(std::numeric_limits<f64>::max()),
-          maxExecutionTime(0.0)
+          execution_count(0),
+          total_execution_time(0.0),
+          min_execution_time(std::numeric_limits<f64>::max()),
+          max_execution_time(0.0)
     {
         Profiler::get_instance().push_profile(this);
     }
@@ -34,9 +34,9 @@ namespace bebone::core {
     void Profile::record() {
         Profiler::get_instance().bind_top_profile(this);
 
-        ++executionCount;
+        ++execution_count;
 
-        recordStartTimestamp = std::chrono::high_resolution_clock::now();
+        record_start_timestamp = std::chrono::high_resolution_clock::now();
     }
 
     void Profile::stop() {
@@ -44,39 +44,39 @@ namespace bebone::core {
 
         auto record_stop_timestamp = std::chrono::high_resolution_clock::now();
         
-        f64 duration = std::chrono::duration_cast<std::chrono::nanoseconds>(record_stop_timestamp - recordStartTimestamp).count();
+        f64 duration = std::chrono::duration_cast<std::chrono::nanoseconds>(record_stop_timestamp - record_start_timestamp).count();
 
-        totalExecutionTime += duration;
-        minExecutionTime = std::min(minExecutionTime, duration);
-        maxExecutionTime = std::max(maxExecutionTime, duration);
+        total_execution_time += duration;
+        min_execution_time = std::min(min_execution_time, duration);
+        max_execution_time = std::max(max_execution_time, duration);
     }
 
     void Profile::push_child_profile(Profile *profile) {
         childs.push_back(profile);
     }
 
-    Profiler::Profiler() : stack(), stackIndex(0) {
+    Profiler::Profiler() : stack(), stack_index(0) {
 
     }
 
     void Profiler::push_profile(Profile* profile) {
-        if(stackIndex == 0)
-            entryPoints.push_back(profile);
+        if(stack_index == 0)
+            entry_points.push_back(profile);
         else
-            stack[stackIndex - 1]->push_child_profile(profile);
+            stack[stack_index - 1]->push_child_profile(profile);
     }
 
     void Profiler::bind_top_profile(Profile *profile) {
-        stack[stackIndex] = profile;
-        ++stackIndex;
+        stack[stack_index] = profile;
+        ++stack_index;
     }
 
     void Profiler::unbind_top_profile() {
-        if(stackIndex <= 0) {
+        if(stack_index <= 0) {
             // Todo throw profiler exception
         } else {
-            stack[stackIndex] = nullptr;
-            --stackIndex;
+            stack[stack_index] = nullptr;
+            --stack_index;
         }
     }
 
@@ -98,7 +98,7 @@ namespace bebone::core {
     }
 
     const unsigned int& Profiler::get_stack_index() const {
-        return stackIndex;
+        return stack_index;
     }
 
     const std::array<Profile*, 1024>& Profiler::get_stack() const {
@@ -106,19 +106,19 @@ namespace bebone::core {
     }
 
     const std::vector<Profile*>& Profiler::get_entry_points() const {
-        return entryPoints;
+        return entry_points;
     }
 
     std::string Profiler::result() const {
         std::stringstream ss;
 
-        for(auto& profile : entryPoints) {
+        for(auto& profile : entry_points) {
             ss << "Profile: '" << profile->label << "' ("
-               << "times = " << profile->executionCount << ", "
-               << "total = " << profile->totalExecutionTime / 1000000.0 << " ms, "
-               << "min = " << profile->minExecutionTime / 1000000.0 << " ms, "
-               << "max = " << profile->maxExecutionTime / 1000000.0 << " ms, "
-               << "avg = " << (profile->totalExecutionTime / profile->executionCount) / 1000000.0 << " ms, "
+               << "times = " << profile->execution_count << ", "
+               << "total = " << profile->total_execution_time / 1000000.0 << " ms, "
+               << "min = " << profile->min_execution_time / 1000000.0 << " ms, "
+               << "max = " << profile->max_execution_time / 1000000.0 << " ms, "
+               << "avg = " << (profile->total_execution_time / profile->execution_count) / 1000000.0 << " ms, "
                << "perc = 100.0 %) \n";
 
             trace_profiles(profile, profile, 1, [&](Profile* pp, Profile* parent, unsigned int depth) {
@@ -126,12 +126,12 @@ namespace bebone::core {
                     ss << "    ";
 
                 ss << "Profile :'" << pp->label << "' ("
-                    << "times = " << pp->executionCount << ", "
-                    << "total = " << pp->totalExecutionTime / 1000000.0 << " ms, "
-                    << "min = " << pp->minExecutionTime / 1000000.0 << " ms, "
-                    << "max = " << pp->maxExecutionTime / 1000000.0 << " ms, "
-                    << "avg = " << (pp->totalExecutionTime / pp->executionCount) / 1000000.0 << " ms, "
-                    << "perc = " << (pp->totalExecutionTime / parent->totalExecutionTime) * 100.0 << "%) \n";
+                    << "times = " << pp->execution_count << ", "
+                    << "total = " << pp->total_execution_time / 1000000.0 << " ms, "
+                    << "min = " << pp->min_execution_time / 1000000.0 << " ms, "
+                    << "max = " << pp->max_execution_time / 1000000.0 << " ms, "
+                    << "avg = " << (pp->total_execution_time / pp->execution_count) / 1000000.0 << " ms, "
+                    << "perc = " << (pp->total_execution_time / parent->total_execution_time) * 100.0 << "%) \n";
             });
         }
 

@@ -24,6 +24,8 @@ namespace bebone::gfx::vulkan {
                 std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout,
                 const size_t& descriptorCount);
 
+            // Todo Hey any update_descriptor_set functions can be made static ?, nice !
+
             void update_descriptor_set(
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanBuffer>& buffer,
