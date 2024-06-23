@@ -35,8 +35,13 @@ namespace bebone::gfx::vulkan {
                 VulkanDevice& device,
                 std::shared_ptr<VulkanImage>& image);
 
-            void map(std::shared_ptr<VulkanDevice>& device, const size_t& size, void** data);
-            void unmap(std::shared_ptr<VulkanDevice>& device);
+            void map(VulkanDevice& device, const size_t& size, void** data);
+            void unmap(VulkanDevice& device);
+
+            void upload_data(
+                VulkanDevice& device,
+                const void* src,
+                const size_t& size);
 
             void upload_data(
                 std::shared_ptr<VulkanDevice>& device,
