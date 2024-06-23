@@ -4,6 +4,7 @@
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_descriptor_set.h"
+#include "vulkan_pipeline_tuples.h"
 
 namespace bebone::gfx::vulkan {
     VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& commandBufferPool) {

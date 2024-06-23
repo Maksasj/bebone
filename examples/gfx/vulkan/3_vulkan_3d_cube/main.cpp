@@ -53,20 +53,24 @@ int main() {
 
     auto pipeline_manager = device->create_pipeline_manager();
 
-    auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
+    auto pipeline = pipeline_manager->create_pipeline(
         device, swapChain,
         { VulkanConstRange::common(sizeof(Handles), 0) },
         { {BindlessUniform, 0}, {BindlessUniform, 1} },
         { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
     );
 
-    auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);
-    auto [ ibuffer, imemory ] = device->create_buffer_memory_from(indices);
+    auto vb = device->create_buffer_memory_from(vertices);
+    auto eb = device->create_buffer_memory_from(indices);
 
     auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
     auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
-    pipeline_manager->descriptor_pool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2}); // Todo fix this
-    pipeline_manager->descriptor_pool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5}); // Todo fix this
+
+    auto t_handles = pipeline->bind_uniform_buffer(device, transformUBO, 0);
+    auto c_handles = pipeline->bind_uniform_buffer(device, cameraUBO, 1);
+
+    // pipeline_manager->descriptor_pool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2}); // Todo fix this
+    // pipeline_manager->descriptor_pool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5}); // Todo fix this
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
@@ -91,7 +95,7 @@ int main() {
             continue;
 
         auto& [_0, tmem] = transformUBO[frame];
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t) * 0.001f, 0.0f));
         tmem->upload_data(device, &transform, sizeof(Transform));
 
         auto& [_1, cmem] = cameraUBO[frame];
@@ -106,13 +110,10 @@ int main() {
         cmd.begin_record();
         cmd.begin_render_pass(swapChain, frame);
         cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-
-        cmd.bind_pipeline(pipeline);
-        cmd.bind_descriptor_set(pipelineLayout, descriptors, frame);
-        cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
-
-        cmd.bind_vertex_buffer(vbuffer);
-        cmd.bind_index_buffer(ibuffer);
+        cmd.bind_managed_pipeline(pipeline, frame);
+        cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
+        cmd.bind_vertex_buffer(vb);
+        cmd.bind_index_buffer(eb);
         cmd.draw_indexed(indices.size());
         cmd.end_render_pass();
         cmd.end_record();
@@ -124,7 +125,8 @@ int main() {
     device->wait_idle();
 
     device->destroy_all(commandBuffers);
-    device->destroy_all(vbuffer, ibuffer, vmemory, imemory, commandBufferPool);
+    device->destroy_all(vb, eb);
+    device->destroy_all(commandBufferPool);
 
     for(auto& [buffer, memory] : transformUBO)
         device->destroy_all(buffer, memory);
@@ -132,8 +134,8 @@ int main() {
     for(auto& [buffer, memory] : cameraUBO)
         device->destroy_all(buffer, memory);
 
-    device->destroy_all(descriptors);
-    device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
+    device->destroy_all(pipeline);
+    device->destroy_all(pipeline_manager, swapChain);
 
     device->destroy();
     instance->destroy();

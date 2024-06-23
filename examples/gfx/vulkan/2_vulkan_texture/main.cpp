@@ -57,7 +57,7 @@ int main() {
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto texture = device->create_texture(commandBufferPool, "image.png");
-    // pipeline_manager->descriptor_pool->update_descriptor_sets(device, texture, descriptors, 0, {0, 0, 0});
+    std::ignore = pipeline.bind_texture(device, texture, 0);
 
     while (!window->closing()) {
         GLFWContext::poll_events();

@@ -21,6 +21,7 @@
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
 #include "vulkan_texture.h"
+#include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 
 #include "vulkan_buffer_tuples.h"
@@ -113,6 +114,60 @@ namespace bebone::gfx::vulkan {
 
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
+
+            void update_descriptor_set(
+                const std::shared_ptr<VulkanBuffer>& buffer,
+                const size_t& size,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                const std::shared_ptr<VulkanTexture>& texture,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                const std::shared_ptr<VulkanSampler>& sampler,
+                const std::shared_ptr<VulkanImageView>& view,
+                const std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                VulkanBufferMemoryTuple& tuple,
+                const size_t& size,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_sets(
+                std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
+                const size_t& size,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
+
+            void update_descriptor_sets(
+                const std::vector<VulkanBufferMemoryTuple>& tuples,
+                const size_t& size,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
+
+            void update_descriptor_sets(
+                std::shared_ptr<VulkanTexture>& texture,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
 
             std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
                 const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,

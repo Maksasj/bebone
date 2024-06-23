@@ -19,7 +19,6 @@ namespace bebone::gfx::vulkan {
     ) {
         // Todo
         auto descriptorSetLayout = device->create_descriptor_set_layouts(bindings);
-
         auto descriptors = descriptor_pool->create_descriptors(device, descriptorSetLayout[0], 3);
 
         auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, constantRanges);

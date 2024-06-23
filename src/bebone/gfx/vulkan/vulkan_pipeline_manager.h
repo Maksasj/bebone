@@ -13,10 +13,9 @@ namespace bebone::gfx::vulkan {
     // Todo inherit from VulkanApi
     class VulkanPipelineManager : private core::NonCopyable {
         private:
+            std::shared_ptr<VulkanDescriptorPool> descriptor_pool;
 
         public:
-            std::shared_ptr<VulkanDescriptorPool> descriptor_pool; // Todo move to private
-
             VulkanPipelineManager(VulkanDevice& device);
 
             VulkanManagedPipelineTuple create_pipeline(std::shared_ptr<VulkanDevice>& device,
