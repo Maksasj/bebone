@@ -1,3 +1,5 @@
+add_subdirectory(types)
+
 add_executable(bebone_arena_allocator_tests_1 bebone_arena_allocator_tests_1.cpp)
 target_link_libraries(bebone_arena_allocator_tests_1 bebone_core)
 

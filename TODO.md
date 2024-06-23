@@ -10,6 +10,9 @@
     - And other interfaces...
         - Model, Mesh, Material, etc.
 
+- [ ] Assets 
+    - [ ] Add Vec2i variants for ImagePainter methods
+
 - [ ] GFX
     - [ ] Vulkan part
         - [ ] Vulkan pipeline manager
@@ -23,15 +26,15 @@
     - [ ] Sound class
     - [ ] Music class
 
-- [ ] Naming convention
-    - [ ] Scane case: methods, functions, variables
-    - [ ] Pascal case: Classes, Enums
+- [x] Naming convention
+    - [x] Scane case: methods, functions, variables
+    - [x] Pascal case: Classes, Enums
 
 - [ ] Core
     - [ ] Timers (delta time) 
     - [ ] Ray, Box, Sphere types, Intersection api
         - Maybe this will be base for our Physics module ?
-    - [ ] omni_types migrate into bebone
+    - [x] omni_types migrate into bebone
 
 - [ ] Input system
     - [ ] Utility functions like 'GetKeyDown'

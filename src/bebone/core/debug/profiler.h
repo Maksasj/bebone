@@ -15,23 +15,23 @@
 
 #include <functional>
 
-#include "types.h"
+#include "../types/types.h"
 
 namespace bebone::core {
     // Debug profile class
     struct Profile {
         private:
-            std::chrono::high_resolution_clock::time_point recordStartTimestamp;
+            std::chrono::high_resolution_clock::time_point record_start_timestamp;
             std::vector<Profile*> childs;
 
         public:
             std::string label;
 
-            u64 executionCount;
+            u64 execution_count;
 
-            f64 totalExecutionTime;
-            f64 minExecutionTime;
-            f64 maxExecutionTime;
+            f64 total_execution_time;
+            f64 min_execution_time;
+            f64 max_execution_time;
 
             /*!
             * Default profile constructor
@@ -73,9 +73,9 @@ namespace bebone::core {
             Profiler();
 
             std::array<Profile*, 1024> stack;
-            unsigned int stackIndex;
+            unsigned int stack_index;
 
-            std::vector<Profile*> entryPoints;
+            std::vector<Profile*> entry_points;
 
         public:
             /*!

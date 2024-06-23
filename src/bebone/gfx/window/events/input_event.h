@@ -1,7 +1,7 @@
 #ifndef _INPUT_EVENT_H_
 #define _INPUT_EVENT_H_
 
-#include "../../../core/events/listeners/event.tpp"
+#include "../../../core/core.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;

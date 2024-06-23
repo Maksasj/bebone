@@ -6,8 +6,7 @@
 
 #include <iostream>
 
-#include "../../core/types.h"
-#include "../../core/noncopyable.h"
+#include "../../core/core.h"
 
 #include <stb_image.h>
 #include <stb_image_write.h>

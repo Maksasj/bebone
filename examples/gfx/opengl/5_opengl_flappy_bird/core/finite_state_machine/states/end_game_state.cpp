@@ -20,11 +20,11 @@ namespace game::core::fsm {
         cout << "Game Over" << endl;
         cout << "Your score: " << Score::get_score() << endl;
 
-        Input::get_instance().register_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
+        Input::get_instance().register_key_action(KeyCode::MouseButtonLeft, transitionFunction);
     }
 
     void EndGameState::exit() {
-        Input::get_instance().remove_key_action(KeyCode::MOUSE_BUTTON_LEFT, transitionFunction);
+        Input::get_instance().remove_key_action(KeyCode::MouseButtonLeft, transitionFunction);
         Score::clear();
     }
 

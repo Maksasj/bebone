@@ -38,7 +38,11 @@ namespace bebone::gfx::vulkan {
 
         // Create frame buffers
         for(size_t i = 0; i < swapChainImages.size(); ++i) {
-            auto attachments = std::vector { swapChainImages[i].view, depthImages[i].view };
+            auto attachments = std::vector {
+                std::get<std::shared_ptr<VulkanImageView>>(swapChainImages[i]),
+                std::get<std::shared_ptr<VulkanImageView>>(depthImages[i])
+            };
+
             auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, renderPass, extent);
 
             swapChainFramebuffers.push_back(framebuffer);
@@ -48,13 +52,13 @@ namespace bebone::gfx::vulkan {
     void VulkanRenderTarget::destroy(VulkanDevice& device) {
         renderPass->destroy(device);
 
-        for(auto& image : swapChainImages)
-            image.view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
+        for(auto& [_, view] : swapChainImages)
+            view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
 
-        for(auto& image : depthImages) {
-            image.memory->destroy(device);
-            image.view->destroy(device);
-            image.image->destroy(device);
+        for(auto& [memory, view, image] : depthImages) {
+            memory->destroy(device);
+            view->destroy(device);
+            image->destroy(device);
         }
 
         for (auto& framebuffer : swapChainFramebuffers)

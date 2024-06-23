@@ -20,7 +20,7 @@ namespace bebone::gfx::vulkan {
     class VulkanResult;
     class VulkanCommandBuffer;
 
-    struct VulkanSwapChainImageTuple;
+    // struct VulkanSwapChainImageTuple; // Todo redefenition
 
     class VulkanSwapChain : public VulkanWrapper<VkSwapchainKHR>, private core::NonCopyable {
         public:

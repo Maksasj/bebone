@@ -1,5 +1,5 @@
-#define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
-#define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
+#define BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
+#define BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
 using namespace bebone::core;
@@ -42,9 +42,6 @@ const std::vector<int> indices = {
     3, 2, 6, 6, 7, 3
 };
 
-// Todo move view matrix to omni_types
-Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up);
-
 int main() {
     GLFWContext::init();
 
@@ -62,10 +59,8 @@ int main() {
         { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
     );
 
-    auto vertexBuffer = device->create_buffer_memory(sizeof(Vertex) * vertices.size());
-    auto indexBuffer = device->create_buffer_memory(sizeof(u32) * indices.size());
-    vertexBuffer.memory->upload_data(device, vertices.data(), sizeof(Vertex) * vertices.size());
-    indexBuffer.memory->upload_data(device, indices.data(), sizeof(u32) * indices.size());
+    auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);
+    auto [ ibuffer, imemory ] = device->create_buffer_memory_from(indices);
 
     auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
     auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
@@ -76,7 +71,7 @@ int main() {
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto cameraTransform = CameraTransform {
-        get_view_matrix(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
+        Mat4f::view(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
@@ -87,24 +82,22 @@ int main() {
     };
 
     f32 t = 0.0f;
-
     while (!window->closing()) {
-        ++t;
-
         GLFWContext::poll_events();
 
         uint32_t frame;
-        auto result = swapChain->acquire_next_image(device, &frame);
-
-        if(!result.is_ok())
+        if(!swapChain->acquire_next_image(device, &frame).is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+        auto& [_0, tmem] = transformUBO[frame];
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+        tmem->upload_data(device, &transform, sizeof(Transform));
+
+        auto& [_1, cmem] = cameraUBO[frame];
         cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
+        cmem->upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
-        transformUBO[frame].memory->upload_data(device, &transform, sizeof(Transform));
-        cameraUBO[frame].memory->upload_data(device, &cameraTransform, sizeof(CameraTransform));
-
+        // Todo, we need to fix this
         auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
 
         auto& cmd = *commandBuffers[frame];
@@ -117,28 +110,26 @@ int main() {
         cmd.bind_descriptor_set(pipelineLayout, descriptors, frame);
         cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
 
-        cmd.bind_vertex_buffer(vertexBuffer.buffer);
-        cmd.bind_index_buffer(indexBuffer.buffer);
+        cmd.bind_vertex_buffer(vbuffer);
+        cmd.bind_index_buffer(ibuffer);
         cmd.draw_indexed(indices.size());
         cmd.end_render_pass();
         cmd.end_record();
 
-        result = swapChain->submit_command_buffers(device, commandBuffers[frame], &frame);
-
-        if(!result.is_ok()) // Todo check if window is resized
+        if(!swapChain->submit_command_buffers(device, commandBuffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 
     device->wait_idle();
 
     device->destroy_all(commandBuffers);
-    device->destroy_all(vertexBuffer.buffer, indexBuffer.buffer, vertexBuffer.memory, indexBuffer.memory,commandBufferPool);
+    device->destroy_all(vbuffer, ibuffer, vmemory, imemory, commandBufferPool);
 
-    for(auto& b : transformUBO)
-        device->destroy_all(b.buffer, b.memory);
+    for(auto& [buffer, memory] : transformUBO)
+        device->destroy_all(buffer, memory);
 
-    for(auto& b : cameraUBO)
-        device->destroy_all(b.buffer, b.memory);
+    for(auto& [buffer, memory] : cameraUBO)
+        device->destroy_all(buffer, memory);
 
     device->destroy_all(descriptors);
     device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
@@ -149,26 +140,4 @@ int main() {
     GLFWContext::terminate();
 
     return 0;
-}
-
-Mat4f get_view_matrix(Vec3f position, Vec3f direction, Vec3f up) {
-    const auto w = direction.normalize();
-    const auto u = w.cross(up).normalize();
-    const auto v = w.cross(u);
-
-    auto viewMatrix = Mat4f::identity();
-    viewMatrix[0 * 4 + 0] = u.x;
-    viewMatrix[1 * 4 + 0] = u.y;
-    viewMatrix[2 * 4 + 0] = u.z;
-    viewMatrix[0 * 4 + 1] = v.x;
-    viewMatrix[1 * 4 + 1] = v.y;
-    viewMatrix[2 * 4 + 1] = v.z;
-    viewMatrix[0 * 4 + 2] = w.x;
-    viewMatrix[1 * 4 + 2] = w.y;
-    viewMatrix[2 * 4 + 2] = w.z;
-    viewMatrix[3 * 4 + 0] = -1.0f * (u).dot(position);
-    viewMatrix[3 * 4 + 1] = -1.0f * (v).dot(position);
-    viewMatrix[3 * 4 + 2] = -1.0f * (w).dot(position);
-
-    return viewMatrix;
 }

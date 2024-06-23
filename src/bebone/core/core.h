@@ -1,17 +1,21 @@
 #ifndef _BEBONE_CORE_CORE_H_
 #define _BEBONE_CORE_CORE_H_
 
-#include "types.h"
+#include "types/types.h"
 
-#include "logger.tpp"
-#include "profiler.h"
+// Debug
+#include "debug/logger.tpp"
+#include "debug/profiler.h"
 
-#include "arena_allocator.h"
-#include "arena_container.h"
+// Memory
+#include "memory/arena_allocator.h"
+#include "memory/arena_container.h"
 
+// Events
 #include "events/listeners/event_dispatcher.tpp"
 #include "events/delegates/action.h"
 
+// Input
 #include "input/input.h"
 #include "input/input_handler.h"
 

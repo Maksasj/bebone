@@ -33,17 +33,17 @@ namespace bebone::gfx {
 
         for(const auto& profile : childs) {
             if (ImGui::TreeNode(profile->label.c_str())) {
-                const f64 totalExecutionTime = profile->totalExecutionTime / 1000000.0;
+                const f64 totalExecutionTime = profile->total_execution_time / 1000000.0;
 
-                const f64 maxExecutionTime = profile->maxExecutionTime / 1000000.0;
-                const f64 minExecutionTime = profile->minExecutionTime / 1000000.0;
-                const f64 avgExecutionTime = totalExecutionTime / profile->executionCount;
+                const f64 maxExecutionTime = profile->max_execution_time / 1000000.0;
+                const f64 minExecutionTime = profile->min_execution_time / 1000000.0;
+                const f64 avgExecutionTime = totalExecutionTime / profile->execution_count;
 
                 f64 parentRationTime = 100.0;
                 if(parent != nullptr)
-                    parentRationTime = (profile->totalExecutionTime / parent->totalExecutionTime) * 100.0;
+                    parentRationTime = (profile->total_execution_time / parent->total_execution_time) * 100.0;
 
-                ImGui::Text("executed %llu times, total execution time %f ms", profile->executionCount, totalExecutionTime);
+                ImGui::Text("executed %llu times, total execution time %f ms", profile->execution_count, totalExecutionTime);
 
                 ImGui::Text("Max execution time %f ms", maxExecutionTime);
                 ImGui::Text("Min execution time %f ms", minExecutionTime);
