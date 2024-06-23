@@ -8,6 +8,10 @@ namespace bebone::gfx::vulkan {
 
     }
 
+    void VulkanBufferMemoryTuple::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
+        memory->upload_data(device, src, size);
+    }
+
     void VulkanBufferMemoryTuple::destroy(VulkanDevice &device) {
 
     }

@@ -5,7 +5,11 @@
 namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
-    VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo bufferInfo) {//VkMemoryPropertyFlags properties) {
+    VulkanBuffer::VulkanBuffer(
+        VulkanDevice& device,
+        const size_t& size,
+        VulkanBufferInfo bufferInfo
+    )  : size(size) {
         VkBufferCreateInfo createInfo{};
 
         createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -26,6 +30,10 @@ namespace bebone::gfx::vulkan {
         VkMemoryRequirements memRequirements;
         vkGetBufferMemoryRequirements(device.device(), backend, &memRequirements);
         return memRequirements;
+    }
+
+    const size_t& VulkanBuffer::get_size() const {
+        return size;
     }
 
     void VulkanBuffer::destroy(VulkanDevice &device) {

@@ -47,7 +47,7 @@ namespace bebone::gfx::vulkan {
             ++bindless_uniforms_index;
         }
 
-        device->update_descriptor_sets(tuples, sizeof(int), descriptors, binding, dst_array_elements);
+        device->update_descriptor_sets(tuples, descriptors, binding, dst_array_elements);
 
         return dst_array_elements;
     }

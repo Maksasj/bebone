@@ -45,7 +45,6 @@ namespace bebone::gfx::vulkan {
     // Todo add bufferInfo offset there
     void VulkanDevice::update_descriptor_set(
         const std::shared_ptr<VulkanBuffer>& buffer,
-        const size_t& size,
         std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
         const size_t& binding,
         const size_t& dstArrayElement
@@ -53,7 +52,7 @@ namespace bebone::gfx::vulkan {
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = buffer->backend;
         bufferInfo.offset = 0;
-        bufferInfo.range = size;
+        bufferInfo.range = buffer->get_size();
 
         VkWriteDescriptorSet descriptorWrite{};
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -116,14 +115,12 @@ namespace bebone::gfx::vulkan {
 
     void VulkanDevice::update_descriptor_set(
             VulkanBufferMemoryTuple& tuple,
-            const size_t& size,
             std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
             const size_t& binding,
             const size_t& dstArrayElement
     ) {
         update_descriptor_set(
             tuple.buffer,
-            size,
             descriptorSet,
             binding,
             dstArrayElement
@@ -132,7 +129,6 @@ namespace bebone::gfx::vulkan {
 
     void VulkanDevice::update_descriptor_sets(
             std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
-            const size_t& size,
             std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
             const size_t& binding,
             const std::vector<size_t>& dstArrayElements
@@ -145,13 +141,12 @@ namespace bebone::gfx::vulkan {
             auto& dstArrayElement = dstArrayElements[i];
             auto& descriptorSet = descriptorSets[i];
 
-            update_descriptor_set(buffer, size, descriptorSet, binding, dstArrayElement);
+            update_descriptor_set(buffer, descriptorSet, binding, dstArrayElement);
         }
     }
 
     void VulkanDevice::update_descriptor_sets(
             const std::vector<VulkanBufferMemoryTuple>& tuples,
-            const size_t& size,
             std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
             const size_t& binding,
             const std::vector<size_t>& dstArrayElements
@@ -164,7 +159,7 @@ namespace bebone::gfx::vulkan {
             const auto& dstArrayElement = dstArrayElements[i];
             auto& descriptorSet = descriptorSets[i];
 
-            update_descriptor_set(buffer, size, descriptorSet, binding, dstArrayElement);
+            update_descriptor_set(buffer, descriptorSet, binding, dstArrayElement);
         }
     }
 
