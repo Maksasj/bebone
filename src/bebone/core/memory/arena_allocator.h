@@ -5,18 +5,18 @@
 
 #include "noncopyable.h"
 
-#define _BEBONE_MEMORY_BYTES_1KB_ 1024
-#define _BEBONE_MEMORY_BYTES_2KB_ 2048
-#define _BEBONE_MEMORY_BYTES_4KB_ 4096
-#define _BEBONE_MEMORY_BYTES_8KB_ 8192
+#define BEBONE_MEMORY_BYTES_1KB 1024
+#define BEBONE_MEMORY_BYTES_2KB 2048
+#define BEBONE_MEMORY_BYTES_4KB 4096
+#define BEBONE_MEMORY_BYTES_8KB 8192
 
 namespace bebone::core {
     /// Class used for allocating and managing an arena of memory
     class ArenaAllocator : private core::NonCopyable {
         private:
-            void *_data;
-            const size_t _capacity;
-            size_t _allocated;
+            void *data;
+            const size_t capacity;
+            size_t allocated;
 
         public:
             /*!
@@ -45,7 +45,7 @@ namespace bebone::core {
              * Function that is used for accessing an arena memory
              * @return Pointer to arena start
             */
-            void* data() noexcept;
+            void* get_data() noexcept;
 
             /*!
              * Clears an arena
@@ -56,13 +56,13 @@ namespace bebone::core {
              * Function that returns how much memory is already allocated in arena
              * @return Bytes allocated
             */
-            [[nodiscard]] const size_t& allocated() const noexcept;
+            [[nodiscard]] const size_t& get_allocated() const noexcept;
 
             /*!
              * Function that returns a total capacity of arena
              * @return Bytes capacity
             */
-            [[nodiscard]] const size_t& capacity() const noexcept;
+            [[nodiscard]] const size_t& get_capacity() const noexcept;
     };
 }
 

@@ -5,7 +5,7 @@ int main() {
     using namespace bebone::core;
 
     TEST_CASE {
-        ArenaContainer container(_BEBONE_MEMORY_BYTES_1KB_);
+        ArenaContainer container(BEBONE_MEMORY_BYTES_1KB);
 
         int* e1 = static_cast<int*>(container.alloc(sizeof(int)));
         int* e2 = static_cast<int*>(container.alloc(sizeof(int)));
@@ -27,7 +27,7 @@ int main() {
     }
 
     TEST_CASE {
-        ArenaContainer container(_BEBONE_MEMORY_BYTES_1KB_ * 256);
+        ArenaContainer container(BEBONE_MEMORY_BYTES_1KB * 256);
 
         for(int i = 0; i < 100; ++i) {
             int* e = static_cast<int*>(container.alloc(sizeof(int)));
@@ -45,7 +45,7 @@ int main() {
     }
 
     TEST_CASE {
-        ArenaContainer container(_BEBONE_MEMORY_BYTES_1KB_ * 256);
+        ArenaContainer container(BEBONE_MEMORY_BYTES_1KB * 256);
 
         for(int i = 0; i < 100; ++i) {
             int* e = static_cast<int*>(container.alloc(sizeof(int)));
