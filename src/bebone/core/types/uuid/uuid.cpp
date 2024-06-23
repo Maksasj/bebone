@@ -2,8 +2,8 @@
 
 namespace bebone::core {
     UUID::UUID(const u64& data1, const u64& data2) {
-            _data[0] = data1;
-            _data[1] = data2;
+            data[0] = data1;
+            data[1] = data2;
         }
 
     UUID::UUID() {
@@ -11,7 +11,7 @@ namespace bebone::core {
     }
 
     bool UUID::operator==(const UUID& other) const {
-        return this->_data[0] == other._data[0] && this->_data[1] == other._data[1];
+        return this->data[0] == other.data[0] && this->data[1] == other.data[1];
     }
 
     bool UUID::operator!=(const UUID& other) const {
@@ -20,8 +20,8 @@ namespace bebone::core {
 
     std::string UUID::to_string() const {
         std::stringstream ss;
-        ss << std::hex << std::setfill('0') << std::setw(16) << _data[0];
-        ss << std::hex << std::setfill('0') << std::setw(16) << _data[1];
+        ss << std::hex << std::setfill('0') << std::setw(16) << data[0];
+        ss << std::hex << std::setfill('0') << std::setw(16) << data[1];
 
         std::string tmp = ss.str();
         tmp.insert(8, "-");
