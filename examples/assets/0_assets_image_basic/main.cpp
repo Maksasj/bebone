@@ -2,8 +2,8 @@
 
 #include <vector>
 
-const unsigned int SCR_WIDTH = 512;
-const unsigned int SCR_HEIGHT = 512;
+const unsigned int screen_width = 512;
+const unsigned int screen_height = 512;
 
 using namespace bebone::assets;
 using namespace bebone::gfx;
@@ -29,10 +29,10 @@ const std::vector<u32> indices {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("0. Image example basic", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. Image example basic", screen_width, screen_height, GfxAPI::OPENGL);
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
 
     auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
