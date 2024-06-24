@@ -4,21 +4,21 @@ namespace bebone::gfx {
     const ShaderType ShaderTypes::FRAGMENT_SHADER = ShaderType(0);
     const ShaderType ShaderTypes::VERTEX_SHADER = ShaderType(1);
 
-    ShaderType::ShaderType(const u32 &p_value)
-            : m_value(p_value) {
+    ShaderType::ShaderType(const u32 &value)
+            : value(value) {
 
     }
 
-    bool ShaderType::operator==(const ShaderType &p_another) const {
-        return m_value == p_another.m_value;
+    bool ShaderType::operator==(const ShaderType &another) const {
+        return value == another.value;
     }
 
-    bool ShaderType::operator!=(const ShaderType &p_another) const {
-        return m_value != p_another.m_value;
+    bool ShaderType::operator!=(const ShaderType &another) const {
+        return value != another.value;
     }
 
     std::string ShaderType::to_string() const {
-        switch (m_value) {
+        switch (value) {
             case 0:
                 return "FRAGMENT_SHADER";
             case 1:
@@ -32,7 +32,7 @@ namespace bebone::gfx {
     }
 
     EShLanguage ShaderType::to_glslang() const {
-        switch (m_value) {
+        switch (value) {
             case 0:
                 return EShLanguage::EShLangFragment;
             case 1:
@@ -46,7 +46,7 @@ namespace bebone::gfx {
     }
 
     GLuint ShaderType::to_opengl() const {
-        switch (m_value) {
+        switch (value) {
             case 0:
                 return GL_FRAGMENT_SHADER;
             case 1:
