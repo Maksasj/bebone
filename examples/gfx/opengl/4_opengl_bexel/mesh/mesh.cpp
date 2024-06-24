@@ -1,24 +1,24 @@
 #include "mesh.h"
 
 namespace bexel {
-    Mesh::Mesh(const vector<Vertex>& vertices, const vector<u32>& indices) : m_vertices(vertices), m_indices(indices) {
-        m_vao = make_unique<GLVertexArrayObject>();
-        m_vao->bind();
+    Mesh::Mesh(const vector<Vertex>& vertices, const vector<u32>& indices) : vertices(vertices), indices(indices) {
+        vao = make_unique<GLVertexArrayObject>();
+        vao->bind();
 
-        m_vbo = make_unique<GLVertexBufferObject>(m_vertices.data(), m_vertices.size() * sizeof(Vertex));
-        m_ebo = make_unique<GLElementBufferObject>(m_indices.data(), m_indices.size() * sizeof(u32));
+        vbo = make_unique<GLVertexBufferObject>(vertices.data(), vertices.size() * sizeof(Vertex));
+        ebo = make_unique<GLElementBufferObject>(indices.data(), indices.size() * sizeof(u32));
 
-        m_vao->link_attributes(*m_vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, pos));
-        m_vao->link_attributes(*m_vbo, 1, 2, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, tex));
+        vao->link_attributes(*vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, pos));
+        vao->link_attributes(*vbo, 1, 2, GL_FLOAT, sizeof(Vertex), (void*) offsetof(Vertex, tex));
 
-        m_vao->unbind();
-        m_vbo->unbind();
-        m_ebo->unbind();
+        vao->unbind();
+        vbo->unbind();
+        ebo->unbind();
     }
 
     void Mesh::render() const {
-        m_vao->bind();
+        vao->bind();
 
-        GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(m_indices.size()), GL_UNSIGNED_INT, nullptr);
+        GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
     }
 }

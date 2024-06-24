@@ -16,7 +16,7 @@ namespace bexel {
     };
 
     template<>
-    struct WallMesh<Direction::UP> {
+    struct WallMesh<Direction::Up> {
         const vector<Vertex>& get_vertices() const {
             static const vector<Vertex> vertices = {
                 {{0.5f,  0.5f, 0.5f},  {1.0f, 1.0f}},
@@ -35,7 +35,7 @@ namespace bexel {
     };
 
     template<>
-    struct WallMesh<Direction::DOWN> {
+    struct WallMesh<Direction::Down> {
         const vector<Vertex>& get_vertices() const {
             static const vector<Vertex> vertices = {
                 {{0.5f,  -0.5f, 0.5f},  {1.0f, 1.0f}},
@@ -54,7 +54,7 @@ namespace bexel {
     };
 
     template<>
-    struct WallMesh<Direction::LEFT> {
+    struct WallMesh<Direction::Left> {
         const vector<Vertex>& get_vertices() const {
             static const vector<Vertex> vertices = {
                 {{0.5f,  0.5f, 0.5f},  {1.0f, 1.0f}},
@@ -73,7 +73,7 @@ namespace bexel {
     };
 
     template<>
-    struct WallMesh<Direction::RIGHT> {
+    struct WallMesh<Direction::Right> {
         const vector<Vertex>& get_vertices() const {
             static const vector<Vertex> vertices = {
                 {{-0.5f,  0.5f, -0.5f},  {1.0f, 1.0f}},
@@ -92,7 +92,7 @@ namespace bexel {
     };
 
     template<>
-    struct WallMesh<Direction::FORWARD> {
+    struct WallMesh<Direction::Forward> {
         const vector<Vertex>& get_vertices() const {
             static const vector<Vertex> vertices = {
                 {{-0.5f,  0.5f, 0.5f},  {1.0f, 1.0f}},
@@ -111,7 +111,7 @@ namespace bexel {
     };
 
     template<>
-    struct WallMesh<Direction::BACK> {
+    struct WallMesh<Direction::Back> {
         const vector<Vertex>& get_vertices() const {
             static const vector<Vertex> vertices = {
                 {{0.5f,  0.5f, -0.5f},  {1.0f, 1.0f}},
