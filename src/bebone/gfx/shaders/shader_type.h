@@ -36,8 +36,8 @@ namespace bebone::gfx {
 
     /// Class that is used for enumerating different shader types
     struct ShaderTypes {
-        static const ShaderType FRAGMENT_SHADER;
-        static const ShaderType VERTEX_SHADER;
+        static const ShaderType fragment_shader;
+        static const ShaderType vertex_shader;
     };
 }
 

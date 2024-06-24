@@ -1,8 +1,8 @@
 #include "shader_type.h"
 
 namespace bebone::gfx {
-    const ShaderType ShaderTypes::FRAGMENT_SHADER = ShaderType(0);
-    const ShaderType ShaderTypes::VERTEX_SHADER = ShaderType(1);
+    const ShaderType ShaderTypes::fragment_shader = ShaderType(0);
+    const ShaderType ShaderTypes::vertex_shader = ShaderType(1);
 
     ShaderType::ShaderType(const u32 &value)
             : value(value) {
@@ -20,9 +20,9 @@ namespace bebone::gfx {
     std::string ShaderType::to_string() const {
         switch (value) {
             case 0:
-                return "FRAGMENT_SHADER";
+                return "fragment_shader";
             case 1:
-                return "VERTEX_SHADER";
+                return "vertex_shader";
             default:
                 throw std::runtime_error("undefined shader type");
         }
