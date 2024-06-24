@@ -8,7 +8,7 @@ namespace bebone::gfx::vulkan {
 
     class VulkanConstRange {
         public:
-            VkPushConstantRange range;
+            VkPushConstantRange range; // Tove to wrapper class
 
             VulkanConstRange(const VkPushConstantRange& range);
 

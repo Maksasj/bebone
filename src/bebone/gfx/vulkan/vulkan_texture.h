@@ -32,4 +32,49 @@ namespace bebone::gfx::vulkan {
     };
 }
 
+// Note, this is a std template specialization and it is case-sensitive, please do not touch
+namespace std {
+    template<>
+    struct tuple_size<bebone::gfx::vulkan::VulkanTexture>
+            : std::integral_constant<std::size_t, 4> { };
+
+    template<>
+    struct tuple_element<0, bebone::gfx::vulkan::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImage>;
+    };
+
+    template<>
+    struct tuple_element<1, bebone::gfx::vulkan::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanDeviceMemory>;
+    };
+
+    template<>
+    struct tuple_element<2, bebone::gfx::vulkan::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImageView>;
+    };
+
+    template<>
+    struct tuple_element<3, bebone::gfx::vulkan::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanSampler>;
+    };
+}
+
+// Todo, why this needs to be in bebone::gfx::vulkan namespace ?
+namespace bebone::gfx::vulkan {
+    template<std::size_t i>
+    auto get(const bebone::gfx::vulkan::VulkanTexture& tuple) {
+        if constexpr (i == 0) {
+            return tuple.image;
+        } else if constexpr (i == 1) {
+            return tuple.memory;
+        } else if constexpr (i == 2) {
+            return tuple.view;
+        } else if constexpr (i == 3) {
+            return tuple.sampler;
+        } else {
+
+        }
+    }
+}
+
 #endif

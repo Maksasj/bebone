@@ -10,8 +10,7 @@
 namespace bebone::gfx::vulkan {
     class VulkanConstRange;
 
-    // Todo inherit from VulkanApi
-    class VulkanPipelineManager : private core::NonCopyable {
+    class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {
         private:
             std::shared_ptr<VulkanDescriptorPool> descriptor_pool;
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> descriptor_layouts;
@@ -26,7 +25,7 @@ namespace bebone::gfx::vulkan {
                 VulkanPipelineConfig configInfo
             );
 
-            void destroy(VulkanDevice& device);
+            void destroy(VulkanDevice& device) override;
     };
 }
 
