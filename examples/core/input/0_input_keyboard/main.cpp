@@ -1,7 +1,7 @@
 #include "bebone/bebone.h"
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int screen_width = 800;
+const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
@@ -9,10 +9,10 @@ using namespace bebone::gfx::opengl;
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("0. Input example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. Input example", screen_width, screen_height, GfxAPI::OPENGL);
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
 
     std::function<void()> key_press = []() {
         std::cout << "key press\n";
