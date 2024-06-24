@@ -11,7 +11,7 @@ int main() {
 
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("0. Begui Node graph example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. Begui Node graph example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
 
     window->add_listener([&](InputKeyEvent& event) {
         if(event.key == GLFW_KEY_ENTER && event.action == GLFW_RELEASE) {

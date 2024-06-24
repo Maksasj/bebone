@@ -16,7 +16,7 @@ using namespace game::core;
 int main() {
     glfwInit();
     
-    auto window = WindowFactory::create_window("5. Flappy Bird", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("5. Flappy Bird", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

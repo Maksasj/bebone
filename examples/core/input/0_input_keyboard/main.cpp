@@ -9,7 +9,7 @@ using namespace bebone::gfx::opengl;
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("0. Input example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. Input example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
