@@ -5,13 +5,13 @@
 
 // Todo
 namespace bebone::core {
-    template<typename _B, u64 point>
+    template<typename B, u64 point>
     class FixedPoint {
         private:
-            _B value;
+            B value;
 
-            FixedPoint(const _B newValue)
-                    : value(newValue) {
+            FixedPoint(const B new_value)
+                    : value(new_value) {
 
             }
 
