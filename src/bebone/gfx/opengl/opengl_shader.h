@@ -13,8 +13,8 @@ namespace bebone::gfx::opengl {
     /// Opengl shader wrapper
     class GLShader : private core::NonCopyable {
         private:
-            GLuint m_shader;
-            GLShaderProperties m_properties;
+            GLuint shader;
+            GLShaderProperties properties;
 
             /*!
              * Checks if opengl shader is compiled successfully
@@ -26,18 +26,18 @@ namespace bebone::gfx::opengl {
             /*!
              * Default constructor
              * @param code - Shader code object
-             * @param shaderType - Shader type
+             * @param shader_type - Shader type
              * @param properties - Shader properties object
             */
-            GLShader(const ShaderCode& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+            GLShader(const ShaderCode& code, const ShaderType& shader_type, const GLShaderProperties& properties = None);
 
             /*!
              * Default constructor
              * @param code - Shader string code
-             * @param shaderType - Shader type
+             * @param shader_type - Shader type
              * @param properties - Shader properties object
             */
-            GLShader(const std::string& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+            GLShader(const std::string& code, const ShaderType& shader_type, const GLShaderProperties& properties = None);
             ~GLShader();
 
             /*!

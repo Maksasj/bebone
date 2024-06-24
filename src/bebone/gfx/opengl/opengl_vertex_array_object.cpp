@@ -9,19 +9,19 @@ namespace bebone::gfx::opengl {
         destroy();
     }
 
-    void GLVertexArrayObject::link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, const u64& offset) {
+    void GLVertexArrayObject::link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint num_components, GLenum type, GLsizeiptr stride, const u64& offset) {
         vbo.bind();
 
-        glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, (void*)(offset));
+        glVertexAttribPointer(layout, num_components, type, GL_FALSE, stride, (void*)(offset));
         glEnableVertexAttribArray(layout);
 
         vbo.unbind();
     }
 
-    void GLVertexArrayObject::link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset) {
+    void GLVertexArrayObject::link_attributes(GLVertexBufferObject& vbo, GLuint layout, GLuint num_components, GLenum type, GLsizeiptr stride, void* offset) {
         vbo.bind();
 
-        glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, offset);
+        glVertexAttribPointer(layout, num_components, type, GL_FALSE, stride, offset);
         glEnableVertexAttribArray(layout);
 
         vbo.unbind();
