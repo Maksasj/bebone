@@ -33,22 +33,22 @@ namespace bebone::gfx {
 
         for(const auto& profile : childs) {
             if (ImGui::TreeNode(profile->label.c_str())) {
-                const f64 totalExecutionTime = profile->total_execution_time / 1000000.0;
+                const f64 total_execution_time = profile->total_execution_time / 1000000.0;
 
-                const f64 maxExecutionTime = profile->max_execution_time / 1000000.0;
-                const f64 minExecutionTime = profile->min_execution_time / 1000000.0;
-                const f64 avgExecutionTime = totalExecutionTime / profile->execution_count;
+                const f64 max_execution_time = profile->max_execution_time / 1000000.0;
+                const f64 min_execution_time = profile->min_execution_time / 1000000.0;
+                const f64 avg_execution_time = total_execution_time / profile->execution_count;
 
-                f64 parentRationTime = 100.0;
+                f64 parent_ration_time = 100.0;
                 if(parent != nullptr)
-                    parentRationTime = (profile->total_execution_time / parent->total_execution_time) * 100.0;
+                    parent_ration_time = (profile->total_execution_time / parent->total_execution_time) * 100.0;
 
-                ImGui::Text("executed %llu times, total execution time %f ms", profile->execution_count, totalExecutionTime);
+                ImGui::Text("executed %llu times, total execution time %f ms", profile->execution_count, total_execution_time);
 
-                ImGui::Text("Max execution time %f ms", maxExecutionTime);
-                ImGui::Text("Min execution time %f ms", minExecutionTime);
-                ImGui::Text("Avg execution time %f ms", avgExecutionTime);
-                ImGui::Text("Parent total time ratio %f %%", parentRationTime);
+                ImGui::Text("Max execution time %f ms", max_execution_time);
+                ImGui::Text("Min execution time %f ms", min_execution_time);
+                ImGui::Text("Avg execution time %f ms", avg_execution_time);
+                ImGui::Text("Parent total time ratio %f %%", parent_ration_time);
 
                 profiler_trace_profiles(profile);
 
@@ -60,9 +60,9 @@ namespace bebone::gfx {
     void BeGUI::show_profiler() {
         ImGui::Begin("Bebone profiler");
 
-        const auto& entryPoints = Profiler::get_instance().get_entry_points();
+        const auto& entry_points = Profiler::get_instance().get_entry_points();
 
-        for(const auto& profile : entryPoints) {
+        for(const auto& profile : entry_points) {
             if (ImGui::TreeNode(profile->label.c_str())) {
                 ImGui::Text("Execution ratio %f %%", 100.0);
 
