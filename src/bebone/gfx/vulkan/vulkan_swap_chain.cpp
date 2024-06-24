@@ -237,5 +237,7 @@ namespace bebone::gfx::vulkan {
         }
 
         vkDestroySwapchainKHR(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

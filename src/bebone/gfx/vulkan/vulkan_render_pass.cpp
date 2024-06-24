@@ -61,5 +61,7 @@ namespace bebone::gfx::vulkan {
 
     void VulkanRenderPass::destroy(VulkanDevice& device) {
         vkDestroyRenderPass(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

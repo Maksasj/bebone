@@ -192,5 +192,7 @@ namespace bebone::gfx::vulkan {
 
     void VulkanDescriptorPool::destroy(VulkanDevice& device) {
         vkDestroyDescriptorPool(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

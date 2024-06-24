@@ -36,6 +36,7 @@ namespace bebone::gfx::vulkan {
 
     class VulkanDevice : private core::NonCopyable {
         private:
+            // Todo, abstract all things below
             VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
             VkDevice device_;
@@ -44,10 +45,14 @@ namespace bebone::gfx::vulkan {
             VkQueue graphicsQueue_;
             VkQueue presentQueue_;
 
+            // Todo, do we really need to have this there ?
             VulkanInstance &vulkanInstance;
 
             void pick_physical_device(VulkanInstance &vulkanInstance);
             void create_logical_device();
+
+            // Todo, maybe this can be optimized
+            std::vector<shared_ptr<VulkanApi>> child_objects;
 
         public:
             VkPhysicalDeviceProperties properties;

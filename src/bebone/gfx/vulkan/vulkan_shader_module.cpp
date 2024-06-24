@@ -16,5 +16,7 @@ namespace bebone::gfx::vulkan {
 
     void VulkanShaderModule::destroy(VulkanDevice& device) {
         vkDestroyShaderModule(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

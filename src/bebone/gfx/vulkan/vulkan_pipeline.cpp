@@ -205,5 +205,7 @@ namespace bebone::gfx::vulkan {
 
     void VulkanPipeline::destroy(VulkanDevice& device) {
         vkDestroyPipeline(device.device(), backend, nullptr);
+        
+        mark_destroyed();
     }
 }

@@ -36,5 +36,7 @@ namespace bebone::gfx::vulkan {
 
     void VulkanPipelineManager::destroy(VulkanDevice& device) {
         descriptor_pool->destroy(device);
+
+        mark_destroyed();
     }
 }
