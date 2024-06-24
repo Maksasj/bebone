@@ -3,8 +3,8 @@
 
 namespace bebone::gfx::opengl {
     enum GLShaderProperties {
-        NONE = (1 << 0),
-        ENABLE_UNIFORMS = (1 << 1),
+        None = (1 << 0),
+        EnableUniforms = (1 << 1),
     };
 
     inline GLShaderProperties operator|(GLShaderProperties first, GLShaderProperties second) {

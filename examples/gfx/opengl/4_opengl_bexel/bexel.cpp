@@ -23,7 +23,7 @@ namespace bexel {
     void Bexel::load() {
         BEBONE_PROFILE_RECORD(BEXEL_LOAD)
 
-        const auto shaderFlags = ENABLE_UNIFORMS;
+        const auto shaderFlags = EnableUniforms;
 
         auto vertexShader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::VERTEX_SHADER, shaderFlags);
         auto fragmentShader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shaderFlags);
