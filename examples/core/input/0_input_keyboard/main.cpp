@@ -14,11 +14,11 @@ int main() {
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    std::function<void()> keyPress = []() {
+    std::function<void()> key_press = []() {
         std::cout << "key press\n";
     };
 
-    Input::get_instance().register_key_action(KeyCode::A, keyPress);
+    Input::get_instance().register_key_action(KeyCode::A, key_press);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
