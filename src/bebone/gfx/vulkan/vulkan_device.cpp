@@ -54,6 +54,14 @@ namespace bebone::gfx::vulkan {
         return { descriptor_set_layout };
     }
 
+    std::shared_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(
+        std::vector<VulkanSwapChainImageTuple>& images,
+        VkFormat imageFormat,
+        VkExtent2D extent
+    ) {
+        return std::make_unique<VulkanRenderTarget>(*this, images, imageFormat, extent);
+    }
+
     std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::shared_ptr<Window> &window) {
         auto swap_chain = std::make_shared<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });
 
@@ -146,7 +154,8 @@ namespace bebone::gfx::vulkan {
     std::shared_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
         auto im = std::make_shared<VulkanImage>(image);
 
-        child_objects.push_back(im);
+        // This image provided by implementation so, no need in clearing
+        // child_objects.push_back(im);
 
         return im;
     }
@@ -319,8 +328,9 @@ namespace bebone::gfx::vulkan {
         wait_idle();
 
         for(auto& child : child_objects) {
-            if(!child->is_destroyed())
+            if(!child->is_destroyed()) {
                 destroy_all(child);
+            }
         }
 
         vkDestroyDevice(device_, nullptr);

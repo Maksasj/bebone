@@ -37,10 +37,15 @@ namespace bebone::gfx::vulkan {
         view = device.create_image_view(*image, VK_FORMAT_R32G32B32A32_SFLOAT);
     }
 
-    void VulkanTexture::destroy(VulkanDevice &device) {
+    void VulkanTexture::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         sampler->destroy(device);
         view->destroy(device);
         memory->destroy(device);
         image->destroy(device);
+
+        mark_destroyed();
     }
 }

@@ -42,9 +42,9 @@ namespace bebone::gfx::vulkan {
             std::vector<VkFence> inFlightFences;
             std::vector<VkFence> imagesInFlight;
 
-            std::unique_ptr<VulkanRenderTarget> renderTarget;
+            std::shared_ptr<VulkanRenderTarget> renderTarget;
 
-            VulkanSwapChain(VulkanDevice &device, VkExtent2D windowExtent);
+            VulkanSwapChain(VulkanDevice& device, VkExtent2D windowExtent);
 
             std::vector<VulkanSwapChainImageTuple> create_swap_chain_images(VulkanDevice& device, VkFormat imageFormat);
 

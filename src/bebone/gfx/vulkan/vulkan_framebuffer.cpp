@@ -26,7 +26,12 @@ namespace bebone::gfx::vulkan {
         }
     }
 
-    void VulkanFramebuffer::destroy(VulkanDevice &device) {
+    void VulkanFramebuffer::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+            
         vkDestroyFramebuffer(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

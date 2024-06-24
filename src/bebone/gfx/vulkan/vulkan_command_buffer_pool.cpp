@@ -56,6 +56,9 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanCommandBufferPool::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         vkDestroyCommandPool(device.device(), backend, nullptr);
 
         mark_destroyed();

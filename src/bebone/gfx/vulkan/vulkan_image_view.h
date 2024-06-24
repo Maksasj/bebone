@@ -40,7 +40,7 @@ namespace bebone::gfx::vulkan {
                 const VkFormat& imageFormat,
                 VulkanImageViewInfo imageViewInfo = {});
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

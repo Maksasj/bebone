@@ -60,6 +60,9 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanRenderPass::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         vkDestroyRenderPass(device.device(), backend, nullptr);
 
         mark_destroyed();
