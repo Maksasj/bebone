@@ -18,7 +18,7 @@ namespace game::core {
 
         camera = make_shared<OrthographicCamera>(aspect * -7.0f, aspect * 7.0f, 7.0, -7.0, -7.0f, 7.0f);
  
-        const auto shaderFlags = ENABLE_UNIFORMS;
+        const auto shaderFlags = EnableUniforms;
 
         auto vertexShader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::vertex_shader, shaderFlags);
         auto fragmentShader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderTypes::fragment_shader, shaderFlags);

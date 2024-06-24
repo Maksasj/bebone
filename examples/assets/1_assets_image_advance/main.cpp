@@ -11,7 +11,7 @@ using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;
-    Vec2f texCord;
+    Vec2f tex_coords;
 };
 
 const std::vector<Vertex> vertices {
@@ -34,13 +34,13 @@ int main() {
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
-    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
-    GLShaderProgram shaderProgram(vertexShader, fragmentShader);
-    shaderProgram.set_uniform("ourTexture", 0);
+    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
+    GLShaderProgram shader_program(vertex_shader, fragment_shader);
+    shader_program.set_uniform("ourTexture", 0);
 
-    vertexShader.destroy();
-    fragmentShader.destroy();
+    vertex_shader.destroy();
+    fragment_shader.destroy();
     
     GLVertexArrayObject vao;
     vao.bind();
@@ -49,7 +49,7 @@ int main() {
     GLElementBufferObject ebo(indices.data(), indices.size() * sizeof(u32));
 
     vao.link_attributes(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, pos));
-    vao.link_attributes(vbo, 1, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, texCord));
+    vao.link_attributes(vbo, 1, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex_coords));
 
     vao.unbind();
 	vbo.unbind();
@@ -73,7 +73,7 @@ int main() {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
-        shaderProgram.enable();
+        shader_program.enable();
 
         texture->bind();
         vao.bind();

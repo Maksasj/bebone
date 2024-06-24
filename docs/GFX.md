@@ -117,7 +117,7 @@ To use shaders in OpenGL Bebone you will need to use the GLShaderFactory, GLShad
 ### GLShaderFactory
 GLShaderFactory creates shader objects (GLShader) which later need to be assigned to the shader program (GLShaderProgram). GLShaderFactory has only one public method for shader creation:
 ```c++
-static GLShader create_shader(const std::string& path, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+static GLShader create_shader(const std::string& path, const ShaderType& shaderType, const GLShaderProperties& properties = None);
 ```
 You need to specify the path to the glsl shader, it's type (vertex/fragment shader) and other properties (enable uniforms or not)
 
@@ -139,7 +139,7 @@ As you see you need only to specify path to shader source code and shader type, 
 
 Second way is using GLShader constructor:
 ```c++
-GLShader(const ShaderCode& code, const ShaderType& shaderType, const GLShaderProperties& properties = NONE);
+GLShader(const ShaderCode& code, const ShaderType& shaderType, const GLShaderProperties& properties = None);
 ```
 As you see there you have a bit more controll on creating your opengl shader. You can compile your opengl shader code manually using ShaderCompiler and then use shader code as input for GLShader constructor.
 

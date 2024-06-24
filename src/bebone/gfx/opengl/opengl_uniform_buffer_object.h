@@ -15,9 +15,9 @@ namespace bebone::gfx::opengl {
         public:
             /*!
              * Default constructor
-             * @param _size - desired buffer size
+             * @param size - desired buffer size
             */
-            GLUniformBufferObject(const u64& _size);
+            GLUniformBufferObject(const u64& size);
 
             ~GLUniformBufferObject();
 
