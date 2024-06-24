@@ -112,6 +112,9 @@ namespace bebone::gfx::vulkan {
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
+            std::shared_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
+                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
+
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 

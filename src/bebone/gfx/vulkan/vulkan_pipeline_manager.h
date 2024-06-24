@@ -14,6 +14,7 @@ namespace bebone::gfx::vulkan {
     class VulkanPipelineManager : private core::NonCopyable {
         private:
             std::shared_ptr<VulkanDescriptorPool> descriptor_pool;
+            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> descriptor_layouts;
 
         public:
             VulkanPipelineManager(VulkanDevice& device);

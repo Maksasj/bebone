@@ -1,9 +1,13 @@
 #include "vulkan_device.h"
 
 #include "vulkan_sampler.h"
+
 #include "vulkan_swap_chain.h"
+
 #include "vulkan_descriptor_pool.h"
+#include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout.h"
+
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_pipeline.h"
@@ -177,9 +181,13 @@ namespace bebone::gfx::vulkan {
         }
     }
 
+    std::shared_ptr<VulkanDescriptorSetLayout> VulkanDevice::create_descriptor_set_layout(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
+        return std::make_shared<VulkanDescriptorSetLayout>(*this, bindings);
+    }
+
     // Todo why there is a vector ?
     std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
-        return { std::make_shared<VulkanDescriptorSetLayout>(*this, bindings) };
+        return { create_descriptor_set_layout(bindings) };
     }
 
     std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::shared_ptr<Window> &window) {

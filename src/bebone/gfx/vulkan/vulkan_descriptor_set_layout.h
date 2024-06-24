@@ -11,7 +11,7 @@ namespace bebone::gfx::vulkan {
 
     class VulkanDescriptorSetLayout : public VulkanWrapper<VkDescriptorSetLayout>, private core::NonCopyable {
         public:
-            VulkanDescriptorSetLayout(
+            VulkanDescriptorSetLayout( // Todo move to private
                 VulkanDevice& device,
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
