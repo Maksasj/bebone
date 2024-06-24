@@ -172,6 +172,8 @@ namespace bebone::gfx::vulkan {
                 }
             }
 
+            void collect_garbage();
+
             void destroy();
 
             VkFormat find_depth_format();

@@ -324,8 +324,16 @@ namespace bebone::gfx::vulkan {
         vkDeviceWaitIdle(device_);
     }
 
+    void VulkanDevice::collect_garbage() {
+        child_objects.erase(std::remove_if(child_objects.begin(), child_objects.end(), [](shared_ptr<VulkanApi>& child) {
+            return child->is_destroyed();
+        }), child_objects.end());
+    }
+
     void VulkanDevice::destroy() {
         wait_idle();
+
+        collect_garbage();
 
         for(auto& child : child_objects) {
             if(!child->is_destroyed()) {

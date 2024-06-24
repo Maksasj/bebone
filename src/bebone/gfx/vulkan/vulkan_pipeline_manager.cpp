@@ -30,6 +30,7 @@ namespace bebone::gfx::vulkan {
         auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, configInfo);
 
         device->destroy_all(vertShaderModule, fragShaderModule);
+        device->collect_garbage();
 
         return make_tuple(pipeline, pipelineLayout, descriptors);
     }
