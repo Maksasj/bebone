@@ -135,7 +135,6 @@ int main() {
     device->destroy_all(descriptors);
     device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
 
-    device->destroy();
     instance->destroy();
 
     GLFWContext::terminate();

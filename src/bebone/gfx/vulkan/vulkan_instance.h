@@ -20,8 +20,10 @@ namespace bebone::gfx::vulkan {
             static void hasGflwRequiredInstanceExtensions();
             static std::vector<const char *> getRequiredExtensions();
 
+            std::vector<std::shared_ptr<VulkanDevice>> child_devices;
+
         public:
-            bool const static enableValidationLayers = true;
+            bool const static enable_validation_layers = true;
 
             void createInstance();
 
@@ -37,12 +39,9 @@ namespace bebone::gfx::vulkan {
                 return std::make_shared<VulkanInstance>();
             }
 
-            void destroy() {
-                if(enableValidationLayers)
-                    debugMessenger = nullptr;
+            void destroy_all(std::shared_ptr<VulkanDevice>& device);
 
-                vkDestroyInstance(instance, nullptr);
-            }
+            void destroy();
     };
 }
 
