@@ -1,5 +1,6 @@
 #include "vulkan_descriptor_pool.h"
 
+#include "vulkan_texture.h"
 #include "vulkan_device.h"
 #include "vulkan_descriptor_set.h"
 
