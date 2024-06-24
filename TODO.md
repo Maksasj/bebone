@@ -3,12 +3,31 @@
 - [ ] Make a game for GMTK 24 game jam
 
 - [ ] Renderer
-    - [ ] Sprite interface
-    - [ ] Renderer interface
-        - [ ] Complete OpenGL renderer implementation
-        - [ ] Complete Vulkan renderer implementation
-    - And other interfaces...
-        - Model, Mesh, Material, etc.
+    - [ ] Interfaces
+        - [ ] IProgram
+        - [ ] IUniformBuffer
+        - [ ] IVertexBuffer
+        - [ ] IIndexBuffer
+        - [ ] ITexture
+        - [ ] IMesh
+        - [ ] IMaterial
+        - [ ] ISprite
+        - [ ] IModel
+
+    - [ ] Handles
+        - [ ] ProgramHandle
+        - [ ] UniformBufferHandle
+        - [ ] VertexBufferHandle
+        - [ ] IndexBufferHandle
+        - [ ] TextureHandle
+        - [ ] MeshHandle
+        - [ ] MaterialHandle
+        - [ ] SpriteHandle
+        - [ ] ModelHandle
+
+    - [ ] Helper classes
+        - [ ] Vertex
+        - [ ] Transform
 
 - [ ] Assets 
     - [ ] Add Vec2i variants for ImagePainter methods

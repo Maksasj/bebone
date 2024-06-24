@@ -12,6 +12,10 @@
 #include "window_properties.h"
 #include "window_handler.h"
 
+namespace bebone::renderer {
+    class IRenderer;
+}
+
 namespace bebone::gfx {
     using namespace core;
 
@@ -65,6 +69,9 @@ namespace bebone::gfx {
 
             /// Function that executes all queued input actions
             void execute_input_actions() const;
+
+            // Todo, implement
+            virtual shared_ptr<renderer::IRenderer> create_renderer() {};
 
         private:
             /// GLFW window position change callbacks
