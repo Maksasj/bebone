@@ -17,6 +17,7 @@
     - [ ] Vulkan part
         - [ ] Vulkan pipeline manager
         - [ ] Vulkan textures
+        - [ ] VulkanDevice manages all child vulkan objects
     - [ ] Refactor window api
         - [ ] Default values
 
