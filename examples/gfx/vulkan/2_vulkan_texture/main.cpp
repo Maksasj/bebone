@@ -37,7 +37,7 @@ const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("2. Vulkan texture example", 800, 600, GfxAPI::VULKAN);
+    auto window = WindowFactory::create_window("2. Vulkan texture example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);

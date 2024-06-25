@@ -17,7 +17,7 @@
 #include <GLFW/glfw3.h>
 
 namespace bebone::core {
-    template<ColorFormat _Format>
+    template<ColorFormat Format>
     struct Color {
 
     };

@@ -16,22 +16,22 @@ namespace bebone::gfx {
     /// Class used for storing shader code
     class ShaderCode {
         private:
-            RawSpirVByteCode m_spirVCode;
-            ShaderType m_shaderType;
+            RawSpirVByteCode spirv_code;
+            ShaderType shader_type;
 
         public:
             /*!
              * Default constructor
-             * @param p_shaderType - shader type
+             * @param shader_type - shader type
             */
-            ShaderCode(const ShaderType& p_shaderType);
+            ShaderCode(const ShaderType& shader_type);
 
             /*!
              * Standart constructor
-             * @param p_spirVByteCode - shader byte code vector
-             * @param p_shaderType - shader type
+             * @param spirv_byte_code - shader byte code vector
+             * @param shader_type - shader type
             */
-            ShaderCode(const RawSpirVByteCode& p_spirVByteCode, const ShaderType& p_shaderType) ;
+            ShaderCode(const RawSpirVByteCode& spirv_byte_code, const ShaderType& shader_type) ;
 
             /*!
              * Returns shader type
