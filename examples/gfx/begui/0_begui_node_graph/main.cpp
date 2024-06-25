@@ -1,7 +1,7 @@
 #include "imgui_node_graph_test.h"
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int screen_width = 800;
+const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
@@ -11,7 +11,7 @@ int main() {
 
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("0. Begui Node graph example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
+    auto window = WindowFactory::create_window("0. Begui Node graph example", screen_width, screen_height, GfxAPI::OpenGL);
 
     window->add_listener([&](InputKeyEvent& event) {
         if(event.key == GLFW_KEY_ENTER && event.action == GLFW_RELEASE) {
@@ -24,15 +24,15 @@ int main() {
     });
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
     glfwSwapInterval(0);
 
-    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
-    GLShaderProgram shaderProgram(vertexShader, fragmentShader);
+    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
+    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
-    vertexShader.destroy();
-    fragmentShader.destroy();
+    vertex_shader.destroy();
+    fragment_shader.destroy();
 
     GLContext::enable(GL_DEPTH_TEST);
 
@@ -60,7 +60,7 @@ int main() {
         BEBONE_PROFILE_STOP(LOOP)
     }
 
-    shaderProgram.destroy();
+    shader_program.destroy();
 
     GLFWContext::terminate();
 
