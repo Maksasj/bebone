@@ -79,7 +79,6 @@ int main() {
     device->destroy_all(vbuffer, ibuffer, vmemory, imemory, commandBufferPool);
     device->destroy_all(vertShaderModule,fragShaderModule,pipelineLayout,pipeline, swapChain);
 
-    device->destroy();
     instance->destroy();
 
     GLFWContext::terminate();
