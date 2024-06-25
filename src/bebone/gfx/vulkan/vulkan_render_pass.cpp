@@ -46,7 +46,7 @@ namespace bebone::gfx::vulkan {
 
         std::array<VkAttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
         VkRenderPassCreateInfo renderPassInfo = {};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+        renderPassInfo.type = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
         renderPassInfo.pAttachments = attachments.data();
         renderPassInfo.subpassCount = 1;
@@ -54,7 +54,7 @@ namespace bebone::gfx::vulkan {
         renderPassInfo.dependencyCount = 1;
         renderPassInfo.pDependencies = &dependency;
 
-        if (vkCreateRenderPass(device.device(), &renderPassInfo, nullptr, &backend) != VK_SUCCESS) {
+        if (vkCreateRenderPass(device.device, &renderPassInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create render pass!");
         }
     }
@@ -63,7 +63,7 @@ namespace bebone::gfx::vulkan {
         if(is_destroyed())
             return;
 
-        vkDestroyRenderPass(device.device(), backend, nullptr);
+        vkDestroyRenderPass(device.device, backend, nullptr);
 
         mark_destroyed();
     }

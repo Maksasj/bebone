@@ -7,7 +7,7 @@ namespace bebone::gfx::vulkan {
 
     VulkanSampler::VulkanSampler(VulkanDevice& device) {
         VkSamplerCreateInfo samplerInfo{};
-        samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        samplerInfo.type = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
         samplerInfo.magFilter = VK_FILTER_LINEAR;
         samplerInfo.minFilter = VK_FILTER_LINEAR;
         samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
@@ -22,14 +22,14 @@ namespace bebone::gfx::vulkan {
         samplerInfo.anisotropyEnable = VK_FALSE;
         samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
-        vkCreateSampler(device.device(), &samplerInfo, nullptr, &backend);
+        vkCreateSampler(device.device, &samplerInfo, nullptr, &backend);
     }
 
     void VulkanSampler::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
 
-        vkDestroySampler(device.device(), backend, nullptr);
+        vkDestroySampler(device.device, backend, nullptr);
 
         mark_destroyed();
     }

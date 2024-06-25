@@ -22,8 +22,8 @@ namespace bebone::gfx::vulkan {
     using VulkanDepthImageTuple = std::tuple<std::shared_ptr<VulkanImage>, std::shared_ptr<VulkanImageView>, std::shared_ptr<VulkanDeviceMemory>>;
 
     struct VulkanImageInfo {
-        // VkStructureType sType;
-        // const void* pNext;
+        // VkStructureType type;
+        // const void* ptr_next;
         VkImageCreateFlags flags = 0;
         VkImageType imageType = VK_IMAGE_TYPE_2D;
         // VkFormat format = VK_FORMAT_UNDEFINED;
@@ -49,13 +49,13 @@ namespace bebone::gfx::vulkan {
                 VulkanDevice& device,
                 VkFormat format,
                 VkExtent3D extent,
-                VulkanImageInfo imageInfo = {});
+                VulkanImageInfo image_info = {});
 
             void transition_layout(
                 VulkanCommandBufferPool& pool,
                 VulkanDevice& device,
-                VkImageLayout oldLayout,
-                VkImageLayout newLayout);
+                VkImageLayout old_layout,
+                VkImageLayout new_layout);
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 

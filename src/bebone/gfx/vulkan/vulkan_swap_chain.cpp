@@ -7,22 +7,22 @@
 
 namespace bebone::gfx::vulkan {
     VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, VkExtent2D _windowExtent) {
-        SwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
+        VulkanSwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
         extent = choose_swap_extent(swapChainSupport.capabilities, _windowExtent);
 
         create_swap_chain(device);
 
         auto images = create_swap_chain_images(device, surfaceFormat.format);
-        renderTarget = device.create_render_target(images, surfaceFormat.format, extent);
+        render_target = device.create_render_target(images, surfaceFormat.format, extent);
 
         create_sync_objects(device);
     }
 
     VulkanResult VulkanSwapChain::acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *imageIndex) {
-        vkWaitForFences(device->device(), 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
+        vkWaitForFences(device->device, 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 
         auto result = vkAcquireNextImageKHR(
-                device->device(),
+                device->device,
                 backend,
                 std::numeric_limits<uint64_t>::max(),
                 imageAvailableSemaphores[currentFrame],  // must be a not signaled semaphore
@@ -35,10 +35,10 @@ namespace bebone::gfx::vulkan {
         return VulkanResult(result);
     }
 
-    VulkanResult VulkanSwapChain::submit_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& commandBuffer, uint32_t *imageIndex) {
+    VulkanResult VulkanSwapChain::submit_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& command_buffer, uint32_t *imageIndex) {
         // Submitting and synchronization
         if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
-            vkWaitForFences(device->device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
+            vkWaitForFences(device->device, 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
         }
 
         imagesInFlight[*imageIndex] = inFlightFences[currentFrame];
@@ -49,17 +49,17 @@ namespace bebone::gfx::vulkan {
 
         VkSubmitInfo submitInfo = {};
 
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.type = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &commandBuffer->backend;
+        submitInfo.command_bufferCount = 1;
+        submitInfo.pCommandBuffers = &command_buffer->backend;
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        vkResetFences(device->device(), 1, &inFlightFences[currentFrame]);
-        if (vkQueueSubmit(device->graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
+        vkResetFences(device->device, 1, &inFlightFences[currentFrame]);
+        if (vkQueueSubmit(device->graphics_queue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
             throw std::runtime_error("failed to submit draw command buffer!");
         }
 
@@ -67,14 +67,14 @@ namespace bebone::gfx::vulkan {
         VkSwapchainKHR swapChains[] = { backend };
 
         VkPresentInfoKHR presentInfo = {};
-        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        presentInfo.type = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         presentInfo.waitSemaphoreCount = 1;
         presentInfo.pWaitSemaphores = signalSemaphores;
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = swapChains;
         presentInfo.pImageIndices = imageIndex;
 
-        VkResult result = vkQueuePresentKHR(device->presentQueue(), &presentInfo);
+        VkResult result = vkQueuePresentKHR(device->present_queue, &presentInfo);
 
         currentFrame = (currentFrame + 1) % imageCount;
 
@@ -85,13 +85,13 @@ namespace bebone::gfx::vulkan {
         return { result };
     }
 
-    std::vector<VulkanSwapChainImageTuple> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat imageFormat) {
+    std::vector<VulkanSwapChainImageTuple> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat image_format) {
         std::vector<VkImage> images;
         uint32_t imageCount;
 
-        vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, nullptr);
+        vkGetSwapchainImagesKHR(device.device, backend, &imageCount, nullptr);
         images.resize(imageCount);
-        vkGetSwapchainImagesKHR(device.device(), backend, &imageCount, images.data());
+        vkGetSwapchainImagesKHR(device.device, backend, &imageCount, images.data());
 
         std::vector<VulkanSwapChainImageTuple> out;
 
@@ -100,7 +100,7 @@ namespace bebone::gfx::vulkan {
 
             out.emplace_back(
                 swap_chain_image,
-                device.create_image_view(*swap_chain_image, imageFormat)
+                device.create_image_view(*swap_chain_image, image_format)
             );
         }
 
@@ -108,10 +108,10 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanSwapChain::create_swap_chain(VulkanDevice& device) {
-        SwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
+        VulkanSwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
 
         surfaceFormat = choose_swap_surface_format(swapChainSupport.formats);
-        presentMode = choose_swap_present_mode(swapChainSupport.presentModes);
+        presentMode = choose_swap_present_mode(swapChainSupport.present_modes);
 
         // Todo image count should be configurable
         imageCount = swapChainSupport.capabilities.minImageCount + 1;
@@ -122,8 +122,8 @@ namespace bebone::gfx::vulkan {
         std::cout << "Chosen swap chain image count " << imageCount << "\n";
 
         VkSwapchainCreateInfoKHR createInfo = {};
-        createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-        createInfo.surface = device.surface();
+        createInfo.type = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+        createInfo.surface = device.surface;
 
         createInfo.minImageCount = imageCount;
         createInfo.imageFormat = surfaceFormat.format;
@@ -132,13 +132,13 @@ namespace bebone::gfx::vulkan {
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        QueueFamilyIndices indices = device.find_physical_queue_families();
-        uint32_t queueFamilyIndices[] = {indices.graphicsFamily, indices.presentFamily};
+        VulkanQueueFamilyIndices indices = device.find_physical_queue_families();
+        uint32_t queue_family_indices[] = {indices.graphics_family, indices.present_family};
 
-        if (indices.graphicsFamily != indices.presentFamily) {
+        if (indices.graphics_family != indices.present_family) {
             createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
             createInfo.queueFamilyIndexCount = 2;
-            createInfo.pQueueFamilyIndices = queueFamilyIndices;
+            createInfo.pQueueFamilyIndices = queue_family_indices;
         } else {
             createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
             createInfo.queueFamilyIndexCount = 0;      // Optional
@@ -153,7 +153,7 @@ namespace bebone::gfx::vulkan {
 
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-        if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &backend) != VK_SUCCESS) {
+        if (vkCreateSwapchainKHR(device.device, &createInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
         }
     }
@@ -162,25 +162,25 @@ namespace bebone::gfx::vulkan {
         imageAvailableSemaphores.resize(imageCount);
         renderFinishedSemaphores.resize(imageCount);
         inFlightFences.resize(imageCount);
-        imagesInFlight.resize(renderTarget->swapChainImages.size(), VK_NULL_HANDLE);
+        imagesInFlight.resize(render_target->swap_chain_images.size(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo = {};
-        semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+        semaphoreInfo.type = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
         VkFenceCreateInfo fenceInfo = {};
-        fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceInfo.type = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
         for (size_t i = 0; i < imageCount; i++) {
-            if(vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS) {
+            if(vkCreateSemaphore(device.device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create synchronization objects for a frame!");
             }
 
-            if(vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
+            if(vkCreateSemaphore(device.device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create synchronization objects for a frame!");
             }
 
-            if (vkCreateFence(device.device(), &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+            if (vkCreateFence(device.device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create synchronization objects for a frame!");
             }
         }
@@ -230,16 +230,16 @@ namespace bebone::gfx::vulkan {
         if(is_destroyed())
             return;
 
-        renderTarget->destroy(device);
+        render_target->destroy(device);
 
         // Todo move this somewhere else
         for (size_t i = 0; i < imageCount; i++) {
-            vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
-            vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
-            vkDestroyFence(device.device(), inFlightFences[i], nullptr);
+            vkDestroySemaphore(device.device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(device.device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(device.device, inFlightFences[i], nullptr);
         }
 
-        vkDestroySwapchainKHR(device.device(), backend, nullptr);
+        vkDestroySwapchainKHR(device.device, backend, nullptr);
 
         mark_destroyed();
     }

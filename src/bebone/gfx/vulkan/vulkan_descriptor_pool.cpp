@@ -13,20 +13,20 @@ namespace bebone::gfx::vulkan {
         };
 
         VkDescriptorPoolCreateInfo poolInfo{};
-        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.type = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = poolSizes.size();
         poolInfo.pPoolSizes = poolSizes.data();
         poolInfo.maxSets = static_cast<uint32_t>(65536 * poolSizes.size());
         poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
-        if (vkCreateDescriptorPool(device.device(), &poolInfo, nullptr, &backend) != VK_SUCCESS) {
+        if (vkCreateDescriptorPool(device.device, &poolInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
 
     // VulkanDescriptorPool::~VulkanDescriptorPool() {
     //     // for(const auto& layouts : descriptorSetLayouts) {
-    //     //     vkDestroyDescriptorSetLayout(_device.device(), layouts, nullptr);
+    //     //     vkDestroyDescriptorSetLayout(_device.device, layouts, nullptr);
     //     // }
     // }
 
@@ -38,13 +38,13 @@ namespace bebone::gfx::vulkan {
         const size_t& binding,
         const size_t& dstArrayElement
     ) {
-        VkDescriptorBufferInfo bufferInfo{};
-        bufferInfo.buffer = buffer->backend;
-        bufferInfo.offset = 0;
-        bufferInfo.range = size;
+        VkDescriptorBufferInfo buffer_info{};
+        buffer_info.buffer = buffer->backend;
+        buffer_info.offset = 0;
+        buffer_info.range = size;
 
         VkWriteDescriptorSet descriptorWrite{};
-        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.type = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
         descriptorWrite.dstSet = descriptorSet->backend;
         descriptorWrite.dstBinding = binding;
@@ -54,12 +54,12 @@ namespace bebone::gfx::vulkan {
 
         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         descriptorWrite.descriptorCount = 1;
-        descriptorWrite.pBufferInfo = &bufferInfo;
+        descriptorWrite.pBufferInfo = &buffer_info;
 
         descriptorWrite.pImageInfo = nullptr; // Optional
         descriptorWrite.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(device->device(), 1, &descriptorWrite, 0, nullptr);
+        vkUpdateDescriptorSets(device->device, 1, &descriptorWrite, 0, nullptr);
     }
 
     void VulkanDescriptorPool::update_descriptor_set(
@@ -81,13 +81,13 @@ namespace bebone::gfx::vulkan {
             const size_t& binding,
             const size_t& dstArrayElement
     ) {
-        VkDescriptorImageInfo imageInfo{};
-        imageInfo.sampler = sampler->backend;
-        imageInfo.imageView = view->backend;
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
+        VkDescriptorImageInfo image_info{};
+        image_info.sampler = sampler->backend;
+        image_info.imageView = view->backend;
+        image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
 
         VkWriteDescriptorSet descriptorWrite{};
-        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.type = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
         descriptorWrite.dstSet = descriptorSet->backend;
         descriptorWrite.dstBinding = binding;
@@ -95,13 +95,13 @@ namespace bebone::gfx::vulkan {
 
         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         descriptorWrite.descriptorCount = 1;
-        // descriptorWrite.pBufferInfo = &bufferInfo;
-        descriptorWrite.pImageInfo = &imageInfo;
+        // descriptorWrite.pBufferInfo = &buffer_info;
+        descriptorWrite.pImageInfo = &image_info;
 
         // descriptorWrite.pImageInfo = nullptr; // Optional
         descriptorWrite.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(device->device(), 1, &descriptorWrite, 0, nullptr);
+        vkUpdateDescriptorSets(device->device, 1, &descriptorWrite, 0, nullptr);
     }
 
     void VulkanDescriptorPool::update_descriptor_set(
@@ -194,7 +194,7 @@ namespace bebone::gfx::vulkan {
         if(is_destroyed())
             return;
         
-        vkDestroyDescriptorPool(device.device(), backend, nullptr);
+        vkDestroyDescriptorPool(device.device, backend, nullptr);
 
         mark_destroyed();
     }

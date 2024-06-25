@@ -16,7 +16,7 @@ namespace bebone::gfx::vulkan {
     class VulkanBuffer;
     class VulkanDeviceMemory;
 
-    const static VkBufferUsageFlags VULKAN_BUFFER_ANY_USE_FLAG =
+    const static VkBufferUsageFlags vulkan_buffer_any_use_flag =
         VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT |
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT |
         VK_BUFFER_USAGE_TRANSFER_DST_BIT |
@@ -35,11 +35,11 @@ namespace bebone::gfx::vulkan {
         VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR;
 
     struct VulkanBufferInfo {
-        // VkStructureType sType;
-        // const void* pNext;
+        // VkStructureType type;
+        // const void* ptr_next;
         VkBufferCreateFlags flags = 0;
         // VkDeviceSize size;
-        VkBufferUsageFlags usage = VULKAN_BUFFER_ANY_USE_FLAG;
+        VkBufferUsageFlags usage = vulkan_buffer_any_use_flag;
         VkSharingMode sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         uint32_t queueFamilyIndexCount = 0;
         uint32_t* pQueueFamilyIndices = nullptr;
@@ -49,7 +49,7 @@ namespace bebone::gfx::vulkan {
 
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
         public:
-            VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo bufferInfo);
+            VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo buffer_info);
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 

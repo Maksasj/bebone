@@ -15,16 +15,16 @@ namespace bebone::gfx::vulkan {
 
     class VulkanRenderTarget : public VulkanApi {
         public:
-            std::shared_ptr<VulkanRenderPass> renderPass;
+            std::shared_ptr<VulkanRenderPass> render_pass;
 
             std::vector<std::shared_ptr<VulkanFramebuffer>> swapChainFramebuffers;
             std::vector<VulkanDepthImageTuple> depthImages;
-            std::vector<VulkanSwapChainImageTuple> swapChainImages;
+            std::vector<VulkanSwapChainImageTuple> swap_chain_images;
 
             VulkanRenderTarget(
                 VulkanDevice& device,
-                std::vector<VulkanSwapChainImageTuple>& swapChainImages,
-                VkFormat imageFormat,
+                std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
+                VkFormat image_format,
                 VkExtent2D extent);
 
             void destroy(VulkanDevice& device);

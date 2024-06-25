@@ -14,7 +14,7 @@ namespace bebone::gfx::vulkan {
             VulkanPipelineLayout(
                 VulkanDevice& device,
                 const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
-                const std::vector<VulkanConstRange>& constantRanges
+                const std::vector<VulkanConstRange>& constant_ranges
             );
 
             VkPipelineLayout get_layout();

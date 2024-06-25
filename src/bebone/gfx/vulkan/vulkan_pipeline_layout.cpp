@@ -7,16 +7,14 @@ namespace bebone::gfx::vulkan {
     VulkanPipelineLayout::VulkanPipelineLayout(
             VulkanDevice& device,
             const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
-            const std::vector<VulkanConstRange>& constantRanges
+            const std::vector<VulkanConstRange>& constant_ranges
         ) {
-
         std::vector<VkPushConstantRange> ranges;
-        for(auto range : constantRanges)
-            ranges.push_back(range.range);
+        for(auto range : constant_ranges)
+            ranges.push_back(range.backend);
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-        pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-
+        pipelineLayoutInfo.type = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
         std::vector<VkDescriptorSetLayout> layouts;
         for(const auto& layout : descriptorSetLayouts) {
@@ -28,7 +26,7 @@ namespace bebone::gfx::vulkan {
         pipelineLayoutInfo.pushConstantRangeCount = ranges.size();
         pipelineLayoutInfo.pPushConstantRanges = ranges.data();
 
-        if(vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreatePipelineLayout(device.device, &pipelineLayoutInfo, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create pipeline layout");
         }
     }
@@ -41,7 +39,7 @@ namespace bebone::gfx::vulkan {
         if(is_destroyed())
             return;
 
-        vkDestroyPipelineLayout(device.device(), backend, nullptr);
+        vkDestroyPipelineLayout(device.device, backend, nullptr);
 
         mark_destroyed();
     }

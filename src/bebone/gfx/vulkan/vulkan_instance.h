@@ -14,17 +14,15 @@ namespace bebone::gfx::vulkan {
         private:
             VkInstance instance;
 
-            std::unique_ptr<VulkanDebugMessenger> debugMessenger;
+            std::unique_ptr<VulkanDebugMessenger> debug_messenger;
             std::vector<std::shared_ptr<VulkanDevice>> child_devices;
 
-            bool checkValidationLayerSupport();
-            static void hasGflwRequiredInstanceExtensions();
-            static std::vector<const char *> getRequiredExtensions();
+            bool check_validation_layer_support();
+            static void has_gflw_required_instance_extensions();
+            static std::vector<const char *> get_required_extensions();
 
         public:
             bool const static enable_validation_layers = true;
-
-            void createInstance();
 
             VkInstance& get_instance();
 
@@ -32,7 +30,7 @@ namespace bebone::gfx::vulkan {
 
             std::shared_ptr<VulkanDevice> create_device(std::shared_ptr<Window>& window);
 
-            const std::vector<const char *> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+            const std::vector<const char *> validation_layers = { "VK_LAYER_KHRONOS_validation" };
 
             static std::shared_ptr<VulkanInstance> create_instance() {
                 return std::make_shared<VulkanInstance>();

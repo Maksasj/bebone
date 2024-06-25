@@ -6,29 +6,28 @@
 
 namespace bebone::gfx::vulkan {
     VulkanDescriptorSet::VulkanDescriptorSet(
-        std::shared_ptr<VulkanDevice>& device,
-        VulkanDescriptorPool& descriptorPool,
-        std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout
+        const std::shared_ptr<VulkanDevice>& device,
+        VulkanDescriptorPool& descriptor_pool,
+        const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
     ) {
-        VkDescriptorSetAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = descriptorPool.backend;
-        allocInfo.descriptorSetCount = 1;
-        allocInfo.pSetLayouts = &descriptorSetLayout->backend;
+        VkDescriptorSetAllocateInfo alloc_info{};
+        alloc_info.type = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        alloc_info.descriptorPool = descriptor_pool.backend;
+        alloc_info.descriptorSetCount = 1;
+        alloc_info.pSetLayouts = &descriptor_set_layout->backend;
 
-        VkDescriptorSetVariableDescriptorCountAllocateInfoEXT countInfo;
-        countInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
-        countInfo.pNext = nullptr;
+        VkDescriptorSetVariableDescriptorCountAllocateInfoEXT count_info;
+        count_info.type = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
+        count_info.ptr_next = nullptr;
 
-        unsigned int maxBinding = 65536 - 1;
-        countInfo.descriptorSetCount = 1;
+        // Todo
+        static unsigned int max_binding = 65536 - 1;
+        count_info.descriptorSetCount = 1;
 
-        countInfo.pDescriptorCounts = &maxBinding;
-        allocInfo.pNext = &countInfo; // Todo
+        count_info.pDescriptorCounts = &max_binding;
+        alloc_info.ptr_next = &count_info; // Todo
 
-        // auto& descriptorSet = descriptorSets[descriptorSets.size() - 1];
-
-        if (vkAllocateDescriptorSets(device->device(), &allocInfo, &backend) != VK_SUCCESS) {
+        if (vkAllocateDescriptorSets(device->device, &alloc_info, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
     }

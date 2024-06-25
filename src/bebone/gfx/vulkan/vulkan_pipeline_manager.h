@@ -20,10 +20,10 @@ namespace bebone::gfx::vulkan {
             VulkanPipelineManager(VulkanDevice& device);
 
             VulkanManagedPipelineTuple create_pipeline(std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanSwapChain>& swapChain,
-                const std::vector<VulkanConstRange>& constantRanges,
+                std::shared_ptr<VulkanSwapChain>& swap_chain,
+                const std::vector<VulkanConstRange>& constant_ranges,
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings,
-                VulkanPipelineConfig configInfo
+                VulkanPipelineConfig config_info
             );
 
             void destroy(VulkanDevice& device) override;

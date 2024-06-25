@@ -12,27 +12,27 @@ namespace bebone::gfx::vulkan {
 
     VulkanManagedPipelineTuple VulkanPipelineManager::create_pipeline(
         std::shared_ptr<VulkanDevice>& device,
-        std::shared_ptr<VulkanSwapChain>& swapChain,
-        const std::vector<VulkanConstRange>& constantRanges,
+        std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::vector<VulkanConstRange>& constant_ranges,
         const std::vector<VulkanDescriptorSetLayoutBinding>& bindings,
-        VulkanPipelineConfig configInfo
+        VulkanPipelineConfig config_info
     ) {
         // Todo
-        auto descriptorSetLayout = device->create_descriptor_set_layouts(bindings);
+        auto descriptor_set_layout = device->create_descriptor_set_layouts(bindings);
 
-        auto descriptors = descriptor_pool->create_descriptors(device, descriptorSetLayout[0], 3);
+        auto descriptors = descriptor_pool->create_descriptors(device, descriptor_set_layout[0], 3);
 
-        auto pipelineLayout = device->create_pipeline_layout(descriptorSetLayout, constantRanges);
+        auto pipeline_layout = device->create_pipeline_layout(descriptor_set_layout, constant_ranges);
 
         auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::vertex_shader);
         auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
 
-        auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, configInfo);
+        auto pipeline = device->create_pipeline(swap_chain, pipeline_layout, { vertShaderModule, fragShaderModule }, config_info);
 
         device->destroy_all(vertShaderModule, fragShaderModule);
         device->collect_garbage();
 
-        return make_tuple(pipeline, pipelineLayout, descriptors);
+        return make_tuple(pipeline, pipeline_layout, descriptors);
     }
 
     void VulkanPipelineManager::destroy(VulkanDevice& device) {

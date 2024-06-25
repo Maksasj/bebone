@@ -14,13 +14,21 @@ namespace bebone::gfx::vulkan {
         public:
             VulkanCommandBufferPool(VulkanDevice& device);
 
-            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(std::shared_ptr<VulkanDevice>& device, const size_t& commandBufferCount);
+            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(
+                std::shared_ptr<VulkanDevice>& device,
+                const size_t& count);
 
             VkCommandBuffer begin_single_time_commands(VulkanDevice& device);
-            void end_single_time_commands(VulkanDevice& device, VkCommandBuffer commandBuffer);
+            void end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer);
 
             // Todo factor this out
-            void copy_buffer_to_image(VulkanDevice& device, std::shared_ptr<VulkanBuffer> buffer, std::shared_ptr<VulkanImage> image, uint32_t width, uint32_t height, uint32_t layerCount);
+            void copy_buffer_to_image(
+                VulkanDevice& device,
+                const std::shared_ptr<VulkanBuffer>& buffer,
+                const std::shared_ptr<VulkanImage>& image,
+                const u32& width,
+                const u32& height,
+                const u32& layer_count);
 
             void destroy(VulkanDevice& device) override;
     };
