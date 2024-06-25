@@ -21,10 +21,10 @@ namespace bebone::gfx::vulkan {
         return ss.str();
     }
 
-    VulkanDevice::VulkanDevice(VulkanInstance& _vulkanInstance, VulkanWindow &window) : vulkanInstance(_vulkanInstance) {
-        window.create_window_surface(vulkanInstance.get_instance(), &surface_);
+    VulkanDevice::VulkanDevice(VulkanInstance& instance, VulkanWindow &window) {
+        window.create_window_surface(instance.get_instance(), &surface_);
 
-        pick_physical_device(_vulkanInstance);
+        pick_physical_device(instance);
         create_logical_device();
     }
 
@@ -276,7 +276,7 @@ namespace bebone::gfx::vulkan {
 
         // might not really be necessary anymore because device specific validation layers
         // have been deprecated
-        // if (enableValidationLayers) {
+        // if (enable_validation_layers) {
         // 	createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
         // 	createInfo.ppEnabledLayerNames = validationLayers.data();
         // } else {
@@ -330,7 +330,7 @@ namespace bebone::gfx::vulkan {
         }), child_objects.end());
     }
 
-    void VulkanDevice::destroy() {
+    void VulkanDevice::destroy(VulkanInstance& instance) {
         wait_idle();
 
         collect_garbage();
@@ -342,7 +342,7 @@ namespace bebone::gfx::vulkan {
         }
 
         vkDestroyDevice(device_, nullptr);
-        vkDestroySurfaceKHR(vulkanInstance.get_instance(), surface_, nullptr);
+        vkDestroySurfaceKHR(instance.get_instance(), surface_, nullptr);
     }
 
     VkFormat VulkanDevice::find_depth_format() {

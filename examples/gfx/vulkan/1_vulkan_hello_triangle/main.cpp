@@ -73,7 +73,6 @@ int main() {
             continue;
     }
 
-    device->destroy();
     instance->destroy();
 
     GLFWContext::terminate();

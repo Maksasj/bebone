@@ -45,10 +45,6 @@ namespace bebone::gfx::vulkan {
 
             VkQueue graphicsQueue_;
             VkQueue presentQueue_;
-
-            // Todo, do we really need to have this there ?
-            VulkanInstance &vulkanInstance;
-
             void pick_physical_device(VulkanInstance &vulkanInstance);
             void create_logical_device();
 
@@ -174,7 +170,7 @@ namespace bebone::gfx::vulkan {
 
             void collect_garbage();
 
-            void destroy();
+            void destroy(VulkanInstance& instance);
 
             VkFormat find_depth_format();
     };
