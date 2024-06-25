@@ -14,6 +14,8 @@ namespace bebone::gfx::vulkan {
     VulkanManagedPipelineTuple VulkanPipelineManager::create_pipeline(
         std::shared_ptr<VulkanDevice>& device,
         std::shared_ptr<VulkanSwapChain>& swapChain,
+        const std::string& vertex_shader_file_path,
+        const std::string& fragment_shader_file_path,
         const std::vector<VulkanConstRange>& constantRanges,
         const std::vector<VulkanDescriptorSetLayoutBinding>& bindings,
         VulkanPipelineConfig configInfo
@@ -24,8 +26,8 @@ namespace bebone::gfx::vulkan {
 
         auto pipelineLayout = device->create_pipeline_layout({ descriptorSetLayout }, constantRanges);
 
-        auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::vertex_shader);
-        auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
+        auto vertShaderModule = device->create_shader_module(vertex_shader_file_path, ShaderTypes::vertex_shader);
+        auto fragShaderModule = device->create_shader_module(fragment_shader_file_path, ShaderTypes::fragment_shader);
 
         auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, configInfo);
         device->destroy_all(vertShaderModule, fragShaderModule);
