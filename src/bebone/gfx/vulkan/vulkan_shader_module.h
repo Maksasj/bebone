@@ -16,9 +16,9 @@ namespace bebone::gfx::vulkan {
 
     class VulkanShaderModule : public VulkanWrapper<VkShaderModule>, private core::NonCopyable {
         public:
-            ShaderType shaderType;
+            ShaderType type;
 
-            VulkanShaderModule(VulkanDevice& device, const ShaderCode& shaderCode);
+            VulkanShaderModule(VulkanDevice& device, const ShaderCode& code);
 
             void destroy(VulkanDevice& device) override;
     };

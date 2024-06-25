@@ -20,7 +20,7 @@ namespace bebone::gfx::vulkan {
             attachments.push_back(view->backend);
 
         VkFramebufferCreateInfo create_info = {};
-        create_info.type = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        create_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         create_info.renderPass = render_pass->backend;
         create_info.attachmentCount = static_cast<uint32_t>(attachments.size());
         create_info.pAttachments = attachments.data();

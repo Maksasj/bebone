@@ -17,8 +17,8 @@ namespace bebone::gfx::vulkan {
         public:
             std::shared_ptr<VulkanRenderPass> render_pass;
 
-            std::vector<std::shared_ptr<VulkanFramebuffer>> swapChainFramebuffers;
-            std::vector<VulkanDepthImageTuple> depthImages;
+            std::vector<std::shared_ptr<VulkanFramebuffer>> swap_chain_framebuffers;
+            std::vector<VulkanDepthImageTuple> depth_images;
             std::vector<VulkanSwapChainImageTuple> swap_chain_images;
 
             VulkanRenderTarget(

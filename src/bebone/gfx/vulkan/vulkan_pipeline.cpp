@@ -12,18 +12,17 @@ namespace bebone::gfx::vulkan {
         for(auto& shader_module : shader_modules) {
             VkPipelineShaderStageCreateInfo stage;
 
-            stage.type = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-            stage.ptr_next = nullptr;
+            stage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+            stage.pNext = nullptr;
             stage.flags = 0;
-
-            if(shader_module->shaderType == ShaderTypes::vertex_shader)
-                stage.stage = VK_SHADER_STAGE_VERTEX_BIT;
-            else if(shader_module->shaderType == ShaderTypes::fragment_shader)
-                stage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-
             stage.module = shader_module->backend;
             stage.pName = "main";
             stage.pSpecializationInfo = nullptr;
+
+            if(shader_module->type == ShaderTypes::vertex_shader)
+                stage.stage = VK_SHADER_STAGE_VERTEX_BIT;
+            else if(shader_module->type == ShaderTypes::fragment_shader)
+                stage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
             stages.push_back(stage);
         }
@@ -43,146 +42,148 @@ namespace bebone::gfx::vulkan {
 
         // VulkanPipelineVertexInputStateConfig
         VkPipelineVertexInputStateCreateInfo vertex_input_state{};
-        vertex_input_state.type = config_info.vertex_input_state.type;
-        vertex_input_state.ptr_next = config_info.vertex_input_state.ptr_next;
+        vertex_input_state.sType = config_info.vertex_input_state.type;
+        vertex_input_state.pNext = config_info.vertex_input_state.ptr_next;
         vertex_input_state.flags = config_info.vertex_input_state.flags;
 
-        if(config_info.pVertexInputState.vertexDescriptions.binding_descriptions.size() != 0) {
-            vertex_input_state.vertexBindingDescriptionCount = config_info.vertex_input_state.vertexDescriptions.binding_descriptions.size();
-            vertex_input_state.pVertexBindingDescriptions = config_info.vertex_input_state.vertexDescriptions.binding_descriptions.data();
+        if(config_info.vertex_input_state.vertex_descriptions.binding_descriptions.size() != 0) {
+            vertex_input_state.vertexBindingDescriptionCount = config_info.vertex_input_state.vertex_descriptions.binding_descriptions.size();
+            vertex_input_state.pVertexBindingDescriptions = config_info.vertex_input_state.vertex_descriptions.binding_descriptions.data();
         } else {
             vertex_input_state.vertexBindingDescriptionCount = 0;
             vertex_input_state.pVertexBindingDescriptions = nullptr;
         }
 
-        if(config_info.pVertexInputState.vertexDescriptions.attribute_descriptions.size() != 0) {
-            vertex_input_state.vertexAttributeDescriptionCount = config_info.vertex_input_state.vertexDescriptions.attribute_descriptions.size();
-            vertex_input_state.pVertexAttributeDescriptions = config_info.vertex_input_state.vertexDescriptions.attribute_descriptions.data();
+        if(config_info.vertex_input_state.vertex_descriptions.attribute_descriptions.size() != 0) {
+            vertex_input_state.vertexAttributeDescriptionCount = config_info.vertex_input_state.vertex_descriptions.attribute_descriptions.size();
+            vertex_input_state.pVertexAttributeDescriptions = config_info.vertex_input_state.vertex_descriptions.attribute_descriptions.data();
         } else {
             vertex_input_state.vertexAttributeDescriptionCount = 0;
             vertex_input_state.pVertexAttributeDescriptions = nullptr;
         }
 
         // VulkanPipelineInputAssemblyStateConfig
-        VkPipelineInputAssemblyStateCreateInfo pInputAssemblyState = {
-            .type = config_info.pInputAssemblyState.type,
-            .ptr_next = config_info.pInputAssemblyState.ptr_next,
-            .flags = config_info.pInputAssemblyState.flags,
-            .topology = config_info.pInputAssemblyState.topology,
-            .primitive_restart_enable = config_info.pInputAssemblyState.primitive_restart_enable
+        const VkPipelineInputAssemblyStateCreateInfo input_assembly_state = {
+            .sType = config_info.input_assembly_state.type,
+            .pNext = config_info.input_assembly_state.ptr_next,
+            .flags = config_info.input_assembly_state.flags,
+            .topology = config_info.input_assembly_state.topology,
+            .primitiveRestartEnable = config_info.input_assembly_state.primitive_restart_enable
         };
 
         // VulkanPipelineViewportStateConfig
-        VkPipelineViewportStateCreateInfo pViewportState = {
-            .type = config_info.pViewportState.type,
-            .ptr_next = config_info.pViewportState.ptr_next,
-            .flags = config_info.pViewportState.flags,
-            .viewport_count = config_info.pViewportState.viewport_count,
-            .ptr_viewports = config_info.pViewportState.ptr_viewports,
-            .scissor_count = config_info.pViewportState.scissor_count,
-            .ptr_scissors = config_info.pViewportState.ptr_scissors
+        const VkPipelineViewportStateCreateInfo viewport_state = {
+            .sType = config_info.viewport_state.type,
+            .pNext = config_info.viewport_state.ptr_next,
+            .flags = config_info.viewport_state.flags,
+            .viewportCount = config_info.viewport_state.viewport_count,
+            .pViewports = config_info.viewport_state.ptr_viewports,
+            .scissorCount = config_info.viewport_state.scissor_count,
+            .pScissors = config_info.viewport_state.ptr_scissors
         };
 
         // VulkanPipelineRasterizationStateConfig
-        VkPipelineRasterizationStateCreateInfo pRasterizationState = {
-            .type = config_info.pRasterizationState.type,
-            .ptr_next = config_info.pRasterizationState.ptr_next,
-            .flags = config_info.pRasterizationState.flags,
-            .depth_clamp_enable = config_info.pRasterizationState.depth_clamp_enable,
-            .rasterizer_discard_enable = config_info.pRasterizationState.rasterizer_discard_enable,
-            .polygon_mode = config_info.pRasterizationState.polygon_mode,
-            .cull_mode = config_info.pRasterizationState.cull_mode,
-            .front_face = config_info.pRasterizationState.front_face,
-            .depth_bias_enable = config_info.pRasterizationState.depth_bias_enable,
-            .depth_bias_constant_factor = config_info.pRasterizationState.depth_bias_constant_factor,
-            .depth_bias_clamp = config_info.pRasterizationState.depth_bias_clamp,
-            .depth_bias_slope_factor = config_info.pRasterizationState.depth_bias_slope_factor,
-            .line_width = config_info.pRasterizationState.line_width
+        const VkPipelineRasterizationStateCreateInfo rasterization_state = {
+            .sType = config_info.rasterization_state.type,
+            .pNext = config_info.rasterization_state.ptr_next,
+            .flags = config_info.rasterization_state.flags,
+            .depthClampEnable = config_info.rasterization_state.depth_clamp_enable,
+            .rasterizerDiscardEnable = config_info.rasterization_state.rasterizer_discard_enable,
+            .polygonMode = config_info.rasterization_state.polygon_mode,
+            .cullMode = config_info.rasterization_state.cull_mode,
+            .frontFace = config_info.rasterization_state.front_face,
+            .depthBiasEnable = config_info.rasterization_state.depth_bias_enable,
+            .depthBiasConstantFactor = config_info.rasterization_state.depth_bias_constant_factor,
+            .depthBiasClamp = config_info.rasterization_state.depth_bias_clamp,
+            .depthBiasSlopeFactor = config_info.rasterization_state.depth_bias_slope_factor,
+            .lineWidth = config_info.rasterization_state.line_width
         };
 
         // VulkanPipelineMultisampleStateConfig
-        VkPipelineMultisampleStateCreateInfo pMultisampleState = {
-            .type = config_info.pMultisampleState.type,
-            .ptr_next = config_info.pMultisampleState.ptr_next,
-            .flags = config_info.pMultisampleState.flags,
-            .rasterization_samples = config_info.pMultisampleState.rasterization_samples,
-            .sample_shading_enable = config_info.pMultisampleState.sample_shading_enable,
-            .min_sample_shading = config_info.pMultisampleState.min_sample_shading,
-            .ptr_sample_mask = config_info.pMultisampleState.ptr_sample_mask,
-            .alpha_to_coverage_enable = config_info.pMultisampleState.alpha_to_coverage_enable,
-            .alpha_to_one_enable = config_info.pMultisampleState.alpha_to_one_enable
+        const VkPipelineMultisampleStateCreateInfo multisample_state = {
+            .sType = config_info.multisample_state.type,
+            .pNext = config_info.multisample_state.ptr_next,
+            .flags = config_info.multisample_state.flags,
+            .rasterizationSamples = config_info.multisample_state.rasterization_samples,
+            .sampleShadingEnable = config_info.multisample_state.sample_shading_enable,
+            .minSampleShading = config_info.multisample_state.min_sample_shading,
+            .pSampleMask = config_info.multisample_state.ptr_sample_mask,
+            .alphaToCoverageEnable = config_info.multisample_state.alpha_to_coverage_enable,
+            .alphaToOneEnable = config_info.multisample_state.alpha_to_one_enable
         };
 
         // VulkanPipelineDepthStencilStateConfig
-        VkPipelineDepthStencilStateCreateInfo pDepthStencilState = {
-            .type = config_info.pDepthStencilState.type,
-            .ptr_next = config_info.pDepthStencilState.ptr_next,
-            .flags = config_info.pDepthStencilState.flags,
-            .depth_test_enable = config_info.pDepthStencilState.depth_test_enable,
-            .depth_write_enable = config_info.pDepthStencilState.depth_write_enable,
-            .depth_compare_op = config_info.pDepthStencilState.depth_compare_op,
-            .depth_bounds_test_enable = config_info.pDepthStencilState.depth_bounds_test_enable,
-            .stencilTestEnable = config_info.pDepthStencilState.stencilTestEnable,
-            .front = config_info.pDepthStencilState.front,
-            .back = config_info.pDepthStencilState.back,
-            .minDepthBounds = config_info.pDepthStencilState.minDepthBounds,
-            .maxDepthBounds = config_info.pDepthStencilState.maxDepthBounds
+        const VkPipelineDepthStencilStateCreateInfo depth_stencil_state = {
+            .sType = config_info.depth_stencil_state.type,
+            .pNext = config_info.depth_stencil_state.ptr_next,
+            .flags = config_info.depth_stencil_state.flags,
+            .depthTestEnable = config_info.depth_stencil_state.depth_test_enable,
+            .depthWriteEnable = config_info.depth_stencil_state.depth_write_enable,
+            .depthCompareOp = config_info.depth_stencil_state.depth_compare_op,
+            .depthBoundsTestEnable = config_info.depth_stencil_state.depth_bounds_test_enable,
+            .stencilTestEnable = config_info.depth_stencil_state.stencil_test_enable,
+            .front = config_info.depth_stencil_state.front,
+            .back = config_info.depth_stencil_state.back,
+            .minDepthBounds = config_info.depth_stencil_state.min_depth_bounds,
+            .maxDepthBounds = config_info.depth_stencil_state.max_depth_bounds
         };
 
         // VulkanPipelineColorBlendStateConfig
-        VkPipelineColorBlendStateCreateInfo pColorBlendState = {
-            .type = config_info.pColorBlendState.type,
-            .ptr_next = config_info.pColorBlendState.ptr_next,
-            .flags = config_info.pColorBlendState.flags,
-            .logicOpEnable = config_info.pColorBlendState.logicOpEnable,
-            .logicOp = config_info.pColorBlendState.logicOp,
-            .attachmentCount = static_cast<uint32_t>(config_info.pColorBlendState.pAttachments.size()),
-            .pAttachments = config_info.pColorBlendState.pAttachments.data(),
+        const VkPipelineColorBlendStateCreateInfo color_blend_state = {
+            .sType = config_info.color_blend_state.type,
+            .pNext = config_info.color_blend_state.ptr_next,
+            .flags = config_info.color_blend_state.flags,
+            .logicOpEnable = config_info.color_blend_state.logic_op_enable,
+            .logicOp = config_info.color_blend_state.logic_op,
+            .attachmentCount = static_cast<uint32_t>(config_info.color_blend_state.ptr_attachments.size()),
+            .pAttachments = config_info.color_blend_state.ptr_attachments.data(),
             .blendConstants = {
-                config_info.pColorBlendState.blendConstants[0],
-                config_info.pColorBlendState.blendConstants[1],
-                config_info.pColorBlendState.blendConstants[2],
-                config_info.pColorBlendState.blendConstants[3]
+                config_info.color_blend_state.blendConstants[0],
+                config_info.color_blend_state.blendConstants[1],
+                config_info.color_blend_state.blendConstants[2],
+                config_info.color_blend_state.blendConstants[3]
             }
         };
 
         // VulkanPipelineDynamicStateConfig
-        VkPipelineDynamicStateCreateInfo pDynamicState = {
-            .type = config_info.pDynamicState.type,
-            .ptr_next = config_info.pDynamicState.ptr_next,
-            .flags = config_info.pDynamicState.flags,
-            .dynamicStateCount = static_cast<uint32_t>(config_info.pDynamicState.pDynamicStates.size()),
-            .pDynamicStates = config_info.pDynamicState.pDynamicStates.data()
+        const VkPipelineDynamicStateCreateInfo dynamic_state = {
+            .sType = config_info.dynamic_state.type,
+            .pNext = config_info.dynamic_state.ptr_next,
+            .flags = config_info.dynamic_state.flags,
+            .dynamicStateCount = static_cast<uint32_t>(config_info.dynamic_state.ptr_dynamic_states.size()),
+            .pDynamicStates = config_info.dynamic_state.ptr_dynamic_states.data()
         };
 
-        VkGraphicsPipelineCreateInfo pipelineInfo{};
-        pipelineInfo.type = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        pipelineInfo.ptr_next = nullptr;
-        pipelineInfo.flags = config_info.flags;
+        const auto size = static_cast<uint32_t>(stages.size());
 
-        pipelineInfo.stageCount = stages.size();
-        pipelineInfo.pStages = stages.data();
+        const VkGraphicsPipelineCreateInfo pipeline_info = {
+            .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = config_info.flags,
 
-        pipelineInfo.vertex_input_state = &vertex_input_state;
-        pipelineInfo.pInputAssemblyState = &pInputAssemblyState;
-        pipelineInfo.pTessellationState = nullptr;
-        pipelineInfo.pViewportState = &pViewportState;
-        pipelineInfo.pRasterizationState = &pRasterizationState;
-        pipelineInfo.pMultisampleState = &pMultisampleState;
-        pipelineInfo.pDepthStencilState = &pDepthStencilState;
-        pipelineInfo.pColorBlendState = &pColorBlendState;
-        pipelineInfo.pDynamicState = &pDynamicState;
+            .stageCount = size,
+            .pStages = stages.data(),
 
-        pipelineInfo.layout = pipeline_layout->get_layout();
-        pipelineInfo.renderPass = swap_chain->render_target->render_pass->backend;
+            .pVertexInputState = &vertex_input_state,
+            .pInputAssemblyState = &input_assembly_state,
+            .pTessellationState = nullptr,
+            .pViewportState = &viewport_state,
+            .pRasterizationState = &rasterization_state,
+            .pMultisampleState = &multisample_state,
+            .pDepthStencilState = &depth_stencil_state,
+            .pColorBlendState = &color_blend_state,
+            .pDynamicState = &dynamic_state,
 
-        pipelineInfo.subpass = config_info.subpass;
-        pipelineInfo.basePipelineIndex = config_info.basePipelineIndex;
-        pipelineInfo.basePipelineHandle = config_info.basePipelineHandle;
+            .layout = pipeline_layout->backend,
+            .renderPass = swap_chain->render_target->render_pass->backend,
 
-        if (vkCreateGraphicsPipelines(device.device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &backend) != VK_SUCCESS) {
+            .subpass = config_info.subpass,
+            .basePipelineHandle = config_info.base_pipeline_handle,
+            .basePipelineIndex = config_info.base_pipeline_index
+        };
+
+        if(vkCreateGraphicsPipelines(device.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create graphics pipeline");
-        }
     }
 
     /*

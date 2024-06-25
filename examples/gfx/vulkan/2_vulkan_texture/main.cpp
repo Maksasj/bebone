@@ -24,10 +24,10 @@ const std::vector<u32> indices {
 
 // Todo make this nicer
 const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
-    .bindingDescriptions = {
+    .binding_descriptions = {
         { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
-    .attributeDescriptions = {
+    .attribute_descriptions = {
         { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
         { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
         { 2, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCord) }
@@ -47,7 +47,7 @@ int main() {
     auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
         device, swapChain, { },
         { {BindlessSampler, 0} },
-        { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
+        { .vertex_input_state = { .vertex_descriptions = vertexDescriptions } }
     );
 
     auto [vbuffer, vmemory] = device->create_buffer_memory_from(vertices);

@@ -13,7 +13,8 @@ namespace bebone::gfx::vulkan {
         };
 
         VkDescriptorPoolCreateInfo poolInfo{};
-        poolInfo.type = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = poolSizes.size();
         poolInfo.pPoolSizes = poolSizes.data();
         poolInfo.maxSets = static_cast<uint32_t>(65536 * poolSizes.size());
@@ -25,8 +26,8 @@ namespace bebone::gfx::vulkan {
     }
 
     // VulkanDescriptorPool::~VulkanDescriptorPool() {
-    //     // for(const auto& layouts : descriptorSetLayouts) {
-    //     //     vkDestroyDescriptorSetLayout(_device.device, layouts, nullptr);
+    //     // for(const auto& layouts : descriptor_set_layouts) {
+    //     //     vkDestroyDescriptorSetLayout(device.device, layouts, nullptr);
     //     // }
     // }
 
@@ -44,7 +45,7 @@ namespace bebone::gfx::vulkan {
         buffer_info.range = size;
 
         VkWriteDescriptorSet descriptorWrite{};
-        descriptorWrite.type = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
         descriptorWrite.dstSet = descriptorSet->backend;
         descriptorWrite.dstBinding = binding;
@@ -87,7 +88,7 @@ namespace bebone::gfx::vulkan {
         image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
 
         VkWriteDescriptorSet descriptorWrite{};
-        descriptorWrite.type = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
         descriptorWrite.dstSet = descriptorSet->backend;
         descriptorWrite.dstBinding = binding;

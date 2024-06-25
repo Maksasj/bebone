@@ -6,33 +6,31 @@
 namespace bebone::gfx::vulkan {
     VulkanPipelineLayout::VulkanPipelineLayout(
             VulkanDevice& device,
-            const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
+            const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
             const std::vector<VulkanConstRange>& constant_ranges
         ) {
-        std::vector<VkPushConstantRange> ranges;
-        for(auto range : constant_ranges)
+        auto ranges = std::vector<VkPushConstantRange> {};
+        ranges.reserve(constant_ranges.size());
+
+        for(const auto& range : constant_ranges)
             ranges.push_back(range.backend);
 
-        VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-        pipelineLayoutInfo.type = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+        auto layouts = std::vector<VkDescriptorSetLayout> {};
+        layouts.reserve(descriptor_set_layouts.size());
 
-        std::vector<VkDescriptorSetLayout> layouts;
-        for(const auto& layout : descriptorSetLayouts) {
+        for(const auto& layout : descriptor_set_layouts)
             layouts.push_back(layout->backend);
-        }
 
-        pipelineLayoutInfo.setLayoutCount = layouts.size();
-        pipelineLayoutInfo.pSetLayouts = layouts.data();
-        pipelineLayoutInfo.pushConstantRangeCount = ranges.size();
-        pipelineLayoutInfo.pPushConstantRanges = ranges.data();
+        VkPipelineLayoutCreateInfo pipeline_layout_info{};
 
-        if(vkCreatePipelineLayout(device.device, &pipelineLayoutInfo, nullptr, &backend) != VK_SUCCESS) {
+        pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+        pipeline_layout_info.setLayoutCount = layouts.size();
+        pipeline_layout_info.pSetLayouts = layouts.data();
+        pipeline_layout_info.pushConstantRangeCount = ranges.size();
+        pipeline_layout_info.pPushConstantRanges = ranges.data();
+
+        if(vkCreatePipelineLayout(device.device, &pipeline_layout_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("Failed to create pipeline layout");
-        }
-    }
-
-    VkPipelineLayout VulkanPipelineLayout::get_layout() {
-        return backend;
     }
 
     void VulkanPipelineLayout::destroy(VulkanDevice& device) {

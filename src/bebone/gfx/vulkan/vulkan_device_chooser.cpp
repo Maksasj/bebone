@@ -14,14 +14,12 @@ namespace bebone::gfx::vulkan {
         uint32_t count;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &count, nullptr);
 
-        auto available_extensions = std::vector<VkExtensionProperties> {};
-        available_extensions.reserve(count);
-
+        auto available_extensions = std::vector<VkExtensionProperties>(count);
         vkEnumerateDeviceExtensionProperties(device, nullptr, &count, available_extensions.data());
 
         auto required_extensions = std::set<std::string>(device_extensions.begin(), device_extensions.end());
 
-        for (const auto &extension : available_extensions)
+        for(const auto &extension : available_extensions)
             required_extensions.erase(extension.extensionName);
 
         return required_extensions.empty();
@@ -33,7 +31,7 @@ namespace bebone::gfx::vulkan {
         bool extensions_supported = check_device_extension_support(device);
         bool swap_chain_adequate = false;
 
-        if (extensions_supported) {
+        if(extensions_supported) {
             VulkanSwapChainSupportDetails swap_chain_support = query_swap_chain_support(device, surface);
 
             swap_chain_adequate = !swap_chain_support.formats.empty() && !swap_chain_support.present_modes.empty();
@@ -112,9 +110,8 @@ namespace bebone::gfx::vulkan {
 
         std::cout << "Device count: " << device_count << std::endl;
 
-        auto devices = std::vector<VkPhysicalDevice> {};
-        devices.reserve(device_count);
-        
+        auto devices = std::vector<VkPhysicalDevice>(device_count);
+
         vkEnumeratePhysicalDevices(instance.get_instance(), &device_count, devices.data());
 
         for(const auto &device : devices) {
@@ -124,9 +121,8 @@ namespace bebone::gfx::vulkan {
             }
         }
 
-        if (physical_device == VK_NULL_HANDLE) {
+        if (physical_device == VK_NULL_HANDLE)
             throw std::runtime_error("failed to find a suitable GPU!");
-        }
 
         return physical_device;
     }

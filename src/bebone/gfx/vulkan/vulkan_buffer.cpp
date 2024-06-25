@@ -8,8 +8,8 @@ namespace bebone::gfx::vulkan {
     VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo buffer_info) {//VkMemoryPropertyFlags properties) {
         VkBufferCreateInfo createInfo{};
 
-        createInfo.type = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        createInfo.ptr_next = nullptr;
+        createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        createInfo.pNext = nullptr;
         createInfo.flags = buffer_info.flags;
         createInfo.size = size;
         createInfo.usage = buffer_info.usage;

@@ -9,10 +9,10 @@ namespace bebone::gfx::vulkan {
     VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& command_buffer_pool) {
         VkCommandBufferAllocateInfo alloc_info{};
 
-        alloc_info.type = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         alloc_info.commandPool = command_buffer_pool.backend;
-        alloc_info.command_bufferCount = static_cast<uint32_t>(1);
+        alloc_info.commandBufferCount = static_cast<uint32_t>(1); // Todo
 
         if(vkAllocateCommandBuffers(device->device, &alloc_info, &backend) != VK_SUCCESS) {
             throw std::runtime_error("Failed to allocate command buffers !");
@@ -22,7 +22,7 @@ namespace bebone::gfx::vulkan {
     VulkanCommandBuffer& VulkanCommandBuffer::begin_record() {
         VkCommandBufferBeginInfo begin_info{};
 
-        begin_info.type = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
         if(vkBeginCommandBuffer(backend, &begin_info) != VK_SUCCESS)
             throw std::runtime_error("failed to being recording command buffer");
@@ -43,9 +43,9 @@ namespace bebone::gfx::vulkan {
     ) {
         VkRenderPassBeginInfo render_pass_info{};
 
-        render_pass_info.type = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        render_pass_info.render_pass = swap_chain->render_target->render_pass->backend;
-        render_pass_info.framebuffer = swap_chain->render_target->swapChainFramebuffers[frame_buffer]->backend;
+        render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        render_pass_info.renderPass = swap_chain->render_target->render_pass->backend;
+        render_pass_info.framebuffer = swap_chain->render_target->swap_chain_framebuffers[frame_buffer]->backend;
 
         render_pass_info.renderArea.offset = {0, 0};
         render_pass_info.renderArea.extent = swap_chain->extent; // Todo not sure is extent is right, maybe there should be extent of render target
@@ -137,7 +137,7 @@ namespace bebone::gfx::vulkan {
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
         const std::shared_ptr<VulkanDescriptorSet>& descriptor_set
     ) {
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->get_layout(), 0, 1, &descriptor_set->backend, 0, nullptr);
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_set->backend, 0, nullptr);
 
         return *this;
     }
@@ -147,7 +147,7 @@ namespace bebone::gfx::vulkan {
         const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& frame
     ) {
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->get_layout(), 0, 1, &descriptor_sets[frame]->backend, 0, nullptr);
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_sets[frame]->backend, 0, nullptr);
 
         return *this;
     }
@@ -157,12 +157,12 @@ namespace bebone::gfx::vulkan {
         const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets
     ) {
         auto sets = std::vector<VkDescriptorSet> { };
-        sets.reserve();
+        sets.reserve(descriptor_sets.size());
 
         for(const auto& descriptor : descriptor_sets)
             sets.push_back(descriptor->backend);
 
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->get_layout(), 0, sets.size(), sets.data(), 0, nullptr);
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, sets.size(), sets.data(), 0, nullptr);
 
         return *this;
     }
@@ -172,7 +172,7 @@ namespace bebone::gfx::vulkan {
         const uint32_t& size,
         const void* ptr
     ) {
-        vkCmdPushConstants(backend, pipeline_layout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
+        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }
@@ -183,7 +183,7 @@ namespace bebone::gfx::vulkan {
         const size_t& offset,
         const void* ptr
     ) {
-        vkCmdPushConstants(backend, pipeline_layout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
+        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }

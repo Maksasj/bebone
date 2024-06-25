@@ -255,7 +255,7 @@ namespace bebone::gfx::vulkan {
     void VulkanDevice::create_logical_device() {
         auto indices = VulkanDeviceChooser::find_queue_families(physical_device, surface);
 
-        auto unique_queue_families = std::set<uint32_t> { indices.graphicsFamily, indices.presentFamily };
+        auto unique_queue_families = std::set<uint32_t> { indices.graphics_family, indices.present_family };
 
         auto queue_create_infos = std::vector<VkDeviceQueueCreateInfo> {};
         queue_create_infos.reserve(unique_queue_families.size());
@@ -265,7 +265,7 @@ namespace bebone::gfx::vulkan {
         for(const auto& queueFamily : unique_queue_families) {
             VkDeviceQueueCreateInfo queue_create_info = {};
 
-            queue_create_info.type = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+            queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             queue_create_info.queueFamilyIndex = queueFamily;
             queue_create_info.queueCount = 1;
             queue_create_info.pQueuePriorities = &queuePriority;
@@ -274,17 +274,17 @@ namespace bebone::gfx::vulkan {
         }
 
         VkDeviceCreateInfo create_info = {};
-        create_info.type = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+        create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 
         create_info.queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size());
         create_info.pQueueCreateInfos = queue_create_infos.data();
         create_info.pEnabledFeatures = nullptr;
-        create_info.enabledExtensionCount = static_cast<uint32_t>(VulkanDeviceChooser::deviceExtensions.size());
-        create_info.ppEnabledExtensionNames = VulkanDeviceChooser::deviceExtensions.data();
+        create_info.enabledExtensionCount = static_cast<uint32_t>(VulkanDeviceChooser::device_extensions.size());
+        create_info.ppEnabledExtensionNames = VulkanDeviceChooser::device_extensions.data();
 
         VkPhysicalDeviceDescriptorIndexingFeatures descriptor_indexing_features{};
-        descriptor_indexing_features.type = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
-        descriptor_indexing_features.ptr_next = nullptr;
+        descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+        descriptor_indexing_features.pNext = nullptr;
         descriptor_indexing_features.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
         descriptor_indexing_features.descriptorBindingPartiallyBound = VK_TRUE;
         descriptor_indexing_features.descriptorBindingVariableDescriptorCount = VK_TRUE;
@@ -294,17 +294,17 @@ namespace bebone::gfx::vulkan {
 
         VkPhysicalDeviceFeatures2 device_features_2{};
         device_features_2.features.samplerAnisotropy = VK_TRUE;
-        device_features_2.type = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-        device_features_2.ptr_next = &descriptor_indexing_features;
+        device_features_2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        device_features_2.pNext = &descriptor_indexing_features;
 
-        create_info.ptr_next = &device_features_2;
+        create_info.pNext = &device_features_2;
         create_info.enabledLayerCount = 0;
 
         if(vkCreateDevice(physical_device, &create_info, nullptr, &device) != VK_SUCCESS)
             throw std::runtime_error("failed to create logical device!");
 
-        vkGetDeviceQueue(device, indices.graphicsFamily, 0, &graphics_queue);
-        vkGetDeviceQueue(device, indices.presentFamily, 0, &present_queue);
+        vkGetDeviceQueue(device, indices.graphics_family, 0, &graphics_queue);
+        vkGetDeviceQueue(device, indices.present_family, 0, &present_queue);
     }
 
     VkFormat VulkanDevice::find_supported_format(

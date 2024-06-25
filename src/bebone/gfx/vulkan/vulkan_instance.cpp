@@ -11,7 +11,7 @@ namespace bebone::gfx::vulkan {
             throw std::runtime_error("validation layers requested, but not available!");
 
         VkApplicationInfo appInfo = {};
-        appInfo.type = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
         appInfo.pApplicationName = "Bebone";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = "Bebone";
@@ -19,7 +19,7 @@ namespace bebone::gfx::vulkan {
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
         VkInstanceCreateInfo createInfo = {};
-        createInfo.type = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+        createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         createInfo.pApplicationInfo = &appInfo;
 
         auto extensions = get_required_extensions();
@@ -33,10 +33,10 @@ namespace bebone::gfx::vulkan {
             createInfo.ppEnabledLayerNames = validation_layers.data();
 
             VulkanDebugMessenger::populate_debug_messenger_create_info(debugCreateInfo);
-            createInfo.ptr_next = (VkDebugUtilsMessengerCreateInfoEXT *)&debugCreateInfo;
+            createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
         } else {
             createInfo.enabledLayerCount = 0;
-            createInfo.ptr_next = nullptr;
+            createInfo.pNext = nullptr;
         }
 
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)

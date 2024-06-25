@@ -19,8 +19,8 @@ namespace bebone::gfx::vulkan {
     ) {
         VkImageCreateInfo create_info{};
 
-        create_info.type = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        create_info.ptr_next = nullptr;
+        create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        create_info.pNext = nullptr;
         create_info.flags = image_info.flags;
         create_info.imageType = image_info.imageType;
         create_info.format = format;
@@ -49,17 +49,18 @@ namespace bebone::gfx::vulkan {
         VkCommandBuffer command_buffer = pool.begin_single_time_commands(device);
 
         VkImageMemoryBarrier barrier{};
-        barrier.type = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+
+        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
         barrier.oldLayout = old_layout;
         barrier.newLayout = new_layout;
         barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         barrier.image = backend;
-        barrier.subresource_range.aspect_mask = VK_IMAGE_ASPECT_COLOR_BIT;
-        barrier.subresource_range.base_mip_level = 0;
-        barrier.subresource_range.level_count = 1;
-        barrier.subresource_range.base_array_layer = 0;
-        barrier.subresource_range.layer_count = 1;
+        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        barrier.subresourceRange.baseMipLevel = 0;
+        barrier.subresourceRange.levelCount = 1;
+        barrier.subresourceRange.baseArrayLayer = 0;
+        barrier.subresourceRange.layerCount = 1;
 
         VkPipelineStageFlags source_stage;
         VkPipelineStageFlags destination_stage;

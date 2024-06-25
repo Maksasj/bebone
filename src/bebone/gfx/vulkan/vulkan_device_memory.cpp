@@ -13,7 +13,7 @@ namespace bebone::gfx::vulkan {
     ) {
         VkMemoryAllocateInfo alloc_info{};
 
-        alloc_info.type = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         alloc_info.allocationSize = requirements.size;
         alloc_info.memoryTypeIndex = device.find_memory_type(requirements.memoryTypeBits, properties);
 

@@ -12,12 +12,12 @@ namespace bebone::gfx::vulkan {
         VkFormat image_format,
         VkExtent2D extent
     ) : swap_chain_images(swap_chain_images) {
-
         // Create render pass
         render_pass = std::make_shared<VulkanRenderPass>(device, image_format);
 
         // Create depth resources
         auto depthFormat = device.find_depth_format();
+        depth_images.reserve(swap_chain_images.size());
 
         for(size_t i = 0; i < swap_chain_images.size(); ++i) {
             auto image = device.create_image(depthFormat, { extent.width, extent.height, 1}, {
@@ -33,19 +33,19 @@ namespace bebone::gfx::vulkan {
                 .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
             });
 
-            depthImages.push_back({image, view, memory});
+            depth_images.push_back({image, view, memory});
         }
 
         // Create frame buffers
         for(size_t i = 0; i < swap_chain_images.size(); ++i) {
             auto attachments = std::vector {
                 std::get<std::shared_ptr<VulkanImageView>>(swap_chain_images[i]),
-                std::get<std::shared_ptr<VulkanImageView>>(depthImages[i])
+                std::get<std::shared_ptr<VulkanImageView>>(depth_images[i])
             };
 
             auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, render_pass, extent);
 
-            swapChainFramebuffers.push_back(framebuffer);
+            swap_chain_framebuffers.push_back(framebuffer);
         }
     }
 
@@ -55,13 +55,13 @@ namespace bebone::gfx::vulkan {
         for(auto& [_, view] : swap_chain_images)
             view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
 
-        for(auto& [memory, view, image] : depthImages) {
+        for(auto& [memory, view, image] : depth_images) {
             memory->destroy(device);
             view->destroy(device);
             image->destroy(device);
         }
 
-        for (auto& framebuffer : swapChainFramebuffers)
+        for (auto& framebuffer : swap_chain_framebuffers)
             framebuffer->destroy(device);
 
         mark_destroyed();

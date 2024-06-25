@@ -36,14 +36,14 @@ namespace bebone::gfx::vulkan {
 
         // Descriptor set
         VkDescriptorSetLayoutCreateInfo layout_info{};
-        layout_info.type = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
         layout_info.bindingCount = bindings.size();
         layout_info.pBindings = bindings.data();
         layout_info.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
 
         VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo;
-        extendedInfo.type = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
-        extendedInfo.ptr_next = nullptr;
+        extendedInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
+        extendedInfo.pNext = nullptr;
         extendedInfo.bindingCount = binding_flags.size();
 
         if(binding_flags.size() == 0)
@@ -51,7 +51,7 @@ namespace bebone::gfx::vulkan {
         else
             extendedInfo.pBindingFlags = binding_flags.data();
 
-        layout_info.ptr_next = &extendedInfo;
+        layout_info.pNext = &extendedInfo;
 
         if (vkCreateDescriptorSetLayout(device.device, &layout_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create descriptor set layout!");

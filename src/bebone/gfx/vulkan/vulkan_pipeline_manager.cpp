@@ -24,12 +24,12 @@ namespace bebone::gfx::vulkan {
 
         auto pipeline_layout = device->create_pipeline_layout(descriptor_set_layout, constant_ranges);
 
-        auto vertShaderModule = device->create_shader_module("vert.glsl", ShaderTypes::vertex_shader);
-        auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
+        auto vert_shader_module = device->create_shader_module("vert.glsl", ShaderTypes::vertex_shader);
+        auto frag_shader_module = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
 
-        auto pipeline = device->create_pipeline(swap_chain, pipeline_layout, { vertShaderModule, fragShaderModule }, config_info);
+        auto pipeline = device->create_pipeline(swap_chain, pipeline_layout, { vert_shader_module, frag_shader_module }, config_info);
 
-        device->destroy_all(vertShaderModule, fragShaderModule);
+        device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
 
         return make_tuple(pipeline, pipeline_layout, descriptors);

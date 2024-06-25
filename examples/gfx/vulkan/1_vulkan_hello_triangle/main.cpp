@@ -17,10 +17,10 @@ const std::vector<Vertex> vertices = {
 
 // Todo make this nicer
 const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
-    .bindingDescriptions = {
+    .binding_descriptions = {
         { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
-    .attributeDescriptions = {
+    .attribute_descriptions = {
         { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
         { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
     }
@@ -41,7 +41,7 @@ int main() {
     auto fragShaderModule = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
     auto pipelineLayout = device->create_pipeline_layout({}, {});
     auto pipeline = device->create_pipeline(swapChain, pipelineLayout, { vertShaderModule, fragShaderModule }, {
-        .pVertexInputState = { .vertexDescriptions = vertexDescriptions }
+        .vertex_input_state = { .vertex_descriptions = vertexDescriptions }
     });
 
     auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);

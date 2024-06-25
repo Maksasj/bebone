@@ -2,10 +2,10 @@
 
 namespace bebone::gfx::vulkan {
     VulkanCommandBufferPool::VulkanCommandBufferPool(VulkanDevice& device) {
-        QueueFamilyIndices queue_family_indices = device.find_physical_queue_families();
+        VulkanQueueFamilyIndices queue_family_indices = device.find_physical_queue_families();
 
         VkCommandPoolCreateInfo pool_info = {};
-        pool_info.type = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         pool_info.queueFamilyIndex = queue_family_indices.graphics_family;
         pool_info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
@@ -31,16 +31,16 @@ namespace bebone::gfx::vulkan {
     VkCommandBuffer VulkanCommandBufferPool::begin_single_time_commands(VulkanDevice& device) {
         VkCommandBufferAllocateInfo alloc_info{};
 
-        alloc_info.type = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         alloc_info.commandPool = backend;
-        alloc_info.command_bufferCount = 1;
+        alloc_info.commandBufferCount = 1;
 
         VkCommandBuffer command_buffer;
         vkAllocateCommandBuffers(device.device, &alloc_info, &command_buffer);
 
         VkCommandBufferBeginInfo begin_info{};
-        begin_info.type = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
         vkBeginCommandBuffer(command_buffer, &begin_info);
@@ -53,8 +53,8 @@ namespace bebone::gfx::vulkan {
         vkEndCommandBuffer(command_buffer);
 
         VkSubmitInfo submit_info{};
-        submit_info.type = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submit_info.command_bufferCount = 1;
+        submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submit_info.commandBufferCount = 1;
         submit_info.pCommandBuffers = &command_buffer;
 
         vkQueueSubmit(device.graphics_queue, 1, &submit_info, VK_NULL_HANDLE);
@@ -100,10 +100,10 @@ namespace bebone::gfx::vulkan {
         region.bufferRowLength = 0;
         region.bufferImageHeight = 0;
 
-        region.imageSubresource.aspect_mask = VK_IMAGE_ASPECT_COLOR_BIT;
+        region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         region.imageSubresource.mipLevel = 0;
-        region.imageSubresource.base_array_layer = 0;
-        region.imageSubresource.layer_count = layer_count;
+        region.imageSubresource.baseArrayLayer = 0;
+        region.imageSubresource.layerCount = layer_count;
 
         region.imageOffset = {0, 0, 0};
         region.imageExtent = {width, height, 1};

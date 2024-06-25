@@ -20,7 +20,7 @@ namespace bebone::gfx::vulkan {
         void* ptr_next = nullptr;
         VkPipelineVertexInputStateCreateFlags flags = 0;
 
-        VulkanPipelineVertexInputStateTuple vertexDescriptions = {};
+        VulkanPipelineVertexInputStateTuple vertex_descriptions = {};
     };
 
     // VkPipelineInputAssemblyStateCreateInfo
@@ -90,11 +90,11 @@ namespace bebone::gfx::vulkan {
         VkBool32 depth_write_enable = VK_TRUE;
         VkCompareOp depth_compare_op = VK_COMPARE_OP_LESS;
         VkBool32 depth_bounds_test_enable = VK_FALSE;
-        VkBool32 stencilTestEnable = VK_FALSE;
+        VkBool32 stencil_test_enable = VK_FALSE;
         VkStencilOpState front = {};
         VkStencilOpState back = {};
-        float minDepthBounds = 0.0f;
-        float maxDepthBounds = 1.0f;
+        float min_depth_bounds = 0.0f;
+        float max_depth_bounds = 1.0f;
     };
 
     // VkPipelineColorBlendStateCreateInfo
@@ -102,10 +102,10 @@ namespace bebone::gfx::vulkan {
         VkStructureType type = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
         void* ptr_next = nullptr;
         VkPipelineColorBlendStateCreateFlags flags = 0;
-        VkBool32 logicOpEnable = VK_FALSE;
-        VkLogicOp logicOp = VK_LOGIC_OP_COPY;
+        VkBool32 logic_op_enable = VK_FALSE;
+        VkLogicOp logic_op = VK_LOGIC_OP_COPY;
 
-        std::vector<VkPipelineColorBlendAttachmentState> pAttachments = {
+        std::vector<VkPipelineColorBlendAttachmentState> ptr_attachments = {
             {
                 .blendEnable = VK_FALSE,
                 .srcColorBlendFactor = VK_BLEND_FACTOR_ONE,
@@ -127,7 +127,7 @@ namespace bebone::gfx::vulkan {
         void* ptr_next = nullptr;
         VkPipelineDynamicStateCreateFlags flags = 0;
 
-        std::vector<VkDynamicState> pDynamicStates = {
+        std::vector<VkDynamicState> ptr_dynamic_states = {
             VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR
         };
     };
@@ -140,22 +140,22 @@ namespace bebone::gfx::vulkan {
         // uint32_t stageCount;                                                     // Stage thing
         // VkPipelineShaderStageCreateInfo* pStages;                                // Stage thing
 
-        VulkanPipelineVertexInputStateConfig pVertexInputState = {};                //
-        VulkanPipelineInputAssemblyStateConfig pInputAssemblyState = {};            //
-        VulkanPipelineTessellationStateConfig* pTessellationState = nullptr;        // For now lets set this to null
-        VulkanPipelineViewportStateConfig pViewportState = {};                      //
-        VulkanPipelineRasterizationStateConfig pRasterizationState = {};            //
-        VulkanPipelineMultisampleStateConfig pMultisampleState = {};                //
-        VulkanPipelineDepthStencilStateConfig pDepthStencilState = {};              //
-        VulkanPipelineColorBlendStateConfig pColorBlendState = {};                  //
-        VulkanPipelineDynamicStateConfig pDynamicState = {};                        //
+        VulkanPipelineVertexInputStateConfig vertex_input_state = {};                //
+        VulkanPipelineInputAssemblyStateConfig input_assembly_state = {};            //
+        VulkanPipelineTessellationStateConfig* ptr_tessellation_state = nullptr;        // For now lets set this to null
+        VulkanPipelineViewportStateConfig viewport_state = {};                      //
+        VulkanPipelineRasterizationStateConfig rasterization_state = {};            //
+        VulkanPipelineMultisampleStateConfig multisample_state = {};                //
+        VulkanPipelineDepthStencilStateConfig depth_stencil_state = {};              //
+        VulkanPipelineColorBlendStateConfig color_blend_state = {};                  //
+        VulkanPipelineDynamicStateConfig dynamic_state = {};                        //
 
         // VkPipelineLayout layout;                                                 // Pipeline thing
         // VkRenderPass render_pass;                                                 // Pipeline thing
 
         uint32_t subpass = 0;
-        VkPipeline basePipelineHandle = VK_NULL_HANDLE;
-        int32_t basePipelineIndex = -1;
+        VkPipeline base_pipeline_handle = VK_NULL_HANDLE;
+        int32_t base_pipeline_index = -1;
     };
 }
 

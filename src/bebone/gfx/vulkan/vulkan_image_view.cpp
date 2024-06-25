@@ -9,8 +9,8 @@ namespace bebone::gfx::vulkan {
     VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) {
         VkImageViewCreateInfo create_info{};
 
-        create_info.type = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        create_info.ptr_next = nullptr;
+        create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        create_info.pNext = nullptr;
         create_info.flags = image_view_info.flags;
         create_info.image = image.backend;
         create_info.viewType = image_view_info.view_type;

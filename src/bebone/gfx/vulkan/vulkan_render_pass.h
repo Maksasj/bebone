@@ -11,7 +11,7 @@
 namespace bebone::gfx::vulkan {
     class VulkanRenderPass : public VulkanWrapper<VkRenderPass> {
         public:
-            VulkanRenderPass(VulkanDevice& _device, VkFormat colorAttachmentImageFormat);
+            VulkanRenderPass(VulkanDevice& device, VkFormat color_attachment_image_format);
 
             void destroy(VulkanDevice& device) override;
     };
