@@ -9,7 +9,7 @@ namespace bebone::gfx::vulkan {
         }
 
         void VulkanSwapChainImageTuple::destroy(VulkanDevice &device)  {
-
+            // Todo
         }
 
         VulkanDepthImageTuple::VulkanDepthImageTuple(
@@ -21,7 +21,7 @@ namespace bebone::gfx::vulkan {
         }
 
         void VulkanDepthImageTuple::destroy(VulkanDevice &device) {
-
+            // Todo
         }
 
         VulkanImageMemoryTuple::VulkanImageMemoryTuple(
@@ -32,6 +32,6 @@ namespace bebone::gfx::vulkan {
         }
 
         void VulkanImageMemoryTuple::destroy(VulkanDevice &device) {
-
+            // Todo
         }
 }
