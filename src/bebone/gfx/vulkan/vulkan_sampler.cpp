@@ -25,7 +25,12 @@ namespace bebone::gfx::vulkan {
         vkCreateSampler(device.device(), &samplerInfo, nullptr, &backend);
     }
 
-    void VulkanSampler::destroy(VulkanDevice &device) {
+    void VulkanSampler::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         vkDestroySampler(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

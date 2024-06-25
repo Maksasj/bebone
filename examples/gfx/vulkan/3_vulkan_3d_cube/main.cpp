@@ -121,20 +121,6 @@ int main() {
             continue;
     }
 
-    device->wait_idle();
-
-    device->destroy_all(commandBuffers);
-    device->destroy_all(vbuffer, ibuffer, vmemory, imemory, commandBufferPool);
-
-    for(auto& [buffer, memory] : transformUBO)
-        device->destroy_all(buffer, memory);
-
-    for(auto& [buffer, memory] : cameraUBO)
-        device->destroy_all(buffer, memory);
-
-    device->destroy_all(descriptors);
-    device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
-
     instance->destroy();
 
     GLFWContext::terminate();

@@ -53,7 +53,7 @@ namespace bebone::gfx::vulkan {
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

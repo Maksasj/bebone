@@ -33,9 +33,11 @@ namespace bebone::gfx::vulkan {
     class VulkanDescriptorSetLayout;
     class VulkanConstRange;
     class VulkanPipelineManager;
+    class VulkanRenderTarget;
 
     class VulkanDevice : private core::NonCopyable {
         private:
+            // Todo, abstract all things below
             VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
             VkDevice device_;
@@ -43,9 +45,11 @@ namespace bebone::gfx::vulkan {
 
             VkQueue graphicsQueue_;
             VkQueue presentQueue_;
-
             void pick_physical_device(VulkanInstance &vulkanInstance);
             void create_logical_device();
+
+            // Todo, maybe this can be optimized
+            std::vector<shared_ptr<VulkanApi>> child_objects;
 
         public:
             VkPhysicalDeviceProperties properties;
@@ -131,6 +135,11 @@ namespace bebone::gfx::vulkan {
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
+            std::shared_ptr<VulkanRenderTarget> create_render_target(
+                std::vector<VulkanSwapChainImageTuple>& swapChainImages,
+                VkFormat imageFormat,
+                VkExtent2D extent);
+
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 
             void wait_idle();
@@ -158,6 +167,8 @@ namespace bebone::gfx::vulkan {
                     arg->destroy(*this);
                 }
             }
+
+            void collect_garbage();
 
             void destroy(VulkanInstance& instance);
 

@@ -83,14 +83,6 @@ int main() {
             continue;
     }
 
-    device->wait_idle();
-
-    device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
-    device->destroy_all(texture);
-    device->destroy_all(vbuffer, vmemory, ibuffer, imemory, commandBufferPool);
-    device->destroy_all(descriptors);
-    device->destroy_all(pipeline_manager, pipelineLayout, pipeline, swapChain);
-
     instance->destroy();
 
     GLFWContext::terminate();

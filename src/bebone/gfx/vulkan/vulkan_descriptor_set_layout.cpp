@@ -53,6 +53,11 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanDescriptorSetLayout::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+            
         vkDestroyDescriptorSetLayout(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }
