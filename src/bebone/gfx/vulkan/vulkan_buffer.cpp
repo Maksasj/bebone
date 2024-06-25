@@ -36,7 +36,12 @@ namespace bebone::gfx::vulkan {
         return size;
     }
 
-    void VulkanBuffer::destroy(VulkanDevice &device) {
+    void VulkanBuffer::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+            
         vkDestroyBuffer(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

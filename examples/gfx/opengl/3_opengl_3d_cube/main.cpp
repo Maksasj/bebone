@@ -49,13 +49,13 @@ struct Camera {
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("3. OpenGL 3D cube example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("3. OpenGL 3D cube example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();

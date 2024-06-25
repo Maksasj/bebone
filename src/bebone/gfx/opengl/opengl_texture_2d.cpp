@@ -17,8 +17,8 @@ namespace bebone::gfx::opengl {
         unbind();
     }
 
-    template<typename _Color>
-    void GLTexture2D::create_gl_texture(const std::shared_ptr<Image<_Color>>& image) {
+    template<typename Color>
+    void GLTexture2D::create_gl_texture(const std::shared_ptr<Image<Color>>& image) {
         width = image->get_width();
         height = image->get_height();
 
@@ -39,7 +39,7 @@ namespace bebone::gfx::opengl {
 
     template void GLTexture2D::create_gl_texture<ColorRGB24>(const std::shared_ptr<Image<ColorRGB24>>& image);
     template void GLTexture2D::create_gl_texture<ColorRGBA32>(const std::shared_ptr<Image<ColorRGBA32>>& image);
-    template void GLTexture2D::create_gl_texture<ColorRGBA32f>(const std::shared_ptr<Image<ColorRGBA32f>>& image);
+    template void GLTexture2D::create_gl_texture<ColorRGBA32F>(const std::shared_ptr<Image<ColorRGBA32F>>& image);
 
     GLTexture2D::GLTexture2D(const int& width, const int& height)
             : GLTexture(GL_TEXTURE_2D),
@@ -49,27 +49,27 @@ namespace bebone::gfx::opengl {
         create_gl_texture();
     }
 
-    GLTexture2D::GLTexture2D(const std::string& filePath)
+    GLTexture2D::GLTexture2D(const std::string& file_path)
             : GLTexture(GL_TEXTURE_2D),
               width(0),
               height(0)
     {
-        auto image = Image<ColorRGBA>::load_from_file(filePath);
+        auto image = Image<ColorRGBA>::load_from_file(file_path);
         create_gl_texture<ColorRGBA>(image);
     }
 
-    template<typename _Color>
-    GLTexture2D::GLTexture2D(const std::shared_ptr<Image<_Color>>& image)
+    template<typename Color>
+    GLTexture2D::GLTexture2D(const std::shared_ptr<Image<Color>>& image)
             : GLTexture(GL_TEXTURE_2D),
               width(0),
               height(0)
     {
-        create_gl_texture<_Color>(image);
+        create_gl_texture<Color>(image);
     }
 
     template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGB24>>& image);
     template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGBA32>>& image);
-    template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGBA32f>>& image);
+    template GLTexture2D::GLTexture2D(const std::shared_ptr<Image<ColorRGBA32F>>& image);
 
     const int& GLTexture2D::get_width() const {
         return width;

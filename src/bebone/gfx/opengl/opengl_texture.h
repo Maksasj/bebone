@@ -19,7 +19,7 @@ namespace bebone::gfx::opengl {
     class GLTexture : private core::NonCopyable {
         private:
             GLuint id;
-            GLenum textureType;
+            GLenum texture_type;
 
         protected:
             void configure_gl_texture(const GLTextureParameters& parameters);
@@ -28,9 +28,9 @@ namespace bebone::gfx::opengl {
         public:
             /*!
             * Default GLTexture constructor
-            * @param textureType - opengl texture type
+            * @param texture_type - opengl texture type
             */
-            GLTexture(const GLenum& textureType);
+            GLTexture(const GLenum& texture_type);
             ~GLTexture();
 
             // Getter for opengl texture handle
@@ -41,9 +41,9 @@ namespace bebone::gfx::opengl {
 
             /*!
              * Binds texture to the specified texture unit
-             * @param textureUnit - texture unit, to which texture should be bound to
+             * @param texture_unit - texture unit, to which texture should be bound to
              */
-            void bind_texture_unit(const GLuint& textureUnit);
+            void bind_texture_unit(const GLuint& texture_unit);
 
             /// Binds texture
             void bind();

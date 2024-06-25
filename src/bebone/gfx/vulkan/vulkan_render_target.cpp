@@ -59,5 +59,7 @@ namespace bebone::gfx::vulkan {
 
         for (auto& framebuffer : swapChainFramebuffers)
             framebuffer->destroy(device);
+
+        mark_destroyed();
     }
 }

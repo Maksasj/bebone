@@ -30,7 +30,12 @@ namespace bebone::gfx::vulkan {
         }
     }
 
-    void VulkanImageView::destroy(VulkanDevice &device) {
+    void VulkanImageView::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         vkDestroyImageView(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

@@ -13,7 +13,7 @@
 namespace bebone::gfx::vulkan {
     class VulkanImage;
 
-    class VulkanRenderTarget {
+    class VulkanRenderTarget : public VulkanApi {
         public:
             std::shared_ptr<VulkanRenderPass> renderPass;
 

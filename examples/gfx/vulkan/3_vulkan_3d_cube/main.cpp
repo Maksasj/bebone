@@ -45,7 +45,7 @@ const std::vector<int> indices = {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::VULKAN);
+    auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
@@ -119,22 +119,6 @@ int main() {
             continue;
     }
 
-    device->wait_idle();
-
-    device->destroy_all(commandBuffers);
-    device->destroy_all(vb, eb);
-    device->destroy_all(commandBufferPool);
-
-    for(auto& [buffer, memory] : transformUBO)
-        device->destroy_all(buffer, memory);
-
-    for(auto& [buffer, memory] : cameraUBO)
-        device->destroy_all(buffer, memory);
-
-    device->destroy_all(pipeline);
-    device->destroy_all(pipeline_manager, swapChain);
-
-    device->destroy();
     instance->destroy();
 
     GLFWContext::terminate();

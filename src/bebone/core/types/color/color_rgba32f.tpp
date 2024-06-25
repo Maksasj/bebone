@@ -6,36 +6,36 @@
 
 namespace bebone::core {
     template<>
-    struct Color<R32G32B32A32_FLOAT> {
+    struct Color<R32G32B32A32Float> {
         f32 r, g, b, a;
         
-        static const Color<R32G32B32A32_FLOAT> BLACK;
-        static const Color<R32G32B32A32_FLOAT> WHITE;
-        static const Color<R32G32B32A32_FLOAT> RED;
-        static const Color<R32G32B32A32_FLOAT> BLUE;
-        static const Color<R32G32B32A32_FLOAT> GREEN;
-        static const Color<R32G32B32A32_FLOAT> YELLOW;
-        static const Color<R32G32B32A32_FLOAT> MAGENTA;
-        static const Color<R32G32B32A32_FLOAT> CYAN;
+        static const Color<R32G32B32A32Float> BLACK;
+        static const Color<R32G32B32A32Float> WHITE;
+        static const Color<R32G32B32A32Float> RED;
+        static const Color<R32G32B32A32Float> BLUE;
+        static const Color<R32G32B32A32Float> GREEN;
+        static const Color<R32G32B32A32Float> YELLOW;
+        static const Color<R32G32B32A32Float> MAGENTA;
+        static const Color<R32G32B32A32Float> CYAN;
 
         operator Vec4<f32>() const { return { r, g, b, a }; }
 
-        template<class _DesiredColor>
-        _DesiredColor to() const;
+        template<class DesiredColor>
+        DesiredColor to() const;
 
         static inline constexpr ColorFormat get_format() {
-            return R32G32B32A32_FLOAT;
+            return R32G32B32A32Float;
         }
 
         static inline constexpr size_t get_channels() {
             return 4;
         }
 
-        static inline constexpr Color<R32G32B32A32_FLOAT> splat(const f32& v) {
+        static inline constexpr Color<R32G32B32A32Float> splat(const f32& v) {
             return {v, v, v, 1.0f};
         }
 
-        static inline constexpr Color<R32G32B32A32_FLOAT> monochrome(const f32& v) {
+        static inline constexpr Color<R32G32B32A32Float> monochrome(const f32& v) {
             return splat(v);
         }
 
@@ -51,7 +51,7 @@ namespace bebone::core {
             return GL_FLOAT;
         }
 
-        static inline Color<R32G32B32A32_FLOAT> random() {
+        static inline Color<R32G32B32A32Float> random() {
             return { 
                 static_cast<f32>(static_cast<u8>(BEBONE_TYPES_RAND % 255)) / 255.0f, 
                 static_cast<f32>(static_cast<u8>(BEBONE_TYPES_RAND % 255)) / 255.0f, 

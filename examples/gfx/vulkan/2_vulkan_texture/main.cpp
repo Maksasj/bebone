@@ -37,7 +37,7 @@ const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("2. Vulkan texture example", 800, 600, GfxAPI::VULKAN);
+    auto window = WindowFactory::create_window("2. Vulkan texture example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
@@ -83,15 +83,6 @@ int main() {
             continue;
     }
 
-    device->wait_idle();
-
-    device->destroy_all(commandBuffers); // Todo \/ lets make all tuples also destroyable
-    device->destroy_all(texture);
-    device->destroy_all(vb, eb, pipeline);
-    device->destroy_all(commandBufferPool);
-    device->destroy_all(pipeline_manager, swapChain);
-
-    device->destroy();
     instance->destroy();
 
     GLFWContext::terminate();

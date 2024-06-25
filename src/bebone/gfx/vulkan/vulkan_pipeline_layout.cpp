@@ -38,6 +38,11 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanPipelineLayout::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         vkDestroyPipelineLayout(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

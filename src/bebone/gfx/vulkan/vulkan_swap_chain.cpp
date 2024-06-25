@@ -6,14 +6,14 @@
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx::vulkan {
-    VulkanSwapChain::VulkanSwapChain(VulkanDevice &device, VkExtent2D _windowExtent) {
+    VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, VkExtent2D _windowExtent) {
         SwapChainSupportDetails swapChainSupport = device.get_swap_chain_support();
         extent = choose_swap_extent(swapChainSupport.capabilities, _windowExtent);
 
         create_swap_chain(device);
 
         auto images = create_swap_chain_images(device, surfaceFormat.format);
-        renderTarget = std::make_unique<VulkanRenderTarget>(device, images, surfaceFormat.format, extent);
+        renderTarget = device.create_render_target(images, surfaceFormat.format, extent);
 
         create_sync_objects(device);
     }
@@ -225,6 +225,9 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanSwapChain::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         renderTarget->destroy(device);
 
         // Todo move this somewhere else
@@ -235,5 +238,7 @@ namespace bebone::gfx::vulkan {
         }
 
         vkDestroySwapchainKHR(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

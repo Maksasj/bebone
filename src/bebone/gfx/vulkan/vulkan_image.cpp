@@ -82,7 +82,12 @@ namespace bebone::gfx::vulkan {
         return memRequirements;
     }
 
-    void VulkanImage::destroy(VulkanDevice &device) {
+    void VulkanImage::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
         vkDestroyImage(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 }

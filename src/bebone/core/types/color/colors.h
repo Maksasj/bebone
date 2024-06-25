@@ -11,9 +11,9 @@
 namespace bebone::core {
     using ColorRGB24 = Color<RGB24>;
     using ColorRGBA32 = Color<RGBA32>;
-    using ColorRGBA32f = Color<RGBA32f>;
+    using ColorRGBA32F = Color<RGBA32F>;
 
-    using ColorRGBA = ColorRGBA32f;
+    using ColorRGBA = ColorRGBA32F;
 }
 
 #endif

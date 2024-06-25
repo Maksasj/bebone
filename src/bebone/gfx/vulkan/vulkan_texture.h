@@ -28,7 +28,7 @@ namespace bebone::gfx::vulkan {
                 std::shared_ptr<VulkanCommandBufferPool>& commandBufferPool,
                 const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

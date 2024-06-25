@@ -41,8 +41,13 @@ namespace bebone::gfx::vulkan {
         vkUnmapMemory(device.device(), backend);
     }
 
-    void VulkanDeviceMemory::destroy(VulkanDevice &device) {
+    void VulkanDeviceMemory::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+        
         vkFreeMemory(device.device(), backend, nullptr);
+
+        mark_destroyed();
     }
 
     void VulkanDeviceMemory::upload_data(VulkanDevice& device, const void* src, const size_t& size) {
