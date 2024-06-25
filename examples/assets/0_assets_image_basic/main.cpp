@@ -29,7 +29,7 @@ const std::vector<u32> indices {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("0. Image example basic", screen_width, screen_height, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. Image example basic", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, screen_width, screen_height);
