@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_INSTANCE_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_INSTANCE_H_
+#ifndef _BEBONE_GFX_VULKAN_INSTANCE_H_
+#define _BEBONE_GFX_VULKAN_INSTANCE_H_
 
 #include <memory>
 
@@ -15,12 +15,11 @@ namespace bebone::gfx::vulkan {
             VkInstance instance;
 
             std::unique_ptr<VulkanDebugMessenger> debugMessenger;
+            std::vector<std::shared_ptr<VulkanDevice>> child_devices;
 
             bool checkValidationLayerSupport();
             static void hasGflwRequiredInstanceExtensions();
             static std::vector<const char *> getRequiredExtensions();
-
-            std::vector<std::shared_ptr<VulkanDevice>> child_devices;
 
         public:
             bool const static enable_validation_layers = true;

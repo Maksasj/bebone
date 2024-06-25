@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_H_
+#ifndef _BEBONE_GFX_VULKAN_PIPELINE_H_
+#define _BEBONE_GFX_VULKAN_PIPELINE_H_
 
 #include "../shaders/shader_code.h"
 

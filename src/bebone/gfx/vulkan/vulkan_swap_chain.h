@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_SWAP_CHAIN_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_SWAP_CHAIN_H_
+#ifndef _BEBONE_GFX_VULKAN_SWAP_CHAIN_H_
+#define _BEBONE_GFX_VULKAN_SWAP_CHAIN_H_
 
 #include <string>
 #include <vector>

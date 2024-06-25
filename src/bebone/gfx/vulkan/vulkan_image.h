@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_IMAGE_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_IMAGE_H_
+#ifndef _BEBONE_GFX_VULKAN_IMAGE_H_
+#define _BEBONE_GFX_VULKAN_IMAGE_H_
 
 #include <vector>
 
