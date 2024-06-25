@@ -31,7 +31,7 @@ const std::vector<int> indices = { 0, 1, 2 };
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::VULKAN);
+    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);

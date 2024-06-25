@@ -10,7 +10,7 @@ namespace bebone::gfx {
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        if (gfx_api == GfxAPI::OPENGL) {
+        if (gfx_api == GfxAPI::OpenGL) {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

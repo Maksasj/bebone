@@ -10,7 +10,7 @@ namespace bexel {
 
         GLFWContext::init();
 
-        m_window = WindowFactory::create_window("4. Opengl Bexel example", GAME_WIDTH, GAME_HEIGHT, GfxAPI::OPENGL, {
+        m_window = WindowFactory::create_window("4. Opengl Bexel example", GAME_WIDTH, GAME_HEIGHT, GfxAPI::OpenGL, {
             .enable_resize = true
         });
 

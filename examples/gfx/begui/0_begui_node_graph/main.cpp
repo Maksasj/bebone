@@ -11,7 +11,7 @@ int main() {
 
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("0. Begui Node graph example", screen_width, screen_height, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. Begui Node graph example", screen_width, screen_height, GfxAPI::OpenGL);
 
     window->add_listener([&](InputKeyEvent& event) {
         if(event.key == GLFW_KEY_ENTER && event.action == GLFW_RELEASE) {
@@ -29,7 +29,7 @@ int main() {
 
     auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
     auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
-    GLShaderProgram shaderProgram(vertex_shader, fragment_shader);
+    GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
     vertex_shader.destroy();
     fragment_shader.destroy();
@@ -60,7 +60,7 @@ int main() {
         BEBONE_PROFILE_STOP(LOOP)
     }
 
-    shaderProgram.destroy();
+    shader_program.destroy();
 
     GLFWContext::terminate();
 
