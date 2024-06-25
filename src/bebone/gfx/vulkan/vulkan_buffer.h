@@ -45,15 +45,18 @@ namespace bebone::gfx::vulkan {
         uint32_t* pQueueFamilyIndices = nullptr;
     };
 
-    using VulkanBufferMemoryTuple = std::tuple<std::shared_ptr<VulkanBuffer>, std::shared_ptr<VulkanDeviceMemory>>;
-
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
+        private:
+            size_t size; // Todo, Do we really need to store buffer size there ?
+
         public:
-            VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo buffer_info);
+            VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo bufferInfo);
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
-            void destroy(VulkanDevice& device) override;
+            const size_t& get_size() const;
+
+            void destroy(VulkanDevice &device) override;
     };
 }
 

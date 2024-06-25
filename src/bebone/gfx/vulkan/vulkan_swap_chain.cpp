@@ -99,13 +99,11 @@ namespace bebone::gfx::vulkan {
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, images.data());
 
-        for(auto& image : images) {
-            auto swap_chain_image = device.create_image(image);
+        for(auto& vk_image : images) {
+            auto image = device.create_image(vk_image);
+            auto view = device.create_image_view(*image, image_format);
 
-            out.emplace_back(
-                swap_chain_image,
-                device.create_image_view(*swap_chain_image, image_format)
-            );
+            out.emplace_back(image, view);
         }
 
         return out;

@@ -33,16 +33,12 @@ namespace bebone::gfx::vulkan {
                 .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
             });
 
-            depth_images.push_back({image, view, memory});
+            depth_images.emplace_back(image, view, memory);
         }
 
         // Create frame buffers
         for(size_t i = 0; i < swap_chain_images.size(); ++i) {
-            auto attachments = std::vector {
-                std::get<std::shared_ptr<VulkanImageView>>(swap_chain_images[i]),
-                std::get<std::shared_ptr<VulkanImageView>>(depth_images[i])
-            };
-
+            auto attachments = std::vector { swap_chain_images[i].view, depth_images[i].view };
             auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, render_pass, extent);
 
             swap_chain_framebuffers.push_back(framebuffer);

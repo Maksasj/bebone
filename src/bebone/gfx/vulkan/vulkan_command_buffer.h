@@ -10,6 +10,10 @@
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline.h"
 
+#include "vulkan_buffer_tuples.h"
+#include "vulkan_image_tuples.h"
+#include "vulkan_pipeline_tuples.h"
+
 namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
@@ -40,9 +44,13 @@ namespace bebone::gfx::vulkan {
 
             VulkanCommandBuffer& bind_pipeline(const VulkanPipeline& pipeline);
             VulkanCommandBuffer& bind_pipeline(const std::shared_ptr<VulkanPipeline>& pipeline);
+            VulkanCommandBuffer& bind_managed_pipeline(const VulkanManagedPipelineTuple& tuple, const size_t& frame);
 
-            VulkanCommandBuffer& bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& buffer);
-            VulkanCommandBuffer& bind_index_buffer(const std::shared_ptr<VulkanBuffer>& index_buffer);
+            VulkanCommandBuffer& bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
+            VulkanCommandBuffer& bind_vertex_buffer(const VulkanBufferMemoryTuple& tuple);
+
+            VulkanCommandBuffer& bind_index_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
+            VulkanCommandBuffer& bind_index_buffer(const VulkanBufferMemoryTuple& tuple);
 
             VulkanCommandBuffer& bind_descriptor_set(
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
@@ -59,7 +67,7 @@ namespace bebone::gfx::vulkan {
 
             VulkanCommandBuffer& push_constant(
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const uint32_t& size,
+                const u32& size,
                 const void* ptr);
 
             VulkanCommandBuffer& push_constant(

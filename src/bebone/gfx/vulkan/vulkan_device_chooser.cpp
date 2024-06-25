@@ -111,7 +111,6 @@ namespace bebone::gfx::vulkan {
         std::cout << "Device count: " << device_count << std::endl;
 
         auto devices = std::vector<VkPhysicalDevice>(device_count);
-
         vkEnumeratePhysicalDevices(instance.get_instance(), &device_count, devices.data());
 
         for(const auto &device : devices) {

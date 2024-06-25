@@ -4,6 +4,7 @@
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_descriptor_set.h"
+#include "vulkan_pipeline_tuples.h"
 
 namespace bebone::gfx::vulkan {
     VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& command_buffer_pool) {
@@ -105,6 +106,11 @@ namespace bebone::gfx::vulkan {
         return *this;
     }
 
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_managed_pipeline(const VulkanManagedPipelineTuple& tuple, const size_t& frame) {
+        auto& [pipeline, pipelineLayout, descriptors] = tuple;
+        return bind_pipeline(pipeline).bind_descriptor_set(pipelineLayout, descriptors, frame);
+    }
+
     VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {
         VkBuffer buffers[] = {buffer->backend};
         VkDeviceSize offset[] = { 0 }; // Todo
@@ -114,6 +120,10 @@ namespace bebone::gfx::vulkan {
         return *this;
     }
 
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const VulkanBufferMemoryTuple& tuple) {
+        return bind_vertex_buffer(tuple.buffer);
+    }
+
     VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {
         // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
         vkCmdBindIndexBuffer(backend, buffer->backend, 0, VK_INDEX_TYPE_UINT32);
@@ -121,10 +131,12 @@ namespace bebone::gfx::vulkan {
         return *this;
     }
 
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const VulkanBufferMemoryTuple& tuple) {
+        return bind_index_buffer(tuple.buffer);
+    }
+
     VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertex_count) {
         vkCmdDraw(backend, vertex_count, 1, 0, 0);
-
-        return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw_indexed(const size_t& index_count) {
@@ -169,7 +181,7 @@ namespace bebone::gfx::vulkan {
 
     VulkanCommandBuffer& VulkanCommandBuffer::push_constant(
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        const uint32_t& size,
+        const u32& size,
         const void* ptr
     ) {
         vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT

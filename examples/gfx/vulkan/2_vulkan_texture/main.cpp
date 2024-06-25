@@ -44,20 +44,21 @@ int main() {
     auto swapChain = device->create_swap_chain(window);
 
     auto pipeline_manager = device->create_pipeline_manager();
-    auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
-        device, swapChain, { },
-        { {BindlessSampler, 0} },
+
+    auto pipeline = pipeline_manager->create_pipeline(
+        device, swapChain, "vert.glsl", "frag.glsl",
+        { }, { {BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertexDescriptions } }
     );
 
-    auto [vbuffer, vmemory] = device->create_buffer_memory_from(vertices);
-    auto [ibuffer, imemory] = device->create_buffer_memory_from(indices);
+    auto vb = device->create_buffer_memory_from(vertices);
+    auto eb = device->create_buffer_memory_from(indices);
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
 
     auto texture = device->create_texture(commandBufferPool, "image.png");
-    pipeline_manager->descriptor_pool->update_descriptor_sets(device, texture, descriptors, 0, {0, 0, 0});
+    std::ignore = pipeline.bind_texture(device, texture, 0);
 
     while (!window->closing()) {
         GLFWContext::poll_events();
@@ -71,10 +72,9 @@ int main() {
         cmd->begin_record()
             .begin_render_pass(swapChain, frame)
             .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_pipeline(pipeline)
-            .bind_descriptor_set(pipelineLayout, descriptors, frame)
-            .bind_vertex_buffer(vbuffer)
-            .bind_index_buffer(ibuffer)
+            .bind_managed_pipeline(pipeline, frame)
+            .bind_vertex_buffer(vb)
+            .bind_index_buffer(eb)
             .draw_indexed(indices.size())
             .end_render_pass()
             .end_record();

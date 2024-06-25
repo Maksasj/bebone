@@ -5,19 +5,23 @@
 namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
-    VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo buffer_info) {//VkMemoryPropertyFlags properties) {
-        VkBufferCreateInfo createInfo{};
+    VulkanBuffer::VulkanBuffer(
+        VulkanDevice& device,
+        const size_t& size,
+        VulkanBufferInfo buffer_info
+    )  : size(size) {
+        VkBufferCreateInfo create_Info{};
 
-        createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        createInfo.pNext = nullptr;
-        createInfo.flags = buffer_info.flags;
-        createInfo.size = size;
-        createInfo.usage = buffer_info.usage;
-        createInfo.sharingMode = buffer_info.sharingMode;
-        createInfo.queueFamilyIndexCount = buffer_info.queueFamilyIndexCount;
-        createInfo.pQueueFamilyIndices = buffer_info.pQueueFamilyIndices;
+        create_Info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        create_Info.pNext = nullptr;
+        create_Info.flags = buffer_info.flags;
+        create_Info.size = size;
+        create_Info.usage = buffer_info.usage;
+        create_Info.sharingMode = buffer_info.sharingMode;
+        create_Info.queueFamilyIndexCount = buffer_info.queueFamilyIndexCount;
+        create_Info.pQueueFamilyIndices = buffer_info.pQueueFamilyIndices;
 
-        if (vkCreateBuffer(device.device, &createInfo, nullptr, &backend) != VK_SUCCESS) {
+        if (vkCreateBuffer(device.device, &create_Info, nullptr, &backend) != VK_SUCCESS) {
             throw std::runtime_error("failed to create vulkan buffer!");
         }
     }
@@ -26,6 +30,10 @@ namespace bebone::gfx::vulkan {
         VkMemoryRequirements requirements;
         vkGetBufferMemoryRequirements(device.device, backend, &requirements);
         return requirements;
+    }
+
+    const size_t& VulkanBuffer::get_size() const {
+        return size;
     }
 
     void VulkanBuffer::destroy(VulkanDevice& device) {

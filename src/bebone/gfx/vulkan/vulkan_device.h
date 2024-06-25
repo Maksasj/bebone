@@ -21,7 +21,11 @@
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
 #include "vulkan_texture.h"
+#include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout_binding.h"
+
+#include "vulkan_buffer_tuples.h"
+#include "vulkan_image_tuples.h"
 
 namespace bebone::gfx::vulkan {
     class VulkanSwapChain;
@@ -113,8 +117,61 @@ namespace bebone::gfx::vulkan {
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
+            std::shared_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
+                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
+
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
+
+            void update_descriptor_set(
+                const std::shared_ptr<VulkanBuffer>& buffer,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                const std::shared_ptr<VulkanTexture>& texture,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                const std::shared_ptr<VulkanSampler>& sampler,
+                const std::shared_ptr<VulkanImageView>& view,
+                const std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_set(
+                VulkanBufferMemoryTuple& tuple,
+                std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+                const size_t& binding,
+                const size_t& dstArrayElement
+            );
+
+            void update_descriptor_sets(
+                std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
+
+            void update_descriptor_sets(
+                const std::vector<VulkanBufferMemoryTuple>& tuples,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
+
+            void update_descriptor_sets(
+                std::shared_ptr<VulkanTexture>& texture,
+                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+                const size_t& binding,
+                const std::vector<size_t>& dstArrayElements
+            );
 
             std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
                 const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
@@ -153,6 +210,11 @@ namespace bebone::gfx::vulkan {
             VulkanSwapChainSupportDetails get_swap_chain_support() { return VulkanDeviceChooser::query_swap_chain_support(physical_device, surface); }
 
             VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+
+            template <typename... Args>
+            void destroy_all(Args... args) {
+                (args.destroy(*this), ...);
+            }
 
             template <typename... Args>
             void destroy_all(std::shared_ptr<Args>... args) {
