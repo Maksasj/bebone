@@ -53,20 +53,21 @@ int main() {
 
     auto pipeline_manager = device->create_pipeline_manager();
 
-    auto [pipeline, pipelineLayout, descriptors] = pipeline_manager->create_pipeline(
-        device, swapChain,
+    auto pipeline = pipeline_manager->create_pipeline(
+        device, swapChain, "vert.glsl", "frag.glsl",
         { VulkanConstRange::common(sizeof(Handles), 0) },
         { {BindlessUniform, 0}, {BindlessUniform, 1} },
         { .pVertexInputState = { .vertexDescriptions = vertexDescriptions } }
     );
 
-    auto [ vbuffer, vmemory ] = device->create_buffer_memory_from(vertices);
-    auto [ ibuffer, imemory ] = device->create_buffer_memory_from(indices);
+    auto vb = device->create_buffer_memory_from(vertices);
+    auto eb = device->create_buffer_memory_from(indices);
 
-    auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3); // Todo
+    auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3);
     auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
-    pipeline_manager->descriptor_pool->update_descriptor_sets(device, transformUBO, sizeof(Transform), descriptors, 0, {0, 1, 2}); // Todo fix this
-    pipeline_manager->descriptor_pool->update_descriptor_sets(device, cameraUBO, sizeof(CameraTransform), descriptors, 1, {3, 4, 5}); // Todo fix this
+
+    auto t_handles = pipeline.bind_uniform_buffer(device, transformUBO, 0);
+    auto c_handles = pipeline.bind_uniform_buffer(device, cameraUBO, 1);
 
     auto commandBufferPool = device->create_command_buffer_pool();
     auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
@@ -75,6 +76,9 @@ int main() {
         Mat4f::view(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
+
+    for(auto& ubo : cameraUBO)
+        ubo.upload_data(device, &cameraTransform, sizeof(CameraTransform));
 
     auto transform = Transform {
         Mat4f::translation(Vec3f::zero),
@@ -90,29 +94,23 @@ int main() {
         if(!swapChain->acquire_next_image(device, &frame).is_ok())
             continue;
 
-        auto& [_0, tmem] = transformUBO[frame];
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
-        tmem->upload_data(device, &transform, sizeof(Transform));
+        transformUBO[frame].upload_data(device, &transform, sizeof(Transform));
 
-        auto& [_1, cmem] = cameraUBO[frame];
-        cameraTransform.proj = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f);
-        cmem->upload_data(device, &cameraTransform, sizeof(CameraTransform));
-
-        // Todo, we need to fix this
-        auto handles = Handles {static_cast<u32>(frame + 3), static_cast<u32>(frame) };
+        auto handles = Handles {
+            static_cast<u32>(c_handles[frame]),
+            static_cast<u32>(t_handles[frame])
+        };
 
         auto& cmd = *commandBuffers[frame];
 
         cmd.begin_record();
         cmd.begin_render_pass(swapChain, frame);
         cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-
-        cmd.bind_pipeline(pipeline);
-        cmd.bind_descriptor_set(pipelineLayout, descriptors, frame);
-        cmd.push_constant(pipelineLayout, sizeof(Handles), 0, &handles);
-
-        cmd.bind_vertex_buffer(vbuffer);
-        cmd.bind_index_buffer(ibuffer);
+        cmd.bind_managed_pipeline(pipeline, frame);
+        cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
+        cmd.bind_vertex_buffer(vb);
+        cmd.bind_index_buffer(eb);
         cmd.draw_indexed(indices.size());
         cmd.end_render_pass();
         cmd.end_record();

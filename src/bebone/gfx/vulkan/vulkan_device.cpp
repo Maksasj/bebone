@@ -1,9 +1,13 @@
 #include "vulkan_device.h"
 
 #include "vulkan_sampler.h"
+
 #include "vulkan_swap_chain.h"
+
 #include "vulkan_descriptor_pool.h"
+#include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout.h"
+
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_pipeline.h"
@@ -43,6 +47,145 @@ namespace bebone::gfx::vulkan {
         child_objects.push_back(descriptor_pool);
 
         return descriptor_pool;
+    }
+
+    // Todo add bufferInfo offset there
+    void VulkanDevice::update_descriptor_set(
+        const std::shared_ptr<VulkanBuffer>& buffer,
+        std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+        const size_t& binding,
+        const size_t& dstArrayElement
+    ) {
+        VkDescriptorBufferInfo bufferInfo{};
+        bufferInfo.buffer = buffer->backend;
+        bufferInfo.offset = 0;
+        bufferInfo.range = buffer->get_size();
+
+        VkWriteDescriptorSet descriptorWrite{};
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+
+        descriptorWrite.dstSet = descriptorSet->backend;
+        descriptorWrite.dstBinding = binding;
+        descriptorWrite.dstArrayElement = dstArrayElement;
+        // Todo, remember that this mean \/
+        // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
+
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pBufferInfo = &bufferInfo;
+
+        descriptorWrite.pImageInfo = nullptr; // Optional
+        descriptorWrite.pTexelBufferView = nullptr; // Optional
+
+        vkUpdateDescriptorSets(device_, 1, &descriptorWrite, 0, nullptr);
+    }
+
+    void VulkanDevice::update_descriptor_set(
+        const std::shared_ptr<VulkanTexture>& texture,
+        std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+        const size_t& binding,
+        const size_t& dstArrayElement
+    ) {
+        const auto& [image, memory, view, sampler] = *texture;
+        update_descriptor_set(sampler, view, descriptorSet, binding, dstArrayElement);
+    }
+
+    void VulkanDevice::update_descriptor_set(
+        const std::shared_ptr<VulkanSampler>& sampler,
+        const std::shared_ptr<VulkanImageView>& view,
+        const std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+        const size_t& binding,
+        const size_t& dstArrayElement
+    ) {
+        VkDescriptorImageInfo imageInfo{};
+        imageInfo.sampler = sampler->backend;
+        imageInfo.imageView = view->backend;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
+
+        VkWriteDescriptorSet descriptorWrite{};
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+
+        descriptorWrite.dstSet = descriptorSet->backend;
+        descriptorWrite.dstBinding = binding;
+        descriptorWrite.dstArrayElement = dstArrayElement; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
+
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrite.descriptorCount = 1;
+        // descriptorWrite.pBufferInfo = &bufferInfo;
+        descriptorWrite.pImageInfo = &imageInfo;
+
+        // descriptorWrite.pImageInfo = nullptr; // Optional
+        descriptorWrite.pTexelBufferView = nullptr; // Optional
+
+        vkUpdateDescriptorSets(device_, 1, &descriptorWrite, 0, nullptr);
+    }
+
+    void VulkanDevice::update_descriptor_set(
+            VulkanBufferMemoryTuple& tuple,
+            std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+            const size_t& binding,
+            const size_t& dstArrayElement
+    ) {
+        update_descriptor_set(
+            tuple.buffer,
+            descriptorSet,
+            binding,
+            dstArrayElement
+        );
+    }
+
+    void VulkanDevice::update_descriptor_sets(
+            std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
+            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+            const size_t& binding,
+            const std::vector<size_t>& dstArrayElements
+    ) {
+        if(buffers.size() != dstArrayElements.size())
+            throw std::runtime_error("buffer an dstArrayElements count is not matching");
+
+        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
+            auto& buffer = buffers[i];
+            auto& dstArrayElement = dstArrayElements[i];
+            auto& descriptorSet = descriptorSets[i];
+
+            update_descriptor_set(buffer, descriptorSet, binding, dstArrayElement);
+        }
+    }
+
+    void VulkanDevice::update_descriptor_sets(
+            const std::vector<VulkanBufferMemoryTuple>& tuples,
+            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+            const size_t& binding,
+            const std::vector<size_t>& dstArrayElements
+    ) {
+        if(tuples.size() != dstArrayElements.size())
+            throw std::runtime_error("buffer an dstArrayElements count is not matching");
+
+        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
+            const auto& buffer = tuples[i].buffer;
+            const auto& dstArrayElement = dstArrayElements[i];
+            auto& descriptorSet = descriptorSets[i];
+
+            update_descriptor_set(buffer, descriptorSet, binding, dstArrayElement);
+        }
+    }
+
+    void VulkanDevice::update_descriptor_sets(
+            std::shared_ptr<VulkanTexture>& texture,
+            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
+            const size_t& binding,
+            const std::vector<size_t>& dstArrayElements
+    ) {
+        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
+            auto& dstArrayElement = dstArrayElements[i];
+            auto& descriptorSet = descriptorSets[i];
+
+            update_descriptor_set(texture, descriptorSet, binding, dstArrayElement);
+        }
+    }
+
+    std::shared_ptr<VulkanDescriptorSetLayout> VulkanDevice::create_descriptor_set_layout(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
+        return std::make_shared<VulkanDescriptorSetLayout>(*this, bindings);
     }
 
     // Todo why there is a vector ?
@@ -147,7 +290,7 @@ namespace bebone::gfx::vulkan {
         auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(*this, image);
 
-        return make_tuple(image, memory);
+        return { image, memory };
     }
 
     // Todo Why this function is public ?, and probably could be static

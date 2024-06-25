@@ -95,13 +95,11 @@ namespace bebone::gfx::vulkan {
 
         std::vector<VulkanSwapChainImageTuple> out;
 
-        for(auto& image : images) {
-            auto swap_chain_image = device.create_image(image);
+        for(auto& vk_image : images) {
+            auto image = device.create_image(vk_image);
+            auto view = device.create_image_view(*image, imageFormat);
 
-            out.emplace_back(
-                swap_chain_image,
-                device.create_image_view(*swap_chain_image, imageFormat)
-            );
+            out.emplace_back(image, view);
         }
 
         return out;
