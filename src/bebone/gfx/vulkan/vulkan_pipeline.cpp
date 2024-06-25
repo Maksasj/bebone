@@ -15,9 +15,9 @@ namespace bebone::gfx::vulkan {
             stage.pNext = nullptr;
             stage.flags = 0;
 
-            if(shaderModule->shaderType == ShaderTypes::VERTEX_SHADER)
+            if(shaderModule->shaderType == ShaderTypes::vertex_shader)
                 stage.stage = VK_SHADER_STAGE_VERTEX_BIT;
-            else if(shaderModule->shaderType == ShaderTypes::FRAGMENT_SHADER)
+            else if(shaderModule->shaderType == ShaderTypes::fragment_shader)
                 stage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
             stage.module = shaderModule->backend;
