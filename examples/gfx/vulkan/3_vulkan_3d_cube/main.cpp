@@ -7,7 +7,7 @@ using namespace bebone::gfx;
 using namespace bebone::gfx::vulkan;
 
 struct Vertex { Vec3f pos, color; };
-struct Handles { u32 cameraHandle, transformHandle; };
+struct Handles { u32 camera_handle, transform_handle; };
 struct CameraTransform { Mat4f view, proj; };
 struct Transform { Mat4f transform, scale, rotation; };
 
@@ -23,7 +23,7 @@ const std::vector<Vertex> vertices = {
 };
 
 // Todo make this nicer
-const auto vertexDescriptions = VulkanPipelineVertexInputStateTuple {
+const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     .binding_descriptions = {
         { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
     },
@@ -49,36 +49,36 @@ int main() {
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
-    auto swapChain = device->create_swap_chain(window);
+    auto swap_chain = device->create_swap_chain(window);
 
     auto pipeline_manager = device->create_pipeline_manager();
 
     auto pipeline = pipeline_manager->create_pipeline(
-        device, swapChain, "vert.glsl", "frag.glsl",
+        device, swap_chain, "vert.glsl", "frag.glsl",
         { VulkanConstRange::common(sizeof(Handles), 0) },
-        { {BindlessUniform, 0}, {BindlessUniform, 1} },
-        { .vertex_input_state = { .vertex_descriptions = vertexDescriptions } }
+        { { BindlessUniform, 0}, { BindlessUniform, 1 } },
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
     auto vb = device->create_buffer_memory_from(vertices);
     auto eb = device->create_buffer_memory_from(indices);
 
-    auto transformUBO = device->create_buffer_memorys(sizeof(Transform), 3);
-    auto cameraUBO = device->create_buffer_memorys(sizeof(CameraTransform), 3);
+    auto t_ubo = device->create_buffer_memorys(sizeof(Transform), 3);
+    auto c_ubo = device->create_buffer_memorys(sizeof(CameraTransform), 3);
 
-    auto t_handles = pipeline.bind_uniform_buffer(device, transformUBO, 0);
-    auto c_handles = pipeline.bind_uniform_buffer(device, cameraUBO, 1);
+    auto t_handles = pipeline.bind_uniform_buffer(device, t_ubo, 0);
+    auto c_handles = pipeline.bind_uniform_buffer(device, c_ubo, 1);
 
-    auto commandBufferPool = device->create_command_buffer_pool();
-    auto commandBuffers = commandBufferPool->create_command_buffers(device, 3);
+    auto command_buffer_pool = device->create_command_buffer_pool();
+    auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
-    auto cameraTransform = CameraTransform {
+    auto c_transform = CameraTransform {
         Mat4f::view(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
-    for(auto& ubo : cameraUBO)
-        ubo.upload_data(device, &cameraTransform, sizeof(CameraTransform));
+    for(auto& ubo : c_ubo)
+        ubo.upload_data(device, &c_transform, sizeof(CameraTransform));
 
     auto transform = Transform {
         Mat4f::translation(Vec3f::zero),
@@ -91,21 +91,21 @@ int main() {
         GLFWContext::poll_events();
 
         uint32_t frame;
-        if(!swapChain->acquire_next_image(device, &frame).is_ok())
+        if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             continue;
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
-        transformUBO[frame].upload_data(device, &transform, sizeof(Transform));
+        t_ubo[frame].upload_data(device, &transform, sizeof(Transform));
 
         auto handles = Handles {
             static_cast<u32>(c_handles[frame]),
             static_cast<u32>(t_handles[frame])
         };
 
-        auto& cmd = *commandBuffers[frame];
+        auto& cmd = *command_buffers[frame];
 
         cmd.begin_record();
-        cmd.begin_render_pass(swapChain, frame);
+        cmd.begin_render_pass(swap_chain, frame);
         cmd.set_viewport(0, 0, window->get_width(), window->get_height());
         cmd.bind_managed_pipeline(pipeline, frame);
         cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
@@ -115,7 +115,7 @@ int main() {
         cmd.end_render_pass();
         cmd.end_record();
 
-        if(!swapChain->submit_command_buffers(device, commandBuffers[frame], &frame).is_ok()) // Todo check if window is resized
+        if(!swap_chain->submit_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 
