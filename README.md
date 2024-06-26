@@ -7,8 +7,9 @@
 - **Designed with real-world use in mind** for small hobby projects, as well as professional/enterprise projects. **bebone** provides multi layer APIs **Abstraction -> System -> App** levels, where each level build on top of previous 
 
 ### Links
-1. Source code avaiable at [github.com/Maksasj/bebone](https://github.com/Maksasj/bebone)
+1. Source code available at [github.com/Maksasj/bebone](https://github.com/Maksasj/bebone)
 2. Community Discord [link](https://discord.gg/v4mcTmuDTb)
+3. **bebone** documentation available at [link](github.com/Maksasj/bebone/docs/DOCUMENTATION.md)
 
 > **bebone** is not a new javascript framework btw. It is a game development one!
 
@@ -24,41 +25,44 @@ In other words **bebone** is modular game development framework, where each modu
 
 ## Features
 For now **bebone** have severall modules
-* [Core module]()
-  * Memory
-  * Debug
-  * Types
-  * Event
-  * Input
-* [Graphics module]()
-  * OpenGL
-  * Vulkan
-  * Shaders
-  * Window
-* [Assets module]()
-* [Renderer module]()
+* [Core module](). Core **bebone** module implements most important abstractions which are widely used across all other modules. Implements **Memory, Debug, Types, Event, Input** abstractions
+* [Graphics module (GFX module)](). **Abstraction layer** module, implements basic abstractions on top of **Graphical APIs** such as **OpenGL** and **Vulkan**. **GFX module**
+ depends on **Core**, **Assets** modules
+* [Assets module](). Module designed for loading and managing different **assets** such as **images**, **models**, **materals**. **Assets module** depends on Core module only 
+* [Renderer module]() **System layer** module, provides high-level generalized graphical functionality. It abstracts all low-level **OpenGL** or **Vulkan** under one convenient interface. **Renderer module** build on top of **GFX module**
+
+### Planned modules
+* [Sound module]()
+* [Physics module]()
+* [Entity component system module (ECS module)]()
+* [App module]()
 
 ## Build
 For now there is one method how you can use bebone is your project
 
-- **Build manually**<br>
-  First of all requirements:
-    - CMake (At least version 3.21)
-    - Ninja (At least version 1.11.1)
-    - C++ compiler (Have test with Clang 15.0.5 and GCC 12.2.0) 
-    - *Vulkan SDK (if you want to build gfx module)*
-  
-    Firstly lets clone bebone locally(note that you also need to clone all bebone git submodules).
+### Build manually
 
-    Secondly lets configure our Cmake configuration with
-    ```bash
-    cmake -B build -G Ninja
-    ```
+First of all requirements
+  - [CMake]() (At least version 3.21)
+  - [Ninja]() (At least version 1.11.1)
+  - C++ compiler (Have test with Clang 15.0.5 and GCC 12.2.0) 
+  - *Vulkan SDK (if you want to build [GFX module]())*
 
-    Finally you can simply build project with cmake 
-    ```bash
-    cmake --build build
-    ```
+  Firstly lets clone bebone locally *(note that you also need to clone all bebone git submodules)*
+
+  ```bash
+  git clone --recursive git@github.com:Maksasj/bebone.git
+  ```
+
+  Secondly lets configure our **CMake** configuration with
+  ```bash
+  cmake -B build -G Ninja
+  ```
+
+  Finally you can simply build project with cmake 
+  ```bash
+  cmake --build build
+  ```
 
 ## Testing
 ### Unit testing
@@ -85,6 +89,9 @@ You can find examples in [examples](https://github.com/Maksasj/bebone/tree/maste
 ## Documentation
   - [Core module](https://github.com/Maksasj/bebone/blob/master/docs/Core.md)
   - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/Gfx.md)
+
+## Contribution
+Todo
 
 ## License
 **bebone** is free and open source game development framework. All code in this repository **FOR NOW** is licensed under
