@@ -1,36 +1,49 @@
-# Bebone
-Bebone - Is a framework/engine aimed for flexible and comfortable game development, written in C++. 
-In other words Bebone is a set of useful game development libraries, written and integrated 
-in Bebone framework ecosystem.
+# bebone
 
-> Bebone is not a new javascript framework btw. It is a game development one!
+**bebone** is a game development framework/engine aimed for flexible and comfortable game development, written in **C++**.
+
+- **Modular code base**, every **bebone** module is a self contained library with **minimal** dependency on **third-party** libraries. All **bebone** abstractions inherit same **interfaces**, for better integration with user defined abstractions   
+
+- **Designed with real-world use in mind** for small hobby projects, as well as professional/enterprise projects. **bebone** provides multi layer APIs **Abstraction -> System -> App** levels, where each level build on top of previous 
+
+### Links
+1. Source code avaiable at [github.com/Maksasj/bebone](https://github.com/Maksasj/bebone)
+2. Community Discord [link](https://discord.gg/v4mcTmuDTb)
+
+> **bebone** is not a new javascript framework btw. It is a game development one!
 
 Cool looking widgets 
-<img src="https://img.shields.io/github/stars/Maksasj/bebone" alt="stars">
-<img src="https://img.shields.io/github/actions/workflow/status/Maksasj/bebone/clang_build_win.yml" alt="build">
-<img src="https://img.shields.io/github/license/Maksasj/bebone" alt="build">
+![GitHub Repo stars](https://img.shields.io/github/stars/Maksasj/bebone)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Maksasj/bebone/clang_build_win.yml)
+![GitHub License](https://img.shields.io/github/license/Maksasj/bebone)
+![Discord](https://img.shields.io/discord/1156584129190711326?style=flat&label=discord)
+
+### Architecture
+
+In other words **bebone** is modular game development framework, where each module is a self contained library, that can be used apart from the entire framework
 
 ## Features
-* Core module
-  * Arena allocator & container
-  * Logger
-  * Types library
-  * Event submodule
-    * Listener system (Java style)
-    * Action delegate (C# style)
-  * Input system
-  * Meta programming module
-* Graphics module
-  * OpenGL abstraction layer
-  * Vulkan abstraction layer (in development)
+For now **bebone** have severall modules
+* [Core module]()
+  * Memory
+  * Debug
+  * Types
+  * Event
+  * Input
+* [Graphics module]()
+  * OpenGL
+  * Vulkan
   * Shaders
   * Window
-  * Begui (Dear ImGui abstraction layer)
+* [Assets module]()
+* [Renderer module]()
+
 ## Build
-For now there is two methods how you can use bebone is your project(build locally).
-1. **Build manually**<br>
+For now there is one method how you can use bebone is your project
+
+- **Build manually**<br>
   First of all requirements:
-    - Cmake (At least version 3.21)
+    - CMake (At least version 3.21)
     - Ninja (At least version 1.11.1)
     - C++ compiler (Have test with Clang 15.0.5 and GCC 12.2.0) 
     - *Vulkan SDK (if you want to build gfx module)*
@@ -47,64 +60,34 @@ For now there is two methods how you can use bebone is your project(build locall
     cmake --build build
     ```
 
-2. **Using docker**<br>
-    Currently the docker image is not available, but we are planning to release it towards bebone 0.2v.
-
-Note that bebone is only a **set** of useful libraries/modules, some modules can be used separately.
-
 ## Testing
-The testing process is similar to the **Building**. After a successful build, all you have to do is run CTest from ```build\tests\unit``` directory.
+### Unit testing
+The testing process is similar to the **Building**. After a successful build, all you have to do is run [CTest](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html) from ```build\tests\unit``` directory
+
+### Integration testing
+As for integration tests we use our examples, so see **[Examples]() section**
 
 ## Dependencies
-For convenience, we try to reduce the use of third-party libraries, as it complicates code management and readability.
-At the moment, bebone is only dependent on these libraries:
-  - [Glad](https://github.com/Maksasj/glad/tree/all-extensions) *(opengl function header)*
-  - [Vulkan-Headers](https://github.com/Maksasj/Vulkan-Headers/tree/main) *(vulkan function header)*
-  - [GLFW](https://github.com/Maksasj/glfw/tree/master) *(window management library)*
+For convenience, we tried to reduce the use of third-party libraries, as it complicates code management and readability.
+At the moment, bebone is only dependent on these third-party libraries:
+  - [Glad](https://github.com/Maksasj/glad/tree/all-extensions) *(OpenGL function header)*
+  - [Vulkan-Headers](https://github.com/Maksasj/Vulkan-Headers/tree/main) *(Vulkan function header)*
+  - [GLFW](https://github.com/Maksasj/glfw/tree/master) *(Window management library)*
   - [Glslang](https://github.com/KhronosGroup/glslang/tree/main) *(SPIR-V shader compiler library)* 
-  - [imgui](https://github.com/Maksasj/imgui/tree/master) *(Debug gui library)* 
+  - [imgui](https://github.com/Maksasj/imgui/tree/master) *(Debug GUI library)* 
   - [stb](https://github.com/Maksasj/stb/tree/master) *(Image management library and others)* 
-  - [miniaudio](https://github.com/Maksasj/miniaudio/tree/master) *(Sound/Music management library)*
+  - [miniaudio](https://github.com/Maksasj/miniaudio/tree/master) *(Sound and Music library)*
 
 ## Examples
 Bebone hello world example:
-```c++
-#include "bebone/bebone.h"
-
-using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
-
-int main() {
-    GLFWContext::init();
-    
-    auto window = WindowFactory::create_window("Example", 800, 600, GfxAPI::OpenGL);
-
-    GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-
-    while (!window->closing()) {
-        GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
-        GLContext::clear(GL_COLOR_BUFFER_BIT);
-
-        // Your game code
-
-        GLFWContext::swap_buffers(*window);
-        GLFWContext::poll_events();
-        window->execute_input_actions();
-    }
-
-    GLFWContext::terminate();
-    return 0;
-}
-
-```
-
-You can find other examples in [examples](https://github.com/Maksasj/bebone/tree/master/examples) directory.
+You can find examples in [examples](https://github.com/Maksasj/bebone/tree/master/examples) directory.
 
 ## Documentation
   - [Core module](https://github.com/Maksasj/bebone/blob/master/docs/Core.md)
   - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/Gfx.md)
 
 ## License
-Bebone is free, open source game development framework. All code in this repository FOR NOW is licensed under
-- MIT License ([LICENSE.md](https://github.com/Maksasj/bebone/blob/master/LICENSE.md) or https://opensource.org/license/mit/)
+**bebone** is free and open source game development framework. All code in this repository **FOR NOW** is licensed under
+-  Apache-2.0 license ([LICENSE.md](https://github.com/Maksasj/bebone/blob/master/LICENSE.md) or http://www.apache.org/licenses/LICENSE-2.0)
+
+*Copyright 2019-2022 © Maksim Jaroslavcevas, Oskaras Vištorskis*
