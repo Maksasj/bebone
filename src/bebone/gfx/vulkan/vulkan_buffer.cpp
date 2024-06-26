@@ -17,18 +17,19 @@ namespace bebone::gfx::vulkan {
         create_Info.flags = buffer_info.flags;
         create_Info.size = size;
         create_Info.usage = buffer_info.usage;
-        create_Info.sharingMode = buffer_info.sharingMode;
-        create_Info.queueFamilyIndexCount = buffer_info.queueFamilyIndexCount;
-        create_Info.pQueueFamilyIndices = buffer_info.pQueueFamilyIndices;
+        create_Info.sharingMode = buffer_info.sharing_mode;
+        create_Info.queueFamilyIndexCount = buffer_info.queue_family_index_count;
+        create_Info.pQueueFamilyIndices = buffer_info.ptr_queue_family_indices;
 
-        if (vkCreateBuffer(device.device, &create_Info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateBuffer(device.device, &create_Info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create vulkan buffer!");
-        }
     }
 
     VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
         VkMemoryRequirements requirements;
+
         vkGetBufferMemoryRequirements(device.device, backend, &requirements);
+
         return requirements;
     }
 

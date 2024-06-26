@@ -1,7 +1,6 @@
 #include "vulkan_image.h"
 
 #include "vulkan_device.h"
-#include "vulkan_image_view.h"
 #include "vulkan_command_buffer_pool.h"
 
 namespace bebone::gfx::vulkan {
@@ -22,18 +21,18 @@ namespace bebone::gfx::vulkan {
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         create_info.pNext = nullptr;
         create_info.flags = image_info.flags;
-        create_info.imageType = image_info.imageType;
+        create_info.imageType = image_info.image_type;
         create_info.format = format;
         create_info.extent = extent;
-        create_info.mipLevels = image_info.mipLevels;
-        create_info.arrayLayers = image_info.arrayLayers;
+        create_info.mipLevels = image_info.mip_levels;
+        create_info.arrayLayers = image_info.array_layers;
         create_info.samples = image_info.samples;
         create_info.tiling = image_info.tiling;
         create_info.usage = image_info.usage;
-        create_info.sharingMode = image_info.sharingMode;
-        create_info.queueFamilyIndexCount = image_info.queueFamilyIndexCount;
-        create_info.pQueueFamilyIndices = image_info.pQueueFamilyIndices;
-        create_info.initialLayout = image_info.initialLayout;
+        create_info.sharingMode = image_info.sharing_mode;
+        create_info.queueFamilyIndexCount = image_info.queue_family_index_count;
+        create_info.pQueueFamilyIndices = image_info.ptr_queue_family_indices;
+        create_info.initialLayout = image_info.initial_layout;
 
         if(vkCreateImage(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create image!");

@@ -55,146 +55,149 @@ namespace bebone::gfx::vulkan {
     // Todo add bufferInfo offset there
     void VulkanDevice::update_descriptor_set(
         const std::shared_ptr<VulkanBuffer>& buffer,
-        std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
         const size_t& binding,
-        const size_t& dstArrayElement
+        const size_t& dst_array_element
     ) {
-        VkDescriptorBufferInfo bufferInfo{};
-        bufferInfo.buffer = buffer->backend;
-        bufferInfo.offset = 0;
-        bufferInfo.range = buffer->get_size();
+        VkDescriptorBufferInfo buffer_info{};
+        buffer_info.buffer = buffer->backend;
+        buffer_info.offset = 0;
+        buffer_info.range = buffer->get_size();
 
-        VkWriteDescriptorSet descriptorWrite{};
-        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        VkWriteDescriptorSet descriptor_write{};
+        descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
-        descriptorWrite.dstSet = descriptorSet->backend;
-        descriptorWrite.dstBinding = binding;
-        descriptorWrite.dstArrayElement = dstArrayElement;
+        descriptor_write.dstSet = descriptor_set->backend;
+        descriptor_write.dstBinding = binding;
+        descriptor_write.dstArrayElement = dst_array_element;
         // Todo, remember that this mean \/
         // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
-        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrite.descriptorCount = 1;
-        descriptorWrite.pBufferInfo = &bufferInfo;
+        descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptor_write.descriptorCount = 1;
+        descriptor_write.pBufferInfo = &buffer_info;
 
-        descriptorWrite.pImageInfo = nullptr; // Optional
-        descriptorWrite.pTexelBufferView = nullptr; // Optional
+        descriptor_write.pImageInfo = nullptr; // Optional
+        descriptor_write.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+        vkUpdateDescriptorSets(device, 1, &descriptor_write, 0, nullptr);
     }
 
     void VulkanDevice::update_descriptor_set(
         const std::shared_ptr<VulkanTexture>& texture,
-        std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
         const size_t& binding,
-        const size_t& dstArrayElement
+        const size_t& dst_array_element
     ) {
         const auto& [image, memory, view, sampler] = *texture;
-        update_descriptor_set(sampler, view, descriptorSet, binding, dstArrayElement);
+
+        update_descriptor_set(sampler, view, descriptor_set, binding, dst_array_element);
     }
 
     void VulkanDevice::update_descriptor_set(
         const std::shared_ptr<VulkanSampler>& sampler,
         const std::shared_ptr<VulkanImageView>& view,
-        const std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
+        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
         const size_t& binding,
-        const size_t& dstArrayElement
+        const size_t& dst_array_element
     ) {
-        VkDescriptorImageInfo imageInfo{};
-        imageInfo.sampler = sampler->backend;
-        imageInfo.imageView = view->backend;
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
+        VkDescriptorImageInfo image_info{};
+        image_info.sampler = sampler->backend;
+        image_info.imageView = view->backend;
+        image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
 
-        VkWriteDescriptorSet descriptorWrite{};
-        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        VkWriteDescriptorSet descriptor_write{};
+        descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
-        descriptorWrite.dstSet = descriptorSet->backend;
-        descriptorWrite.dstBinding = binding;
-        descriptorWrite.dstArrayElement = dstArrayElement; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
+        descriptor_write.dstSet = descriptor_set->backend;
+        descriptor_write.dstBinding = binding;
+        descriptor_write.dstArrayElement = dst_array_element; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 
-        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrite.descriptorCount = 1;
+        descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptor_write.descriptorCount = 1;
         // descriptorWrite.pBufferInfo = &bufferInfo;
-        descriptorWrite.pImageInfo = &imageInfo;
+        descriptor_write.pImageInfo = &image_info;
 
         // descriptorWrite.pImageInfo = nullptr; // Optional
-        descriptorWrite.pTexelBufferView = nullptr; // Optional
+        descriptor_write.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+        vkUpdateDescriptorSets(device, 1, &descriptor_write, 0, nullptr);
     }
 
     void VulkanDevice::update_descriptor_set(
-            VulkanBufferMemoryTuple& tuple,
-            std::shared_ptr<VulkanDescriptorSet>& descriptorSet,
-            const size_t& binding,
-            const size_t& dstArrayElement
+        const VulkanBufferMemoryTuple& tuple,
+        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
+        const size_t& binding,
+        const size_t& dst_array_element
     ) {
         update_descriptor_set(
             tuple.buffer,
-            descriptorSet,
+            descriptor_set,
             binding,
-            dstArrayElement
+            dst_array_element
         );
     }
 
     void VulkanDevice::update_descriptor_sets(
-            std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
-            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
-            const size_t& binding,
-            const std::vector<size_t>& dstArrayElements
+        const std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
+        std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
+        const size_t& binding,
+        const std::vector<size_t>& dst_array_elements
     ) {
-        if(buffers.size() != dstArrayElements.size())
-            throw std::runtime_error("buffer an dstArrayElements count is not matching");
+        if(buffers.size() != dst_array_elements.size())
+            throw std::runtime_error("buffer an dst_array_elements count is not matching");
 
-        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
+        for(size_t i = 0; i < dst_array_elements.size(); ++i) {
             auto& buffer = buffers[i];
-            auto& dstArrayElement = dstArrayElements[i];
-            auto& descriptorSet = descriptorSets[i];
+            auto& dst_array_element = dst_array_elements[i];
+            auto& descriptor_set = descriptor_sets[i];
 
-            update_descriptor_set(buffer, descriptorSet, binding, dstArrayElement);
+            update_descriptor_set(buffer, descriptor_set, binding, dst_array_element);
         }
     }
 
     void VulkanDevice::update_descriptor_sets(
-            const std::vector<VulkanBufferMemoryTuple>& tuples,
-            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
-            const size_t& binding,
-            const std::vector<size_t>& dstArrayElements
+        const std::vector<VulkanBufferMemoryTuple>& tuples,
+        std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
+        const size_t& binding,
+        const std::vector<size_t>& dst_array_elements
     ) {
-        if(tuples.size() != dstArrayElements.size())
-            throw std::runtime_error("buffer an dstArrayElements count is not matching");
+        if(tuples.size() != dst_array_elements.size())
+            throw std::runtime_error("buffer an dst_array_elements count is not matching");
 
-        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
+        for(size_t i = 0; i < dst_array_elements.size(); ++i) {
             const auto& buffer = tuples[i].buffer;
-            const auto& dstArrayElement = dstArrayElements[i];
-            auto& descriptorSet = descriptorSets[i];
+            const auto& dst_array_element = dst_array_elements[i];
+            auto& descriptor_set = descriptor_sets[i];
 
-            update_descriptor_set(buffer, descriptorSet, binding, dstArrayElement);
+            update_descriptor_set(buffer, descriptor_set, binding, dst_array_element);
         }
     }
 
     void VulkanDevice::update_descriptor_sets(
-            std::shared_ptr<VulkanTexture>& texture,
-            std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets,
-            const size_t& binding,
-            const std::vector<size_t>& dstArrayElements
+        const std::shared_ptr<VulkanTexture>& texture,
+        std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
+        const size_t& binding,
+        const std::vector<size_t>& dst_array_elements
     ) {
-        for(size_t i = 0; i < dstArrayElements.size(); ++i) {
-            auto& dstArrayElement = dstArrayElements[i];
-            auto& descriptorSet = descriptorSets[i];
+        for(size_t i = 0; i < dst_array_elements.size(); ++i) {
+            auto& dst_array_element = dst_array_elements[i];
+            auto& descriptor_set = descriptor_sets[i];
 
-            update_descriptor_set(texture, descriptorSet, binding, dstArrayElement);
+            update_descriptor_set(texture, descriptor_set, binding, dst_array_element);
         }
     }
 
     std::shared_ptr<VulkanDescriptorSetLayout> VulkanDevice::create_descriptor_set_layout(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
-        return std::make_shared<VulkanDescriptorSetLayout>(*this, bindings);
+        auto descriptor_set_layout = std::make_shared<VulkanDescriptorSetLayout>(*this, bindings);
+
+        child_objects.push_back(descriptor_set_layout);
+
+        return descriptor_set_layout;
     }
 
     // Todo why there is a vector ?
-    std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(
-        const std::vector<VulkanDescriptorSetLayoutBinding>& bindings
-    ) {
+    std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
         auto descriptor_set_layout = std::make_shared<VulkanDescriptorSetLayout>(*this, bindings);
 
         child_objects.push_back(descriptor_set_layout);
@@ -218,8 +221,8 @@ namespace bebone::gfx::vulkan {
         return swap_chain;
     }
 
-    std::shared_ptr<VulkanPipelineLayout> VulkanDevice::create_pipeline_layout(const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VulkanConstRange>& constant_Ranges) {
-        auto pipeline_layout = std::make_shared<VulkanPipelineLayout>(*this, layouts, constant_Ranges);
+    std::shared_ptr<VulkanPipelineLayout> VulkanDevice::create_pipeline_layout(const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VulkanConstRange>& constant_ranges) {
+        auto pipeline_layout = std::make_shared<VulkanPipelineLayout>(*this, layouts, constant_ranges);
 
         child_objects.push_back(pipeline_layout);
 
@@ -347,9 +350,9 @@ namespace bebone::gfx::vulkan {
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-        std::shared_ptr<VulkanSwapChain>& swap_chain,
-        std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        std::vector<std::shared_ptr<VulkanShaderModule>> shader_modules,
+        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::vector<std::shared_ptr<VulkanShaderModule>> shader_modules,
         VulkanPipelineConfig config_info
     ) {
         auto pipeline = std::make_shared<VulkanPipeline>(*this, swap_chain, pipeline_layout, shader_modules, config_info);
@@ -403,15 +406,15 @@ namespace bebone::gfx::vulkan {
         auto queue_create_infos = std::vector<VkDeviceQueueCreateInfo> {};
         queue_create_infos.reserve(unique_queue_families.size());
 
-        float queuePriority = 1.0f;
+        float queue_priority = 1.0f;
 
-        for(const auto& queueFamily : unique_queue_families) {
+        for(const auto& queue_family : unique_queue_families) {
             VkDeviceQueueCreateInfo queue_create_info = {};
 
             queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-            queue_create_info.queueFamilyIndex = queueFamily;
+            queue_create_info.queueFamilyIndex = queue_family;
             queue_create_info.queueCount = 1;
-            queue_create_info.pQueuePriorities = &queuePriority;
+            queue_create_info.pQueuePriorities = &queue_priority;
 
             queue_create_infos.push_back(queue_create_info);
         }

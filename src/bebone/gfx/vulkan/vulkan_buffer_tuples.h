@@ -15,12 +15,17 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanBuffer> buffer;
             std::shared_ptr<VulkanDeviceMemory> memory;
 
-            VulkanBufferMemoryTuple( // Todo this constructor should be moved to protected
+            VulkanBufferMemoryTuple( // Todo this constructor should be moved to protected, or no ?
                 const shared_ptr<VulkanBuffer>& buffer,
                 const shared_ptr<VulkanDeviceMemory>& memory);
 
             void upload_data(
                 std::shared_ptr<VulkanDevice>& device,
+                const void* src,
+                const size_t& size);
+
+            void upload_data(
+                VulkanDevice& device,
                 const void* src,
                 const size_t& size);
 

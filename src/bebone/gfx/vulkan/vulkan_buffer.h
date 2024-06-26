@@ -40,9 +40,9 @@ namespace bebone::gfx::vulkan {
         VkBufferCreateFlags flags = 0;
         // VkDeviceSize size;
         VkBufferUsageFlags usage = vulkan_buffer_any_use_flag;
-        VkSharingMode sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        uint32_t queueFamilyIndexCount = 0;
-        uint32_t* pQueueFamilyIndices = nullptr;
+        VkSharingMode sharing_mode = VK_SHARING_MODE_EXCLUSIVE;
+        uint32_t queue_family_index_count = 0;
+        uint32_t* ptr_queue_family_indices = nullptr;
     };
 
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {

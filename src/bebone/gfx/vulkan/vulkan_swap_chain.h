@@ -27,8 +27,8 @@ namespace bebone::gfx::vulkan {
             void create_swap_chain(VulkanDevice& device);
             void create_sync_objects(VulkanDevice& device);
 
-            static VkSurfaceFormatKHR choose_swap_surface_format(const std::vector<VkSurfaceFormatKHR> &availableFormats);
-            static VkPresentModeKHR choose_swap_present_mode(const std::vector<VkPresentModeKHR> &availablePresentModes);
+            static VkSurfaceFormatKHR choose_swap_surface_format(const std::vector<VkSurfaceFormatKHR> &available_formats);
+            static VkPresentModeKHR choose_swap_present_mode(const std::vector<VkPresentModeKHR> &available_present_modes);
             static VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D window_extent);
 
             VkExtent2D extent;
@@ -51,7 +51,7 @@ namespace bebone::gfx::vulkan {
             VulkanResult acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *image_index);
             VulkanResult submit_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& command_buffer, uint32_t *image_index);
 
-            size_t currentFrame = 0;
+            size_t current_frame = 0;
 
             void destroy(VulkanDevice& device) override;
     };

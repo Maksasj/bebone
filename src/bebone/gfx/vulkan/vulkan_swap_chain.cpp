@@ -19,13 +19,13 @@ namespace bebone::gfx::vulkan {
     }
 
     VulkanResult VulkanSwapChain::acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *image_index) {
-        vkWaitForFences(device->device, 1, &in_flight_fences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
+        vkWaitForFences(device->device, 1, &in_flight_fences[current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 
         auto result = vkAcquireNextImageKHR(
             device->device,
             backend,
             std::numeric_limits<uint64_t>::max(),
-            image_available_semaphores[currentFrame],  // must be a not signaled semaphore
+            image_available_semaphores[current_frame],  // must be a not signaled semaphore
             VK_NULL_HANDLE,
             image_index);
 
@@ -44,11 +44,11 @@ namespace bebone::gfx::vulkan {
         if (images_in_flight[*image_index] != VK_NULL_HANDLE)
             vkWaitForFences(device->device, 1, &images_in_flight[*image_index], VK_TRUE, UINT64_MAX);
 
-        images_in_flight[*image_index] = in_flight_fences[currentFrame];
+        images_in_flight[*image_index] = in_flight_fences[current_frame];
 
-        VkSemaphore wait_semaphores[] = {image_available_semaphores[currentFrame]};
+        VkSemaphore wait_semaphores[] = {image_available_semaphores[current_frame]};
         VkPipelineStageFlags wait_stages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        VkSemaphore signal_semaphores[] = {render_finished_semaphores[currentFrame]};
+        VkSemaphore signal_semaphores[] = {render_finished_semaphores[current_frame]};
 
         VkSubmitInfo submit_info = {};
         submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -60,10 +60,9 @@ namespace bebone::gfx::vulkan {
         submit_info.signalSemaphoreCount = 1;
         submit_info.pSignalSemaphores = signal_semaphores;
 
-        vkResetFences(device->device, 1, &in_flight_fences[currentFrame]);
-        if (vkQueueSubmit(device->graphics_queue, 1, &submit_info, in_flight_fences[currentFrame]) != VK_SUCCESS) {
+        vkResetFences(device->device, 1, &in_flight_fences[current_frame]);
+        if(vkQueueSubmit(device->graphics_queue, 1, &submit_info, in_flight_fences[current_frame]) != VK_SUCCESS)
             throw std::runtime_error("failed to submit draw command buffer!");
-        }
 
         // Presenting part
         VkSwapchainKHR swap_chains[] = { backend };
@@ -78,11 +77,10 @@ namespace bebone::gfx::vulkan {
 
         VkResult result = vkQueuePresentKHR(device->present_queue, &present_info);
 
-        currentFrame = (currentFrame + 1) % image_count;
+        current_frame = (current_frame + 1) % image_count;
 
-        if(result != VK_SUCCESS) {
+        if(result != VK_SUCCESS)
             throw std::runtime_error("failed to acquire submit command buffers !");
-        }
 
         return { result };
     }
@@ -117,9 +115,8 @@ namespace bebone::gfx::vulkan {
 
         // Todo image count should be configurable
         image_count = swap_chain_support.capabilities.minImageCount + 1;
-        if (swap_chain_support.capabilities.maxImageCount > 0 && image_count > swap_chain_support.capabilities.maxImageCount) {
+        if (swap_chain_support.capabilities.maxImageCount > 0 && image_count > swap_chain_support.capabilities.maxImageCount)
             image_count = swap_chain_support.capabilities.maxImageCount;
-        }
 
         std::cout << "Chosen swap chain image count " << image_count << "\n";
 
@@ -182,11 +179,9 @@ namespace bebone::gfx::vulkan {
     }
 
     VkSurfaceFormatKHR VulkanSwapChain::choose_swap_surface_format(const std::vector<VkSurfaceFormatKHR> &available_formats) {
-        for (const auto &available_format : available_formats) {
-            if (available_format.format == VK_FORMAT_B8G8R8A8_UNORM && available_format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+        for (const auto &available_format : available_formats)
+            if (available_format.format == VK_FORMAT_B8G8R8A8_UNORM && available_format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
                 return available_format;
-            }
-        }
 
         return available_formats[0];
     }
@@ -212,7 +207,7 @@ namespace bebone::gfx::vulkan {
 
             actual_extent.width = std::max(
                 capabilities.minImageExtent.width,
-                std::min(capabilities.maxImageExtent.width, actual_extent.width));
+                std::min(capabilities.maxImageExtent.width, actual_extent.width)); // Todo
             actual_extent.height = std::max(
                 capabilities.minImageExtent.height,
                 std::min(capabilities.maxImageExtent.height, actual_extent.height)); // Todo

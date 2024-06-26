@@ -20,7 +20,7 @@ namespace bebone::gfx::vulkan {
 
             VulkanManagedPipelineTuple create_pipeline(
                 std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanSwapChain>& swapChain,
+                const std::shared_ptr<VulkanSwapChain>& swapChain,
                 const std::string& vertex_shader_file_path,
                 const std::string& fragment_shader_file_path,
                 const std::vector<VulkanConstRange>& constantRanges,

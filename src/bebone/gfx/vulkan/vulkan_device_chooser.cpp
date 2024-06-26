@@ -32,7 +32,7 @@ namespace bebone::gfx::vulkan {
         bool swap_chain_adequate = false;
 
         if(extensions_supported) {
-            VulkanSwapChainSupportDetails swap_chain_support = query_swap_chain_support(device, surface);
+            auto swap_chain_support = query_swap_chain_support(device, surface);
 
             swap_chain_adequate = !swap_chain_support.formats.empty() && !swap_chain_support.present_modes.empty();
         }
@@ -70,7 +70,7 @@ namespace bebone::gfx::vulkan {
         uint32_t queue_family_count = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(device, &queue_family_count, nullptr);
 
-        std::vector<VkQueueFamilyProperties> queue_families(queue_family_count);
+        auto queue_families = std::vector<VkQueueFamilyProperties>(queue_family_count);
         vkGetPhysicalDeviceQueueFamilyProperties(device, &queue_family_count, queue_families.data());
 
         VulkanQueueFamilyIndices indices;

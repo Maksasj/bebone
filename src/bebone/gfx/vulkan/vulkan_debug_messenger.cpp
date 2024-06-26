@@ -25,7 +25,7 @@ namespace bebone::gfx::vulkan {
     ) {
         auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 
-        if (func != nullptr)
+        if(func != nullptr)
             return func(instance, create_info, allocator, debug_messenger);
 
         return VK_ERROR_EXTENSION_NOT_PRESENT;
@@ -36,9 +36,9 @@ namespace bebone::gfx::vulkan {
         VkDebugUtilsMessengerEXT debug_messenger,
         const VkAllocationCallbacks *allocator
     ) {
-        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 
-        if (func != nullptr)
+        if(func != nullptr)
             func(instance, debug_messenger, allocator);
     }
 
@@ -56,9 +56,8 @@ namespace bebone::gfx::vulkan {
 
         populate_debug_messenger_create_info(create_info);
 
-        if (CreateDebugUtilsMessengerEXT(vulkan_instance.get_instance(), &create_info, nullptr, &debug_messenger) != VK_SUCCESS) {
+        if(CreateDebugUtilsMessengerEXT(vulkan_instance.get_instance(), &create_info, nullptr, &debug_messenger) != VK_SUCCESS)
             throw std::runtime_error("failed to set up debug messenger!");
-        }
     }
 
     VulkanDebugMessenger::~VulkanDebugMessenger() {

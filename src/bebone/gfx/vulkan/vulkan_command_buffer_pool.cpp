@@ -105,10 +105,11 @@ namespace bebone::gfx::vulkan {
         region.imageSubresource.baseArrayLayer = 0;
         region.imageSubresource.layerCount = layer_count;
 
-        region.imageOffset = {0, 0, 0};
-        region.imageExtent = {width, height, 1};
+        region.imageOffset = { 0, 0, 0 };
+        region.imageExtent = { width, height, 1 };
 
         vkCmdCopyBufferToImage(command_buffer, buffer->backend, image->backend, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+
         end_single_time_commands(device, command_buffer);
     }
 }

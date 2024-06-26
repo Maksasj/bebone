@@ -12,7 +12,7 @@ namespace bebone::gfx::vulkan {
     struct VulkanTexture;
     struct VulkanBufferMemoryTuple;
 
-    using VulkanBindlessHandle = size_t;
+    using VulkanBindlessHandle = size_t; // Todo
 
     struct VulkanManagedPipelineTuple : public VulkanApi {
         public:

@@ -19,7 +19,7 @@ namespace bebone::gfx::vulkan {
         std::shared_ptr<VulkanTexture>& texture,
         const size_t& binding
     ) {
-        auto dst_array_elements = std::vector<size_t> {};
+        auto dst_array_elements = std::vector<size_t> {}; // Todo
         dst_array_elements.reserve(descriptors.size()); // FIF
 
         for(auto& _ : descriptors) {

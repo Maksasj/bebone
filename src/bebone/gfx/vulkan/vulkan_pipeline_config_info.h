@@ -118,7 +118,7 @@ namespace bebone::gfx::vulkan {
             }
         };
 
-        float blendConstants[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        float blend_constants[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
     };
 
     // VkPipelineDynamicStateCreateInfo

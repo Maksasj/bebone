@@ -5,7 +5,7 @@
 #include "vulkan_pipeline_layout.h"
 
 namespace bebone::gfx::vulkan {
-    std::vector<VkPipelineShaderStageCreateInfo> VulkanPipeline::collect_shader_stages(std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules) {
+    std::vector<VkPipelineShaderStageCreateInfo> VulkanPipeline::collect_shader_stages(const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules) {
         auto stages = std::vector<VkPipelineShaderStageCreateInfo>{};
         stages.reserve(shader_modules.size());
 
@@ -32,9 +32,9 @@ namespace bebone::gfx::vulkan {
 
     VulkanPipeline::VulkanPipeline(
         VulkanDevice& device,
-        std::shared_ptr<VulkanSwapChain>& swap_chain,
-        std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
+        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig& config_info
     ) {
         // VkPipelineShaderStageCreateInfo
@@ -46,7 +46,7 @@ namespace bebone::gfx::vulkan {
         vertex_input_state.pNext = config_info.vertex_input_state.ptr_next;
         vertex_input_state.flags = config_info.vertex_input_state.flags;
 
-        if(config_info.vertex_input_state.vertex_descriptions.binding_descriptions.size() != 0) {
+        if(!config_info.vertex_input_state.vertex_descriptions.binding_descriptions.empty()) {
             vertex_input_state.vertexBindingDescriptionCount = config_info.vertex_input_state.vertex_descriptions.binding_descriptions.size();
             vertex_input_state.pVertexBindingDescriptions = config_info.vertex_input_state.vertex_descriptions.binding_descriptions.data();
         } else {
@@ -54,7 +54,7 @@ namespace bebone::gfx::vulkan {
             vertex_input_state.pVertexBindingDescriptions = nullptr;
         }
 
-        if(config_info.vertex_input_state.vertex_descriptions.attribute_descriptions.size() != 0) {
+        if(!config_info.vertex_input_state.vertex_descriptions.attribute_descriptions.empty()) {
             vertex_input_state.vertexAttributeDescriptionCount = config_info.vertex_input_state.vertex_descriptions.attribute_descriptions.size();
             vertex_input_state.pVertexAttributeDescriptions = config_info.vertex_input_state.vertex_descriptions.attribute_descriptions.data();
         } else {
@@ -138,10 +138,10 @@ namespace bebone::gfx::vulkan {
             .attachmentCount = static_cast<uint32_t>(config_info.color_blend_state.ptr_attachments.size()),
             .pAttachments = config_info.color_blend_state.ptr_attachments.data(),
             .blendConstants = {
-                config_info.color_blend_state.blendConstants[0],
-                config_info.color_blend_state.blendConstants[1],
-                config_info.color_blend_state.blendConstants[2],
-                config_info.color_blend_state.blendConstants[3]
+                config_info.color_blend_state.blend_constants[0],
+                config_info.color_blend_state.blend_constants[1],
+                config_info.color_blend_state.blend_constants[2],
+                config_info.color_blend_state.blend_constants[3]
             }
         };
 
