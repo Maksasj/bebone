@@ -31,6 +31,8 @@ namespace bebone::gfx::vulkan {
         memory->destroy(device); // Todo
         buffer->destroy(device); // Todo
 
+        // Todo collect garbage
+
         image->transition_layout(*commandBufferPool, device, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         sampler = device.create_sampler();

@@ -24,6 +24,6 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanDescriptorSetLayoutBinding::destroy(VulkanDevice&) {
-
+        mark_destroyed();
     }
 }
