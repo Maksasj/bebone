@@ -1,8 +1,8 @@
-# bebone
+# bebone 💀
 
-**bebone** is a game development framework/engine aimed for flexible and comfortable game development, written in **C++**.
+**bebone** is a modular game development framework/engine written with **C++**. **bebone** implements **high-level** abstractions, as well as provides access to **low-level** internal abstractions for **flexible** and **highly customizable** game development
 
-- **Modular code base**, every **bebone** module is a self contained library with **minimal** dependency on **third-party** libraries. All **bebone** abstractions inherit same **interfaces**, for better integration with user defined abstractions   
+- **Modular code base** written with, every **bebone** module is a self contained library with **minimal** dependency on **third-party** libraries. All **bebone** abstractions inherit same **interfaces**, for better integration with user defined abstractions   
 
 - **Designed with real-world use in mind** for small hobby projects, as well as professional/enterprise projects. **bebone** provides multi layer APIs **Abstraction -> System -> App** levels, where each level build on top of previous 
 
@@ -19,7 +19,9 @@ Cool looking widgets
 ![GitHub License](https://img.shields.io/github/license/Maksasj/bebone)
 ![Discord](https://img.shields.io/discord/1156584129190711326?style=flat&label=discord)
 
-### Architecture
+## Architecture
+
+Todo
 
 In other words **bebone** is modular game development framework, where each module is a self contained library, that can be used apart from the entire framework
 
@@ -28,7 +30,7 @@ For now **bebone** have severall modules
 * [Core module](). Core **bebone** module implements most important abstractions which are widely used across all other modules. Implements **Memory, Debug, Types, Event, Input** abstractions
 * [Graphics module (GFX module)](). **Abstraction layer** module, implements basic abstractions on top of **Graphical APIs** such as **OpenGL** and **Vulkan**. **GFX module**
  depends on **Core**, **Assets** modules
-* [Assets module](). Module designed for loading and managing different **assets** such as **images**, **models**, **materals**. **Assets module** depends on Core module only 
+* [Assets module](). Module designed for loading and managing different **assets** such as **images**, **models**, **materals**. **Assets module** depends on **Core module** only 
 * [Renderer module]() **System layer** module, provides high-level generalized graphical functionality. It abstracts all low-level **OpenGL** or **Vulkan** under one convenient interface. **Renderer module** build on top of **GFX module**
 
 ### Planned modules
