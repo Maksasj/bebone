@@ -1,52 +1,145 @@
+#include <utility>
+
 #include "bebone/core/core.h"
 #include "test_shared.h"
 
 using namespace bebone::core;
 
-void example_function(int x) {
-    std::cout << "Example function: " << x << std::endl;
-}
+enum Category {
+    Simple,
+    Complex,
+    Cool
+};
 
-void another_function(int x) {
-    std::cout << "Another Function: " << x + 40 << std::endl;
-}
+struct SimpleEvent : public Event<Category, Simple> {
 
-void meme(int x) {
-    std::cout << "meme function" << x + 32445 / 23 << std::endl;
-}
+};
+
+struct ComplexEvent : public Event<Category, Complex> {
+    int field;
+
+    explicit ComplexEvent(const int& field) : field(field) {}
+};
+
+struct CoolEvent : public Event<Category, Cool> {
+    std::string field;
+
+    explicit CoolEvent(std::string field) : field(std::move(field)) {}
+};
 
 int main() {
+    TEST_CASE {
+        EventDispatcher<Category> dispatcher;
 
-    Action<int> action;
-    std::function<void(int)> func = example_function;
-    std::function<void(int)> func2 = another_function;
-    std::function<void(int)> func3 = meme;
+        int res = 0;
 
-    action += func;
-    action += func2;
+        dispatcher.add_listener([&](SimpleEvent& event) {
+            res += 1;
+        });
 
-    // subscribed functions: func, func2
+        dispatcher.fire(SimpleEvent());
 
-    action(5);
+        ensure(res == 1);
+    }
 
-    action -= func;
-    action += func3;
+    TEST_CASE {
+        EventDispatcher<Category> dispatcher;
 
-    // subscribed functions: func2, func3
+        int res = 0;
 
-    action(4);
+        dispatcher.add_listener([&](SimpleEvent& event) {
+            res += 1;
+        });
 
-    action -= func2;
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(SimpleEvent());
 
-    // subscribed functions: func3
+        ensure(res == 3);
+    }
 
-    action(0);
+    TEST_CASE {
+        EventDispatcher<Category> dispatcher;
 
-    action -= func3;
+        int res = 123;
 
-    // subscribed functions: none
+        dispatcher.add_listener([&](SimpleEvent& event) {
+            res += 1;
+        });
 
-    action(324);
+        dispatcher.add_listener([&](SimpleEvent& event) {
+            res -= 1;
+        });
+
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(SimpleEvent());
+
+        ensure(res == 123);
+    }
+
+    TEST_CASE {
+        EventDispatcher<Category> dispatcher;
+
+        int res = 0;
+
+        dispatcher.add_listener([&](SimpleEvent& event) {
+            res += 1;
+        });
+
+        dispatcher.add_listener([&](ComplexEvent& event) {
+            res += event.field;
+        });
+
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(SimpleEvent());
+
+        ensure(res == 3);
+    }
+
+    TEST_CASE {
+        EventDispatcher<Category> dispatcher;
+
+        int res = 0;
+
+        dispatcher.add_listener([&](SimpleEvent& event) {
+            res += 1;
+        });
+
+        dispatcher.add_listener([&](ComplexEvent& event) {
+            res += event.field;
+        });
+
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(ComplexEvent(2));
+
+        ensure(res == 3);
+    }
+
+    TEST_CASE {
+        EventDispatcher<Category> dispatcher;
+
+        std::string res = "some";
+
+        dispatcher.add_listener([&](SimpleEvent& event) {
+            res += "1";
+        });
+
+        dispatcher.add_listener([&](ComplexEvent& event) {
+            res += to_string(event.field);
+        });
+
+        dispatcher.add_listener([&](CoolEvent& event) {
+            res += event.field;
+        });
+
+        dispatcher.fire(SimpleEvent());
+        dispatcher.fire(ComplexEvent(2));
+        dispatcher.fire(CoolEvent("poggers"));
+
+        ensure(res == "some12poggers");
+    }
 
     return 0;
 }
