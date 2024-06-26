@@ -6,11 +6,6 @@
 
 - **Designed with real-world use in mind** for small hobby projects, as well as professional/enterprise projects. **bebone** provides multi layer APIs **Abstraction -> System -> App** levels, where each level build on top of previous 
 
-### Links
-1. Source code available at [github.com/Maksasj/bebone](https://github.com/Maksasj/bebone)
-2. Community Discord [link](https://discord.gg/v4mcTmuDTb)
-3. **bebone** documentation available at [link](github.com/Maksasj/bebone/docs/DOCUMENTATION.md)
-
 > **bebone** is not a new javascript framework btw. It is a game development one!
 
 Cool looking widgets 
@@ -18,6 +13,11 @@ Cool looking widgets
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Maksasj/bebone/clang_build_win.yml)
 ![GitHub License](https://img.shields.io/github/license/Maksasj/bebone)
 ![Discord](https://img.shields.io/discord/1156584129190711326?style=flat&label=discord)
+
+### Links
+1. Source code available at [github.com/Maksasj/bebone](https://github.com/Maksasj/bebone)
+2. Community Discord [link](https://discord.gg/v4mcTmuDTb)
+3. **bebone** documentation available at [link](github.com/Maksasj/bebone/docs/DOCUMENTATION.md)
 
 ## Architecture
 
@@ -99,4 +99,4 @@ Todo
 **bebone** is free and open source game development framework. All code in this repository **FOR NOW** is licensed under
 -  Apache-2.0 license ([LICENSE.md](https://github.com/Maksasj/bebone/blob/master/LICENSE.md) or http://www.apache.org/licenses/LICENSE-2.0)
 
-*Copyright 2019-2022 © Maksim Jaroslavcevas, Oskaras Vištorskis*
+*Copyright 2023-9999 © Maksim Jaroslavcevas, Oskaras Vištorskis*
