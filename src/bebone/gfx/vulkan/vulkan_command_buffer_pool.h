@@ -18,6 +18,7 @@ namespace bebone::gfx::vulkan {
                 std::shared_ptr<VulkanDevice>& device,
                 const size_t& count);
 
+            // Todo, refactor this
             VkCommandBuffer begin_single_time_commands(VulkanDevice& device);
             void end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer);
 

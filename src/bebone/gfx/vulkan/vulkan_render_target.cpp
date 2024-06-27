@@ -51,7 +51,7 @@ namespace bebone::gfx::vulkan {
         for(auto& [_, view] : swap_chain_images)
             view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
 
-        for(auto& [memory, view, image] : depth_images) {
+        for(auto& [memory, view, image] : depth_images) { // Todo
             memory->destroy(device);
             view->destroy(device);
             image->destroy(device);

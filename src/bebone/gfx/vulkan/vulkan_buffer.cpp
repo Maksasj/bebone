@@ -10,18 +10,18 @@ namespace bebone::gfx::vulkan {
         const size_t& size,
         VulkanBufferInfo buffer_info
     )  : size(size) {
-        VkBufferCreateInfo create_Info{};
+        VkBufferCreateInfo create_info{};
 
-        create_Info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        create_Info.pNext = nullptr;
-        create_Info.flags = buffer_info.flags;
-        create_Info.size = size;
-        create_Info.usage = buffer_info.usage;
-        create_Info.sharingMode = buffer_info.sharing_mode;
-        create_Info.queueFamilyIndexCount = buffer_info.queue_family_index_count;
-        create_Info.pQueueFamilyIndices = buffer_info.ptr_queue_family_indices;
+        create_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        create_info.pNext = nullptr;
+        create_info.flags = buffer_info.flags;
+        create_info.size = size;
+        create_info.usage = buffer_info.usage;
+        create_info.sharingMode = buffer_info.sharing_mode;
+        create_info.queueFamilyIndexCount = buffer_info.queue_family_index_count;
+        create_info.pQueueFamilyIndices = buffer_info.ptr_queue_family_indices;
 
-        if(vkCreateBuffer(device.device, &create_Info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateBuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create vulkan buffer!");
     }
 

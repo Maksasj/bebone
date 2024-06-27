@@ -17,7 +17,7 @@ namespace bebone::gfx::vulkan {
                 const shared_ptr<VulkanImage>& image,
                 const shared_ptr<VulkanImageView>& view);
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
         };
 
         struct VulkanDepthImageTuple : public VulkanApi {
@@ -30,7 +30,7 @@ namespace bebone::gfx::vulkan {
                 const shared_ptr<VulkanImageView>& view,
                 const shared_ptr<VulkanDeviceMemory>& memory);
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
         };
 
         struct VulkanImageMemoryTuple : public VulkanApi {
@@ -41,7 +41,7 @@ namespace bebone::gfx::vulkan {
                 const shared_ptr<VulkanImage>& image,
                 const shared_ptr<VulkanDeviceMemory>& memory);
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
         };
 }
 

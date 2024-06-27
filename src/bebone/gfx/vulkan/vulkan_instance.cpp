@@ -10,36 +10,36 @@ namespace bebone::gfx::vulkan {
         if (enable_validation_layers && !check_validation_layer_support())
             throw std::runtime_error("validation layers requested, but not available!");
 
-        VkApplicationInfo appInfo = {};
-        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = "Bebone";
-        appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = "Bebone";
-        appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VK_API_VERSION_1_2;
+        VkApplicationInfo app_info = {};
+        app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+        app_info.pApplicationName = "Bebone";
+        app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+        app_info.pEngineName = "Bebone";
+        app_info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+        app_info.apiVersion = VK_API_VERSION_1_2;
 
-        VkInstanceCreateInfo createInfo = {};
-        createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-        createInfo.pApplicationInfo = &appInfo;
+        VkInstanceCreateInfo create_info = {};
+        create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+        create_info.pApplicationInfo = &app_info;
 
         auto extensions = get_required_extensions();
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-        createInfo.ppEnabledExtensionNames = extensions.data();
+        create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+        create_info.ppEnabledExtensionNames = extensions.data();
 
         if (enable_validation_layers) {
-            VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
+            VkDebugUtilsMessengerCreateInfoEXT debug_create_info;
 
-            createInfo.enabledLayerCount = static_cast<uint32_t>(validation_layers.size());
-            createInfo.ppEnabledLayerNames = validation_layers.data();
+            create_info.enabledLayerCount = static_cast<uint32_t>(validation_layers.size());
+            create_info.ppEnabledLayerNames = validation_layers.data();
 
-            VulkanDebugMessenger::populate_debug_messenger_create_info(debugCreateInfo);
-            createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
+            VulkanDebugMessenger::populate_debug_messenger_create_info(debug_create_info);
+            create_info.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debug_create_info;
         } else {
-            createInfo.enabledLayerCount = 0;
-            createInfo.pNext = nullptr;
+            create_info.enabledLayerCount = 0;
+            create_info.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
+        if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS)
             throw std::runtime_error("failed to create instance!");
 
         has_gflw_required_instance_extensions();
@@ -52,20 +52,20 @@ namespace bebone::gfx::vulkan {
         uint32_t layer_count;
         vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
 
-        auto availableLayers = std::vector<VkLayerProperties>(layer_count);
-        vkEnumerateInstanceLayerProperties(&layer_count, availableLayers.data());
+        auto available_layers = std::vector<VkLayerProperties>(layer_count);
+        vkEnumerateInstanceLayerProperties(&layer_count, available_layers.data());
 
-        for(const char *layerName : validation_layers) {
-            bool layerFound = false;
+        for(const char *layer_name : validation_layers) {
+            bool found = false;
 
-            for (const auto &layerProperties : availableLayers) {
-                if (strcmp(layerName, layerProperties.layerName) == 0) {
-                    layerFound = true;
+            for (const auto &layer_properties : available_layers) {
+                if (strcmp(layer_name, layer_properties.layerName) == 0) {
+                    found = true;
                     break;
                 }
             }
 
-            if (!layerFound)
+            if (!found)
                 return false;
         }
 

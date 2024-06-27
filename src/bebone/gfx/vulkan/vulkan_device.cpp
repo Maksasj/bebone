@@ -52,7 +52,7 @@ namespace bebone::gfx::vulkan {
         return descriptor_pool;
     }
 
-    // Todo add bufferInfo offset there
+    // Todo add buffer_info offset there
     void VulkanDevice::update_descriptor_set(
         const std::shared_ptr<VulkanBuffer>& buffer,
         std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
@@ -115,7 +115,7 @@ namespace bebone::gfx::vulkan {
 
         descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         descriptor_write.descriptorCount = 1;
-        // descriptorWrite.pBufferInfo = &bufferInfo;
+        // descriptorWrite.pBufferInfo = &buffer_info;
         descriptor_write.pImageInfo = &image_info;
 
         // descriptorWrite.pImageInfo = nullptr; // Optional
@@ -239,9 +239,9 @@ namespace bebone::gfx::vulkan {
 
     std::shared_ptr<VulkanDeviceMemory> VulkanDevice::create_device_memory(
         VkMemoryRequirements requirements,
-        VkMemoryPropertyFlags properties
+        VkMemoryPropertyFlags local_properties
     ) {
-        auto device_memory = std::make_shared<VulkanDeviceMemory>(*this, requirements, properties);
+        auto device_memory = std::make_shared<VulkanDeviceMemory>(*this, requirements, local_properties);
 
         child_objects.push_back(device_memory);
 
@@ -352,7 +352,7 @@ namespace bebone::gfx::vulkan {
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        const std::vector<std::shared_ptr<VulkanShaderModule>> shader_modules,
+        const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig config_info
     ) {
         auto pipeline = std::make_shared<VulkanPipeline>(*this, swap_chain, pipeline_layout, shader_modules, config_info);
@@ -370,8 +370,8 @@ namespace bebone::gfx::vulkan {
             type
         ));
 
-        auto shadeCode = shader_compiler.compile(type);
-        auto shader = std::make_shared<VulkanShaderModule>(*this, shadeCode);
+        auto shader_code = shader_compiler.compile(type);
+        auto shader = std::make_shared<VulkanShaderModule>(*this, shader_code);
 
         child_objects.push_back(shader);
 
@@ -472,12 +472,12 @@ namespace bebone::gfx::vulkan {
         throw std::runtime_error("failed to find supported format!");
     }
 
-    uint32_t VulkanDevice::find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags m_properties) {
-        VkPhysicalDeviceMemoryProperties mem_properties;
-        vkGetPhysicalDeviceMemoryProperties(physical_device, &mem_properties);
+    uint32_t VulkanDevice::find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags mem_properties) {
+        VkPhysicalDeviceMemoryProperties physical_properties;
+        vkGetPhysicalDeviceMemoryProperties(physical_device, &physical_properties);
 
-        for(uint32_t i = 0; i < mem_properties.memoryTypeCount; i++) {
-            if((type_filter & (1 << i)) && (mem_properties.memoryTypes[i].propertyFlags & m_properties) == m_properties)
+        for(uint32_t i = 0; i < physical_properties.memoryTypeCount; i++) {
+            if((type_filter & (1 << i)) && (physical_properties.memoryTypes[i].propertyFlags & mem_properties) == mem_properties)
                 return i;
         }
 

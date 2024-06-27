@@ -50,13 +50,13 @@ namespace bebone::gfx::vulkan {
             size_t size; // Todo, Do we really need to store buffer size there ?
 
         public:
-            VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo bufferInfo);
+            VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
             const size_t& get_size() const;
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

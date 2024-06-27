@@ -10,7 +10,6 @@
 namespace bebone::gfx::vulkan {
     VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) {
         descriptor_pool = device.create_descriptor_pool();
-
     }
 
     VulkanManagedPipelineTuple VulkanPipelineManager::create_pipeline(

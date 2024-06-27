@@ -178,7 +178,7 @@ namespace bebone::gfx::vulkan {
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::vector<std::shared_ptr<VulkanShaderModule>> shader_modules,
+                const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
 
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();

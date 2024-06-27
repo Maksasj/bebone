@@ -23,6 +23,7 @@ namespace bebone::gfx::vulkan {
         sampler_info.anisotropyEnable = VK_FALSE;
         sampler_info.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
+        // Todo
         vkCreateSampler(device.device, &sampler_info, nullptr, &backend);
     }
 
