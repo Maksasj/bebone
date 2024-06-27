@@ -3,8 +3,8 @@
 Modular game development framework/engine written with **C++**. **Bebone** implements **high-level** abstractions, as well as provides access to **low-level** internal abstractions for **flexible** and **highly customizable** game development
 
 - **Modular code base**, every **bebone** module is a self contained library with **minimal** dependency on **third-party** libraries. All **bebone** abstractions inherit same **interfaces**, for better integration with user defined abstractions   
-
-- **Designed with real-world use in mind** for small hobby projects, as well as professional/enterprise projects. **bebone** provides multi layer APIs **Abstraction -> System -> App** levels, where each level build on top of previous 
+- **Designed with real-world use in mind** for small hobby projects, as well as professional/enterprise projects. 
+- **User-Friendly** for **all experience levels**. Designed to be intuitive and easy to use for **beginners**, as well as experienced professionals
 
 > **Bebone** is not a new javascript framework btw. It is a game development one!
 
@@ -21,12 +21,18 @@ Cool looking widgets
 
 ## Architecture
 
-Todo
+**Bebone** provides multi layer APIs where each level build on top of previous:
 
-In other words **bebone** is modular game development framework, where each module is a self contained library, that can be used apart from the entire framework
+- **[Abstraction]()** basic abstraction layer, abstracts most basic things, such as OpenGL or Vulkan
+- **[System]()** advance abstraction layer, implements generalized systems on top of **abstraction layer**, such as **Renderer**
+- **[App]()** - complete application layer, combines multiple systems into self-contained application 
+
+
 
 ## Features
-For now **bebone** have severall modules
+
+For now **bebone** have severall modules:
+
 * [Core module](). Core **bebone** module implements most important abstractions which are widely used across all other modules. Implements **Memory, Debug, Types, Event, Input** abstractions
 * [Graphics module (GFX module)](). **Abstraction layer** module, implements basic abstractions on top of **Graphical APIs** such as **OpenGL** and **Vulkan**. **GFX module**
  depends on **Core**, **Assets** modules
@@ -34,6 +40,7 @@ For now **bebone** have severall modules
 * [Renderer module]() **System layer** module, provides high-level generalized graphical functionality. It abstracts all low-level **OpenGL** or **Vulkan** under one convenient interface. **Renderer module** build on top of **GFX module**
 
 ### Planned modules
+
 * [Sound module]()
 * [Physics module]()
 * [Entity component system module (ECS module)]()
@@ -45,12 +52,12 @@ For now there is only one build method
 ### Build manually
 
 First of all requirements
-  - [CMake]() (At least version 3.21)
-  - [Ninja]() (At least version 1.11.1)
+  - [CMake](https://cmake.org/) (At least version 3.21)
+  - [Ninja](https://github.com/ninja-build/ninja) (At least version 1.11.1)
   - C++ compiler (Have test with Clang 15.0.5 and GCC 12.2.0) 
-  - *Vulkan SDK (if you want to build [GFX module]())*
+  - *[Vulkan SDK](https://www.lunarg.com/vulkan-sdk/) (if you want to build [GFX module]())*
 
-  Firstly lets clone bebone locally *(note that you also need to clone all bebone git submodules)*
+  Firstly lets clone **bebone** locally *(note that you also need to clone all bebone git submodules)*
 
   ```bash
   git clone --recursive git@github.com:Maksasj/bebone.git
@@ -88,11 +95,15 @@ At the moment, bebone is only dependent on these third-party libraries:
 You can find examples in [examples](https://github.com/Maksasj/bebone/tree/master/examples) directory.
 
 ## Documentation
-  - [Core module](https://github.com/Maksasj/bebone/blob/master/docs/Core.md)
-  - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/Gfx.md)
+  - [Core module](https://github.com/Maksasj/bebone/blob/master/docs/core/CORE.md)
+  - [Assets module](https://github.com/Maksasj/bebone/blob/master/docs/assets/ASSETS.md)
+  - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/gfx/GFX.md)
+  - [Renderer module](https://github.com/Maksasj/bebone/blob/master/docs/renderer/RENDERER.md)
+
+For full documentation see [DOCUMENTATION.md](https://github.com/Maksasj/bebone/blob/master/docs/DOCUMENTATION.md) file
 
 ## Contribution
-Todo
+Since for now no one cares about **bebone** we do not have any instructions or pull request templates, so just open [issue](https://github.com/Maksasj/bebone/issues) or something.
 
 ## License
 **Bebone** is free and open source game development framework. All code in this repository **FOR NOW** is licensed under
