@@ -1,23 +1,23 @@
 # bebone 💀
 
-**bebone** is a modular game development framework/engine written with **C++**. **bebone** implements **high-level** abstractions, as well as provides access to **low-level** internal abstractions for **flexible** and **highly customizable** game development
+Modular game development framework/engine written with **C++**. **Bebone** implements **high-level** abstractions, as well as provides access to **low-level** internal abstractions for **flexible** and **highly customizable** game development
 
-- **Modular code base** written with, every **bebone** module is a self contained library with **minimal** dependency on **third-party** libraries. All **bebone** abstractions inherit same **interfaces**, for better integration with user defined abstractions   
+- **Modular code base**, every **bebone** module is a self contained library with **minimal** dependency on **third-party** libraries. All **bebone** abstractions inherit same **interfaces**, for better integration with user defined abstractions   
 
 - **Designed with real-world use in mind** for small hobby projects, as well as professional/enterprise projects. **bebone** provides multi layer APIs **Abstraction -> System -> App** levels, where each level build on top of previous 
 
-> **bebone** is not a new javascript framework btw. It is a game development one!
+> **Bebone** is not a new javascript framework btw. It is a game development one!
 
 Cool looking widgets 
 ![GitHub Repo stars](https://img.shields.io/github/stars/Maksasj/bebone)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Maksasj/bebone/clang_build_win.yml)
 ![GitHub License](https://img.shields.io/github/license/Maksasj/bebone)
-![Discord](https://img.shields.io/discord/1156584129190711326?style=flat&label=discord)
+![Discord](https://img.shields.io/discord/1156584129190711326?logo=discord)
 
 ### Links
 1. Source code available at [github.com/Maksasj/bebone](https://github.com/Maksasj/bebone)
-2. Community Discord [link](https://discord.gg/v4mcTmuDTb)
-3. **bebone** documentation available at [link](github.com/Maksasj/bebone/docs/DOCUMENTATION.md)
+2. Community Discord [discord.gg/bebone](https://discord.gg/v4mcTmuDTb)
+3. **Bebone** documentation available at [github.com/Maksasj/bebone](github.com/Maksasj/bebone/docs/DOCUMENTATION.md)
 
 ## Architecture
 
@@ -40,7 +40,7 @@ For now **bebone** have severall modules
 * [App module]()
 
 ## Build
-For now there is one method how you can use bebone is your project
+For now there is only one build method
 
 ### Build manually
 
@@ -85,7 +85,6 @@ At the moment, bebone is only dependent on these third-party libraries:
   - [miniaudio](https://github.com/Maksasj/miniaudio/tree/master) *(Sound and Music library)*
 
 ## Examples
-Bebone hello world example:
 You can find examples in [examples](https://github.com/Maksasj/bebone/tree/master/examples) directory.
 
 ## Documentation
@@ -96,7 +95,7 @@ You can find examples in [examples](https://github.com/Maksasj/bebone/tree/maste
 Todo
 
 ## License
-**bebone** is free and open source game development framework. All code in this repository **FOR NOW** is licensed under
+**Bebone** is free and open source game development framework. All code in this repository **FOR NOW** is licensed under
 -  Apache-2.0 license ([LICENSE.md](https://github.com/Maksasj/bebone/blob/master/LICENSE.md) or http://www.apache.org/licenses/LICENSE-2.0)
 
 *Copyright 2023-9999 © Maksim Jaroslavcevas, Oskaras Vištorskis*
