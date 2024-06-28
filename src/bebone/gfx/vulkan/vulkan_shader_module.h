@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_SHADER_MODULE_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_SHADER_MODULE_H_
+#ifndef _BEBONE_GFX_VULKAN_SHADER_MODULE_H_
+#define _BEBONE_GFX_VULKAN_SHADER_MODULE_H_
 
 #include "../gfx_backend.h"
 
@@ -16,9 +16,9 @@ namespace bebone::gfx::vulkan {
 
     class VulkanShaderModule : public VulkanWrapper<VkShaderModule>, private core::NonCopyable {
         public:
-            ShaderType shaderType;
+            ShaderType type;
 
-            VulkanShaderModule(VulkanDevice& device, const ShaderCode& shaderCode);
+            VulkanShaderModule(VulkanDevice& device, const ShaderCode& code);
 
             void destroy(VulkanDevice& device) override;
     };

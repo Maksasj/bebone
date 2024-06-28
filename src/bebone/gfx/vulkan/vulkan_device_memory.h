@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_BUFFER_DEVICE_MEMORY_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_BUFFER_DEVICE_MEMORY_H_
+#ifndef _BEBONE_GFX_VULKAN_BUFFER_DEVICE_MEMORY_H_
+#define _BEBONE_GFX_VULKAN_BUFFER_DEVICE_MEMORY_H_
 
 #include <vector>
 
@@ -17,7 +17,10 @@ namespace bebone::gfx::vulkan {
 
     class VulkanDeviceMemory : public VulkanWrapper<VkDeviceMemory>, private core::NonCopyable {
         public:
-            VulkanDeviceMemory(VulkanDevice& device, VkMemoryRequirements memRequirements, VkMemoryPropertyFlags properties);
+            VulkanDeviceMemory(
+                VulkanDevice& device,
+                VkMemoryRequirements requirements,
+                VkMemoryPropertyFlags properties);
 
             void bind_buffer_memory(
                 VulkanDevice& device,
@@ -39,16 +42,16 @@ namespace bebone::gfx::vulkan {
             void unmap(VulkanDevice& device);
 
             void upload_data(
-                VulkanDevice& device,
-                const void* src,
-                const size_t& size);
-
-            void upload_data(
                 std::shared_ptr<VulkanDevice>& device,
                 const void* src,
                 const size_t& size);
 
-            void destroy(VulkanDevice &device) override;
+            void upload_data(
+                VulkanDevice& device,
+                const void* src,
+                const size_t& size);
+
+            void destroy(VulkanDevice& device) override;
     };
 }
 

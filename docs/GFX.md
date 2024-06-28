@@ -24,7 +24,7 @@ using namespace bebone::gfx::opengl;
 int main() {
     glfwInit();
     
-    auto window = WindowFactory::create_window("0. OpenGL window example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. OpenGL window example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -123,8 +123,8 @@ You need to specify the path to the glsl shader, it's type (vertex/fragment shad
 
 Simple example usage:
 ```c++
-GLShader vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+GLShader vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
 ```
 
 ### GLShader
@@ -132,8 +132,8 @@ In OpenGL, a Shader is a user-defined program designed to run on some stage of a
 
 Firstly lets create our shader. The easiest and simplest way to create a shader is to use GLShaderFactory, like this:
 ```c++
-auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
 ```
 As you see you need only to specify path to shader source code and shader type, after this you can use your shader for creating your shader program.
 
@@ -183,13 +183,13 @@ const std::vector<u32> indices = {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    GLShader vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    GLShader vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();
@@ -276,13 +276,13 @@ const std::vector<u32> indices {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("2. OpenGL texture example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
     GLShaderProgram shaderProgram(vertexShader, fragmentShader);
 
     vertexShader.destroy();

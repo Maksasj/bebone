@@ -20,8 +20,8 @@ namespace bebone::gfx {
         private:
             GLFWwindow* window;
 
-            InputHandler inputHandler;
-            WindowHandler windowHandler;
+            InputHandler input_handler;
+            WindowHandler window_handler;
 
         protected:
             int width;
@@ -68,9 +68,9 @@ namespace bebone::gfx {
 
         private:
             /// GLFW window position change callbacks
-            static void glfw_window_pos_callback(GLFWwindow* glfwWindow, int xPos, int yPos);
+            static void glfw_window_pos_callback(GLFWwindow* glfw_window, int x_pos, int y_pos);
             /// GLFW window size change callbacks
-            static void glfw_window_size_callback(GLFWwindow* glfwWindow, int width, int height);
+            static void glfw_window_size_callback(GLFWwindow* glfw_window, int width, int height);
             /// GLFW window close callback
             static void glfw_window_close_callback(GLFWwindow* handle);
             /// GLFW window refresh callback
@@ -82,14 +82,14 @@ namespace bebone::gfx {
             /// GLFW window maximize callback
             static void glfw_window_maximize_callback(GLFWwindow* handle, int maximized);
             /// GLFW window framebuffer size callback
-            static void glfw_framebuffer_size_callback(GLFWwindow* glfwWindow, int width, int height);
+            static void glfw_framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height);
             /// GLFW window content scale callback
-            static void glfw_window_content_scale_callback(GLFWwindow* handle, float xScale, float yScale);
+            static void glfw_window_content_scale_callback(GLFWwindow* handle, float x_scale, float y_scale);
 
             /// GLFW mouse button press callback
-            static void glfw_mouse_button_callback(GLFWwindow* glfwWindow, int button, int action, int mods);
+            static void glfw_mouse_button_callback(GLFWwindow* glfw_window, int button, int action, int mods);
             /// GLFW key press callback
-            static void glfw_key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods);
+            static void glfw_key_callback(GLFWwindow* glfw_window, int key, int scancode, int action, int mods);
 
     };
 }

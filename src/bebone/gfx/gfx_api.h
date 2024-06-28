@@ -3,8 +3,8 @@
 
 /// Specifies the graphics API
 enum GfxAPI {
-    OPENGL,
-    VULKAN
+    OpenGL,
+    Vulkan
 };
 
 #endif

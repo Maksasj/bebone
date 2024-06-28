@@ -12,10 +12,10 @@ namespace bebone::gfx {
 
             /*!
              * Function that compiles shader source codes with desired shader type
-             * @param p_shaderType - desired shader type
+             * @param shader_type - desired shader type
              * @return Shader code object
             */
-            ShaderCode compile(const ShaderType& p_shaderType);
+            ShaderCode compile(const ShaderType& shader_type);
     };
 }
 

@@ -29,13 +29,13 @@ const std::vector<u32> indices {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("2. OpenGL texture example", screen_width, screen_height, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("2. OpenGL texture example", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, screen_width, screen_height);
 
-    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
     GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
     vertex_shader.destroy();

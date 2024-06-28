@@ -10,8 +10,8 @@ namespace bexel {
 
         GLFWContext::init();
 
-        window = WindowFactory::create_window("4. Opengl Bexel example", game_width, game_height, GfxAPI::OPENGL, {
-            .enableResize = true
+        window = WindowFactory::create_window("4. Opengl Bexel example", game_width, game_height, GfxAPI::OpenGL, {
+            .enable_resize = true
         });
 
         GLContext::load_opengl();
@@ -25,8 +25,8 @@ namespace bexel {
 
         const auto shader_flags = EnableUniforms;
 
-        auto vertex_shader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::VERTEX_SHADER, shader_flags);
-        auto fragment_shader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderTypes::FRAGMENT_SHADER, shader_flags);
+        auto vertex_shader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::vertex_shader, shader_flags);
+        auto fragment_shader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderTypes::fragment_shader, shader_flags);
 
         shader = make_unique<GLShaderProgram>(vertex_shader, fragment_shader);
 

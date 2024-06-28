@@ -10,16 +10,16 @@ namespace bebone::gfx {
     /// Class used for storing shader source
     class ShaderSource {
         private:
-            std::string m_shaderSource;
-            ShaderType m_shaderType;
+            std::string shader_source;
+            ShaderType shader_type;
 
         public:
             /*!
              * Default constructor
-             * @param p_shaderSource - shader source string
-             * @param p_shaderType - shader type
+             * @param shader_source - shader source string
+             * @param shader_type - shader type
              */
-            ShaderSource(const std::string& p_shaderSource, const ShaderType& p_shaderType);
+            ShaderSource(const std::string& shader_source, const ShaderType& shader_type);
 
             /// Function that returns shader type
             const ShaderType& get_type() const;

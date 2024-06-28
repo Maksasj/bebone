@@ -21,13 +21,13 @@ const std::vector<u32> indices = {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", screen_width, screen_height, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, screen_width, screen_height);
 
-    GLShader vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    GLShader fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
+    GLShader vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    GLShader fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
     GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
     vertex_shader.destroy();
