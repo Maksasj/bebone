@@ -1,5 +1,8 @@
 #include "vulkan_image_tuples.h"
 
+#include "vulkan_image.h"
+#include "vulkan_image_view.h"
+
 namespace bebone::gfx::vulkan {
         VulkanSwapChainImageTuple::VulkanSwapChainImageTuple(
             const shared_ptr<VulkanImage>& image,
@@ -8,8 +11,10 @@ namespace bebone::gfx::vulkan {
 
         }
 
-        void VulkanSwapChainImageTuple::destroy(VulkanDevice& device)  {
-            // Todo
+        void VulkanSwapChainImageTuple::destroy(VulkanDevice &device)  {
+            view->destroy(device);
+
+            mark_destroyed();
         }
 
         VulkanDepthImageTuple::VulkanDepthImageTuple(
@@ -20,8 +25,12 @@ namespace bebone::gfx::vulkan {
 
         }
 
-        void VulkanDepthImageTuple::destroy(VulkanDevice& device) {
-            // Todo
+        void VulkanDepthImageTuple::destroy(VulkanDevice &device) {
+            image->destroy(device);
+            view->destroy(device);
+            memory->destroy(device);
+
+            mark_destroyed();
         }
 
         VulkanImageMemoryTuple::VulkanImageMemoryTuple(
@@ -31,7 +40,10 @@ namespace bebone::gfx::vulkan {
 
         }
 
-        void VulkanImageMemoryTuple::destroy(VulkanDevice& device) {
-            // Todo
+        void VulkanImageMemoryTuple::destroy(VulkanDevice &device) {
+            image->destroy(device);
+            memory->destroy(device);
+
+            mark_destroyed();
         }
 }

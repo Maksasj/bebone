@@ -37,6 +37,9 @@ namespace bebone::gfx::vulkan {
     };
 
     class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
+        private:
+            VkExtent3D extent;
+
         public:
             VulkanImage(const VkImage& image);
 
@@ -52,6 +55,8 @@ namespace bebone::gfx::vulkan {
                 VulkanDevice& device,
                 VkImageLayout old_layout,
                 VkImageLayout new_layout);
+
+            VkExtent3D get_extent() const;
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 

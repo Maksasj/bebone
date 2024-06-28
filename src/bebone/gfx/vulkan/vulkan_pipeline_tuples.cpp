@@ -34,9 +34,9 @@ namespace bebone::gfx::vulkan {
     }
 
     std::vector<VulkanBindlessHandle> VulkanManagedPipelineTuple::bind_uniform_buffer(
-            std::shared_ptr<VulkanDevice>& device,
-            const std::vector<VulkanBufferMemoryTuple>& tuples,
-            const size_t& binding
+        std::shared_ptr<VulkanDevice>& device,
+        const std::vector<VulkanBufferMemoryTuple>& tuples,
+        const size_t& binding
     ) {
         auto dst_array_elements = std::vector<size_t> {};
         dst_array_elements.reserve(descriptors.size()); // FIF
@@ -55,5 +55,7 @@ namespace bebone::gfx::vulkan {
     void VulkanManagedPipelineTuple::destroy(VulkanDevice& device) {
         device.destroy_all(pipeline, layout);
         device.destroy_all(descriptors);
+
+        mark_destroyed();
     }
 }

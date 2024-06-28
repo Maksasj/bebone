@@ -22,14 +22,8 @@ namespace bebone::gfx::vulkan {
             VkCommandBuffer begin_single_time_commands(VulkanDevice& device);
             void end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer);
 
-            // Todo factor this out
-            void copy_buffer_to_image(
-                VulkanDevice& device,
-                const std::shared_ptr<VulkanBuffer>& buffer,
-                const std::shared_ptr<VulkanImage>& image,
-                const u32& width,
-                const u32& height,
-                const u32& layer_count);
+            // Wait why copy buffer to image is in VulkanCommandBufferPool class ?
+            void copy_buffer_to_image(VulkanDevice& device, std::shared_ptr<VulkanBuffer> buffer, std::shared_ptr<VulkanImage> image);
 
             void destroy(VulkanDevice& device) override;
     };

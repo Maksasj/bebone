@@ -15,7 +15,7 @@ namespace bebone::gfx::vulkan {
         VkFormat format,
         VkExtent3D extent,
         VulkanImageInfo image_info
-    ) {
+    ) : extent(extent) {
         VkImageCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -82,6 +82,10 @@ namespace bebone::gfx::vulkan {
         vkCmdPipelineBarrier(command_buffer, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
         pool.end_single_time_commands(device, command_buffer);
+    }
+
+    VkExtent3D VulkanImage::get_extent() const {
+        return extent;
     }
 
     VkMemoryRequirements VulkanImage::get_memory_requirements(VulkanDevice& device) {
