@@ -15,5 +15,7 @@ namespace bebone::gfx::vulkan {
     void VulkanBufferMemoryTuple::destroy(VulkanDevice &device) {
         buffer->destroy(device);
         memory->destroy(device);
+
+        mark_destroyed();
     }
 }

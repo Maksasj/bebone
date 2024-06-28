@@ -173,6 +173,8 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanCommandBuffer::destroy(VulkanDevice&) {
-
+        // Todo
+        
+        mark_destroyed();
     }
 }

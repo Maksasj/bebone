@@ -34,6 +34,8 @@ namespace bebone::gfx::vulkan {
     }
 
     void VulkanDescriptorSet::destroy(VulkanDevice&) {
+        // Todo
 
+        mark_destroyed();
     }
 }
