@@ -26,7 +26,7 @@ namespace bebone::gfx::vulkan {
         memory->upload_data(device, raw->data(), size);
 
         // Todo Probably uploading data to gpu need some sort of render graph api
-        commandBufferPool->copy_buffer_to_image(device, buffer, image, raw->get_width(), raw->get_height(), 1);
+        commandBufferPool->copy_buffer_to_image(device, buffer, image);
 
         memory->destroy(device); // Todo
         buffer->destroy(device); // Todo
