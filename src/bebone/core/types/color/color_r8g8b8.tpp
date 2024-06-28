@@ -43,6 +43,11 @@ namespace bebone::core {
             return GL_RGB;
         }
 
+        // Todo check SRGB is a valid format
+        static inline constexpr VkFormat get_vulkan_format() {
+            return VK_FORMAT_R8G8B8_SRGB;
+        }
+
         static inline constexpr u32 get_gl_type() {
             return GL_UNSIGNED_BYTE;
         }

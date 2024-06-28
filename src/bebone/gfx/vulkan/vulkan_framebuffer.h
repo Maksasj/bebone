@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_FRAMEBUFFER_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_FRAMEBUFFER_H_
+#ifndef _BEBONE_GFX_VULKAN_FRAMEBUFFER_H_
+#define _BEBONE_GFX_VULKAN_FRAMEBUFFER_H_
 
 #include <vector>
 
@@ -19,11 +19,11 @@ namespace bebone::gfx::vulkan {
         public:
             VulkanFramebuffer(
                 VulkanDevice& device,
-                std::vector<std::shared_ptr<VulkanImageView>>& attachmentViews,
-                std::shared_ptr<VulkanRenderPass>& renderPass,
+                std::vector<std::shared_ptr<VulkanImageView>>& attachment_views,
+                std::shared_ptr<VulkanRenderPass>& render_pass,
                 VkExtent2D extent);
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

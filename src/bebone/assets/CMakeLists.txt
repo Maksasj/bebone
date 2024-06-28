@@ -3,6 +3,8 @@ file(GLOB_RECURSE BEBONE_ASSETS_SRC_FILES "*.cpp")
 include_directories(
     "${CMAKE_SOURCE_DIR}/3dparty/stb"
     "${CMAKE_SOURCE_DIR}/3dparty/glad/include"
+    "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"
+    "${CMAKE_SOURCE_DIR}/3dparty/Vulkan-Headers/include"
 )
 
 add_library(bebone_assets STATIC ${BEBONE_ASSETS_SRC_FILES})

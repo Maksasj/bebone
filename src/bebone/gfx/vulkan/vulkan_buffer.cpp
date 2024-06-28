@@ -5,30 +5,44 @@
 namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
-    VulkanBuffer::VulkanBuffer(VulkanDevice& device, VkDeviceSize size, VulkanBufferInfo bufferInfo) {//VkMemoryPropertyFlags properties) {
-        VkBufferCreateInfo createInfo{};
+    VulkanBuffer::VulkanBuffer(
+        VulkanDevice& device,
+        const size_t& size,
+        VulkanBufferInfo buffer_info
+    )  : size(size) {
+        VkBufferCreateInfo create_info{};
 
-        createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        createInfo.pNext = nullptr;
-        createInfo.flags = bufferInfo.flags;
-        createInfo.size = size;
-        createInfo.usage = bufferInfo.usage;
-        createInfo.sharingMode = bufferInfo.sharingMode;
-        createInfo.queueFamilyIndexCount = bufferInfo.queueFamilyIndexCount;
-        createInfo.pQueueFamilyIndices = bufferInfo.pQueueFamilyIndices;
+        create_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        create_info.pNext = nullptr;
+        create_info.flags = buffer_info.flags;
+        create_info.size = size;
+        create_info.usage = buffer_info.usage;
+        create_info.sharingMode = buffer_info.sharing_mode;
+        create_info.queueFamilyIndexCount = buffer_info.queue_family_index_count;
+        create_info.pQueueFamilyIndices = buffer_info.ptr_queue_family_indices;
 
-        if (vkCreateBuffer(device.device(), &createInfo, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateBuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create vulkan buffer!");
-        }
     }
 
     VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(device.device(), backend, &memRequirements);
-        return memRequirements;
+        VkMemoryRequirements requirements;
+
+        vkGetBufferMemoryRequirements(device.device, backend, &requirements);
+
+        return requirements;
     }
 
-    void VulkanBuffer::destroy(VulkanDevice &device) {
-        vkDestroyBuffer(device.device(), backend, nullptr);
+    const size_t& VulkanBuffer::get_size() const {
+        return size;
+    }
+
+    void VulkanBuffer::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+            
+        vkDestroyBuffer(device.device, backend, nullptr);
+
+        mark_destroyed();
     }
 }
