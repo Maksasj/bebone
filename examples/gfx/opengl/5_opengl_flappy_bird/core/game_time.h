@@ -9,7 +9,7 @@ namespace game::core {
     class Time {
         public:
             static const steady_clock::time_point startupTime;
-            static double deltaTime;
+            static double delta_time;
 
             static double get_time();
     };
