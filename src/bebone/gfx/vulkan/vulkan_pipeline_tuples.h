@@ -12,7 +12,7 @@ namespace bebone::gfx::vulkan {
     struct VulkanTexture;
     struct VulkanBufferMemoryTuple;
 
-    using VulkanBindlessHandle = size_t;
+    using VulkanBindlessHandle = size_t; // Todo
 
     struct VulkanManagedPipelineTuple : public VulkanApi {
         public:
@@ -28,7 +28,7 @@ namespace bebone::gfx::vulkan {
             VulkanManagedPipelineTuple(
                 const shared_ptr<VulkanPipeline>& pipeline,
                 const shared_ptr<VulkanPipelineLayout>& layout,
-                const std::vector<std::shared_ptr<VulkanDescriptorSet>> & descriptors);
+                const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptors);
 
             std::vector<VulkanBindlessHandle> bind_texture(
                 std::shared_ptr<VulkanDevice>& device,
@@ -40,7 +40,7 @@ namespace bebone::gfx::vulkan {
                 const std::vector<VulkanBufferMemoryTuple>& tuples,
                 const size_t& binding);
 
-            void destroy(VulkanDevice &device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

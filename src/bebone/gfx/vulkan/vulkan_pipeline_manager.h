@@ -1,5 +1,5 @@
-#ifndef BEBONE_VULKAN_PIPELINE_MANAGER_H
-#define BEBONE_VULKAN_PIPELINE_MANAGER_H
+#ifndef _BEBONE_VULKAN_PIPELINE_MANAGER_H_
+#define _BEBONE_VULKAN_PIPELINE_MANAGER_H_
 
 #include "../gfx_backend.h"
 
@@ -20,12 +20,12 @@ namespace bebone::gfx::vulkan {
 
             VulkanManagedPipelineTuple create_pipeline(
                 std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanSwapChain>& swapChain,
+                const std::shared_ptr<VulkanSwapChain>& swap_chain,
                 const std::string& vertex_shader_file_path,
                 const std::string& fragment_shader_file_path,
-                const std::vector<VulkanConstRange>& constantRanges,
+                const std::vector<VulkanConstRange>& constant_ranges,
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings,
-                VulkanPipelineConfig configInfo
+                VulkanPipelineConfig config_info
             );
 
             void destroy(VulkanDevice& device) override;

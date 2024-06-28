@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_API_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_API_H_
+#ifndef _BEBONE_GFX_VULKAN_API_H_
+#define _BEBONE_GFX_VULKAN_API_H_
 
 #include "vulkan_buffer.h"
 #include "vulkan_image.h"

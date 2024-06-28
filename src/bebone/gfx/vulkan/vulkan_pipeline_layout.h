@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_LAYOUT_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_PIPELINE_LAYOUT_H_
+#ifndef _BEBONE_GFX_VULKAN_PIPELINE_LAYOUT_H_
+#define _BEBONE_GFX_VULKAN_PIPELINE_LAYOUT_H_
 
 #include "../gfx_backend.h"
 
@@ -13,11 +13,8 @@ namespace bebone::gfx::vulkan {
         public:
             VulkanPipelineLayout(
                 VulkanDevice& device,
-                const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptorSetLayouts,
-                const std::vector<VulkanConstRange>& constantRanges
-            );
-
-            VkPipelineLayout get_layout();
+                const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
+                const std::vector<VulkanConstRange>& constant_ranges);
 
             void destroy(VulkanDevice& device) override;
     };

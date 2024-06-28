@@ -9,7 +9,7 @@ namespace bebone::gfx::vulkan {
     VulkanManagedPipelineTuple::VulkanManagedPipelineTuple(
         const shared_ptr<VulkanPipeline>& pipeline,
         const shared_ptr<VulkanPipelineLayout>& layout,
-        const std::vector<std::shared_ptr<VulkanDescriptorSet>> & descriptors
+        const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptors
     ) : pipeline(pipeline), layout(layout), descriptors(descriptors), bindless_samplers_index(0), bindless_uniforms_index(0) {
 
     }
@@ -19,7 +19,7 @@ namespace bebone::gfx::vulkan {
         std::shared_ptr<VulkanTexture>& texture,
         const size_t& binding
     ) {
-        auto dst_array_elements = std::vector<size_t> {};
+        auto dst_array_elements = std::vector<size_t> {}; // Todo
         dst_array_elements.reserve(descriptors.size()); // FIF
 
         for(auto& _ : descriptors) {
@@ -52,7 +52,7 @@ namespace bebone::gfx::vulkan {
         return dst_array_elements;
     }
 
-    void VulkanManagedPipelineTuple::destroy(VulkanDevice &device) {
+    void VulkanManagedPipelineTuple::destroy(VulkanDevice& device) {
         device.destroy_all(pipeline, layout);
         device.destroy_all(descriptors);
 

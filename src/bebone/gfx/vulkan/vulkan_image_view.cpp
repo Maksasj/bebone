@@ -6,35 +6,34 @@
 namespace bebone::gfx::vulkan {
     using namespace bebone::core;
 
-    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& imageFormat, VulkanImageViewInfo imageViewInfo) {
-        VkImageViewCreateInfo createInfo{};
+    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) {
+        VkImageViewCreateInfo create_info{};
 
-        createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        createInfo.pNext = nullptr;
-        createInfo.flags = imageViewInfo.flags;
-        createInfo.image = image.backend;
-        createInfo.viewType = imageViewInfo.viewType;
-        createInfo.format = imageFormat;
-        createInfo.components = imageViewInfo.components;
+        create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        create_info.pNext = nullptr;
+        create_info.flags = image_view_info.flags;
+        create_info.image = image.backend;
+        create_info.viewType = image_view_info.view_type;
+        create_info.format = image_format;
+        create_info.components = image_view_info.components;
 
-        createInfo.subresourceRange = {
-            .aspectMask = imageViewInfo.subresourceRange.aspectMask,
-            .baseMipLevel = imageViewInfo.subresourceRange.baseMipLevel,
-            .levelCount = imageViewInfo.subresourceRange.levelCount,
-            .baseArrayLayer = imageViewInfo.subresourceRange.baseArrayLayer,
-            .layerCount = imageViewInfo.subresourceRange.layerCount
+        create_info.subresourceRange = {
+            .aspectMask = image_view_info.subresource_range.aspect_mask,
+            .baseMipLevel = image_view_info.subresource_range.base_mip_level,
+            .levelCount = image_view_info.subresource_range.level_count,
+            .baseArrayLayer = image_view_info.subresource_range.base_array_layer,
+            .layerCount = image_view_info.subresource_range.layer_count
         };
 
-        if (vkCreateImageView(device.device(), &createInfo, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateImageView(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create texture image view!");
-        }
     }
 
     void VulkanImageView::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
 
-        vkDestroyImageView(device.device(), backend, nullptr);
+        vkDestroyImageView(device.device, backend, nullptr);
 
         mark_destroyed();
     }

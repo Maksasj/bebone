@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_DESCRIPTOR_POOL_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_DESCRIPTOR_POOL_H_
+#ifndef _BEBONE_GFX_VULKAN_DESCRIPTOR_POOL_H_
+#define _BEBONE_GFX_VULKAN_DESCRIPTOR_POOL_H_
 
 #include <vector>
 
@@ -17,15 +17,12 @@ namespace bebone::gfx::vulkan {
 
             std::shared_ptr<VulkanDescriptorSet> create_descriptor(
                 std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout);
+                const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
 
             std::vector<std::shared_ptr<VulkanDescriptorSet>> create_descriptors(
                 std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanDescriptorSetLayout>& descriptorSetLayout,
-                const size_t& descriptorCount);
-
-            // Todo Hey any update_descriptor_set functions can be made static ?, nice !
-
+                const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout,
+                const size_t& count);
 
             void destroy(VulkanDevice& device) override;
     };  
