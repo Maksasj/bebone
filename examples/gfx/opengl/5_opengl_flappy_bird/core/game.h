@@ -27,21 +27,21 @@ namespace game::core {
             shared_ptr<Batch> batch;
             shared_ptr<OrthographicCamera> camera;
 
-            shared_ptr<MainMenuState> mainMenuState;
-            shared_ptr<GameState> gameState;
-            shared_ptr<EndGameState> endGameState;
+            shared_ptr<MainMenuState> main_menu_state;
+            shared_ptr<GameState> game_state;
+            shared_ptr<EndGameState> end_game_state;
 
-            static vector<shared_ptr<GameObject>> gameObjects;
+            static vector<shared_ptr<GameObject>> game_objects;
 
-            shared_ptr<GameObject> instantiate(const string& gameObjectName, const Vec3f& position = {0.0f, 0.0f, 0.0f});
-            void add_renderer_component(shared_ptr<GameObject>& gameObject, const string& textureName, const unsigned int& pixelsPerUnit);
+            shared_ptr<GameObject> instantiate(const string& game_object_name, const Vec3f& position = {0.0f, 0.0f, 0.0f});
+            void add_renderer_component(shared_ptr<GameObject>& game_object, const string& texture_name, const unsigned int& pixels_per_unit);
 
             void update_game_objects();
         public:
             Game(const unsigned int& width, const unsigned int& height);
             void update();
 
-            static shared_ptr<GameObject> find_game_object_by_name(const string& gameObjectName);
+            static shared_ptr<GameObject> find_game_object_by_name(const string& game_object_name);
     };
 }
 

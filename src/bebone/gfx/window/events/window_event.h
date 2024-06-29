@@ -8,32 +8,32 @@ namespace bebone::gfx {
 
     /// Window events enumeration
     enum WindowEvent {
-        WINDOW_POS,
-        WINDOW_SIZE,
-        WINDOW_CLOSE,
-        WINDOW_REFRESH,
-        WINDOW_FOCUS,
-        WINDOW_ICONIFY,
-        WINDOW_MAXIMIZE,
-        FRAMEBUFFERS_SIZE,
-        WINDOW_CONTENT_SCALE
+        WindowPos,
+        WindowSize,
+        WindowClose,
+        WindowRefresh,
+        WindowFocus,
+        WindowIconify,
+        WindowMaximize,
+        FramebuffersSize,
+        WindowContentScale
     };
 
     /// Window position change event structure
-    struct WindowPosEvent : public Event<WindowEvent, WINDOW_POS> {
-        i32 xPos;
-        i32 yPos;
+    struct WindowPosEvent : public Event<WindowEvent, WindowPos> {
+        i32 x_pos;
+        i32 y_pos;
 
         /*!
          * Default constructor
-         * @param xPos - new window x position
-         * @param yPos - new window y position
+         * @param x_pos - new window x position
+         * @param y_pos - new window y position
         */
-        WindowPosEvent(const i32& xPos, const i32& yPos) : xPos(xPos), yPos(yPos) {}
+        WindowPosEvent(const i32& x_pos, const i32& y_pos) : x_pos(x_pos), y_pos(y_pos) {}
     };
 
     /// Window size change event structure
-    struct WindowSizeEvent : public Event<WindowEvent, WINDOW_SIZE> {
+    struct WindowSizeEvent : public Event<WindowEvent, WindowSize> {
         i32 width;
         i32 height;
 
@@ -46,17 +46,17 @@ namespace bebone::gfx {
     };
 
     /// Window close event structure
-    struct WindowCloseEvent : public Event<WindowEvent, WINDOW_CLOSE> {
+    struct WindowCloseEvent : public Event<WindowEvent, WindowClose> {
 
     };
 
     /// Window refresh event structure
-    struct WindowRefreshEvent : public Event<WindowEvent, WINDOW_REFRESH> {
+    struct WindowRefreshEvent : public Event<WindowEvent, WindowRefresh> {
 
     };
 
     /// Window focus event structure
-    struct WindowFocusEvent : public Event<WindowEvent, WINDOW_FOCUS> {
+    struct WindowFocusEvent : public Event<WindowEvent, WindowFocus> {
         i32 focused;
 
         /*!
@@ -67,7 +67,7 @@ namespace bebone::gfx {
     };
 
     /// Window iconify event structure
-    struct WindowIconifyEvent : public Event<WindowEvent, WINDOW_ICONIFY> {
+    struct WindowIconifyEvent : public Event<WindowEvent, WindowIconify> {
         i32 iconified;
 
         /*!
@@ -78,7 +78,7 @@ namespace bebone::gfx {
     };
 
     /// Window maximize event structure
-    struct WindowMaximizeEvent : public Event<WindowEvent, WINDOW_MAXIMIZE> {
+    struct WindowMaximizeEvent : public Event<WindowEvent, WindowMaximize> {
         i32 maximized;
 
         /*!
@@ -89,7 +89,7 @@ namespace bebone::gfx {
     };
 
     /// Window framebuffer size change event structure
-    struct FrameBufferSizeEvent : public Event<WindowEvent, FRAMEBUFFERS_SIZE> {
+    struct FrameBufferSizeEvent : public Event<WindowEvent, FramebuffersSize> {
         i32 width;
         i32 height;
 
@@ -102,16 +102,16 @@ namespace bebone::gfx {
     };
 
     /// Window content scale change event structure
-    struct WindowContentScaleEvent : public Event<WindowEvent, WINDOW_CONTENT_SCALE> {
-        f32 xScale;
-        f32 yScale;
+    struct WindowContentScaleEvent : public Event<WindowEvent, WindowContentScale> {
+        f32 x_scale;
+        f32 y_scale;
 
         /*!
          * Default constructor
-         * @param xScale - new window x content scale
-         * @param yScale - new window y content scale
+         * @param x_scale - new window x content scale
+         * @param y_scale - new window y content scale
         */
-        WindowContentScaleEvent(const f32& xScale, const f32& yScale) : xScale(xScale), yScale(yScale) {}
+        WindowContentScaleEvent(const f32& x_scale, const f32& y_scale) : x_scale(x_scale), y_scale(y_scale) {}
     };
 }
 

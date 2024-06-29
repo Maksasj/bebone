@@ -16,18 +16,18 @@ namespace game::core::ecs {
 
     class Flying : public Component {
         private:
-            float velocityY;
+            float velocity_y;
             const float gravity = 0.1f;
-            float flyForce;
+            float fly_force;
 
-            float rotZAlterationSpeed = -550.0f;
-            float minRotZ = -85.0f;
-            float maxRotZ = 25.0f;
+            float rot_z_alteration_speed = -550.0f;
+            float min_rot_z = -85.0f;
+            float max_rot_z = 25.0f;
 
-            std::function<void()> flyFunction;
+            std::function<void()> fly_function;
             
         public:
-            explicit Flying(const float& flyForce);
+            explicit Flying(const float& fly_force);
 
             void update() override;
 

@@ -10,20 +10,20 @@ namespace bexel {
 
     class TileBlock {
         private:
-            bool m_opaque;
+            bool opaque;
 
         public:
-            TileBlock(const bool& opaque) : m_opaque(opaque) {
+            TileBlock(const bool& opaque) : opaque(opaque) {
 
             }
 
             virtual ~TileBlock() = default;
 
             const bool& is_opaque() const {
-                return m_opaque;
+                return opaque;
             }
 
-            virtual void append_mesh(MeshBuilder& meshBuilder, World& world, Chunk& chunk) = 0;
+            virtual void append_mesh(MeshBuilder& mesh_builder, World& world, Chunk& chunk) = 0;
     };
 }
 

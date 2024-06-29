@@ -2,8 +2,8 @@
 
 #include "bebone/bebone.h"
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int screen_width = 800;
+const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
 using namespace bebone::gfx::opengl;
@@ -21,17 +21,17 @@ const std::vector<u32> indices = {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("1. OpenGL hello triangle example", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
 
-    GLShader vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    GLShader fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
-    GLShaderProgram shaderProgram(vertexShader, fragmentShader);
+    GLShader vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    GLShader fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
+    GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
-    vertexShader.destroy();
-    fragmentShader.destroy();
+    vertex_shader.destroy();
+    fragment_shader.destroy();
     
     GLVertexArrayObject vao;
     vao.bind();
@@ -49,7 +49,7 @@ int main() {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
-        shaderProgram.enable();
+        shader_program.enable();
         vao.bind();
         GLContext::draw_arrays(GL_TRIANGLES, 0, 3);
 
@@ -60,7 +60,7 @@ int main() {
     vao.destroy();
     vbo.destroy();
     ebo.destroy();
-    shaderProgram.destroy();
+    shader_program.destroy();
 
     GLFWContext::terminate();
     return 0;

@@ -3,12 +3,12 @@
 
 namespace bexel {
     enum Direction {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        FORWARD,
-        BACK
+        Up,
+        Down,
+        Left,
+        Right,
+        Forward,
+        Back
     };
 }
 

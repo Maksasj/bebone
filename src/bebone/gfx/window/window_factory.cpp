@@ -5,12 +5,12 @@
 #include "../glfw_context.h"
 
 namespace bebone::gfx {
-    std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI, const WindowProperties& properties) {
+    std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties) {
         std::shared_ptr<Window> window;
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        if (gfxAPI == GfxAPI::OPENGL) {
+        if (gfx_api == GfxAPI::OpenGL) {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
