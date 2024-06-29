@@ -6,7 +6,7 @@ using namespace bebone::gfx;
 int main() {
     GLFWContext::init(); // this should be moved somewhere else
 
-    auto window = WindowFactory::create_window("1. Renderer sprite", 800, 600, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("2. Renderer sprite", 800, 600, GfxAPI::OpenGL);
     auto renderer = window->create_renderer();
 
     auto sprite = renderer->load_sprite("image.png");
