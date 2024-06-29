@@ -3,7 +3,7 @@
 #include <cmath>
 
 namespace game::core::ecs {
-    Flying::Flying(const float& flyForce) : velocityY(0.0f), flyForce(flyForce) {
+    Flying::Flying(const float& flyForce, const shared_ptr<Input>& input) : velocityY(0.0f), flyForce(flyForce), input(input) {
         flyFunction = std::function<void()>([this]() {
             set_velocity(this->flyForce);
         });
@@ -32,11 +32,11 @@ namespace game::core::ecs {
 
     void Flying::enable() {
         Component::enable();
-        Input::get_instance().register_key_action(KeyCode::MouseButtonLeft, flyFunction);
+        input->register_key_action(KeyCode::MouseButtonLeft, flyFunction);
     }
 
     void Flying::disable() {
         Component::disable();
-        Input::get_instance().remove_key_action(KeyCode::MouseButtonLeft, flyFunction);
+        input->remove_key_action(KeyCode::MouseButtonLeft, flyFunction);
     }
 }

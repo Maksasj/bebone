@@ -27,7 +27,8 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Game game(SCR_WIDTH, SCR_HEIGHT);
+    auto input = window->get_input();
+    Game game(SCR_WIDTH, SCR_HEIGHT, input);
 
     double beginTime = Time::get_time();
     double endTime;

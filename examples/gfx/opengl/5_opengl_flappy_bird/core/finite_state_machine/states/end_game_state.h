@@ -18,10 +18,11 @@ namespace game::core::fsm {
         private:
             shared_ptr<State> menuState;
             shared_ptr<GameObject> flappyBird;
+            shared_ptr<Input> input;
 
             std::function<void()> transitionFunction;
         public:
-            EndGameState(shared_ptr<GameObject> flappyBird);
+            EndGameState(shared_ptr<GameObject> flappyBird, const shared_ptr<Input>& input);
             ~EndGameState() override;
 
             void enter() override;

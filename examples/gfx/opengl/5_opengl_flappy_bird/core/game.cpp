@@ -13,7 +13,7 @@ namespace game::core {
 
     vector<shared_ptr<GameObject>> Game::gameObjects = vector<shared_ptr<GameObject>>();
 
-    Game::Game(const unsigned int& width, const unsigned int& height) {
+    Game::Game(const unsigned int& width, const unsigned int& height, const shared_ptr<Input>& input) : input(input) {
         const auto aspect = static_cast<f32>(width) / static_cast<f32>(height);
 
         camera = make_shared<OrthographicCamera>(aspect * -7.0f, aspect * 7.0f, 7.0, -7.0, -7.0f, 7.0f);
@@ -63,9 +63,9 @@ namespace game::core {
         batch->add(pipe2);
         pipe2->get_transform()->set_scale(0.5f);
 
-        mainMenuState = make_shared<MainMenuState>(flappyBird);
-        gameState = make_shared<GameState>(flappyBird);
-        endGameState = make_shared<EndGameState>(flappyBird);
+        mainMenuState = make_shared<MainMenuState>(flappyBird, input);
+        gameState = make_shared<GameState>(flappyBird, input);
+        endGameState = make_shared<EndGameState>(flappyBird, input);
         
         mainMenuState->set_game_state(gameState);
         gameState->set_end_game_state(endGameState);
