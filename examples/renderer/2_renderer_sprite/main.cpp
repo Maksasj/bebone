@@ -12,7 +12,7 @@ int main() {
     auto sprite = renderer->load_sprite("image.png");
 
     while(!window->closing()) {
-        renderer->render(sprite, { .pos = Vec3f::zero });
+        renderer->render(sprite, { .position = Vec3f::zero });
         renderer->present();
     }
 

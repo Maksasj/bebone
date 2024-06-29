@@ -1,7 +1,16 @@
-#ifndef _BEBONE_RENDERER_I_RENDERER_H_
-#define _BEBONE_RENDERER_I_RENDERER_H_
+#ifndef _BEBONE_RENDERER_IRENDERER_H_
+#define _BEBONE_RENDERER_IRENDERER_H_
 
-#include "../gfx/gfx.h"
+#include "renderer_backend.h"
+
+#include "mesh/imesh.h"
+#include "mesh/imesh_builder.h"
+#include "mesh/imesh_loader.h"
+#include "mesh/obj_mesh_loader.h"
+
+#include "vertex.h"
+#include "vertex_triangle.h"
+#include "transform.h"
 
 namespace bebone::renderer {
     // Abstract classes
@@ -13,7 +22,7 @@ namespace bebone::renderer {
     class IIndexBuffer {};
     class ITexture {};
 
-    class IMesh {};
+    // class IMesh {};
     class IMaterial {};
 
     class ISprite {};
@@ -35,11 +44,7 @@ namespace bebone::renderer {
     class ModelHandle {};
 
     // Helper classes
-    struct Vertex {};
-
-    struct Transform {
-        core::Vec3f pos;
-    };
+    // struct Vertex {};
 
     class IRenderer {
         private:
