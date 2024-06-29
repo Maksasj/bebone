@@ -12,6 +12,8 @@
 #include "window_properties.h"
 #include "window_handler.h"
 
+#include "../../core/input/input_handler.h"
+
 namespace bebone::gfx {
     using namespace core;
 
@@ -65,6 +67,9 @@ namespace bebone::gfx {
 
             /// Function that executes all queued input actions
             void execute_input_actions() const;
+
+            // TODO: we need to refactor this. I really don't like the idea of a window controlling the input
+            std::shared_ptr<Input> get_input() const;
 
         private:
             /// GLFW window position change callbacks

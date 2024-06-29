@@ -118,4 +118,8 @@ namespace bebone::gfx {
     void Window::execute_input_actions() const {
         input_handler.execute_input_actions();
     }
+
+    std::shared_ptr<Input> Window::get_input() const {
+        return input_handler.get_input();
+    }
 }
