@@ -16,4 +16,22 @@ namespace bebone::renderer {
         vbo->unbind();
         ebo->unbind();
     }
+
+    OpenGLTriangleMesh::~OpenGLTriangleMesh() {
+        vao->destroy();
+        vbo->destroy();
+        ebo->destroy();
+    }
+
+    u64 OpenGLTriangleMesh::triangle_count() const {
+        return indices_count;
+    }
+
+    u64 OpenGLTriangleMesh::vertex_count() const {
+        return indices_count * 3;
+    }
+
+    void OpenGLTriangleMesh::bind() {
+        vao->bind();
+    }
 }

@@ -3,6 +3,11 @@
 
 #include "irenderer.h"
 
+#include "mesh/imesh.h"
+#include "mesh/imesh_builder.h"
+#include "mesh/imesh_loader.h"
+#include "mesh/obj_mesh_loader.h"
+
 #include "opengl/opengl_renderer.h"
 #include "vulkan/vulkan_renderer.h"
 

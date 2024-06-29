@@ -19,6 +19,12 @@ namespace bebone::renderer {
 
         public:
             OpenGLTriangleMesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices);
+            ~OpenGLTriangleMesh() override;
+
+            u64 triangle_count() const override;
+            u64 vertex_count() const override;
+
+            void bind() override;
     };
 }
 

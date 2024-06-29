@@ -43,6 +43,12 @@ namespace bebone::renderer {
             indices.push_back(inds[i]);
     }
 
+    void OpenGLTriangleMeshBuilder::clear() {
+        vertices.clear();
+        indices.clear();
+        index_offset = 0;
+    }
+
     std::shared_ptr<IMesh> OpenGLTriangleMeshBuilder::build() {
         return std::make_shared<OpenGLTriangleMesh>(vertices, indices);
     }

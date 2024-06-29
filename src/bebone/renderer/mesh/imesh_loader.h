@@ -13,8 +13,9 @@ namespace bebone::renderer {
 
         public:
             IMeshLoader(const std::shared_ptr<IMeshBuilder>& builder);
+            virtual ~IMeshLoader() = default;
 
-            virtual std::shared_ptr<IMesh> load_from_file(const std::string& file);
+            virtual std::shared_ptr<IMesh> load_from_file(const std::string& file) = 0;
     };
 
 }

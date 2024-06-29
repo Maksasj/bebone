@@ -22,6 +22,9 @@ set(BEBONE_RENDERER_LIBRARIES
     glslang-default-resource-limits
     ${Vulkan_LIBRARIES}
     imgui
+    bebone_core
+    bebone_assets
+    bebone_gfx
 )
 
 set(BEBONE_RENDERER_INCLUDES "${BEBONE_RENDERER_INCLUDES}" CACHE INTERNAL "")

@@ -28,6 +28,8 @@ namespace bebone::renderer {
             // Todo
             void append_raw(const Vertex* verts, const u64& vert_count, const u32* inds , const u64& ind_count) override;
 
+            void clear() override;
+
             std::shared_ptr<IMesh> build() override;
     };
 }
