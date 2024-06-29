@@ -10,7 +10,7 @@ namespace bebone::renderer {
         public:
             OBJMeshLoader(const std::shared_ptr<IMeshBuilder>& builder);
 
-            std::shared_ptr<IMesh> load_from_file(const std::string& file) override;
+            std::shared_ptr<IMesh> load_from_file(const std::string& file_path) override;
     };
 }
 

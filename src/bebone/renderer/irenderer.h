@@ -13,6 +13,7 @@
 #include "transform.h"
 
 namespace bebone::renderer {
+    class IBindable {}; // ?
     // Abstract classes
     class IProgram {}; // This is shader
     // class IRenderPass;

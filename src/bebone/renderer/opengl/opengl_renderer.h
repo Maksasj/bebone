@@ -3,6 +3,9 @@
 
 #include "../irenderer.h"
 
+#include "opengl_triangle_mesh.h"
+#include "opengl_triangle_mesh_builder.h"
+
 namespace bebone::renderer {
     class GLRenderer : public IRenderer {
         private:
