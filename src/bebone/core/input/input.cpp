@@ -1,12 +1,6 @@
 #include "input.h"
 
 namespace bebone::core {
-    Input& Input::get_instance() {
-        static Input instance;
-
-        return instance;
-    }
-
     void Input::register_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type) {
         const Key key(key_code, input_type);
 

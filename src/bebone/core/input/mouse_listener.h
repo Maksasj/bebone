@@ -10,14 +10,15 @@
 namespace bebone::core {
     using namespace gfx;
 
-    struct MouseListener : EventListener<InputMouseButtonEvent> {
-        void operator()(InputMouseButtonEvent& event) override {
-            Input& input = Input::get_instance();
+    class MouseListener : EventListener<InputMouseButtonEvent> {
+    private:
+        std::shared_ptr<Input>& input;
 
-            const auto key_code = static_cast<KeyCode>(event.button);
-            const auto input_type = static_cast<InputType>(event.action);
-            input.queue_key(key_code, input_type);
-        }
+    public:
+        MouseListener() = delete;
+        explicit MouseListener(std::shared_ptr<Input>& input);
+
+        void operator()(InputMouseButtonEvent& event) override;
     };
 }
 

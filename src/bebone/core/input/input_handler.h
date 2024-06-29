@@ -9,15 +9,18 @@ namespace bebone::core {
     // Input handler class
     class InputHandler {
         private:
+            std::shared_ptr<Input> input;
             KeyListener key_listener;
             MouseListener mouse_listener;
 
         public:
+            InputHandler();
+
             // Getter for key listener
-            const KeyListener& get_key_listener() const;
+            [[nodiscard]] const KeyListener& get_key_listener() const;
 
             // Getter for mouse listener
-            const MouseListener& get_mouse_listener() const;
+            [[nodiscard]] const MouseListener& get_mouse_listener() const;
 
             // Executes all input actions
             void execute_input_actions() const;

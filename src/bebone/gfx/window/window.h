@@ -12,6 +12,8 @@
 #include "window_properties.h"
 #include "window_handler.h"
 
+#include "../../core/input/input_handler.h"
+
 namespace bebone::gfx {
     using namespace core;
 

@@ -7,19 +7,18 @@
 
 #include "input.h"
 
-#include <iostream>
-
 namespace bebone::core {
     using namespace gfx;
 
-    struct KeyListener : EventListener<InputKeyEvent> {
-        void operator()(InputKeyEvent& event) override {
-            Input& input = Input::get_instance();
+    class KeyListener : EventListener<InputKeyEvent> {
+    private:
+        std::shared_ptr<Input>& input;
 
-            const auto key_code = static_cast<KeyCode>(event.key);
-            const auto input_type = static_cast<InputType>(event.action);
-            input.queue_key(key_code, input_type);
-        }
+    public:
+        KeyListener() = delete;
+        explicit KeyListener(std::shared_ptr<Input>& input);
+
+        void operator()(InputKeyEvent& event) override;
     };
 }
 
