@@ -24,6 +24,8 @@ namespace bebone::core {
 
             // Executes all input actions
             void execute_input_actions() const;
+
+            std::shared_ptr<Input> get_input() const;
     };
 }
 

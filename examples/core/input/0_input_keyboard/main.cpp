@@ -18,7 +18,8 @@ int main() {
         std::cout << "key press\n";
     };
 
-    Input::get_instance().register_key_action(KeyCode::A, key_press);
+    auto input = window->get_input();
+    input->register_key_action(KeyCode::A, key_press);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);

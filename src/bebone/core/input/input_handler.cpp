@@ -14,4 +14,8 @@ namespace bebone::core {
     void InputHandler::execute_input_actions() const {
         input->execute_queued_actions();
     }
+
+    std::shared_ptr<Input> InputHandler::get_input() const {
+        return input;
+    }
 }
