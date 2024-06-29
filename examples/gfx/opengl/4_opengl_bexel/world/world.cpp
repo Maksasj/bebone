@@ -1,50 +1,50 @@
 #include "world.h"
 
 namespace bexel {
-    World::World() : m_worldGenerator(nullptr) {
-        m_worldGenerator = make_unique<WorldGenerator>(123);
+    World::World() : world_generator(nullptr) {
+        world_generator = make_unique<WorldGenerator>(123);
     }
 
-    BlockID World::get_voxel_at(const Vec3f& voxelPos) const {
-        return m_worldGenerator->get_voxel_at(voxelPos);
+    BlockID World::get_voxel_at(const Vec3f& voxel_pos) const {
+        return world_generator->get_voxel_at(voxel_pos);
     }
 
     bool World::chunk_exist(const Vec2i& pos) const {
-        return m_chunks.find(pos) != m_chunks.end();
+        return chunks.find(pos) != chunks.end();
     }
 
     void World::update(unique_ptr<Camera>& camera) {
         BEBONE_PROFILE_RECORD(BEXEL_WORLD_UPDATE)
 
         const auto pos = camera->get_position();
-        const auto camChunkPos = Vec2i(
+        const auto cam_chunk_pos = Vec2i(
             static_cast<i32>(pos.x) / CHUNK_SIZE_X,
             static_cast<i32>(pos.z) / CHUNK_SIZE_Z
         );
 
-        static auto prevChunkPos = Vec2i(camChunkPos.x + 1, camChunkPos.x);
+        static auto prev_chunk_pos = Vec2i(cam_chunk_pos.x + 1, cam_chunk_pos.x);
 
-        if(prevChunkPos == camChunkPos)
+        if(prev_chunk_pos == cam_chunk_pos)
             return;
 
-        const auto renderDistance = camera->get_render_distance();
+        const auto render_distance = camera->get_render_distance();
 
-        for(auto x = -renderDistance; x < renderDistance; ++x) {
-            for(auto z = -renderDistance; z < renderDistance; ++z) {
-                const auto toCheck = camChunkPos + Vec2i(x, z);
+        for(auto x = -render_distance; x < render_distance; ++x) {
+            for(auto z = -render_distance; z < render_distance; ++z) {
+                const auto to_check = cam_chunk_pos + Vec2i(x, z);
 
-                if(chunk_exist(toCheck))
+                if(chunk_exist(to_check))
                     continue;
 
-                const auto createChunkPos = Vec3f(
-                    static_cast<f32>(toCheck.x) * CHUNK_SIZE_X,
+                const auto create_chunk_pos = Vec3f(
+                    static_cast<f32>(to_check.x) * CHUNK_SIZE_X,
                     0.0f,
-                    static_cast<f32>(toCheck.y) * CHUNK_SIZE_Z
+                    static_cast<f32>(to_check.y) * CHUNK_SIZE_Z
                 );
 
-                m_chunks[toCheck] = make_unique<Chunk>(createChunkPos);
-                m_chunks[toCheck]->generate_chunk(m_worldGenerator);
-                m_chunks[toCheck]->generate_mesh(*this);
+                chunks[to_check] = make_unique<Chunk>(create_chunk_pos);
+                chunks[to_check]->generate_chunk(world_generator);
+                chunks[to_check]->generate_mesh(*this);
             }
         }
 
@@ -54,7 +54,7 @@ namespace bexel {
     void World::render(unique_ptr<GLShaderProgram>& shader) {
         BEBONE_PROFILE_RECORD(BEXEL_WORLD_RENDER)
 
-        for_each(m_chunks.begin(), m_chunks.end(), [&](const auto& tuple) {
+        for_each(chunks.begin(), chunks.end(), [&](const auto& tuple) {
             const auto& chunk = tuple.second;
             chunk->render(shader);
         });

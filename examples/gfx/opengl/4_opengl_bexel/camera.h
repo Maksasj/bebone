@@ -6,21 +6,21 @@
 namespace bexel {
     class Camera : private core::NonCopyable {
         private:
-            i32 m_renderDistance;
+            i32 render_distance;
 
-            Vec3f m_position;
-            Vec3f m_rotation;
-            Vec3f m_direction;
+            Vec3f position;
+            Vec3f rotation;
+            Vec3f direction;
 
-            bool m_mouseLocked;
+            bool mouse_locked;
 
-            Mat4f m_viewMatrix;
-            Mat4f m_projMatrix;
+            Mat4f view_matrix;
+            Mat4f proj_matrix;
 
             Mat4f calculate_view_matrix() const;
 
     public:
-            Camera(const Vec3f& position, const i32& renderDistance);
+            Camera(const Vec3f& position, const i32& render_distance);
 
             void update(shared_ptr<Window>& window);
             void bind(unique_ptr<GLShaderProgram>& shader);

@@ -14,8 +14,8 @@ namespace game::core::fsm {
 
     class GameState : public State {
         private:
-            shared_ptr<State> endGameState;
-            shared_ptr<GameObject> flappyBird;
+            shared_ptr<State> end_game_state;
+            shared_ptr<GameObject> flappy_bird;
             
             shared_ptr<GameObject> ground1;
             shared_ptr<GameObject> ground2;
@@ -24,21 +24,21 @@ namespace game::core::fsm {
 
             shared_ptr<Input> input;
 
-            float groundY;
-            float airY;
+            float ground_y;
+            float air_y;
 
-            bool pipe_player_collision_check(shared_ptr<GameObject> gameObject) const;
+            bool pipe_player_collision_check(shared_ptr<GameObject> game_object) const;
 
             void transition_to_end_game_state();
         public:
-            explicit GameState(const shared_ptr<GameObject>& flappyBird, const shared_ptr<Input>& input);
+            explicit GameState(const shared_ptr<GameObject>& flappy_bird, const shared_ptr<Input>& input);
             ~GameState() override;
 
             void enter() override;
             void update() override;
             void exit() override;
 
-            void set_end_game_state(shared_ptr<State> endGameState);
+            void set_end_game_state(shared_ptr<State> end_game_state);
 
     };
 }

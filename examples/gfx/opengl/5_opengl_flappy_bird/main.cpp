@@ -5,8 +5,8 @@
 #include "core/game.h"
 #include "core/game_time.h"
 
-const unsigned int SCR_WIDTH = 600;
-const unsigned int SCR_HEIGHT = 800;
+const unsigned int screen_width = 600;
+const unsigned int screen_height = 800;
 
 using namespace bebone::core;
 using namespace bebone::gfx;
@@ -16,10 +16,10 @@ using namespace game::core;
 int main() {
     glfwInit();
     
-    auto window = WindowFactory::create_window("5. Flappy Bird", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
+    auto window = WindowFactory::create_window("5. Flappy Bird", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
     glfwSwapInterval(1);
 
     glEnable(GL_DEPTH_TEST);
@@ -28,10 +28,10 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     auto input = window->get_input();
-    Game game(SCR_WIDTH, SCR_HEIGHT, input);
+    Game game(screen_width, screen_height, input);
 
-    double beginTime = Time::get_time();
-    double endTime;
+    double begin_time = Time::get_time();
+    double end_time;
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
@@ -39,16 +39,16 @@ int main() {
 
         window->execute_input_actions();
 
-        if (Time::deltaTime >= 0) {
+        if (Time::delta_time >= 0) {
             game.update();
         }
 
         glfwSwapBuffers(window->get_backend());
         GLFWContext::poll_events();
 
-        endTime = Time::get_time();
-        Time::deltaTime = endTime - beginTime;
-        beginTime = endTime;
+        end_time = Time::get_time();
+        Time::delta_time = end_time - begin_time;
+        begin_time = end_time;
     }
     
     GLFWContext::terminate();

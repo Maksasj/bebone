@@ -9,12 +9,12 @@
 namespace bexel {
     class Mesh final : private core::NonCopyable {
         private:
-            vector<Vertex> m_vertices;
-            vector<u32> m_indices;
+            vector<Vertex> vertices;
+            vector<u32> indices;
 
-            unique_ptr<GLVertexArrayObject> m_vao;
-            unique_ptr<GLVertexBufferObject> m_vbo;
-            unique_ptr<GLElementBufferObject> m_ebo;
+            unique_ptr<GLVertexArrayObject> vao;
+            unique_ptr<GLVertexBufferObject> vbo;
+            unique_ptr<GLElementBufferObject> ebo;
 
         public:
             Mesh(const vector<Vertex>& vertices, const vector<u32>& indices);

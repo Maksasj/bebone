@@ -14,24 +14,24 @@ namespace game::core::ecs {
         return position;
     }
 
-    void Transform::set_position(const Vec3f& newPosition) {
-        position = newPosition;
+    void Transform::set_position(const Vec3f& new_position) {
+        position = new_position;
     }
 
     const f32& Transform::get_rotation() const {
         return rotation;
     }
 
-    void Transform::set_rotation(const f32& newRotation) {
-        rotation = newRotation;
+    void Transform::set_rotation(const f32& new_rotation) {
+        rotation = new_rotation;
     }
 
     const f32& Transform::get_scale() const {
         return scale;
     }
 
-    void Transform::set_scale(const f32& newScale) {
-        scale = newScale;
+    void Transform::set_scale(const f32& new_scale) {
+        scale = new_scale;
     }
 
     void Transform::move(const Vec3f& v) {
