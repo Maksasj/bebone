@@ -10,7 +10,7 @@ namespace game::core {
 
     class Random : private bebone::core::NonCopyable {
         private:
-            static random_device randomDevice;
+            static random_device random;
             static mt19937 generator;
 
         public:

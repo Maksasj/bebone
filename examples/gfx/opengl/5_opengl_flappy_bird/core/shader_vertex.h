@@ -8,8 +8,8 @@ namespace game::core {
 
     struct ShaderVertex {
         Vec3f position;
-        Vec2f textureCoordinates;
-        int textureUnit;
+        Vec2f texture_coordinates;
+        int texture_unit;
     };
 }
 
