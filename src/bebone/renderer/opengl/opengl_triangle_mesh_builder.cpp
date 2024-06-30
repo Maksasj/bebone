@@ -43,7 +43,7 @@ namespace bebone::renderer {
             indices.push_back(inds[i]);
     }
 
-    void OpenGLTriangleMeshBuilder::clear() {
+    void OpenGLTriangleMeshBuilder::reset() {
         vertices.clear();
         indices.clear();
         index_offset = 0;

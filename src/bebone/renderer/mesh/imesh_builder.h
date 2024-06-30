@@ -19,7 +19,7 @@ namespace bebone::renderer {
 
             virtual void append_raw(const Vertex* vertices, const u64& vert_count, const u32* indices , const u64& ind_count) = 0;
 
-            virtual void clear() = 0;
+            virtual void reset() = 0;
 
             virtual std::shared_ptr<IMesh> build() = 0;
     };

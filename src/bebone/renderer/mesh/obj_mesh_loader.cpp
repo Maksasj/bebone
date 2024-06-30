@@ -23,18 +23,22 @@ namespace bebone::renderer {
         return res;
     }
 
+    void OBJMeshLoader::reset() {
+        builder->reset();
+    }
+
     std::shared_ptr<IMesh> OBJMeshLoader::load_from_file(const std::string& file_path) {
-        std::ifstream file(file_path);
+        auto file = std::ifstream(file_path);
 
-        std::vector<Vec3f> raw_vertices;
-        std::vector<Vec3f> raw_normals;
-        std::vector<Vec2f> raw_texcoord;
+        auto raw_vertices = std::vector<Vec3f> {};
+        auto raw_normals = std::vector<Vec3f> {};
+        auto raw_texcoord = std::vector<Vec2f> {};
 
-        std::vector<Vertex> vertices;
-        std::vector<u32> indicies;
+        auto vertices = std::vector<Vertex> {};
+        auto indicies = std::vector<u32> {};
 
         u32 index = 0;
-        std::unordered_map<string, u32> corrected_index;
+        auto corrected_index =  std::unordered_map<string, u32> {};
 
         string line;
         while(std::getline(file, line)) {
