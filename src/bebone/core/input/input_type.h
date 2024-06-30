@@ -6,7 +6,8 @@ namespace bebone::core {
     enum InputType {
         Release,
         Press,
-        Repeat
+        Repeat,
+        None
     };
 }
 

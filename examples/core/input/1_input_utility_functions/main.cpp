@@ -32,6 +32,14 @@ int main() {
             std::cout << "key A is up\n";
         }
 
+        if (input_executor->is_key_pressed(KeyCode::A)) {
+            std::cout << "Key A is pressed\n";
+        }
+
+        if (input_executor->is_key_released(KeyCode::A)) {
+            std::cout << "Key A is released\n";
+        }
+
         input_executor->execute_input_actions();
 
         glfwSwapBuffers(window->get_backend());
