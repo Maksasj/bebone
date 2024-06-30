@@ -18,18 +18,22 @@ int main() {
         std::cout << "key press\n";
     };
 
-    InputHandler input_handler = InputHandler();
-    window->add_listener(input_handler.get_key_listener());
-    window->add_listener(input_handler.get_mouse_listener());
+    auto input = std::make_shared<Input>();
+    auto input_executor = std::make_shared<InputExecutor>(input);
 
-    auto input = input_handler.get_input();
+    KeyListener key_listener = KeyListener(input_executor);
+    MouseListener mouse_listener = MouseListener(input_executor);
+
+    window->add_listener(key_listener);
+    window->add_listener(mouse_listener);
+
     input->register_key_action(KeyCode::A, key_press);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
-        input_handler.execute_input_actions();
+        input_executor->execute_input_actions();
 
         glfwSwapBuffers(window->get_backend());
         glfwPollEvents();
