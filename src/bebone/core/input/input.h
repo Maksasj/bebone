@@ -43,7 +43,9 @@ namespace bebone::core {
             */
             void remove_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::Press);
 
-            friend class InputHandler;
+            void apply_action(const Key& key);
+
+            friend class InputExecutor;
             friend class KeyListener;
             friend class MouseListener;
     };

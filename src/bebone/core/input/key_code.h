@@ -3,7 +3,7 @@
 
 namespace bebone::core {
     /// Specifies the mouse and keyboard buttons. All values are taken from GLFW
-    enum class KeyCode {
+    enum KeyCode {
         MouseButtonLeft,
         MouseButtonRight,
         MouseButtonMiddle,
@@ -98,9 +98,7 @@ namespace bebone::core {
         RightControl,
         RightAlt,
         RightSuper,
-        Menu,
-
-        Null
+        Menu
     };
 }
 

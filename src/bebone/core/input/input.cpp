@@ -36,4 +36,10 @@ namespace bebone::core {
             }
         }
     }
+
+    void Input::apply_action(const Key& key) {
+        if (key_actions.find(key) != key_actions.end()) {
+            key_actions[key]();
+        }
+    }
 }

@@ -3,10 +3,9 @@
 
 namespace bebone::core {
     /// Specifies in which case the action will be executed
-    enum class InputType {
+    enum InputType {
         Press,
-        Release,
-        Null
+        Release
     };
 }
 
