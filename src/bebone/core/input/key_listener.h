@@ -5,18 +5,18 @@
 
 #include "../../gfx/window/events/input_event.h"
 
-#include "input.h"
+#include "input_executor.h"
 
 namespace bebone::core {
     using namespace gfx;
 
     class KeyListener : EventListener<InputKeyEvent> {
     private:
-        std::shared_ptr<Input>& input;
+        std::shared_ptr<InputExecutor>& input_executor;
 
     public:
         KeyListener() = delete;
-        explicit KeyListener(std::shared_ptr<Input>& input);
+        explicit KeyListener(std::shared_ptr<InputExecutor>& input_executor);
 
         void operator()(InputKeyEvent& event) override;
     };

@@ -21,22 +21,6 @@ namespace bebone::core {
         key_actions[key] -= action;
     }
 
-    void Input::queue_key(const KeyCode &key_code, const InputType &input_type) {
-        queued_keys.emplace(key_code, input_type);
-    }
-
-    void Input::execute_queued_actions() {
-        while (!queued_keys.empty()) {
-            const auto key = queued_keys.front();
-
-            queued_keys.pop();
-
-            if (key_actions.find(key) != key_actions.end()) {
-                key_actions[key]();
-            }
-        }
-    }
-
     void Input::apply_action(const Key& key) {
         if (key_actions.find(key) != key_actions.end()) {
             key_actions[key]();

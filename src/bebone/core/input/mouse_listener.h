@@ -5,18 +5,18 @@
 
 #include "../../gfx/window/events/input_event.h"
 
-#include "input.h"
+#include "input_executor.h"
 
 namespace bebone::core {
     using namespace gfx;
 
     class MouseListener : EventListener<InputMouseButtonEvent> {
     private:
-        std::shared_ptr<Input>& input;
+        std::shared_ptr<InputExecutor>& input_executor;
 
     public:
         MouseListener() = delete;
-        explicit MouseListener(std::shared_ptr<Input>& input);
+        explicit MouseListener(std::shared_ptr<InputExecutor>& input_executor);
 
         void operator()(InputMouseButtonEvent& event) override;
     };
