@@ -13,7 +13,7 @@
 namespace bebone::core {
     using namespace std;
 
-    /// Singleton Input System class. Works with Action delegates
+    /// Input System class. Works with Action delegates
     class Input {
         private:
             using BeboneAction = Action<>;

@@ -1,6 +1,8 @@
 #include "key.h"
 
 namespace bebone::core {
+    Key::Key() : key_code(KeyCode::Null), input_type(InputType::Null) { }
+
     Key::Key(KeyCode key_code, InputType input_type) : key_code(key_code), input_type(input_type) { }
 
     bool Key::operator==(const Key& other) const {

@@ -10,6 +10,7 @@ namespace bebone::core {
         KeyCode key_code;
         InputType input_type;
 
+        Key();
         Key(KeyCode key_code, InputType input_type);
         bool operator==(const Key& other) const;
         bool operator<(const Key& other) const;
