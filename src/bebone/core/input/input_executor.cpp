@@ -1,7 +1,7 @@
 #include "input_executor.h"
 
 namespace bebone::core {
-    InputExecutor::InputExecutor() : input(std::make_shared<Input>()) { }
+    InputExecutor::InputExecutor(const std::shared_ptr<Input>& input) : input(input) { }
 
     std::shared_ptr<Input> InputExecutor::get_input() const {
         return input;

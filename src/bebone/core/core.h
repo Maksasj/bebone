@@ -17,5 +17,6 @@
 
 // Input
 #include "input/input.h"
+#include "input/input_executor.h"
 
 #endif

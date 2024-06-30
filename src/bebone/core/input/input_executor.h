@@ -13,7 +13,7 @@ namespace bebone::core {
             std::queue<Key> queued_keys;
 
         public:
-            InputExecutor();
+            InputExecutor(const std::shared_ptr<Input>& input);
 
             [[nodiscard]] std::shared_ptr<Input> get_input() const;
 
