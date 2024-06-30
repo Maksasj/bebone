@@ -28,12 +28,8 @@ int main() {
             std::cout << "key A is down\n";
         }
 
-        // if (input_executor->is_key_up(KeyCode::A)) {
-        //     std::cout << "key A is up\n";
-        // }
-
-        if (input_executor->is_key_pressed(KeyCode::A)) {
-            std::cout << "key A is pressed\n";
+        if (input_executor->is_key_up(KeyCode::A)) {
+            std::cout << "key A is up\n";
         }
 
         input_executor->execute_input_actions();

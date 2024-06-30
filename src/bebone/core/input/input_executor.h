@@ -12,7 +12,7 @@ namespace bebone::core {
         private:
             std::shared_ptr<Input> input;
             std::queue<Key> queued_keys;
-            std::map<KeyCode, int> pressed_keys_count;
+            std::map<KeyCode, bool> pressed_keys;
 
         public:
             InputExecutor(const std::shared_ptr<Input>& input);
@@ -24,7 +24,6 @@ namespace bebone::core {
             // Executes all queued input actions
             void execute_input_actions();
 
-            bool is_key_pressed(const KeyCode& key_code);
             bool is_key_down(const KeyCode& key_code);
             bool is_key_up(const KeyCode& key_code);
     };

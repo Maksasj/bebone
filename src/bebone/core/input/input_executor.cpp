@@ -10,11 +10,9 @@ namespace bebone::core {
     void InputExecutor::queue_key(const KeyCode &key_code, const InputType &input_type) {
         queued_keys.emplace(key_code, input_type);
 
-        if (pressed_keys_count.find(key_code) == pressed_keys_count.end()) {
-            pressed_keys_count[key_code] = 0;
+        if (pressed_keys.find(key_code) == pressed_keys.end()) {
+            pressed_keys[key_code] = false;
         }
-
-        ++pressed_keys_count[key_code];
     }
 
     void InputExecutor::execute_input_actions() {
@@ -22,37 +20,22 @@ namespace bebone::core {
             const auto key = queued_keys.front();
 
             queued_keys.pop();
-            --pressed_keys_count[key.key_code];
+
+            if (key.input_type == InputType::Press || key.input_type == InputType::Repeat) {
+                pressed_keys[key.key_code] = true;
+            } else {
+                pressed_keys[key.key_code] = false;
+            }
 
             input->apply_action(key);
         }
     }
 
     bool InputExecutor::is_key_down(const KeyCode& key_code) {
-        if (pressed_keys_count.find(key_code) == pressed_keys_count.end()) {
-            return false;
-        }
-
-        if (pressed_keys_count[key_code] > 0) {
-            return true;
-        }
-
-        return false;
+        return pressed_keys[key_code];
     }
 
     bool InputExecutor::is_key_up(const KeyCode& key_code) {
         return !is_key_down(key_code);
-    }
-
-    bool InputExecutor::is_key_pressed(const KeyCode& key_code) {
-        if (pressed_keys_count.find(key_code) == pressed_keys_count.end()) {
-            return false;
-        }
-
-        if (pressed_keys_count[key_code] == 1) {
-            return true;
-        }
-
-        return false;
     }
 }
