@@ -27,8 +27,12 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    auto input = window->get_input();
-    Game game(screen_width, screen_height, input);
+    InputHandler input_handler = InputHandler();
+
+    window->add_listener(input_handler.get_key_listener());
+    window->add_listener(input_handler.get_mouse_listener());
+
+    Game game(screen_width, screen_height, input_handler.get_input());
 
     double begin_time = Time::get_time();
     double end_time;
@@ -37,7 +41,7 @@ int main() {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        window->execute_input_actions();
+        input_handler.execute_input_actions();
 
         if (Time::delta_time >= 0) {
             game.update();
