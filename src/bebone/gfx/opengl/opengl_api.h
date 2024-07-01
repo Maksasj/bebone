@@ -14,6 +14,7 @@
 #include "opengl_shader_factory.h"
 
 #include "opengl_texture.h"
+#include "opengl_framebuffer.h"
 
 #include "opengl_texture_1d.h"
 #include "opengl_texture_2d.h"
