@@ -27,7 +27,7 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    InputHandler input_handler = InputHandler();
+    InputHandler input_handler;
 
     window->add_listener(input_handler.get_key_listener());
     window->add_listener(input_handler.get_mouse_listener());

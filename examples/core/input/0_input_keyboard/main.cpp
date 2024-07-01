@@ -18,7 +18,7 @@ int main() {
         std::cout << "key press\n";
     };
 
-    InputHandler input_handler = InputHandler();
+    InputHandler input_handler;
     window->add_listener(input_handler.get_key_listener());
     window->add_listener(input_handler.get_mouse_listener());
 
