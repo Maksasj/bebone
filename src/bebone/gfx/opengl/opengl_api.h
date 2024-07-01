@@ -15,6 +15,7 @@
 
 #include "opengl_texture.h"
 #include "opengl_framebuffer.h"
+#include "opengl_renderbuffer.h"
 
 #include "opengl_texture_1d.h"
 #include "opengl_texture_2d.h"

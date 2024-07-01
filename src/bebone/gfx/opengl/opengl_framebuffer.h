@@ -8,6 +8,7 @@
 #include "opengl_uniform_buffer_object.h"
 
 #include "opengl_texture_2d.h"
+#include "opengl_renderbuffer.h"
 
 namespace bebone::gfx::opengl {
     using namespace bebone::core;
@@ -23,6 +24,7 @@ namespace bebone::gfx::opengl {
             void unbind();
 
             void attach_texture_2d(const u32& attachment, GLTexture2D& texture);
+            void attach_renderbuffer(const u32& attachment, GLRenderbuffer& renderbuffer);
     };
 }
 
