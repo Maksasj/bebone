@@ -9,7 +9,7 @@
 
 #include "vulkan_command_buffer.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanCommandBufferPool : public VulkanWrapper<VkCommandPool>, private core::NonCopyable {
         public:
             VulkanCommandBufferPool(VulkanDevice& device);

@@ -1,6 +1,6 @@
 #include "opengl_texture_cube_map.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     template<typename Color>
     void GLTextureCubeMap::create_cube_map_texture(const std::array<std::shared_ptr<Image<Color>>, 6>& images) {
         bind();

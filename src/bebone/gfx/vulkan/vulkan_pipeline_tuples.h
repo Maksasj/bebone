@@ -6,7 +6,7 @@
 #include "vulkan_pipeline.h"
 #include "vulkan_descriptor_set.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanConstRange;
 
     struct VulkanTexture;
@@ -47,29 +47,29 @@ namespace bebone::gfx::vulkan {
 // Note, this is a std template specialization and it is case-sensitive, please do not touch
 namespace std {
     template<>
-    struct tuple_size<bebone::gfx::vulkan::VulkanManagedPipelineTuple>
+    struct tuple_size<bebone::gfx::VulkanManagedPipelineTuple>
         : std::integral_constant<std::size_t, 3> { };
 
     template<>
-    struct tuple_element<0, bebone::gfx::vulkan::VulkanManagedPipelineTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanPipeline>;
+    struct tuple_element<0, bebone::gfx::VulkanManagedPipelineTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanPipeline>;
     };
 
     template<>
-    struct tuple_element<1, bebone::gfx::vulkan::VulkanManagedPipelineTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanPipelineLayout>;
+    struct tuple_element<1, bebone::gfx::VulkanManagedPipelineTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanPipelineLayout>;
     };
 
     template<>
-    struct tuple_element<2, bebone::gfx::vulkan::VulkanManagedPipelineTuple> {
-        using type = std::vector<std::shared_ptr<bebone::gfx::vulkan::VulkanDescriptorSet>>;
+    struct tuple_element<2, bebone::gfx::VulkanManagedPipelineTuple> {
+        using type = std::vector<std::shared_ptr<bebone::gfx::VulkanDescriptorSet>>;
     };
 }
 
-// Todo, why this needs to be in bebone::gfx::vulkan namespace ?
-namespace bebone::gfx::vulkan {
+// Todo, why this needs to be in bebone::gfx namespace ?
+namespace bebone::gfx {
     template<std::size_t i>
-    auto get(const bebone::gfx::vulkan::VulkanManagedPipelineTuple& tuple) {
+    auto get(const bebone::gfx::VulkanManagedPipelineTuple& tuple) {
         if constexpr (i == 0) {
             return tuple.pipeline;
         } else if constexpr (i == 1) {

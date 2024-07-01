@@ -5,7 +5,7 @@
 
 #include "vulkan_instance.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     struct VulkanSwapChainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
         std::vector<VkSurfaceFormatKHR> formats;

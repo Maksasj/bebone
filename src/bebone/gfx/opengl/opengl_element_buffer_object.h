@@ -3,7 +3,7 @@
 
 #include "opengl_buffer_object.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     /// EBO
     class GLElementBufferObject final : public GLBufferObject {
         public:

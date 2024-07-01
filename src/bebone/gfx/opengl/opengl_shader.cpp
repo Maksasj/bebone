@@ -1,6 +1,6 @@
 #include "opengl_shader.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLShader::GLShader(const ShaderCode& code, const ShaderType& shader_type, const GLShaderProperties& properties)
             : properties(properties) {
 

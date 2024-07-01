@@ -3,7 +3,7 @@
 #include "vulkan_const_range.h"
 #include "vulkan_descriptor_set_layout.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanPipelineLayout::VulkanPipelineLayout(
             VulkanDevice& device,
             const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,

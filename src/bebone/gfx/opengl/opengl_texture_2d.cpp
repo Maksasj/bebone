@@ -1,6 +1,6 @@
 #include "opengl_texture_2d.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     void GLTexture2D::create_gl_texture() {
         const auto format = ColorRGBA::get_gl_format();
         const auto type = ColorRGBA::get_gl_type();

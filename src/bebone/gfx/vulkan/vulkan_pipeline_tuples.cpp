@@ -5,7 +5,7 @@
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_buffer_tuples.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanManagedPipelineTuple::VulkanManagedPipelineTuple(
         const shared_ptr<VulkanPipeline>& pipeline,
         const shared_ptr<VulkanPipelineLayout>& layout,
