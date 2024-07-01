@@ -30,9 +30,6 @@ namespace bebone::gfx {
         glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
         glfwSetKeyCallback(window, glfw_key_callback);
 
-        add_listener(input_handler.get_key_listener());
-        add_listener(input_handler.get_mouse_listener());
-
         add_listener(window_handler.get_window_size_listener());
     }
 
@@ -113,13 +110,5 @@ namespace bebone::gfx {
 
     f32 Window::get_aspect() const {
         return static_cast<f32>(width) / static_cast<f32>(height);
-    }
-
-    void Window::execute_input_actions() const {
-        input_handler.execute_input_actions();
-    }
-
-    std::shared_ptr<Input> Window::get_input() const {
-        return input_handler.get_input();
     }
 }
