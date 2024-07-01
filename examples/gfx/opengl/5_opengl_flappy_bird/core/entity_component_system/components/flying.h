@@ -24,10 +24,12 @@ namespace game::core::ecs {
             float min_rot_z = -85.0f;
             float max_rot_z = 25.0f;
 
+            std::shared_ptr<Input> input;
+
             std::function<void()> fly_function;
             
         public:
-            explicit Flying(const float& fly_force);
+            explicit Flying(const float& fly_force, const std::shared_ptr<Input>& input);
 
             void update() override;
 

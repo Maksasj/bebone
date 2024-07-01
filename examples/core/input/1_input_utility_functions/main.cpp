@@ -9,29 +9,36 @@ using namespace bebone::gfx::opengl;
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("0. Input example", screen_width, screen_height, GfxAPI::OpenGL);
+    auto window = WindowFactory::create_window("1. Input utility functions example", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, screen_width, screen_height);
-
-    std::function<void()> key_press = []() {
-        std::cout << "key press\n";
-    };
 
     auto input = std::make_shared<Input>();
     auto input_executor = std::make_shared<InputExecutor>(input);
 
     KeyListener key_listener(input_executor);
-    MouseListener mouse_listener(input_executor);
-
     window->add_listener(key_listener);
-    window->add_listener(mouse_listener);
-
-    input->register_key_action(KeyCode::A, key_press);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);
+
+        if (input_executor->is_key_down(KeyCode::A)) {
+            std::cout << "key A is down\n";
+        }
+
+        if (input_executor->is_key_up(KeyCode::A)) {
+            std::cout << "key A is up\n";
+        }
+
+        if (input_executor->is_key_pressed(KeyCode::A)) {
+            std::cout << "Key A is pressed\n";
+        }
+
+        if (input_executor->is_key_released(KeyCode::A)) {
+            std::cout << "Key A is released\n";
+        }
 
         input_executor->execute_input_actions();
 

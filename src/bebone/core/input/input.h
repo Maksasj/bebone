@@ -2,7 +2,6 @@
 #define _INPUT_H_
 
 #include <map>
-#include <queue>
 
 #include "../events/delegates/action.h"
 
@@ -13,27 +12,14 @@
 namespace bebone::core {
     using namespace std;
 
-    /// Singleton Input System class. Works with Action delegates
+    /// Input System class. Works with Action delegates
     class Input {
         private:
             using BeboneAction = Action<>;
 
             map<Key, BeboneAction> key_actions;
-            queue<Key> queued_keys;
-
-            Input() = default;
-
-            void queue_key(const KeyCode& key_code, const InputType& input_type);
-            void execute_queued_actions();
 
         public:
-            Input(const Input& obj) = delete;
-            void operator=(Input const& obj) = delete;
-
-            /// Returns singleton reference to the input system object
-            /// @return Input system object reference
-            static Input& get_instance();
-
             /*!
             * Registers the key to do specific action
             * 
@@ -52,9 +38,7 @@ namespace bebone::core {
             */
             void remove_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::Press);
 
-            friend class InputHandler;
-            friend struct KeyListener;
-            friend struct MouseListener;
+            void apply_action(const Key& key);
     };
 }
 

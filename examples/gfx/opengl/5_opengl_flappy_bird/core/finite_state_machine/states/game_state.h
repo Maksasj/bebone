@@ -22,6 +22,8 @@ namespace game::core::fsm {
             shared_ptr<GameObject> pipe1;
             shared_ptr<GameObject> pipe2;
 
+            shared_ptr<Input> input;
+
             float ground_y;
             float air_y;
 
@@ -29,7 +31,7 @@ namespace game::core::fsm {
 
             void transition_to_end_game_state();
         public:
-            explicit GameState(const shared_ptr<GameObject>& flappy_bird);
+            explicit GameState(const shared_ptr<GameObject>& flappy_bird, const shared_ptr<Input>& input);
             ~GameState() override;
 
             void enter() override;

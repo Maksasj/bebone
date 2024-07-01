@@ -31,6 +31,8 @@ namespace game::core {
             shared_ptr<GameState> game_state;
             shared_ptr<EndGameState> end_game_state;
 
+            shared_ptr<Input> input;
+
             static vector<shared_ptr<GameObject>> game_objects;
 
             shared_ptr<GameObject> instantiate(const string& game_object_name, const Vec3f& position = {0.0f, 0.0f, 0.0f});
@@ -38,7 +40,7 @@ namespace game::core {
 
             void update_game_objects();
         public:
-            Game(const unsigned int& width, const unsigned int& height);
+            Game(const unsigned int& width, const unsigned int& height, const shared_ptr<Input>& input);
             void update();
 
             static shared_ptr<GameObject> find_game_object_by_name(const string& game_object_name);
