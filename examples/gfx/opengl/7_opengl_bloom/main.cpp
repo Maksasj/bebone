@@ -104,29 +104,21 @@ int main() {
 
     // Geometry pass
     auto geometry_fbo = GLFramebuffer();
-    geometry_fbo.bind();
         auto geometry_texture = GLTexture2D(800, 600);
-        geometry_fbo.attach_texture_2d(GL_COLOR_ATTACHMENT0, geometry_texture);
-
         auto geometry_renderbuffer = GLRenderbuffer();
-        geometry_renderbuffer.bind();
         geometry_renderbuffer.storage(GL_DEPTH24_STENCIL8, 800, 600);
 
+        geometry_fbo.attach_texture_2d(GL_COLOR_ATTACHMENT0, geometry_texture);
         geometry_fbo.attach_renderbuffer(GL_DEPTH_STENCIL_ATTACHMENT, geometry_renderbuffer);
-    geometry_fbo.unbind();
 
     // Blur pass
     auto blur_fbo = GLFramebuffer();
-        blur_fbo.bind();
         auto blur_texture = GLTexture2D(800, 600);
-        blur_fbo.attach_texture_2d(GL_COLOR_ATTACHMENT0, blur_texture);
-
         auto blur_renderbuffer = GLRenderbuffer();
-        blur_renderbuffer.bind();
         blur_renderbuffer.storage(GL_DEPTH24_STENCIL8, 800, 600);
 
+        blur_fbo.attach_texture_2d(GL_COLOR_ATTACHMENT0, blur_texture);
         blur_fbo.attach_renderbuffer(GL_DEPTH_STENCIL_ATTACHMENT, blur_renderbuffer);
-    blur_fbo.unbind();
 
     while (!window->closing()) {
         transform.rotation.x += 0.1f;

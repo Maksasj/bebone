@@ -6,7 +6,11 @@ namespace bebone::gfx::opengl {
     }
 
     void GLRenderbuffer::storage(const u32& type, const u32& width, const u32& height) {
+        bind();
+
         glRenderbufferStorage(GL_RENDERBUFFER, type, width, height);
+
+        unbind();
     }
 
     void GLRenderbuffer::bind() {
