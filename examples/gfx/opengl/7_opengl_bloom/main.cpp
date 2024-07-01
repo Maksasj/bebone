@@ -79,7 +79,7 @@ int main() {
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, 800, 600);
 
-    GLShaderProgram main_program(
+    GLShaderProgram geometry_program(
         GLShaderFactory::create_shader("main.vert.glsl", ShaderTypes::vertex_shader, EnableUniforms),
         GLShaderFactory::create_shader("main.frag.glsl", ShaderTypes::fragment_shader, EnableUniforms));
 
@@ -105,10 +105,12 @@ int main() {
     // Geometry pass
     auto geometry_fbo = GLFramebuffer();
         auto geometry_texture = GLTexture2D(800, 600);
+        auto grayscale_texture = GLTexture2D(800, 600);
         auto geometry_renderbuffer = GLRenderbuffer();
         geometry_renderbuffer.storage(GL_DEPTH24_STENCIL8, 800, 600);
 
         geometry_fbo.attach_texture_2d(GL_COLOR_ATTACHMENT0, geometry_texture);
+        geometry_fbo.attach_texture_2d(GL_COLOR_ATTACHMENT1, grayscale_texture);
         geometry_fbo.attach_renderbuffer(GL_DEPTH_STENCIL_ATTACHMENT, geometry_renderbuffer);
 
     // Blur pass
@@ -121,17 +123,20 @@ int main() {
         blur_fbo.attach_renderbuffer(GL_DEPTH_STENCIL_ATTACHMENT, blur_renderbuffer);
 
     while (!window->closing()) {
-        transform.rotation.x += 0.1f;
-        transform.rotation.z -= 0.1f;
+        transform.rotation.x += 0.02f;
+        transform.rotation.z -= 0.02f;
 
         // Geometry pass
         geometry_fbo.bind();
+            GLenum drawBuffers[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+            glDrawBuffers(2, drawBuffers); // Todo, this needs to be abstracted
+
             GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
             GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            main_program.enable();
-            main_program.set_uniform("transform", transform.final_matrix());
-            main_program.set_uniform("cam", camera);
+            geometry_program.enable();
+            geometry_program.set_uniform("transform", transform.final_matrix());
+            geometry_program.set_uniform("cam", camera);
 
             cube_mesh->bind();
             GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(cube_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
@@ -156,7 +161,7 @@ int main() {
         post_program.enable();
         quad_mesh->bind();
 
-        geometry_texture.bind_texture_unit(0);
+        grayscale_texture.bind_texture_unit(0);
         blur_texture.bind_texture_unit(1);
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(quad_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
 
@@ -164,7 +169,7 @@ int main() {
         GLFWContext::poll_events();
     }
 
-    main_program.destroy();
+    geometry_program.destroy();
 
     GLFWContext::terminate();
 
