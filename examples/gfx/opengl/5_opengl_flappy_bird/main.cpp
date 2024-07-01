@@ -27,12 +27,16 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    InputHandler input_handler;
+    auto input = std::make_shared<Input>();
+    auto input_executor = std::make_shared<InputExecutor>(input);
 
-    window->add_listener(input_handler.get_key_listener());
-    window->add_listener(input_handler.get_mouse_listener());
+    KeyListener key_listener(input_executor);
+    MouseListener mouse_listener(input_executor);
 
-    Game game(screen_width, screen_height, input_handler.get_input());
+    window->add_listener(key_listener);
+    window->add_listener(mouse_listener);
+
+    Game game(screen_width, screen_height, input);
 
     double begin_time = Time::get_time();
     double end_time;
@@ -41,7 +45,7 @@ int main() {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        input_handler.execute_input_actions();
+        input_executor->execute_input_actions();
 
         if (Time::delta_time >= 0) {
             game.update();
