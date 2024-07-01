@@ -24,7 +24,6 @@ namespace bebone::gfx {
         private:
             GLFWwindow* window;
 
-            InputHandler input_handler;
             WindowHandler window_handler;
 
         protected:
@@ -67,10 +66,6 @@ namespace bebone::gfx {
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
 
-            /// Function that executes all queued input actions
-            void execute_input_actions() const;
-
-            // Todo, implement
             virtual shared_ptr<renderer::IRenderer> create_renderer() {};
 
         private:

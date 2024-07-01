@@ -12,7 +12,9 @@
 namespace game::core::fsm {
     #define FLY_FORCE 0.06f
 
-    GameState::GameState(const shared_ptr<GameObject>& flappy_bird) : end_game_state(nullptr), flappy_bird(flappy_bird) {
+    GameState::GameState(const shared_ptr<GameObject>& flappy_bird, const shared_ptr<Input>& input)
+        : end_game_state(nullptr), flappy_bird(flappy_bird), input(input) {
+
         ground1 = Game::find_game_object_by_name("Ground1");
         ground2 = Game::find_game_object_by_name("Ground2");
         pipe1 = Game::find_game_object_by_name("Pipe1");
@@ -46,7 +48,7 @@ namespace game::core::fsm {
         pipe1->add_component<Collider>(empty_space_trigger_top_left_point, empty_space_trigger_bottom_right_point, true);
         pipe2->add_component<Collider>(empty_space_trigger_top_left_point, empty_space_trigger_bottom_right_point, true);
 
-        flappy_bird->add_component<Flying>(FLY_FORCE)->disable();
+        flappy_bird->add_component<Flying>(FLY_FORCE, input)->disable();
         
         auto flappy_bird_sprite = flappy_bird->get_component<SpriteRenderer>()->get_sprite();
         Vec2f flappy_bird_collider_top_left_point = { -flappy_bird_sprite->get_unit_width() / 2.0f, flappy_bird_sprite->get_unit_height() / 2.0f };
