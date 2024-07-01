@@ -22,6 +22,15 @@ const std::vector<Vertex> vertices = {
     {{-1.0,  1.0,  1.0}, {1.0f, 0.0f, 0.0f}},
 };
 
+const std::vector<int> indices = {
+    0, 1, 2, 2, 3, 0,
+    1, 5, 6, 6, 2, 1,
+    7, 6, 5, 5, 4, 7,
+    4, 0, 3, 3, 7, 4,
+    4, 5, 1, 1, 0, 4,
+    3, 2, 6, 6, 7, 3
+};
+
 // Todo make this nicer
 const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     .binding_descriptions = {
@@ -33,19 +42,10 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     }
 };
 
-const std::vector<int> indices = {
-    0, 1, 2, 2, 3, 0,
-    1, 5, 6, 6, 2, 1,
-    7, 6, 5, 5, 4, 7,
-    4, 0, 3, 3, 7, 4,
-    4, 5, 1, 1, 0, 4,
-    3, 2, 6, 6, 7, 3
-};
-
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, GfxAPI::Vulkan);
+    auto window = WindowFactory::create_window("3. Vulkan 3d cube example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);

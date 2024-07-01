@@ -37,12 +37,15 @@ namespace bebone::gfx::vulkan {
         return *this;
     }
 
+    // This function should have multiple variants, with swap chain or just with custom render target
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
         const u32& frame_buffer
     ) {
         VkRenderPassBeginInfo render_pass_info{};
 
+        // yes so swapchain is not needed there, just a framebuffer and render pass object
+        // Todo update this
         render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         render_pass_info.renderPass = swap_chain->render_target->render_pass->backend;
         render_pass_info.framebuffer = swap_chain->render_target->swap_chain_framebuffers[frame_buffer]->backend;

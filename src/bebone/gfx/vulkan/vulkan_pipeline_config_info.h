@@ -60,7 +60,7 @@ namespace bebone::gfx::vulkan {
         VkBool32 rasterizer_discard_enable = VK_FALSE;
         VkPolygonMode polygon_mode = VK_POLYGON_MODE_FILL;
         VkCullModeFlags cull_mode = VK_CULL_MODE_BACK_BIT;
-        VkFrontFace front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+        VkFrontFace front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE; // Todo
         VkBool32 depth_bias_enable = VK_FALSE;
         float depth_bias_constant_factor = 0.0f;
         float depth_bias_clamp = 0.0f;
