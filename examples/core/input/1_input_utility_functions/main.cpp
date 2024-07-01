@@ -17,7 +17,7 @@ int main() {
     auto input = std::make_shared<Input>();
     auto input_executor = std::make_shared<InputExecutor>(input);
 
-    KeyListener key_listener = KeyListener(input_executor);
+    KeyListener key_listener(input_executor);
     window->add_listener(key_listener);
 
     while (!window->closing()) {
