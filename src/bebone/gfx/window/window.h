@@ -12,6 +12,10 @@
 #include "window_properties.h"
 #include "window_handler.h"
 
+namespace bebone::renderer {
+    class IRenderer;
+}
+
 namespace bebone::gfx {
     using namespace core;
 
@@ -61,6 +65,8 @@ namespace bebone::gfx {
 
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
+
+            virtual shared_ptr<renderer::IRenderer> create_renderer() {};
 
         private:
             /// GLFW window position change callbacks

@@ -11,6 +11,10 @@ if(BEBONE_BUILD_GFX)
     add_subdirectory(gfx)
 endif()
 
+if(BEBONE_BUILD_RENDERER)
+    add_subdirectory(renderer)
+endif()
+
 # Source files
 file(GLOB BEBONE_SRC_FILE bebone.cpp)
 add_library(bebone STATIC ${BEBONE_SRC_FILE})
@@ -26,6 +30,10 @@ endif()
 
 if(BEBONE_BUILD_CORE)
     target_link_libraries(bebone bebone_core)
+endif()
+
+if(BEBONE_BUILD_RENDERER)
+    target_link_libraries(bebone bebone_renderer)
 endif()
 
 set(BEBONE_INCLUDES "${CMAKE_SOURCE_DIR}/src")
