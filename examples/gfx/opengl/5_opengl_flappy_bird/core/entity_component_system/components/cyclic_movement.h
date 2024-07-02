@@ -16,15 +16,15 @@ namespace game::core::ecs {
         private:
             float speed = 2.5f;
 
-            bool randomizeY = false;
-            float minY = -3.0f;
-            float maxY = 4.5f;
+            bool randomize_y = false;
+            float min_y = -3.0f;
+            float max_y = 4.5f;
 
-            float endXPoint;
-            float startXPoint;
+            float end_x_point;
+            float start_x_point;
 
         public:
-            CyclicMovement(const float& endXPoint, const float& startXPoint, const bool& randomizeY = false);
+            CyclicMovement(const float& end_x_point, const float& start_x_point, const bool& randomize_y = false);
 
             void update() override;
     };

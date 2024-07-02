@@ -4,69 +4,69 @@
 #include "../world.h"
 
 namespace bexel {
-    DirectionalBlock::DirectionalBlock(const Vec3f& chunkPosition) : Block(chunkPosition) {
+    DirectionalBlock::DirectionalBlock(const Vec3f& chunk_position) : Block(chunk_position) {
 
     }
 
-    void DirectionalBlock::append_mesh(MeshBuilder& meshBuilder, World& world, Chunk& chunk) {
-        const auto chunkPos = chunk.get_pos();
+    void DirectionalBlock::append_mesh(MeshBuilder& mesh_builder, World& world, Chunk& chunk) {
+        const auto chunk_pos = chunk.get_pos();
 
-        const auto& x = m_chunkPosition.x + chunkPos.x;
-        const auto& y = m_chunkPosition.y + chunkPos.y;
-        const auto& z = m_chunkPosition.z + chunkPos.z;
+        const auto& x = chunk_position.x + chunk_pos.x;
+        const auto& y = chunk_position.y + chunk_pos.y;
+        const auto& z = chunk_position.z + chunk_pos.z;
 
-        auto upBlock =      world.get_voxel_at(Vec3f(x, y + 1.0f, z));
-        auto downBlock =    world.get_voxel_at(Vec3f(x, y - 1.0f, z));
-        auto leftBlock =    world.get_voxel_at(Vec3f(x + 1.0f, y, z));
-        auto rightBlock =   world.get_voxel_at(Vec3f(x - 1.0f, y, z));
-        auto forwardBlock = world.get_voxel_at(Vec3f(x, y, z + 1.0f));
-        auto backBlock =    world.get_voxel_at(Vec3f(x, y, z - 1.0f));
+        auto up_block =      world.get_voxel_at(Vec3f(x, y + 1.0f, z));
+        auto down_block =    world.get_voxel_at(Vec3f(x, y - 1.0f, z));
+        auto left_block =    world.get_voxel_at(Vec3f(x + 1.0f, y, z));
+        auto right_block =   world.get_voxel_at(Vec3f(x - 1.0f, y, z));
+        auto forward_block = world.get_voxel_at(Vec3f(x, y, z + 1.0f));
+        auto back_block =    world.get_voxel_at(Vec3f(x, y, z - 1.0f));
 
-        if(upBlock != SOLID) {
-            meshBuilder.append(
-            WallMesh<UP>{},
+        if(up_block != Solid) {
+            mesh_builder.append(
+            WallMesh<Up>{},
             get_up_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
+            Transform{chunk_position, Mat4f::identity(), Vec3f::one
             });
         }
 
-        if(downBlock != SOLID) {
-            meshBuilder.append(
-            WallMesh<DOWN>{},
+        if(down_block != Solid) {
+            mesh_builder.append(
+            WallMesh<Down>{},
             get_down_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
+            Transform{chunk_position, Mat4f::identity(), Vec3f::one
             });
         }
 
-        if(leftBlock != SOLID) {
-            meshBuilder.append(
-            WallMesh<LEFT>{},
+        if(left_block != Solid) {
+            mesh_builder.append(
+            WallMesh<Left>{},
             get_left_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
+            Transform{chunk_position, Mat4f::identity(), Vec3f::one
             });
         }
 
-        if(rightBlock != SOLID) {
-            meshBuilder.append(
-            WallMesh<RIGHT>{},
+        if(right_block != Solid) {
+            mesh_builder.append(
+            WallMesh<Right>{},
             get_right_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
+            Transform{chunk_position, Mat4f::identity(), Vec3f::one
             });
         }
 
-        if(forwardBlock != SOLID) {
-            meshBuilder.append(
-            WallMesh<FORWARD>{},
+        if(forward_block != Solid) {
+            mesh_builder.append(
+            WallMesh<Forward>{},
             get_forward_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
+            Transform{chunk_position, Mat4f::identity(), Vec3f::one
             });
         }
 
-        if(backBlock != SOLID) {
-            meshBuilder.append(
-            WallMesh<BACK>{},
+        if(back_block != Solid) {
+            mesh_builder.append(
+            WallMesh<Back>{},
             get_back_tex_coords(),
-            Transform{m_chunkPosition,Mat4f::identity(),Vec3f::one
+            Transform{chunk_position, Mat4f::identity(), Vec3f::one
             });
         }
     }

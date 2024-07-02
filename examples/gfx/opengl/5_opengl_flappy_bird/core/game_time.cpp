@@ -2,7 +2,7 @@
 
 namespace game::core {
     const steady_clock::time_point Time::startupTime = steady_clock::now();
-    double Time::deltaTime = -1;
+    double Time::delta_time = -1;
 
     double Time::get_time() {
         auto now = steady_clock::now();

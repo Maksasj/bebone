@@ -3,9 +3,9 @@
 
 namespace bexel {
     enum BlockID {
-        UNDEFINED,
-        AIR,
-        SOLID
+        Undefined,
+        Air,
+        Solid
     };
 }
 

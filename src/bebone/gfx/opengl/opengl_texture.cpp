@@ -1,7 +1,7 @@
 #include "opengl_texture.h"
 
-namespace bebone::gfx::opengl {
-    GLTexture::GLTexture(const GLenum& textureType) : textureType(textureType) {
+namespace bebone::gfx {
+    GLTexture::GLTexture(const GLenum& texture_type) : texture_type(texture_type) {
         glGenTextures(1, &id);
     }
 
@@ -11,11 +11,11 @@ namespace bebone::gfx::opengl {
 
     void GLTexture::configure_gl_texture(const GLTextureParameters& parameters) {
         for(auto& param : parameters.parameters)
-            glTexParameteri(textureType, param.first, param.second);
+            glTexParameteri(texture_type, param.first, param.second);
     };
 
     void GLTexture::generate_mipmap() {
-        glGenerateMipmap(textureType);
+        glGenerateMipmap(texture_type);
     }
 
     const GLuint& GLTexture::get_id() const {
@@ -23,19 +23,19 @@ namespace bebone::gfx::opengl {
     }
 
     const GLenum& GLTexture::get_texture_type() const {
-        return textureType;
+        return texture_type;
     }
 
-    void GLTexture::bind_texture_unit(const GLuint& textureUnit) {
-        glBindTextureUnit(textureUnit, id);
+    void GLTexture::bind_texture_unit(const GLuint& texture_unit) {
+        glBindTextureUnit(texture_unit, id);
     }
 
     void GLTexture::bind() {
-        glBindTexture(textureType, id);
+        glBindTexture(texture_type, id);
     }
 
     void GLTexture::unbind() {
-        glBindTexture(textureType, 0);
+        glBindTexture(texture_type, 0);
     }
 
     void GLTexture::destroy() {

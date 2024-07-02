@@ -11,18 +11,18 @@ namespace bebone::gfx {
     // Class used for specifying a shader type
     struct ShaderType {
         private:
-            u32 m_value;
+            u32 value;
 
-            ShaderType(const u32& p_value);
+            ShaderType(const u32& value);
         
         public:
             friend struct ShaderTypes;
 
             /// Overloaded shader type comparison operator
-            bool operator==(const ShaderType& p_another) const;
+            bool operator==(const ShaderType& another) const;
 
             /// Overloaded shader type comparison operator
-            bool operator!=(const ShaderType& p_another) const;
+            bool operator!=(const ShaderType& another) const;
 
             /// Function that return string representation of shader type
             std::string to_string() const;
@@ -36,8 +36,8 @@ namespace bebone::gfx {
 
     /// Class that is used for enumerating different shader types
     struct ShaderTypes {
-        static const ShaderType FRAGMENT_SHADER;
-        static const ShaderType VERTEX_SHADER;
+        static const ShaderType fragment_shader;
+        static const ShaderType vertex_shader;
     };
 }
 

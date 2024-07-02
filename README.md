@@ -63,8 +63,8 @@ At the moment, bebone is only dependent on these libraries:
   - [GLFW](https://github.com/Maksasj/glfw/tree/master) *(window management library)*
   - [Glslang](https://github.com/KhronosGroup/glslang/tree/main) *(SPIR-V shader compiler library)* 
   - [imgui](https://github.com/Maksasj/imgui/tree/master) *(Debug gui library)* 
-  - [omni_types](https://github.com/Maksasj/omni_types/tree/master) *(Type library)* 
   - [stb](https://github.com/Maksasj/stb/tree/master) *(Image management library and others)* 
+  - [miniaudio](https://github.com/Maksasj/miniaudio/tree/master) *(Sound/Music management library)*
 
 ## Examples
 Bebone hello world example:
@@ -72,12 +72,11 @@ Bebone hello world example:
 #include "bebone/bebone.h"
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 int main() {
     GLFWContext::init();
     
-    auto window = WindowFactory::create_window("Example", 800, 600, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("Example", 800, 600, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

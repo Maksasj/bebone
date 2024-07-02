@@ -8,7 +8,7 @@ namespace bexel {
         private:
 
         public:
-            SideDirectionalBlock(const Vec3f& chunkPosition);
+            SideDirectionalBlock(const Vec3f& chunk_position);
 
             const vector<Vec2f>& get_left_tex_coords() override {
                 return get_forward_tex_coords();

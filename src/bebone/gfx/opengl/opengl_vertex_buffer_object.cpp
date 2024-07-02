@@ -1,6 +1,6 @@
 #include "opengl_vertex_buffer_object.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLVertexBufferObject::GLVertexBufferObject(const void* vertices, const GLsizeiptr& size, const GLenum& usage) : GLBufferObject() {
         bind();
         glBufferData(GL_ARRAY_BUFFER, size, vertices, usage);

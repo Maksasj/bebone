@@ -4,7 +4,7 @@
 #include "event.tpp"
 
 namespace bebone::core {
-    using namespace std;
+    // using namespace std;
 
     /*!
      * Base class for all event listeners
@@ -15,6 +15,8 @@ namespace bebone::core {
         private:
 
         public:
+            virtual ~EventListener() = default;
+            
             virtual void operator()(EventType&) = 0;
     };
 }

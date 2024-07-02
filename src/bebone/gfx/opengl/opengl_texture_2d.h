@@ -7,7 +7,7 @@
 
 #include "opengl_texture.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::assets;
 
     class GLTexture2D : public GLTexture {
@@ -17,8 +17,8 @@ namespace bebone::gfx::opengl {
 
             void create_gl_texture();
 
-            template<typename _Color>
-            void create_gl_texture(const std::shared_ptr<Image<_Color>>& image);
+            template<typename Color>
+            void create_gl_texture(const std::shared_ptr<Image<Color>>& image);
 
         public:
             /*!
@@ -30,16 +30,16 @@ namespace bebone::gfx::opengl {
 
             /*!
             * Constructor, loads image from a file
-            * @param filePath - Image file path
+            * @param file_path - Image file path
             */
-            GLTexture2D(const std::string& filePath);
+            GLTexture2D(const std::string& file_path);
 
             /*!
             * Constructor, creates GLTexture2D from already loaded image
             * @param image - Image
             */
-            template<typename _Color>
-            GLTexture2D(const std::shared_ptr<Image<_Color>>& image);
+            template<typename Color>
+            GLTexture2D(const std::shared_ptr<Image<Color>>& image);
 
             // Getter for image width
             const int& get_width() const;

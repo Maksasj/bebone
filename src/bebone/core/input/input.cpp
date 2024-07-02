@@ -1,44 +1,29 @@
 #include "input.h"
 
 namespace bebone::core {
-    Input& Input::get_instance() {
-        static Input instance;
+    void Input::register_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type) {
+        const Key key(key_code, input_type);
 
-        return instance;
-    }
-
-    void Input::register_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType) {
-        Key key(keyCode, inputType);
-
-        if (keyActions.find(key) == keyActions.end()) {
-            keyActions[key] = Action();
+        if (key_actions.find(key) == key_actions.end()) {
+            key_actions[key] = Action();
         }
 
-        keyActions[key] += action;
+        key_actions[key] += action;
     }
 
-    void Input::remove_key_action(const KeyCode &keyCode, std::function<void()> &action, const InputType &inputType) {
-        Key key(keyCode, inputType);
+    void Input::remove_key_action(const KeyCode &key_code, std::function<void()> &action, const InputType &input_type) {
+        const Key key(key_code, input_type);
 
-        if (keyActions.find(key) == keyActions.end()) {
+        if (key_actions.find(key) == key_actions.end()) {
             return;
         }
 
-        keyActions[key] -= action;
+        key_actions[key] -= action;
     }
 
-    void Input::queue_key(const KeyCode &keyCode, const InputType &inputType) {
-        queuedKeys.push(Key(keyCode, inputType));
-    }
-
-    void Input::execute_queued_actions() {
-        while (!queuedKeys.empty()) {
-            Key key = queuedKeys.front();
-            queuedKeys.pop();
-
-            if (keyActions.find(key) != keyActions.end()) {
-                keyActions[key]();
-            }
+    void Input::apply_action(const Key& key) {
+        if (key_actions.find(key) != key_actions.end()) {
+            key_actions[key]();
         }
     }
 }

@@ -1,14 +1,12 @@
+set(BEBONE_CORE_INCLUDES
+    "${CMAKE_SOURCE_DIR}/src/bebone/core"
+    "${CMAKE_SOURCE_DIR}/3dparty/glad/include"
+    "${CMAKE_SOURCE_DIR}/3dparty/glfw/include"
+    "${CMAKE_SOURCE_DIR}/3dparty/Vulkan-Headers/include"
+)
+
+set(BEBONE_CORE_INCLUDES "${BEBONE_CORE_INCLUDES}" CACHE INTERNAL "")
+include_directories(${BEBONE_CORE_INCLUDES})
+
 file(GLOB_RECURSE BEBONE_CORE_SRC_FILES "*.cpp")
-
-# Since we also building gfx module
-# lets include glad headers for omni_types library
-if(BEBONE_BUILD_GFX)
-    add_compile_definitions(OMNI_GLAD_INTEGRATION)
-    include_directories("../../../3dparty/glad/include")
-endif()
-
-include_directories("../../../3dparty/omni_types/src")
-
 add_library(bebone_core STATIC ${BEBONE_CORE_SRC_FILES})
-
-target_link_libraries(bebone_core omni_types)

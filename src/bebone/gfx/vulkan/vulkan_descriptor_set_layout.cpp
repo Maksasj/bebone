@@ -3,56 +3,66 @@
 
 #include "vulkan_device.h"
 
-namespace bebone::gfx::vulkan {
-    VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(VulkanDevice& device, const std::vector<VulkanDescriptorSetLayoutBinding>& allBindings) {
-        std::vector<VkDescriptorBindingFlags> bindingFlags;
-        std::vector<VkDescriptorSetLayoutBinding> bindings;
+namespace bebone::gfx {
+    VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(
+        VulkanDevice& device,
+        const std::vector<VulkanDescriptorSetLayoutBinding>& all_bindings
+    ) {
+        auto binding_flags = std::vector<VkDescriptorBindingFlags> {};
+        binding_flags.reserve(all_bindings.size());
 
-        for(const auto& b : allBindings)
-            bindings.push_back(b.binding);
+        auto bindings = std::vector<VkDescriptorSetLayoutBinding> {};
+        bindings.reserve(all_bindings.size());
+
+        for(const auto& b : all_bindings)
+            bindings.push_back(b.backend);
 
         for(size_t i = 0; i < bindings.size(); ++i) {
-            VkDescriptorBindingFlags bindlessFlags;
+            VkDescriptorBindingFlags flags;
 
             if(i == bindings.size() - 1) {
-                bindlessFlags =
-                        VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT |
-                        // VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT |
-                        VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
+                flags =
+                    VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT |
+                    // VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT |
+                    VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
             } else {
-                bindlessFlags =
-                        VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT |
-                        VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
+                flags =
+                    VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT |
+                    VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
             }
 
-            bindingFlags.push_back(bindlessFlags);
+            binding_flags.push_back(flags);
         }
 
         // Descriptor set
-        VkDescriptorSetLayoutCreateInfo layoutInfo{};
-        layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layoutInfo.bindingCount = bindings.size();
-        layoutInfo.pBindings = bindings.data();
-        layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
+        VkDescriptorSetLayoutCreateInfo layout_info{};
+        layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        layout_info.bindingCount = bindings.size();
+        layout_info.pBindings = bindings.data();
+        layout_info.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
 
-        VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo;
-        extendedInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
-        extendedInfo.pNext = nullptr;
-        extendedInfo.bindingCount = bindingFlags.size();
+        VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extended_info;
+        extended_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
+        extended_info.pNext = nullptr;
+        extended_info.bindingCount = binding_flags.size();
 
-        if(bindingFlags.size() == 0) {
-            extendedInfo.pBindingFlags = nullptr;
-        } else
-            extendedInfo.pBindingFlags = bindingFlags.data();
+        if(binding_flags.empty())
+            extended_info.pBindingFlags = nullptr;
+        else
+            extended_info.pBindingFlags = binding_flags.data();
 
-        layoutInfo.pNext = &extendedInfo;
+        layout_info.pNext = &extended_info;
 
-        if (vkCreateDescriptorSetLayout(device.device(), &layoutInfo, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateDescriptorSetLayout(device.device, &layout_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create descriptor set layout!");
-        }
     }
 
     void VulkanDescriptorSetLayout::destroy(VulkanDevice& device) {
-        vkDestroyDescriptorSetLayout(device.device(), backend, nullptr);
+        if(is_destroyed())
+            return;
+            
+        vkDestroyDescriptorSetLayout(device.device, backend, nullptr);
+
+        mark_destroyed();
     }
 }

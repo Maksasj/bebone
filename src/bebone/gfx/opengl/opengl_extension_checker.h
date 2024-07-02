@@ -6,11 +6,11 @@
 #include <set>
 #include <string>
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     /// Class used fort checking if specific opengl gl extension is available on device
     class GLExtensionChecker : private core::NonCopyable {
         private:
-            std::set<std::string> m_extensions;
+            std::set<std::string> extensions;
 
             /// Default constructor
             GLExtensionChecker();

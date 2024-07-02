@@ -9,7 +9,7 @@
 #include "../transform.h"
 
 #include "world_generator.h"
-#include "gfx/opengl/4_opengl_bexel/world/tiles/tile_block.h"
+#include "world/tiles/tile_block.h"
 
 #define CHUNK_SIZE_X 16
 #define CHUNK_SIZE_Y 32
@@ -20,16 +20,16 @@ namespace bexel {
 
     class Chunk final : public Renderable, private core::NonCopyable {
         private:
-            array<array<array<TileBlock*, CHUNK_SIZE_Z>, CHUNK_SIZE_Y>, CHUNK_SIZE_X> m_voxels;
-            Transform m_transform;
+            array<array<array<TileBlock*, CHUNK_SIZE_Z>, CHUNK_SIZE_Y>, CHUNK_SIZE_X> voxels;
+            Transform transform;
 
-            unique_ptr<Mesh> m_mesh;
+            unique_ptr<Mesh> mesh;
 
         public:
             Chunk(const Vec3f& pos);
             ~Chunk();
 
-            void generate_chunk(unique_ptr<WorldGenerator>& worldGenerator);
+            void generate_chunk(unique_ptr<WorldGenerator>& world_generator);
             void generate_mesh(World& world);
 
             TileBlock* get_voxel(const i32& x, const i32& y, const i32& z);

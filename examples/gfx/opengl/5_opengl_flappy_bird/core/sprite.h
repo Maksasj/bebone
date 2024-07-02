@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-using namespace bebone::gfx::opengl;
+using namespace bebone::gfx;
 
 namespace game::core {
     using namespace std;
@@ -13,13 +13,13 @@ namespace game::core {
     class Sprite : private NonCopyable {
         private:
             shared_ptr<GLTexture2D> texture;
-            unsigned int pixelsPerUnit;
+            unsigned int pixels_per_unit;
 
-            float unitWidth;
-            float unitHeight;
+            float unit_width;
+            float unit_height;
         public:
             Sprite();
-            Sprite(const std::string& textureName, const unsigned int& pixelsPerUnit);
+            Sprite(const std::string& texture_name, const unsigned int& pixels_per_unit);
 
             const shared_ptr<GLTexture2D>& get_texture() const;
             void set_texture(const std::string& textureName);

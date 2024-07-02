@@ -4,7 +4,7 @@
 namespace bebone::gfx {
     // Structured used for configuring window properties
     struct WindowProperties {
-        bool enableResize = false;
+        bool enable_resize = false;
 
         // Todo, default name, width and height can be moved there
     };

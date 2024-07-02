@@ -8,7 +8,7 @@ namespace bexel {
         private:
 
         public:
-            GrassBlock(const Vec3f &chunkPosition);
+            GrassBlock(const Vec3f &chunk_position);
 
             const vector<Vec2f>& get_up_tex_coords() override {
                 static const vector<Vec2f> coordinates = {

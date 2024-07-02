@@ -12,15 +12,15 @@
 namespace bexel {
     class World final : public Renderable, private core::NonCopyable {
         private:
-            unique_ptr<WorldGenerator> m_worldGenerator;
-            unordered_map<Vec2i, unique_ptr<Chunk>> m_chunks;
+            unique_ptr<WorldGenerator> world_generator;
+            unordered_map<Vec2i, unique_ptr<Chunk>> chunks;
 
             bool chunk_exist(const Vec2i& pos) const;
 
         public:
             World();
 
-            BlockID get_voxel_at(const Vec3f& voxelPos) const;
+            BlockID get_voxel_at(const Vec3f& voxel_pos) const;
 
             void update(unique_ptr<Camera>& camera);
             void render(unique_ptr<GLShaderProgram>& shader) override;

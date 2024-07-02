@@ -1,11 +1,11 @@
 #include "mesh_builder.h"
 
 namespace bexel {
-    MeshBuilder::MeshBuilder() : m_indexOffset(0) {
+    MeshBuilder::MeshBuilder() : index_offset(0) {
 
     }
 
     unique_ptr<Mesh> MeshBuilder::build() {
-        return make_unique<Mesh>(m_vertices, m_indices);
+        return make_unique<Mesh>(vertices, indices);
     }
 }

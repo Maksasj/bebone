@@ -1,19 +1,19 @@
 #include "state_machine.h"
 
 namespace game::core::fsm {
-    std::shared_ptr<State> StateMachine::currentState = nullptr;
+    std::shared_ptr<State> StateMachine::current_state = nullptr;
 
     void StateMachine::set_state(std::shared_ptr<State> state) {
-        if (currentState != nullptr) {
-            currentState->exit();
+        if (current_state != nullptr) {
+            current_state->exit();
         }
         
         state->enter();
 
-        currentState = state;
+        current_state = state;
     }
 
     void StateMachine::update_current_state() {
-        currentState->update();
+        current_state->update();
     }
 }

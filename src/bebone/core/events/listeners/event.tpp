@@ -1,15 +1,13 @@
 #ifndef _BEBONE_CORE_EVENTS_LISTENERS_EVENT_H_
 #define _BEBONE_CORE_EVENTS_LISTENERS_EVENT_H_
 
-#include "../../types.h"
-
 namespace bebone::core {
     /*!
      * Base class for all events
      * @tparam EventCategoryType - enumeration that specifies set of possible events
-     * @tparam eventType - specific event type
+     * @tparam event_type - specific event type
     */
-    template<class EventCategoryType, EventCategoryType eventType>
+    template<class EventCategoryType, EventCategoryType event_type>
     class Event {
         private:
             bool handled = false;
@@ -33,8 +31,8 @@ namespace bebone::core {
                 return handled;
             }
 
-            using category = EventCategoryType;
-            static constexpr const EventCategoryType type = eventType;
+            using Category = EventCategoryType;
+            static constexpr const EventCategoryType type = event_type;
     };
 }
 

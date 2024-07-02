@@ -2,11 +2,11 @@
 #include "window.h"
 
 namespace bebone::gfx {
-    WindowHandler::WindowHandler(Window* window) : windowSizeListener(window) {
+    WindowHandler::WindowHandler(Window* window) : window_size_listener(window) {
 
     }
 
     const WindowSizeListener& WindowHandler::get_window_size_listener() const {
-        return windowSizeListener;
+        return window_size_listener;
     }
 }

@@ -1,6 +1,6 @@
 #include "opengl_texture_1d.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLTexture1D::GLTexture1D(const int& w, void* data)
             : GLTexture(GL_TEXTURE_1D),
               width(w)

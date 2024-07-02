@@ -11,7 +11,7 @@
 namespace bebone::gfx {
     class WindowHandler : private core::NonCopyable {
         private:
-            WindowSizeListener windowSizeListener;
+            WindowSizeListener window_size_listener;
 
         public:
     public:

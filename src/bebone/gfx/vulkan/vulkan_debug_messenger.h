@@ -1,22 +1,22 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_DEBUG_MESSENGER_H_
-#define _BEBONE_GFX_VULKAN_VULKAN_DEBUG_MESSENGER_H_
+#ifndef _BEBONE_GFX_VULKAN_DEBUG_MESSENGER_H_
+#define _BEBONE_GFX_VULKAN_DEBUG_MESSENGER_H_
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanInstance;
 
     class VulkanDebugMessenger : private core::NonCopyable {
         private:
-            VulkanInstance& vulkanInstance;
-
-            VkDebugUtilsMessengerEXT debugMessenger;
+            VulkanInstance& vulkan_instance;
+            VkDebugUtilsMessengerEXT debug_messenger;
 
         public:
-            static void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &createInfo);
+            VulkanDebugMessenger(VulkanInstance& instance);
 
-            VulkanDebugMessenger(VulkanInstance& vulkanInstance);
             ~VulkanDebugMessenger();
+
+            static void populate_debug_messenger_create_info(VkDebugUtilsMessengerCreateInfoEXT &create_info);
     };
 }
 

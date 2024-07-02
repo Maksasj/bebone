@@ -3,7 +3,7 @@
 
 #include "bebone/bebone.h"
 
-using namespace omni::types;
+using namespace bebone::core;
 
 namespace game::core {
     class OrthographicCamera {

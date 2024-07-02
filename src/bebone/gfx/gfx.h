@@ -9,6 +9,8 @@
 
 #include "window/window.h"
 #include "window/window_factory.h"
+#include "window/events/mouse_listener.h"
+#include "window/events/key_listener.h"
 
 #include "shaders/shader_code.h"
 #include "shaders/shader_compiler.h"

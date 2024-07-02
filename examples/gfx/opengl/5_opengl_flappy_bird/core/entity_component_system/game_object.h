@@ -61,13 +61,13 @@ namespace game::core::ecs {
             template <typename T>
             vector<shared_ptr<T>> get_components() {
                 auto v = components[typeid(T)];
-                auto vOut = vector<shared_ptr<T>>();
+                auto v_out = vector<shared_ptr<T>>();
                 
                 for (auto & it : v) {
-                    vOut.push_back(dynamic_pointer_cast<T>(it));
+                    v_out.push_back(dynamic_pointer_cast<T>(it));
                 }
 
-                return vOut;
+                return v_out;
             }
     };
 

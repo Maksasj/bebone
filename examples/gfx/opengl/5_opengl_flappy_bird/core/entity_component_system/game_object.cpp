@@ -20,18 +20,18 @@ namespace game::core::ecs {
     }
 
     void GameObject::update() {
-        for (auto mapIt = components.begin(); mapIt != components.end(); ++mapIt) {
-            auto v = (*mapIt).second;
-            auto vIt = v.begin();
+        for (auto map_it = components.begin(); map_it != components.end(); ++map_it) {
+            auto v = (*map_it).second;
+            auto v_it = v.begin();
             
-            while (vIt != v.end()) {
-                auto component = *vIt;
+            while (v_it != v.end()) {
+                auto component = *v_it;
 
                 if (component->is_enabled()) {
                     component->update();
                 }
                 
-                ++vIt;
+                ++v_it;
             }
         }
     }

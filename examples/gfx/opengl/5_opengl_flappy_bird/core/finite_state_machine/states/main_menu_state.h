@@ -16,19 +16,20 @@ namespace game::core::fsm {
 
     class MainMenuState : public State {
         private:
-            shared_ptr<State> gameState;
-            shared_ptr<GameObject> flappyBird;
+            shared_ptr<State> game_state;
+            shared_ptr<GameObject> flappy_bird;
+            shared_ptr<Input> input;
 
-            std::function<void()> transitionFunction;
+            std::function<void()> transition_function;
         public:
-            MainMenuState(shared_ptr<GameObject> flappyBird);
+            MainMenuState(shared_ptr<GameObject> flappy_bird, const shared_ptr<Input>& input);
             ~MainMenuState() override;
 
             void enter() override;
             void update() override {};
             void exit() override;
             
-            void set_game_state(shared_ptr<State> gameState);
+            void set_game_state(shared_ptr<State> game_state);
     };
 }
 

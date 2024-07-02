@@ -1,19 +1,19 @@
 #ifndef _INPUT_EVENT_H_
 #define _INPUT_EVENT_H_
 
-#include "../../../core/events/listeners/event.tpp"
+#include "../../../core/core.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
 
     /// Input events enumeration
     enum InputEvent {
-        KEY,
-        MOUSE_BUTTON
+        Key,
+        MouseButton
     };
 
     /// Key event structure
-    struct InputKeyEvent : public Event<InputEvent, KEY> {
+    struct InputKeyEvent : public Event<InputEvent, Key> {
         i32 key;
         i32 scancode;
         i32 action;
@@ -30,7 +30,7 @@ namespace bebone::gfx {
     };
 
     /// Mouse button press event structure
-    struct InputMouseButtonEvent : public Event<InputEvent, MOUSE_BUTTON> {
+    struct InputMouseButtonEvent : public Event<InputEvent, MouseButton> {
         i32 button;
         i32 action;
         i32 mods;

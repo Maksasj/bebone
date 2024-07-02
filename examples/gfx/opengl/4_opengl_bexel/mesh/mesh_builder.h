@@ -11,63 +11,63 @@
 namespace bexel {
     class MeshBuilder {
         private:
-            vector<Vertex> m_vertices;
-            vector<u32> m_indices;
+            vector<Vertex> vertices;
+            vector<u32> indices;
 
-            u32 m_indexOffset;
+            u32 index_offset;
 
         public:
             MeshBuilder();
 
-            template<class _MeshData>
-            MeshBuilder& append(const _MeshData& meshData, const Transform& transform) {
-                for(auto vertex : meshData.get_vertices()) {
+            template<class MeshData>
+            MeshBuilder& append(const MeshData& mesh_data, const Transform& transform) {
+                for(auto vertex : mesh_data.get_vertices()) {
                     vertex.rotate(transform.rotation);
                     vertex.translate(transform.translation);
                     vertex.scale(transform.scale);
 
-                    m_vertices.push_back(vertex);
+                    vertices.push_back(vertex);
                 }
 
-                u32 maxIndex = 0;
-                for(const auto& index : meshData.get_indices()) {
-                    m_indices.push_back(index + m_indexOffset);
+                u32 max_index = 0;
+                for(const auto& index : mesh_data.get_indices()) {
+                    indices.push_back(index + index_offset);
 
-                    if(index > maxIndex)
-                        maxIndex = index;
+                    if(index > max_index)
+                        max_index = index;
                 }
 
-                m_indexOffset += maxIndex + 1;
+                index_offset += max_index + 1;
 
                 return *this;
             }
 
-            template<class _MeshData>
-            MeshBuilder& append(const _MeshData& meshData, const vector<Vec2f>& textureCoords, const Transform& transform) {
-                const auto size = meshData.get_vertices().size();
-                const auto& vertices = meshData.get_vertices();
+            template<class MeshData>
+            MeshBuilder& append(const MeshData& mesh_data, const vector<Vec2f>& texture_coords, const Transform& transform) {
+                const auto size = mesh_data.get_vertices().size();
+                const auto& mesh_vertices = mesh_data.get_vertices();
 
                 for(size_t i = 0; i < size; ++i) {
-                    auto vertex = vertices[i];
+                    auto vertex = mesh_vertices[i];
 
                     vertex.rotate(transform.rotation);
                     vertex.translate(transform.translation);
                     vertex.scale(transform.scale);
 
-                    vertex.tex = textureCoords[i];
+                    vertex.tex = texture_coords[i];
 
-                    m_vertices.push_back(vertex);
+                    vertices.push_back(vertex);
                 }
 
-                u32 maxIndex = 0;
-                for(const auto& index : meshData.get_indices()) {
-                    m_indices.push_back(index + m_indexOffset);
+                u32 max_index = 0;
+                for(const auto& index : mesh_data.get_indices()) {
+                    indices.push_back(index + index_offset);
 
-                    if(index > maxIndex)
-                        maxIndex = index;
+                    if(index > max_index)
+                        max_index = index;
                 }
 
-                m_indexOffset += maxIndex + 1;
+                index_offset += max_index + 1;
 
                 return *this;
             }
