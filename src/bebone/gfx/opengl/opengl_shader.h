@@ -7,7 +7,7 @@
 #include "opengl_shader_properties.h"
 #include "opengl_uniform_buffer_object.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     /// Opengl shader wrapper

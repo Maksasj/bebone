@@ -14,7 +14,7 @@
 #include "vulkan_image_tuples.h"
 #include "vulkan_pipeline_tuples.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanDevice;

@@ -1,6 +1,6 @@
 #include "vulkan_device_chooser.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     bool VulkanQueueFamilyIndices::is_complete() {
         return graphics_family_has_value && present_family_has_value ;
     }

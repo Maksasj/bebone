@@ -5,7 +5,7 @@
 
 #include "vulkan_descriptor_pool.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanDevice;
     class VulkanDescriptorSetLayoutBinding;
 

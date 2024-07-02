@@ -1,6 +1,6 @@
 #include "vulkan_command_buffer_pool.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanCommandBufferPool::VulkanCommandBufferPool(VulkanDevice& device) {
         VulkanQueueFamilyIndices queue_family_indices = device.find_physical_queue_families();
 

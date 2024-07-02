@@ -4,7 +4,7 @@
 #include "vulkan_image_view.h"
 #include "vulkan_render_pass.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     VulkanFramebuffer::VulkanFramebuffer(

@@ -16,7 +16,7 @@
 #include "vulkan_const_range.h"
 #include "vulkan_pipeline_manager.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     // Todo, move this
     std::string vulkan_device_read_file(const std::string& path) {
         std::ifstream file(path);

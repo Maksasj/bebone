@@ -1,6 +1,6 @@
 #include "opengl_texture.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLTexture::GLTexture(const GLenum& texture_type) : texture_type(texture_type) {
         glGenTextures(1, &id);
     }

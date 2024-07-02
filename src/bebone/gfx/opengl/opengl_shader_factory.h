@@ -9,7 +9,7 @@
 #include "opengl_extension_checker.h"
 #include "opengl_shader.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     /// This class is used to create shaders
     class GLShaderFactory {
         private:

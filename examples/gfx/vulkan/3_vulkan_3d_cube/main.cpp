@@ -4,7 +4,6 @@
 
 using namespace bebone::core;
 using namespace bebone::gfx;
-using namespace bebone::gfx::vulkan;
 
 struct Vertex { Vec3f pos, color; };
 struct Handles { u32 camera_handle, transform_handle; };

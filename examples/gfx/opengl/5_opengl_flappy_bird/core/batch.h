@@ -20,7 +20,7 @@
 namespace game::core {
     using namespace bebone::core;
     using namespace std;
-    using namespace bebone::gfx::opengl;
+    using namespace bebone::gfx;
     using namespace ecs;
     
     class Batch : private NonCopyable {

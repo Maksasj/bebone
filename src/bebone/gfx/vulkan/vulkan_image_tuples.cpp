@@ -3,7 +3,7 @@
 #include "vulkan_image.h"
 #include "vulkan_image_view.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
         VulkanSwapChainImageTuple::VulkanSwapChainImageTuple(
             const shared_ptr<VulkanImage>& image,
             const shared_ptr<VulkanImageView>& view

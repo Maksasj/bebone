@@ -6,7 +6,7 @@
 #include "../gfx_backend.h"
 #include "vulkan_image.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
         using namespace bebone::core;
 
         struct VulkanSwapChainImageTuple : public VulkanApi {
@@ -48,24 +48,24 @@ namespace bebone::gfx::vulkan {
 // Note, this is a std template specialization and it is case-sensitive, please do not touch
 namespace std {
     template<>
-    struct tuple_size<bebone::gfx::vulkan::VulkanSwapChainImageTuple>
+    struct tuple_size<bebone::gfx::VulkanSwapChainImageTuple>
             : std::integral_constant<std::size_t, 2> { };
 
     template<>
-    struct tuple_element<0, bebone::gfx::vulkan::VulkanSwapChainImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImage>;
+    struct tuple_element<0, bebone::gfx::VulkanSwapChainImageTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
-    struct tuple_element<1, bebone::gfx::vulkan::VulkanSwapChainImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImageView>;
+    struct tuple_element<1, bebone::gfx::VulkanSwapChainImageTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImageView>;
     };
 }
 
-// Todo, why this needs to be in bebone::gfx::vulkan namespace ?
-namespace bebone::gfx::vulkan {
+// Todo, why this needs to be in bebone::gfx namespace ?
+namespace bebone::gfx {
     template<std::size_t i>
-    auto get(const bebone::gfx::vulkan::VulkanSwapChainImageTuple& tuple) {
+    auto get(const bebone::gfx::VulkanSwapChainImageTuple& tuple) {
         if constexpr (i == 0) {
             return tuple.image;
         } else if constexpr (i == 1) {
@@ -79,29 +79,29 @@ namespace bebone::gfx::vulkan {
 // Note, this is a std template specialization and it is case-sensitive, please do not touch
 namespace std {
     template<>
-    struct tuple_size<bebone::gfx::vulkan::VulkanDepthImageTuple>
+    struct tuple_size<bebone::gfx::VulkanDepthImageTuple>
             : std::integral_constant<std::size_t, 3> { };
 
     template<>
-    struct tuple_element<0, bebone::gfx::vulkan::VulkanDepthImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImage>;
+    struct tuple_element<0, bebone::gfx::VulkanDepthImageTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
-    struct tuple_element<1, bebone::gfx::vulkan::VulkanDepthImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImageView>;
+    struct tuple_element<1, bebone::gfx::VulkanDepthImageTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImageView>;
     };
 
     template<>
-    struct tuple_element<2, bebone::gfx::vulkan::VulkanDepthImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanDeviceMemory>;
+    struct tuple_element<2, bebone::gfx::VulkanDepthImageTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
     };
 }
 
-// Todo, why this needs to be in bebone::gfx::vulkan namespace ?
-namespace bebone::gfx::vulkan {
+// Todo, why this needs to be in bebone::gfx namespace ?
+namespace bebone::gfx {
     template<std::size_t i>
-    auto get(const bebone::gfx::vulkan::VulkanDepthImageTuple& tuple) {
+    auto get(const bebone::gfx::VulkanDepthImageTuple& tuple) {
         if constexpr (i == 0) {
             return tuple.image;
         } else if constexpr (i == 1) {
@@ -117,24 +117,24 @@ namespace bebone::gfx::vulkan {
 // Note, this is a std template specialization and it is case-sensitive, please do not touch
 namespace std {
     template<>
-    struct tuple_size<bebone::gfx::vulkan::VulkanImageMemoryTuple>
+    struct tuple_size<bebone::gfx::VulkanImageMemoryTuple>
             : std::integral_constant<std::size_t, 2> { };
 
     template<>
-    struct tuple_element<0, bebone::gfx::vulkan::VulkanImageMemoryTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImage>;
+    struct tuple_element<0, bebone::gfx::VulkanImageMemoryTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
-    struct tuple_element<1, bebone::gfx::vulkan::VulkanImageMemoryTuple> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanDeviceMemory>;
+    struct tuple_element<1, bebone::gfx::VulkanImageMemoryTuple> {
+        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
     };
 }
 
-// Todo, why this needs to be in bebone::gfx::vulkan namespace ?
-namespace bebone::gfx::vulkan {
+// Todo, why this needs to be in bebone::gfx namespace ?
+namespace bebone::gfx {
     template<std::size_t i>
-    auto get(const bebone::gfx::vulkan::VulkanImageMemoryTuple& tuple) {
+    auto get(const bebone::gfx::VulkanImageMemoryTuple& tuple) {
         if constexpr (i == 0) {
             return tuple.image;
         } else if constexpr (i == 1) {

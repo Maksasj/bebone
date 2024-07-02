@@ -5,7 +5,7 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     // Todo remake this VulkanPipelineVertexInputStateTuple
     struct VulkanPipelineVertexInputStateTuple {
         std::vector<VkVertexInputBindingDescription> binding_descriptions = {};

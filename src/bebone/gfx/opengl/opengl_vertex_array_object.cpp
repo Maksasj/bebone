@@ -1,6 +1,6 @@
 #include "opengl_vertex_array_object.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLVertexArrayObject::GLVertexArrayObject() {
         glGenVertexArrays(1, &id);
     }

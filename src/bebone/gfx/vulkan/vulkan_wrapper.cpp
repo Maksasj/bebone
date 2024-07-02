@@ -1,6 +1,6 @@
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     void VulkanApi::mark_destroyed() {
         destroyed = true;
     }
