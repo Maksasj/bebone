@@ -12,6 +12,7 @@ namespace bebone::gfx::vulkan {
         descriptor_pool = device.create_descriptor_pool();
     }
 
+    // Todo, actually swap chain is not needed there
     VulkanManagedPipelineTuple VulkanPipelineManager::create_pipeline(
         std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,

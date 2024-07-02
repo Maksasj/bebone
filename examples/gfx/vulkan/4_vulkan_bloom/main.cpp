@@ -56,7 +56,7 @@ const std::vector<u32> quad_indices {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("4. Vulkan 3d cube example", 800, 600, GfxAPI::Vulkan);
+    auto window = WindowFactory::create_window("4. Vulkan bloom example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
@@ -78,6 +78,16 @@ int main() {
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
+    auto post_pipeline = pipeline_manager->create_pipeline(
+        device, swap_chain, "post.vert.glsl", "post.frag.glsl",
+        { },
+        { { BindlessSampler, 0} },
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
+    );
+
+    auto cube_vb = device->create_buffer_memory_from(cube_vertices);
+    auto cube_eb = device->create_buffer_memory_from(cube_indices);
+
     auto quad_vb = device->create_buffer_memory_from(quad_vertices);
     auto quad_eb = device->create_buffer_memory_from(quad_indices);
 
@@ -87,20 +97,48 @@ int main() {
     auto t_handles = geometry_pipeline.bind_uniform_buffer(device, t_ubo, 0);
     auto c_handles = geometry_pipeline.bind_uniform_buffer(device, c_ubo, 1);
 
-    auto command_buffer_pool = device->create_command_buffer_pool();
-    auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
-
     auto transform = Transform {};
     auto camera = Mat4f::translation(Vec3f(0, 0, 5)) * Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
 
     for(auto& ubo : c_ubo)
-        ubo.upload_data(device, &camera, sizeof(Mat4f ));
+        ubo.upload_data(device, &camera, sizeof(Mat4f));
+
+    auto command_buffer_pool = device->create_command_buffer_pool();
+    auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
+
+    auto textures = std::vector<std::shared_ptr<VulkanTexture>> {
+        device->create_texture(command_buffer_pool, 800, 600),
+        device->create_texture(command_buffer_pool, 800, 600),
+        device->create_texture(command_buffer_pool, 800, 600)
+    };
+
+    for(auto t : textures) {
+        t->image->transition_layout(
+            *command_buffer_pool,
+            *device,
+            VK_IMAGE_LAYOUT_UNDEFINED,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+        t->image->transition_layout(
+            *command_buffer_pool,
+            *device,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+        std::ignore = post_pipeline.bind_texture(device, t, 0);
+    }
+
+    auto render_pass = device->create_render_pass(VK_FORMAT_R32G32B32_SFLOAT);
+
+    auto framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
+        device->create_framebuffer({ textures[0]->view }, render_pass, {800, 600}),
+        device->create_framebuffer({ textures[1]->view }, render_pass, {800, 600}),
+        device->create_framebuffer({ textures[2]->view }, render_pass, {800, 600})
+    };
 
     while (!window->closing()) {
         transform.rotation.x += 0.001f;
         transform.rotation.z -= 0.001f;
-
-        GLFWContext::poll_events();
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
@@ -115,31 +153,39 @@ int main() {
 
         cmd.begin_record();
 
-        /*
-        cmd.begin_render_pass(swap_chain, frame);
-        cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-        cmd.bind_managed_pipeline(geometry_pipeline, frame);
-        cmd.push_constant(geometry_pipeline.layout, sizeof(Handles), 0, &handles);
+        #if 1
+        cmd.begin_render_pass(
+            swap_chain->render_target->framebuffers[frame],
+            swap_chain->render_target->render_pass,
+            swap_chain->extent);
 
-        cmd.bind_vertex_buffer(quad_vb);
-        cmd.bind_index_buffer(quad_eb);
-
-        cmd.draw_indexed(quad_indices.size());
+            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd.bind_managed_pipeline(geometry_pipeline, frame);
+            cmd.push_constant(geometry_pipeline.layout, sizeof(Handles), 0, &handles);
+            cmd.bind_vertex_buffer(cube_vb);
+            cmd.bind_index_buffer(cube_eb);
+            cmd.draw_indexed(cube_indices.size());
         cmd.end_render_pass();
-        */
+        #else
+        cmd.begin_render_pass(
+                swap_chain->render_target->framebuffers[frame],
+                swap_chain->render_target->render_pass,
+                swap_chain->extent);
 
-        cmd.begin_render_pass(swap_chain, frame);
-        cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-        cmd.bind_managed_pipeline(blur_pipeline, frame);
-        cmd.bind_vertex_buffer(quad_vb);
-        cmd.bind_index_buffer(quad_eb);
-        cmd.draw_indexed(quad_indices.size());
+            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd.bind_managed_pipeline(blur_pipeline, frame);
+            cmd.bind_vertex_buffer(quad_vb);
+            cmd.bind_index_buffer(quad_eb);
+            cmd.draw_indexed(quad_indices.size());
         cmd.end_render_pass();
+        #endif
 
         cmd.end_record();
 
-        if(!swap_chain->submit_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
+        if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
+
+        GLFWContext::poll_events();
     }
 
     instance->destroy();

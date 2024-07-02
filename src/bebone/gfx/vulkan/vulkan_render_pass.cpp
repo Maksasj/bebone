@@ -3,7 +3,7 @@
 namespace bebone::gfx::vulkan {
     VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, VkFormat color_attachment_image_format) {
         VkAttachmentDescription depth_attachment{};
-        depth_attachment.format = device.find_depth_format();
+        depth_attachment.format = device.find_depth_format(); // Todo, This should be moved
         depth_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
