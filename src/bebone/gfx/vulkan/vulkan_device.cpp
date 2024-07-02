@@ -16,6 +16,7 @@
 #include "vulkan_const_range.h"
 #include "vulkan_pipeline_manager.h"
 #include "vulkan_render_pass.h"
+#include "vulkan_framebuffer.h"
 
 namespace bebone::gfx::vulkan {
     // Todo, move this
@@ -365,6 +366,31 @@ namespace bebone::gfx::vulkan {
 
     std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(VkFormat color_attachment_image_format) {
         return std::make_shared<VulkanRenderPass>(*this, color_attachment_image_format);
+    }
+
+    std::shared_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
+        std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
+        VkExtent2D extent
+    ) {
+
+        // Todo safe as child object
+        return std::make_shared<VulkanFramebuffer>(*this, attachments, render_pass, extent);
+    }
+
+    std::vector<std::shared_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
+            std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+            std::shared_ptr<VulkanRenderPass>& render_pass,
+            VkExtent2D extent,
+            const size_t& count
+    ) {
+        auto framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {};
+        framebuffers.reserve(count);
+
+        for(size_t i = 0; i < count; ++i)
+            framebuffers.push_back(create_framebuffer(attachments, render_pass, extent));
+
+        return framebuffers;
     }
 
     std::shared_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& file_path, const ShaderType& type) {

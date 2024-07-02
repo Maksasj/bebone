@@ -72,7 +72,7 @@ int main() {
         cmd->begin_record();
 
         cmd->begin_render_pass(
-                swap_chain->render_target->swap_chain_framebuffers[frame],
+                swap_chain->render_target->framebuffers[frame],
                 swap_chain->render_target->render_pass,
                 swap_chain->extent);
 

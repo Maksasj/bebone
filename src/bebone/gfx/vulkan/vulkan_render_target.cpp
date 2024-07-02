@@ -39,9 +39,9 @@ namespace bebone::gfx::vulkan {
         // Create frame buffers
         for(size_t i = 0; i < swap_chain_images.size(); ++i) {
             auto attachments = std::vector { swap_chain_images[i].view, depth_images[i].view };
-            auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, render_pass, extent);
+            auto framebuffer = device.create_framebuffer(attachments, render_pass, extent);
 
-            swap_chain_framebuffers.push_back(framebuffer);
+            framebuffers.push_back(framebuffer);
         }
     }
 
@@ -57,7 +57,7 @@ namespace bebone::gfx::vulkan {
             image->destroy(device);
         }
 
-        for (auto& framebuffer : swap_chain_framebuffers)
+        for (auto& framebuffer : framebuffers)
             framebuffer->destroy(device);
 
         mark_destroyed();

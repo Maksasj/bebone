@@ -112,8 +112,6 @@ int main() {
         transform.rotation.x += 0.001f;
         transform.rotation.z -= 0.001f;
 
-        GLFWContext::poll_events();
-
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             continue;
@@ -127,9 +125,9 @@ int main() {
 
         cmd.begin_record();
 
-#if 1
+        #if 1
         cmd.begin_render_pass(
-                swap_chain->render_target->swap_chain_framebuffers[frame],
+                swap_chain->render_target->framebuffers[frame],
                 swap_chain->render_target->render_pass,
                 swap_chain->extent);
 
@@ -140,9 +138,9 @@ int main() {
             cmd.bind_index_buffer(cube_eb);
             cmd.draw_indexed(cube_indices.size());
         cmd.end_render_pass();
-#else
+        #else
         cmd.begin_render_pass(
-                swap_chain->render_target->swap_chain_framebuffers[frame],
+                swap_chain->render_target->framebuffers[frame],
                 swap_chain->render_target->render_pass,
                 swap_chain->extent);
 
@@ -152,12 +150,14 @@ int main() {
             cmd.bind_index_buffer(quad_eb);
             cmd.draw_indexed(quad_indices.size());
         cmd.end_render_pass();
-#endif
+        #endif
 
         cmd.end_record();
 
         if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
+
+        GLFWContext::poll_events();
     }
 
     instance->destroy();

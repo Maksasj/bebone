@@ -39,6 +39,7 @@ namespace bebone::gfx::vulkan {
     class VulkanPipelineManager;
     class VulkanRenderTarget;
     class VulkanRenderPass;
+    class VulkanFramebuffer;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -183,6 +184,17 @@ namespace bebone::gfx::vulkan {
                 VulkanPipelineConfig config_info = {});
 
             std::shared_ptr<VulkanRenderPass> create_render_pass(VkFormat color_attachment_image_format);
+
+            std::shared_ptr<VulkanFramebuffer> create_framebuffer(
+                    std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+                    std::shared_ptr<VulkanRenderPass>& render_pass,
+                    VkExtent2D extent);
+
+            std::vector<std::shared_ptr<VulkanFramebuffer>> create_framebuffers(
+                    std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+                    std::shared_ptr<VulkanRenderPass>& render_pass,
+                    VkExtent2D extent,
+                    const size_t& count);
 
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
 
