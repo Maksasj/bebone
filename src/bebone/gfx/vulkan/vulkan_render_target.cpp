@@ -12,8 +12,8 @@ namespace bebone::gfx::vulkan {
         VkFormat image_format,
         VkExtent2D extent
     ) : swap_chain_images(swap_chain_images) {
-        // Create render pass
-        render_pass = std::make_shared<VulkanRenderPass>(device, image_format);
+        // Todo, this should be moved outside
+        render_pass = device.create_render_pass(image_format);
 
         // Create depth resources
         auto depthFormat = device.find_depth_format();

@@ -18,6 +18,7 @@ namespace bebone::gfx::vulkan {
                  const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules);
 
         public:
+            // Todo, actually swap chain is not needed there
             VulkanPipeline(
                 VulkanDevice& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,

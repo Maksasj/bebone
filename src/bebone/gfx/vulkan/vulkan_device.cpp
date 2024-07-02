@@ -15,6 +15,7 @@
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_const_range.h"
 #include "vulkan_pipeline_manager.h"
+#include "vulkan_render_pass.h"
 
 namespace bebone::gfx::vulkan {
     // Todo, move this
@@ -360,6 +361,10 @@ namespace bebone::gfx::vulkan {
         child_objects.push_back(pipeline);
 
         return pipeline;
+    }
+
+    std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(VkFormat color_attachment_image_format) {
+        return std::make_shared<VulkanRenderPass>(*this, color_attachment_image_format);
     }
 
     std::shared_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& file_path, const ShaderType& type) {

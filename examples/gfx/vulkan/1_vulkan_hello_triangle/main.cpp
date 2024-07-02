@@ -59,17 +59,22 @@ int main() {
 
         auto& cmd = command_buffers[frame];
 
-        cmd->begin_record()
-            .begin_render_pass(swap_chain, frame)
-            .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_pipeline(pipeline)
-            .bind_vertex_buffer(vb)
-            .bind_index_buffer(eb)
-            .draw_indexed(indices.size())
-            .end_render_pass()
-            .end_record();
+        cmd->begin_record();
 
-        if(!swap_chain->submit_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
+        cmd->begin_render_pass(
+                swap_chain->render_target->swap_chain_framebuffers[frame],
+                swap_chain->render_target->render_pass,
+                swap_chain->extent);
+
+        cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+        cmd->bind_pipeline(pipeline);
+        cmd->bind_vertex_buffer(vb);
+        cmd->bind_index_buffer(eb);
+        cmd->draw_indexed(indices.size());
+        cmd->end_render_pass();
+        cmd->end_record();
+
+        if(!swap_chain->submit_present_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 

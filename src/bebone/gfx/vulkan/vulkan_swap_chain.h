@@ -49,7 +49,7 @@ namespace bebone::gfx::vulkan {
             std::vector<VulkanSwapChainImageTuple> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
 
             VulkanResult acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *image_index);
-            VulkanResult submit_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& command_buffer, uint32_t *image_index);
+            VulkanResult submit_present_command_buffers(std::shared_ptr<VulkanDevice>& device, std::shared_ptr<VulkanCommandBuffer>& command_buffer, uint32_t *image_index);
 
             size_t current_frame = 0;
 

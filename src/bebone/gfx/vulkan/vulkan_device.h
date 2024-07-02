@@ -38,6 +38,7 @@ namespace bebone::gfx::vulkan {
     class VulkanConstRange;
     class VulkanPipelineManager;
     class VulkanRenderTarget;
+    class VulkanRenderPass;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -180,6 +181,8 @@ namespace bebone::gfx::vulkan {
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
+
+            std::shared_ptr<VulkanRenderPass> create_render_pass(VkFormat color_attachment_image_format);
 
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
 

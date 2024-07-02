@@ -9,8 +9,10 @@
 #include "vulkan_wrapper.tpp"
 
 namespace bebone::gfx::vulkan {
+    // Todo, rewrite this class
     class VulkanRenderPass : public VulkanWrapper<VkRenderPass> {
         public:
+            // Todo attachments should be passed there
             VulkanRenderPass(VulkanDevice& device, VkFormat color_attachment_image_format);
 
             void destroy(VulkanDevice& device) override;

@@ -175,7 +175,7 @@ namespace bebone::gfx::vulkan {
             .pDynamicState = &dynamic_state,
 
             .layout = pipeline_layout->backend,
-            .renderPass = swap_chain->render_target->render_pass->backend,
+            .renderPass = swap_chain->render_target->render_pass->backend, // Todo, actually swap chain is not needed there
 
             .subpass = config_info.subpass,
             .basePipelineHandle = config_info.base_pipeline_handle,
