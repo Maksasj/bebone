@@ -369,7 +369,7 @@ namespace bebone::gfx::vulkan {
     }
 
     std::shared_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
-        std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+        const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
         std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) {
@@ -379,10 +379,10 @@ namespace bebone::gfx::vulkan {
     }
 
     std::vector<std::shared_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
-            std::vector<std::shared_ptr<VulkanImageView>>& attachments,
-            std::shared_ptr<VulkanRenderPass>& render_pass,
-            VkExtent2D extent,
-            const size_t& count
+        const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
+        VkExtent2D extent,
+        const size_t& count
     ) {
         auto framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {};
         framebuffers.reserve(count);
@@ -415,6 +415,18 @@ namespace bebone::gfx::vulkan {
     ) {
         auto raw = assets::Image<ColorRGBA>::load_from_file(file_path);
         auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, raw);
+
+        child_objects.push_back(texture);
+
+        return texture;
+    }
+
+    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
+            std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+            const size_t& width,
+            const size_t& height
+    ) {
+        auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, width, height);
 
         child_objects.push_back(texture);
 

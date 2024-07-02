@@ -56,7 +56,7 @@ const std::vector<u32> quad_indices {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("4. Vulkan 3d cube example", 800, 600, GfxAPI::Vulkan);
+    auto window = WindowFactory::create_window("4. Vulkan bloom example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
@@ -106,7 +106,35 @@ int main() {
     auto command_buffer_pool = device->create_command_buffer_pool();
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
-    // VulkanFramebuffer
+    auto textures = std::vector<std::shared_ptr<VulkanTexture>> {
+        device->create_texture(command_buffer_pool, 800, 600),
+        device->create_texture(command_buffer_pool, 800, 600),
+        device->create_texture(command_buffer_pool, 800, 600)
+    };
+
+    for(auto t : textures) {
+        t->image->transition_layout(
+            *command_buffer_pool,
+            *device,
+            VK_IMAGE_LAYOUT_UNDEFINED,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+        t->image->transition_layout(
+            *command_buffer_pool,
+            *device,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+        std::ignore = post_pipeline.bind_texture(device, t, 0);
+    }
+
+    auto render_pass = device->create_render_pass(VK_FORMAT_R32G32B32_SFLOAT);
+
+    auto framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
+        device->create_framebuffer({ textures[0]->view }, render_pass, {800, 600}),
+        device->create_framebuffer({ textures[1]->view }, render_pass, {800, 600}),
+        device->create_framebuffer({ textures[2]->view }, render_pass, {800, 600})
+    };
 
     while (!window->closing()) {
         transform.rotation.x += 0.001f;
@@ -127,9 +155,9 @@ int main() {
 
         #if 1
         cmd.begin_render_pass(
-                swap_chain->render_target->framebuffers[frame],
-                swap_chain->render_target->render_pass,
-                swap_chain->extent);
+            swap_chain->render_target->framebuffers[frame],
+            swap_chain->render_target->render_pass,
+            swap_chain->extent);
 
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
             cmd.bind_managed_pipeline(geometry_pipeline, frame);

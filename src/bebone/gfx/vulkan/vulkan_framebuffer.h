@@ -19,7 +19,7 @@ namespace bebone::gfx::vulkan {
         public:
             VulkanFramebuffer(
                 VulkanDevice& device,
-                std::vector<std::shared_ptr<VulkanImageView>>& attachment_views,
+                const std::vector<std::shared_ptr<VulkanImageView>>& attachment_views,
                 std::shared_ptr<VulkanRenderPass>& render_pass,
                 VkExtent2D extent);
 

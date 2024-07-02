@@ -28,6 +28,12 @@ namespace bebone::gfx::vulkan {
                 std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
                 const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
 
+            VulkanTexture(
+                VulkanDevice& device,
+                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+                const size_t& width,
+                const size_t& height);
+
             void destroy(VulkanDevice& device) override;
     };
 }
