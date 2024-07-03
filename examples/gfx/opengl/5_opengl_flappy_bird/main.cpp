@@ -3,7 +3,6 @@
 #include "bebone/bebone.h"
 
 #include "core/game.h"
-#include "core/game_time.h"
 
 const unsigned int screen_width = 600;
 const unsigned int screen_height = 800;
