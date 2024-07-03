@@ -8,8 +8,6 @@
 #include "../game_object.h"
 #include "../transform.h"
 
-#include "../../game_time.h"
-
 namespace game::core::ecs {
     using namespace bebone::core;
     using namespace std;

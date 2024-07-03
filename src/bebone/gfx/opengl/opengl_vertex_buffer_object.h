@@ -4,7 +4,7 @@
 #include "opengl_buffer_object.h"
 #include <vector>
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     /// VBO
     class GLVertexBufferObject final : public GLBufferObject {
         public:

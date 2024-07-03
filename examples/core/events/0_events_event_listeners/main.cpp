@@ -4,7 +4,6 @@ const unsigned int screen_width = 800;
 const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 void window_resize_event_listener(WindowSizeEvent&) {
     std::cout << "Window resize event !\n";

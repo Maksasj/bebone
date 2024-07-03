@@ -7,7 +7,7 @@
 
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanDevice;
     class VulkanDescriptorPool;
     class VulkanDescriptorSetLayout;

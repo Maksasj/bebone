@@ -19,4 +19,7 @@
 #include "input/input.h"
 #include "input/input_executor.h"
 
+// Timestamp
+#include "timestamp/watch.h"
+
 #endif

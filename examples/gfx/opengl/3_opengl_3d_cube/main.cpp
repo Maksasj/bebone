@@ -8,7 +8,6 @@ const unsigned int screen_width = 800;
 const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;
@@ -95,12 +94,12 @@ int main() {
 
     f32 t = 0.0f;
     while (!window->closing()) {
-        ++t;
+        t += Time::get_delta_time();
 
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        transform_ptr->rotation = trait_bryan_angle_yxz(Vec3f(t * 0.01f, t * 0.01f, 0.0f));
+        transform_ptr->rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
 
         shader_program.enable();
 
@@ -110,6 +109,8 @@ int main() {
 
         GLFWContext::swap_buffers(*window);
         GLFWContext::poll_events();
+
+        window->end_frame();
     }
 
     transform_ubo.unmap();

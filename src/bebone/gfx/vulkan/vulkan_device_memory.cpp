@@ -5,7 +5,7 @@
 #include "vulkan_buffer.h"
 #include "vulkan_image.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanDeviceMemory::VulkanDeviceMemory(
         VulkanDevice& device,
         VkMemoryRequirements requirements,

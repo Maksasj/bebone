@@ -4,7 +4,6 @@ const unsigned int screen_width = 800;
 const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 int main() {
     BEBONE_PROFILE_RECORD(MAIN)

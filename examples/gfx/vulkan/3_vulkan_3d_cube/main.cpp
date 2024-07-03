@@ -4,7 +4,6 @@
 
 using namespace bebone::core;
 using namespace bebone::gfx;
-using namespace bebone::gfx::vulkan;
 
 struct Vertex { Vec3f pos, color; };
 struct Handles { u32 camera_handle, transform_handle; };
@@ -89,12 +88,13 @@ int main() {
     f32 t = 0.0f;
     while (!window->closing()) {
         GLFWContext::poll_events();
+        t += Time::get_delta_time();
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, (t++) * 0.001f, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
         t_ubo[frame].upload_data(device, &transform, sizeof(Transform));
 
         auto handles = Handles {

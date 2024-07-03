@@ -72,7 +72,6 @@ Bebone hello world example:
 #include "bebone/bebone.h"
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 int main() {
     GLFWContext::init();

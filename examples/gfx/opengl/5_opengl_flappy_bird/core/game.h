@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "bebone/bebone.h"
-#include "game_time.h"
 #include "batch.h"
 #include "sprite.h"
 
