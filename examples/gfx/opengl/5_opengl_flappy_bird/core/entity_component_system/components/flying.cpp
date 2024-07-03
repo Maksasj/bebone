@@ -10,14 +10,14 @@ namespace game::core::ecs {
     }
 
     void Flying::update() {
-        velocity_y += Time::delta_time * -gravity;
+        velocity_y += Time::get_delta_time() * -gravity;
         auto& transform = get_transform();
 
         transform->set_position(Vec3f(transform->get_position().x, transform->get_position().y + velocity_y, transform->get_position().z));
         
         if (velocity_y < 0) {
             float rot_z = transform->get_rotation();
-            rot_z += rot_z_alteration_speed * Time::delta_time * std::abs(velocity_y * 2);
+            rot_z += rot_z_alteration_speed * Time::get_delta_time() * std::abs(velocity_y * 2);
 
             if (rot_z > min_rot_z) {
                 transform->set_rotation(rot_z);
