@@ -4,7 +4,7 @@
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_descriptor_set_layout.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanDescriptorSet::VulkanDescriptorSet(
         const std::shared_ptr<VulkanDevice>& device,
         VulkanDescriptorPool& descriptor_pool,

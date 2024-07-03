@@ -19,7 +19,6 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 int main() {
     glfwInit();
@@ -168,7 +167,6 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 const std::vector<Vec3f> vertices = {
     {-0.5f, -0.5f, 0.0f},
@@ -253,7 +251,6 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;

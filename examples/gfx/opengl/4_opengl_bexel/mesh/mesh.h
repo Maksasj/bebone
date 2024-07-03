@@ -7,6 +7,8 @@
 #include "vertex.h"
 
 namespace bexel {
+    using namespace bebone;
+
     class Mesh final : private core::NonCopyable {
         private:
             vector<Vertex> vertices;

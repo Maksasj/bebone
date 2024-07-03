@@ -1,6 +1,6 @@
 #include "vulkan_render_pass.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, VkFormat color_attachment_image_format) {
         VkAttachmentDescription depth_attachment{};
         depth_attachment.format = device.find_depth_format(); // Todo, This should be moved

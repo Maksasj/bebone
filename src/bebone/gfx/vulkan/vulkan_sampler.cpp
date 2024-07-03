@@ -2,7 +2,7 @@
 
 #include "vulkan_device.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     VulkanSampler::VulkanSampler(VulkanDevice& device) {

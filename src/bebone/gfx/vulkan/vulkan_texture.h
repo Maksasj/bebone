@@ -11,7 +11,7 @@
 #include "vulkan_sampler.h"
 #include "vulkan_image_view.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanDevice;
 
     using namespace bebone::core;
@@ -41,34 +41,34 @@ namespace bebone::gfx::vulkan {
 // Note, this is a std template specialization and it is case-sensitive, please do not touch
 namespace std {
     template<>
-    struct tuple_size<bebone::gfx::vulkan::VulkanTexture>
+    struct tuple_size<bebone::gfx::VulkanTexture>
             : std::integral_constant<std::size_t, 4> { };
 
     template<>
-    struct tuple_element<0, bebone::gfx::vulkan::VulkanTexture> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImage>;
+    struct tuple_element<0, bebone::gfx::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
-    struct tuple_element<1, bebone::gfx::vulkan::VulkanTexture> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanDeviceMemory>;
+    struct tuple_element<1, bebone::gfx::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
     };
 
     template<>
-    struct tuple_element<2, bebone::gfx::vulkan::VulkanTexture> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanImageView>;
+    struct tuple_element<2, bebone::gfx::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImageView>;
     };
 
     template<>
-    struct tuple_element<3, bebone::gfx::vulkan::VulkanTexture> {
-        using type = std::shared_ptr<bebone::gfx::vulkan::VulkanSampler>;
+    struct tuple_element<3, bebone::gfx::VulkanTexture> {
+        using type = std::shared_ptr<bebone::gfx::VulkanSampler>;
     };
 }
 
-// Todo, why this needs to be in bebone::gfx::vulkan namespace ?
-namespace bebone::gfx::vulkan {
+// Todo, why this needs to be in bebone::gfx namespace ?
+namespace bebone::gfx {
     template<std::size_t i>
-    auto get(const bebone::gfx::vulkan::VulkanTexture& tuple) {
+    auto get(const bebone::gfx::VulkanTexture& tuple) {
         if constexpr (i == 0) {
             return tuple.image;
         } else if constexpr (i == 1) {

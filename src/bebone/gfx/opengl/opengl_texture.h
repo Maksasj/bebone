@@ -4,7 +4,7 @@
 #include "../../assets/image/image.h"
 #include "../gfx_backend.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::assets;
 
     struct GLTextureParameters {

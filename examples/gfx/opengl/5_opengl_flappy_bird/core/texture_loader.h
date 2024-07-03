@@ -11,7 +11,7 @@
 #include <map>
 
 namespace game::core {
-    using namespace bebone::gfx::opengl;
+    using namespace bebone::gfx;
     using namespace bebone::core;
 
     class TextureLoader : private NonCopyable {

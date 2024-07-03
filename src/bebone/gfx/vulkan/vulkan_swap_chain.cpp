@@ -5,7 +5,7 @@
 #include "vulkan_image_view.h"
 #include "vulkan_command_buffer.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent) {
         auto swap_chain_support = device.get_swap_chain_support();
         extent = choose_swap_extent(swap_chain_support.capabilities, window_extent);

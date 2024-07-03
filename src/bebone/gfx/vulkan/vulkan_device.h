@@ -27,7 +27,7 @@
 #include "vulkan_buffer_tuples.h"
 #include "vulkan_image_tuples.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanSwapChain;
     class VulkanPipeline;
     class VulkanDescriptorPool;

@@ -3,7 +3,7 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     /// Abstract buffer object which can be initialized, bound, unbound and destroyed
     class GLBufferObject : private core::NonCopyable {
         protected:

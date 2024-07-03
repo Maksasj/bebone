@@ -3,7 +3,7 @@
 
 #include "vulkan_device.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(
         VulkanDevice& device,
         const std::vector<VulkanDescriptorSetLayoutBinding>& all_bindings

@@ -7,7 +7,7 @@
 #include "vulkan_shader_module.h"
 #include "vulkan_pipeline_config_info.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanSwapChain;
     class VulkanShaderModule;
     class VulkanPipelineLayout;

@@ -12,6 +12,9 @@
 #include "window_properties.h"
 #include "window_handler.h"
 
+#include "../../core/timestamp/timestamp.h"
+#include "../../core/timestamp/watch.h"
+
 namespace bebone::renderer {
     class IRenderer;
 }
@@ -25,6 +28,8 @@ namespace bebone::gfx {
             GLFWwindow* window;
 
             WindowHandler window_handler;
+
+            Watch watch;
 
         protected:
             int width;
@@ -65,6 +70,8 @@ namespace bebone::gfx {
 
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
+
+            void end_frame();
 
             virtual shared_ptr<renderer::IRenderer> create_renderer() {};
 

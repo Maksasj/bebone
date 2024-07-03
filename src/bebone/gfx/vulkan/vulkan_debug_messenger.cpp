@@ -1,7 +1,7 @@
 #include "vulkan_debug_messenger.h"
 #include "vulkan_instance.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(
         VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
         VkDebugUtilsMessageTypeFlagsEXT message_type,

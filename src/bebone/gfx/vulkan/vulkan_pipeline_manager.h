@@ -7,7 +7,7 @@
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_pipeline_tuples.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanConstRange;
 
     class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {

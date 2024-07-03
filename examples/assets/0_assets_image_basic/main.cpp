@@ -7,7 +7,6 @@ const unsigned int screen_height = 512;
 
 using namespace bebone::assets;
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;
