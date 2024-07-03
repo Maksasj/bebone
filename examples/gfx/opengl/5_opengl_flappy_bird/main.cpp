@@ -30,25 +30,18 @@ int main() {
     auto input = window->get_input();
     Game game(screen_width, screen_height, input);
 
-    double begin_time = Time::get_time();
-    double end_time;
-
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         window->execute_input_actions();
 
-        if (Time::delta_time >= 0) {
-            game.update();
-        }
+        game.update();
 
         glfwSwapBuffers(window->get_backend());
         GLFWContext::poll_events();
 
-        end_time = Time::get_time();
-        Time::delta_time = end_time - begin_time;
-        begin_time = end_time;
+        window->end_frame();
     }
     
     GLFWContext::terminate();
