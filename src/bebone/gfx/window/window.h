@@ -13,6 +13,7 @@
 #include "window_handler.h"
 
 #include "../../core/input/input_handler.h"
+#include "../../core/timestamp/timestamp.h"
 
 namespace bebone::gfx {
     using namespace core;
@@ -24,6 +25,9 @@ namespace bebone::gfx {
 
             InputHandler input_handler;
             WindowHandler window_handler;
+
+            double start_frame_time;
+            double end_frame_time;
 
         protected:
             int width;
@@ -70,6 +74,8 @@ namespace bebone::gfx {
 
             // TODO: we need to refactor this. I really don't like the idea of a window controlling the input
             std::shared_ptr<Input> get_input() const;
+
+            void end_frame();
 
         private:
             /// GLFW window position change callbacks

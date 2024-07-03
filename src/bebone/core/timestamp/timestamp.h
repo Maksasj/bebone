@@ -3,6 +3,10 @@
 
 #include <chrono>
 
+namespace bebone::gfx {
+    class Window;
+}
+
 namespace bebone::core {
     using namespace std::chrono;
 
@@ -17,6 +21,8 @@ namespace bebone::core {
 
         static double get_delta_time();
         static double get_seconds_elapsed();
+
+        friend class bebone::gfx::Window;
     };
 }
 

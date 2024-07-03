@@ -4,7 +4,9 @@ namespace bebone::gfx {
     Window::Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties)
         : window_handler(this),
           width(width),
-          height(height)
+          height(height),
+          start_frame_time(Time::get_seconds_elapsed()),
+          end_frame_time(0)
     {
         if(properties.enable_resize)
             glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -121,5 +123,11 @@ namespace bebone::gfx {
 
     std::shared_ptr<Input> Window::get_input() const {
         return input_handler.get_input();
+    }
+
+    void Window::end_frame() {
+        end_frame_time = Time::get_seconds_elapsed();
+        Time::delta_time = end_frame_time - start_frame_time;
+        start_frame_time = end_frame_time;
     }
 }
