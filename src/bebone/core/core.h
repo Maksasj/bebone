@@ -18,4 +18,7 @@
 // Input
 #include "input/input.h"
 
+// Timestamp
+#include "timestamp/timestamp.h"
+
 #endif
