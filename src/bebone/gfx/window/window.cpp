@@ -116,7 +116,7 @@ namespace bebone::gfx {
 
     void Window::end_frame() {
         end_frame_time = Time::get_seconds_elapsed();
-        Time::delta_time = end_frame_time - start_frame_time;
+        Time::set_delta_time(end_frame_time - start_frame_time);
         start_frame_time = end_frame_time;
     }
 }

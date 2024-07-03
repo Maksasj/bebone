@@ -5,6 +5,10 @@ namespace bebone::core {
     double Time::delta_time = 1.0f / 60;
 
     void Time::set_delta_time(const double& time) {
+        if (time <= 0) {
+            return;
+        }
+
         delta_time = time;
     }
 
