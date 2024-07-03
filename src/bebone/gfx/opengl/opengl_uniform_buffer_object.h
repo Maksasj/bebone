@@ -4,7 +4,7 @@
 #include "opengl_buffer_object.h"
 #include <vector>
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     /// UBO

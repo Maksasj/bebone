@@ -3,7 +3,7 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanResult {
         private:
             VkResult result;

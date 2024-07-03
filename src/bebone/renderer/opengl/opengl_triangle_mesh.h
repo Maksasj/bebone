@@ -6,7 +6,7 @@
 #include "../vertex.h"
 
 namespace bebone::renderer {
-    using namespace bebone::gfx::opengl;
+    using namespace bebone::gfx;
 
     class OpenGLTriangleMesh : public IMesh {
         private:

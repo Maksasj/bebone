@@ -1,6 +1,6 @@
 #include "opengl_shader_factory.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     std::string GLShaderFactory::read_file(const std::string& path) {
         std::ifstream file(path);
         std::stringstream ss;

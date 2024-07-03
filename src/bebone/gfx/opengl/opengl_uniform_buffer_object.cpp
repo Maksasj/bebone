@@ -1,6 +1,6 @@
 #include "opengl_uniform_buffer_object.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLUniformBufferObject::GLUniformBufferObject(const u64& size) : GLBufferObject(), size(size) {
         bind();
 

@@ -8,7 +8,6 @@ const unsigned int screen_width = 800;
 const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;

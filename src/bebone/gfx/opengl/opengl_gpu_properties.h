@@ -3,7 +3,7 @@
 
 #include "../gfx_backend.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     class GLGpuProperties : private core::NonCopyable {
         public:
             static int texture_unit_capacity();

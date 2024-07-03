@@ -1,6 +1,6 @@
 #include "opengl_extension_checker.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLExtensionChecker::GLExtensionChecker() {
         update_extension_set();
     }

@@ -7,7 +7,7 @@
 #include "vulkan_descriptor_set_layout.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) {
         descriptor_pool = device.create_descriptor_pool();
     }

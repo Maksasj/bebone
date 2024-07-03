@@ -4,6 +4,8 @@
 #include "mesh/vertex.h"
 
 namespace bexel {
+    using namespace bebone;
+
     class Camera : private core::NonCopyable {
         private:
             i32 render_distance;

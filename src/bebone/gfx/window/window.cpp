@@ -111,4 +111,10 @@ namespace bebone::gfx {
     f32 Window::get_aspect() const {
         return static_cast<f32>(width) / static_cast<f32>(height);
     }
+
+    void Window::end_frame() {
+        double time_diff = watch.get_time_difference();
+        Time::set_delta_time(time_diff);
+        watch.update_timestamp();
+    }
 }

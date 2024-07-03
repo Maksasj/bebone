@@ -6,7 +6,7 @@
 #include "vulkan_device.h"
 #include "vulkan_descriptor_pool.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanConstRange;
 
     class VulkanPipelineLayout : public VulkanWrapper<VkPipelineLayout>, private core::NonCopyable {

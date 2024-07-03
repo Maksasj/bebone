@@ -1,6 +1,5 @@
 #include "cyclic_movement.h"
 
-#include "../../game_time.h"
 #include "../../rng.h"
 
 namespace game::core::ecs {
@@ -8,7 +7,7 @@ namespace game::core::ecs {
             randomize_y(randomize_y), end_x_point(end_x_point), start_x_point(start_x_point) { }
 
     void CyclicMovement::update() {
-        Vec3f movement = Vec3f::left * speed * Time::delta_time;
+        Vec3f movement = Vec3f::left * speed * Time::get_delta_time();
         auto& transform = get_transform();
 
         if (transform->get_position().x + movement.x < end_x_point) {
