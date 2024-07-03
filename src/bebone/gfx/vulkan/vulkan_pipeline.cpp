@@ -4,7 +4,7 @@
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline_layout.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     std::vector<VkPipelineShaderStageCreateInfo> VulkanPipeline::collect_shader_stages(const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules) {
         auto stages = std::vector<VkPipelineShaderStageCreateInfo>{};
         stages.reserve(shader_modules.size());

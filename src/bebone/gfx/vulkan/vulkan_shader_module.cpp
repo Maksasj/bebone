@@ -2,7 +2,7 @@
 
 #include "vulkan_device.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanShaderModule::VulkanShaderModule(VulkanDevice& device, const ShaderCode& code) : type(code.get_shader_type()) {
         VkShaderModuleCreateInfo create_info{};
 

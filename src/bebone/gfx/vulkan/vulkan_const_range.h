@@ -5,7 +5,7 @@
 
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanConstRange : public VulkanWrapper<VkPushConstantRange> {

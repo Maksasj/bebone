@@ -26,14 +26,22 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    auto input = window->get_input();
+    auto input = std::make_shared<Input>();
+    auto input_executor = std::make_shared<InputExecutor>(input);
+
+    KeyListener key_listener(input_executor);
+    MouseListener mouse_listener(input_executor);
+
+    window->add_listener(key_listener);
+    window->add_listener(mouse_listener);
+
     Game game(screen_width, screen_height, input);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        window->execute_input_actions();
+        input_executor->execute_input_actions();
 
         game.update();
 

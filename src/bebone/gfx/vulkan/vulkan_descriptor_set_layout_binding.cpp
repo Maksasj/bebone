@@ -1,6 +1,6 @@
 #include "vulkan_descriptor_set_layout_binding.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     VulkanDescriptorSetLayoutBinding::VulkanDescriptorSetLayoutBinding(const VulkanDescriptorSetLayoutBindingType& type, const u32& binding) {

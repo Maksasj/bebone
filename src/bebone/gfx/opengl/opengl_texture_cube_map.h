@@ -7,7 +7,7 @@
 
 #include "opengl_texture.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::assets;
 
     class GLTextureCubeMap : public GLTexture {

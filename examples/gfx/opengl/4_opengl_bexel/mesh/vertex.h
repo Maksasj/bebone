@@ -4,11 +4,9 @@
 #include "bebone/bebone.h"
 
 namespace bexel {
-    using namespace bebone::core;
-    using namespace bebone;
     using namespace std;
+    using namespace bebone::core;
     using namespace bebone::gfx;
-    using namespace bebone::gfx::opengl;
 
     struct Vertex {
         Vec3f pos;

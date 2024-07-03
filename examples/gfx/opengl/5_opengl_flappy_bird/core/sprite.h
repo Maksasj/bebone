@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-using namespace bebone::gfx::opengl;
+using namespace bebone::gfx;
 
 namespace game::core {
     using namespace std;

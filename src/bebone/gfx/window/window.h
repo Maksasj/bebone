@@ -12,7 +12,6 @@
 #include "window_properties.h"
 #include "window_handler.h"
 
-#include "../../core/input/input_handler.h"
 #include "../../core/timestamp/timestamp.h"
 
 namespace bebone::gfx {
@@ -23,7 +22,6 @@ namespace bebone::gfx {
         private:
             GLFWwindow* window;
 
-            InputHandler input_handler;
             WindowHandler window_handler;
 
             double start_frame_time;
@@ -68,12 +66,6 @@ namespace bebone::gfx {
 
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
-
-            /// Function that executes all queued input actions
-            void execute_input_actions() const;
-
-            // TODO: we need to refactor this. I really don't like the idea of a window controlling the input
-            std::shared_ptr<Input> get_input() const;
 
             void end_frame();
 

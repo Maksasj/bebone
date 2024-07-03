@@ -4,7 +4,7 @@
 #include "../gfx_backend.h"
 #include "vulkan_wrapper.tpp"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     enum VulkanDescriptorSetLayoutBindingType {

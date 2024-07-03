@@ -6,7 +6,7 @@
 #include "vulkan_descriptor_set.h"
 #include "vulkan_pipeline_tuples.h"
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& command_buffer_pool) {
         VkCommandBufferAllocateInfo alloc_info{};
 
