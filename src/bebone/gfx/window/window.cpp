@@ -3,10 +3,10 @@
 namespace bebone::gfx {
     Window::Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties)
         : window_handler(this),
-          width(width),
-          height(height),
           start_frame_time(Time::get_seconds_elapsed()),
-          end_frame_time(0)
+          end_frame_time(0),
+          width(width),
+          height(height)
     {
         if(properties.enable_resize)
             glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
