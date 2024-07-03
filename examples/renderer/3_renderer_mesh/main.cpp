@@ -5,7 +5,6 @@
 #include "bebone/bebone.h"
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 using namespace bebone::renderer;
 
 struct Camera {

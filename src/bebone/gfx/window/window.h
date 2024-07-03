@@ -71,6 +71,10 @@ namespace bebone::gfx {
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
 
+            void end_frame();
+
+            virtual shared_ptr<renderer::IRenderer> create_renderer() {};
+
         private:
             /// GLFW window position change callbacks
             static void glfw_window_pos_callback(GLFWwindow* glfw_window, int x_pos, int y_pos);
