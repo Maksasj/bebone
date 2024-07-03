@@ -20,4 +20,16 @@ namespace bebone::core {
         auto now = steady_clock::now();
         return duration_cast<microseconds>(now - startup_time).count() / 1000000.0;
     }
+
+    Timestamp::Timestamp() {
+        time = Time::get_seconds_elapsed();
+    }
+
+    double Timestamp::operator-(const Timestamp& timestamp) const {
+        return time - timestamp.time;
+    }
+
+    double Timestamp::operator+(const Timestamp& timestamp) const {
+        return time + timestamp.time;
+    }
 }

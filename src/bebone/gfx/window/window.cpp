@@ -3,8 +3,6 @@
 namespace bebone::gfx {
     Window::Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties)
         : window_handler(this),
-          start_frame_time(Time::get_seconds_elapsed()),
-          end_frame_time(0),
           width(width),
           height(height)
     {
@@ -115,8 +113,8 @@ namespace bebone::gfx {
     }
 
     void Window::end_frame() {
-        end_frame_time = Time::get_seconds_elapsed();
-        Time::set_delta_time(end_frame_time - start_frame_time);
-        start_frame_time = end_frame_time;
+        double time_diff = watch.get_time_difference();
+        Time::set_delta_time(time_diff);
+        watch.update_timestamp();
     }
 }

@@ -13,6 +13,7 @@
 #include "window_handler.h"
 
 #include "../../core/timestamp/timestamp.h"
+#include "../../core/timestamp/watch.h"
 
 namespace bebone::gfx {
     using namespace core;
@@ -24,8 +25,7 @@ namespace bebone::gfx {
 
             WindowHandler window_handler;
 
-            double start_frame_time;
-            double end_frame_time;
+            Watch watch;
 
         protected:
             int width;

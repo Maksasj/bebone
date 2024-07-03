@@ -24,6 +24,16 @@ namespace bebone::core {
 
         friend class bebone::gfx::Window;
     };
+
+    struct Timestamp {
+    public:
+        double time;
+
+        Timestamp();
+
+        double operator-(const Timestamp& timestamp) const;
+        double operator+(const Timestamp& timestamp) const;
+    };
 }
 
 #endif
