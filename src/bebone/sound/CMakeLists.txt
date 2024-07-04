@@ -1,0 +1,10 @@
+set(BEBONE_SOUND_INCLUDES
+    "${CMAKE_SOURCE_DIR}/src/bebone/sound"
+    "${CMAKE_SOURCE_DIR}/3dparty/miniaudio/"
+)
+
+set(BEBONE_SOUND_INCLUDES "${BEBONE_SOUND_INCLUDES}" CACHE INTERNAL "")
+include_directories(${BEBONE_SOUND_INCLUDES})
+
+file(GLOB_RECURSE BEBONE_SOUND_SRC_FILES "*.cpp")
+add_library(bebone_sound STATIC ${BEBONE_SOUND_SRC_FILES})
