@@ -10,6 +10,7 @@ namespace bebone::gfx {
 
         auto color_attachments_ref = std::vector<VkAttachmentReference> {};
         auto depth_attachment_ref = VkAttachmentReference {}; // Only one depth attachment
+        bool has_depth_attachment = false;
 
         for(size_t i = 0; i < attachments.size(); ++i) {
             const auto& attachment = attachments[i];
@@ -18,6 +19,7 @@ namespace bebone::gfx {
             if(attachment.type == Depth) {
                 depth_attachment_ref.attachment = i;
                 depth_attachment_ref.layout = attachment.layout;
+                has_depth_attachment = true;
             } else if(attachment.type == Color)
                 color_attachments_ref.push_back(VkAttachmentReference{ static_cast<uint32_t>(i), attachment.layout });
         }
@@ -27,7 +29,11 @@ namespace bebone::gfx {
         subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS; // Todo
         subpass.colorAttachmentCount = color_attachments_ref.size();
         subpass.pColorAttachments = color_attachments_ref.data();
-        subpass.pDepthStencilAttachment = &depth_attachment_ref;
+
+        if(has_depth_attachment)
+            subpass.pDepthStencilAttachment = &depth_attachment_ref;
+        else
+            subpass.pDepthStencilAttachment = nullptr;
 
         // and it dependencies
         VkSubpassDependency dependency = {};

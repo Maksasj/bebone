@@ -8,5 +8,5 @@ layout (location = 0) out vec4 out_color;
 layout(binding = 0) uniform sampler2D textures[];
 
 void main() {
-   out_color = vec4(normal, 1.0);
+   out_color = vec4(texture(textures[0], texcoord).rgb, 1.0);
 }

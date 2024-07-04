@@ -32,7 +32,8 @@ namespace bebone::gfx {
                 VulkanDevice& device,
                 std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
                 const size_t& width,
-                const size_t& height);
+                const size_t& height,
+                VkFormat image_format);
 
             void destroy(VulkanDevice& device) override;
     };

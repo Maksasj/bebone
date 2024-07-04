@@ -34,23 +34,24 @@ namespace bebone::gfx {
         image->transition_layout(*command_buffer_pool, device, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         sampler = device.create_sampler();
-        view = device.create_image_view(*image, VK_FORMAT_R32G32B32A32_SFLOAT);
+        view = device.create_image_view(*image, ColorRGBA::get_vulkan_format());
     }
 
     VulkanTexture::VulkanTexture(VulkanDevice& device,
         std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
         const size_t& width,
-        const size_t& height
+        const size_t& height,
+        VkFormat image_format
     ) {
-        auto [im, mem] = device.create_image_memory(VK_FORMAT_R32G32B32A32_SFLOAT, // Todo this should be configurable
+        auto [im, mem] = device.create_image_memory(image_format, // Todo this should be configurable
             { static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1},
-            { .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
-        );
+            { .usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
+        );  // Todo, usage should be configurable
 
         image = im; memory = mem;
 
         sampler = device.create_sampler();
-        view = device.create_image_view(*image, VK_FORMAT_R32G32B32A32_SFLOAT);
+        view = device.create_image_view(*image, image_format);
     }
 
     void VulkanTexture::destroy(VulkanDevice& device) {

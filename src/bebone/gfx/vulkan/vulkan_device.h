@@ -179,7 +179,7 @@ namespace bebone::gfx {
                 const std::vector<VulkanConstRange>& constant_ranges);
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
+                const std::shared_ptr<VulkanRenderPass>& render_pass,
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
@@ -210,7 +210,8 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanTexture> create_texture(
                 std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
                 const size_t& width,
-                const size_t& height);
+                const size_t& height,
+                VkFormat image_format);
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 

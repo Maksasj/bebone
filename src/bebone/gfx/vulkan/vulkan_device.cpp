@@ -352,12 +352,12 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
         const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig config_info
     ) {
-        auto pipeline = std::make_shared<VulkanPipeline>(*this, swap_chain, pipeline_layout, shader_modules, config_info);
+        auto pipeline = std::make_shared<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);
 
         child_objects.push_back(pipeline);
 
@@ -373,7 +373,6 @@ namespace bebone::gfx {
         std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) {
-
         // Todo safe as child object
         return std::make_shared<VulkanFramebuffer>(*this, attachments, render_pass, extent);
     }
@@ -422,11 +421,12 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
-            std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
-            const size_t& width,
-            const size_t& height
+        std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+        const size_t& width,
+        const size_t& height,
+        VkFormat image_format
     ) {
-        auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, width, height);
+        auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, width, height, image_format);
 
         child_objects.push_back(texture);
 
