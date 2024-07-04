@@ -3,6 +3,7 @@
 
 #include <miniaudio.h>
 #include <string>
+#include <memory>
 #include "sound.h"
 
 namespace bebone::sound_system {
