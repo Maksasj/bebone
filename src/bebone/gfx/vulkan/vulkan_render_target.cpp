@@ -13,7 +13,10 @@ namespace bebone::gfx {
         VkExtent2D extent
     ) : swap_chain_images(swap_chain_images) {
         // Todo, this should be moved outside
-        render_pass = device.create_render_pass(image_format);
+        render_pass = device.create_render_pass({
+            VulkanAttachment::color({.format = image_format }),
+            VulkanAttachment::depth({.format = device.find_depth_format() }),
+        });
 
         // Create depth resources
         auto depthFormat = device.find_depth_format();

@@ -12,7 +12,7 @@ namespace bebone::gfx {
         std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
         const std::shared_ptr<Image<ColorRGBA>>& raw
     ) {
-        auto [im, mem] = device.create_image_memory(VK_FORMAT_R32G32B32A32_SFLOAT,
+        auto [im, mem] = device.create_image_memory(ColorRGBA::get_vulkan_format(),
             { static_cast<uint32_t>(raw->get_width()), static_cast<uint32_t>(raw->get_height()), 1},
             { .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
         );
@@ -42,7 +42,7 @@ namespace bebone::gfx {
         const size_t& width,
         const size_t& height
     ) {
-        auto [im, mem] = device.create_image_memory(VK_FORMAT_R32G32B32A32_SFLOAT,
+        auto [im, mem] = device.create_image_memory(VK_FORMAT_R32G32B32A32_SFLOAT, // Todo this should be configurable
             { static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1},
             { .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
         );

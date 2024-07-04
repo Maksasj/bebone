@@ -7,12 +7,12 @@
 
 #include "vulkan_device.h"
 #include "vulkan_wrapper.tpp"
+#include "vulkan_attachment.h"
 
 namespace bebone::gfx {
     class VulkanRenderPass : public VulkanWrapper<VkRenderPass> {
         public:
-            // Todo attachments should be passed there
-            VulkanRenderPass(VulkanDevice& device, VkFormat color_attachment_image_format);
+            VulkanRenderPass(VulkanDevice& device, const std::vector<VulkanAttachment>& attachments);
 
             void destroy(VulkanDevice& device) override;
     };

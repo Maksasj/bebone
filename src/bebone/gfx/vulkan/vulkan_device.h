@@ -23,6 +23,7 @@
 #include "vulkan_texture.h"
 #include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout_binding.h"
+#include "vulkan_attachment.h"
 
 #include "vulkan_buffer_tuples.h"
 #include "vulkan_image_tuples.h"
@@ -183,7 +184,7 @@ namespace bebone::gfx {
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
 
-            std::shared_ptr<VulkanRenderPass> create_render_pass(VkFormat color_attachment_image_format);
+            std::shared_ptr<VulkanRenderPass> create_render_pass(const std::vector<VulkanAttachment>& attachments);
 
             std::shared_ptr<VulkanFramebuffer> create_framebuffer(
                     const std::vector<std::shared_ptr<VulkanImageView>>& attachments,

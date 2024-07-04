@@ -364,8 +364,8 @@ namespace bebone::gfx {
         return pipeline;
     }
 
-    std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(VkFormat color_attachment_image_format) {
-        return std::make_shared<VulkanRenderPass>(*this, color_attachment_image_format);
+    std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(const std::vector<VulkanAttachment>& attachments) {
+        return std::make_shared<VulkanRenderPass>(*this, attachments);
     }
 
     std::shared_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(

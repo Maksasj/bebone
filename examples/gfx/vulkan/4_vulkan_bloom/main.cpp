@@ -127,7 +127,10 @@ int main() {
         std::ignore = post_pipeline.bind_texture(device, t, 0);
     }
 
-    auto render_pass = device->create_render_pass(VK_FORMAT_R32G32B32_SFLOAT);
+    auto render_pass = device->create_render_pass({
+        VulkanAttachment::depth({.format = device->find_depth_format() }),
+        VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT }),
+    });
 
     auto framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
         device->create_framebuffer({ textures[0]->view }, render_pass, {800, 600}),

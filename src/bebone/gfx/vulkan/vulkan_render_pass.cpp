@@ -1,41 +1,35 @@
 #include "vulkan_render_pass.h"
 
 namespace bebone::gfx {
-    VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, VkFormat color_attachment_image_format) {
-        VkAttachmentDescription depth_attachment{};
-        depth_attachment.format = device.find_depth_format(); // Todo, This should be moved
-        depth_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        depth_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        depth_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        depth_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        depth_attachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, const std::vector<VulkanAttachment>& attachments) {
+        auto descriptions = std::vector<VkAttachmentDescription> {};
+        descriptions.reserve(attachments.size());
 
-        VkAttachmentReference depth_attachment_ref{};
-        depth_attachment_ref.attachment = 1;
-        depth_attachment_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+        for(const auto& attachment : attachments)
+            descriptions.push_back(attachment.description);
 
-        VkAttachmentDescription color_attachment = {};
-        color_attachment.format = color_attachment_image_format;
-        color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        color_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        color_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        color_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        color_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        auto color_attachments_ref = std::vector<VkAttachmentReference> {};
+        auto depth_attachment_ref = VkAttachmentReference {}; // Only one depth attachment
 
-        VkAttachmentReference color_attachment_ref = {};
-        color_attachment_ref.attachment = 0;
-        color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        for(size_t i = 0; i < attachments.size(); ++i) {
+            const auto& attachment = attachments[i];
 
-        VkSubpassDescription subpass = {};
-        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        subpass.colorAttachmentCount = 1;
-        subpass.pColorAttachments = &color_attachment_ref;
+            // Todo, only one depth attachment is allowed
+            if(attachment.type == Depth) {
+                depth_attachment_ref.attachment = i;
+                depth_attachment_ref.layout = attachment.layout;
+            } else if(attachment.type == Color)
+                color_attachments_ref.push_back(VkAttachmentReference{ static_cast<uint32_t>(i), attachment.layout });
+        }
+
+        // Main subpass
+        auto subpass = VkSubpassDescription {};
+        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS; // Todo
+        subpass.colorAttachmentCount = color_attachments_ref.size();
+        subpass.pColorAttachments = color_attachments_ref.data();
         subpass.pDepthStencilAttachment = &depth_attachment_ref;
 
+        // and it dependencies
         VkSubpassDependency dependency = {};
         dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
         dependency.srcAccessMask = 0;
@@ -44,14 +38,14 @@ namespace bebone::gfx {
         dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
         dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-        auto attachments = std::array<VkAttachmentDescription, 2> { color_attachment, depth_attachment };
-
         VkRenderPassCreateInfo render_pass_info = {};
         render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        render_pass_info.attachmentCount = static_cast<uint32_t>(attachments.size());
-        render_pass_info.pAttachments = attachments.data();
+        render_pass_info.attachmentCount = static_cast<uint32_t>(descriptions.size());
+        render_pass_info.pAttachments = descriptions.data();
+
         render_pass_info.subpassCount = 1;
         render_pass_info.pSubpasses = &subpass;
+
         render_pass_info.dependencyCount = 1;
         render_pass_info.pDependencies = &dependency;
 
