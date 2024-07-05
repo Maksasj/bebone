@@ -9,33 +9,6 @@ using namespace bebone::gfx;
 using namespace bebone::renderer;
 using namespace bebone::gfx::opengl;
 
-class QuadMeshGenerator : public IMeshGenerator {
-    public:
-        QuadMeshGenerator(const std::shared_ptr<IMeshBuilder>& builder) : IMeshGenerator(builder) {
-
-        }
-
-        void reset() override {
-
-        }
-
-        std::shared_ptr<IMesh> generate() override {
-            const std::vector<Vertex> vertices {
-                {{1.0f,  1.0f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
-                {{1.0f, -1.0f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
-                {{-1.0f, -1.0f,0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
-                {{-1.0f,  1.0f,0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
-            };
-
-            const std::vector<u32> indices {
-                0, 1, 3,
-                1, 2, 3
-            };
-
-            return std::make_shared<OpenGLTriangleMesh>(vertices, indices);
-        }
-};
-
 int main() {
     glfwInit();
 

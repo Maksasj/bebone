@@ -9,6 +9,7 @@
 #include "mesh/imesh_loader.h"
 
 #include "mesh/cube_mesh_generator.h"
+#include "mesh/quad_mesh_generator.h"
 
 #include "mesh/obj_mesh_loader.h"
 
