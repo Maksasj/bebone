@@ -21,6 +21,10 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     }
 };
 
+/* Todo,
+ * A VkRenderPass is a Vulkan object that encapsulates the state needed to setup the “target” for rendering
+ */
+
 int main() {
     GLFWContext::init();
 
@@ -78,7 +82,7 @@ int main() {
 
     auto blur_pipeline = pipeline_manager->create_pipeline(
         device, blur_render_pass, "blur.vert.glsl", "blur.frag.glsl",
-        { },
+        { VulkanConstRange::common(sizeof(u32), 0) },
         { { BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
@@ -126,8 +130,8 @@ int main() {
     post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[2], 0)[0]);
 
     while (!window->closing()) {
-        transform.rotation.x += 0.001f;
-        transform.rotation.z -= 0.001f;
+        transform.rotation.x += 0.02f;
+        transform.rotation.z -= 0.02f;
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
@@ -170,6 +174,9 @@ int main() {
 
         cmd->set_viewport(0, 0, window->get_width(), window->get_height());
         cmd->bind_managed_pipeline(blur_pipeline, frame);
+
+        u32 blur_handles = blur_texture_handles[frame];
+        cmd->push_constant(blur_pipeline.layout, sizeof(u32), 0, &blur_handles);
 
         quad_mesh->bind(&encoder);
         cmd->draw_indexed(quad_mesh->triangle_count());
