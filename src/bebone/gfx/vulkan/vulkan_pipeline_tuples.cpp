@@ -33,6 +33,21 @@ namespace bebone::gfx {
         return dst_array_elements;
     }
 
+    VulkanBindlessHandle VulkanManagedPipelineTuple::bind_texture_immutable(
+        std::shared_ptr<VulkanDevice>& device,
+        std::shared_ptr<VulkanTexture>& texture,
+        const size_t& binding
+    ) {
+        /*
+        auto index = bindless_samplers_index;
+        ++bindless_samplers_index;
+
+        device->update_descriptor_sets(texture, descriptors, binding, index);
+
+        return index;
+        */
+    }
+
     std::vector<VulkanBindlessHandle> VulkanManagedPipelineTuple::bind_uniform_buffer(
         std::shared_ptr<VulkanDevice>& device,
         const std::vector<VulkanBufferMemoryTuple>& tuples,

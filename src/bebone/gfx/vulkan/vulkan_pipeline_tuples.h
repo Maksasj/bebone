@@ -35,6 +35,11 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanTexture>& texture,
                 const size_t& binding);
 
+            VulkanBindlessHandle bind_texture_immutable(
+                std::shared_ptr<VulkanDevice>& device,
+                std::shared_ptr<VulkanTexture>& texture,
+                const size_t& binding);
+
             std::vector<VulkanBindlessHandle> bind_uniform_buffer(
                 std::shared_ptr<VulkanDevice>& device,
                 const std::vector<VulkanBufferMemoryTuple>& tuples,
