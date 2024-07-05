@@ -8,6 +8,8 @@
 #include "mesh/imesh_generator.h"
 #include "mesh/imesh_loader.h"
 
+#include "mesh/cube_mesh_generator.h"
+
 #include "mesh/obj_mesh_loader.h"
 
 #include "opengl/opengl_renderer.h"

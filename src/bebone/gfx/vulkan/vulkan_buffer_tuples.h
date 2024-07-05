@@ -15,6 +15,8 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanBuffer> buffer;
             std::shared_ptr<VulkanDeviceMemory> memory;
 
+            VulkanBufferMemoryTuple();
+
             VulkanBufferMemoryTuple( // Todo this constructor should be moved to protected, or no ?
                 const shared_ptr<VulkanBuffer>& buffer,
                 const shared_ptr<VulkanDeviceMemory>& memory);

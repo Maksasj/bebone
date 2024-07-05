@@ -1,7 +1,11 @@
 #include "opengl_triangle_mesh.h"
 
 namespace bebone::renderer {
-    OpenGLTriangleMesh::OpenGLTriangleMesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) : indices_count(indices.size()) {
+    OpenGLTriangleMesh::OpenGLTriangleMesh(
+        const std::vector<Vertex>& vertices,
+        const std::vector<u32>& indices
+    ) : indices_count(indices.size()) {
+
         vao = make_unique<GLVertexArrayObject>();
         vao->bind();
 
