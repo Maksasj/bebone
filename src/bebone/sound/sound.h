@@ -11,6 +11,7 @@ namespace bebone::sound_system {
     private:
         std::shared_ptr<ma_sound> loaded_sound;
 
+        void free();
     public:
         Sound();
         ~Sound();

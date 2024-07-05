@@ -11,11 +11,13 @@ namespace bebone::sound_system {
     private:
         ma_engine engine;
 
+        std::shared_ptr<ma_sound> init_sound(const std::string& path);
     public:
         SoundEngine();
         ~SoundEngine();
 
-        Sound load_sound(const std::string& path);
+        std::shared_ptr<Sound> load_sound(const std::string& path);
+        void load_sound(const std::string& path, const std::shared_ptr<Sound>& sound);
     };
 }
 
