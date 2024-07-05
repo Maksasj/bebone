@@ -92,9 +92,9 @@ int main() {
     );
 
     auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
-    auto cube_mesh = cube_generator->generate();
-
     auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+
+    auto cube_mesh = cube_generator->generate();
     auto quad_mesh = quad_generator->generate();
 
     auto t_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
@@ -145,12 +145,16 @@ int main() {
         cmd->begin_render_pass(
             geometry_framebuffers[frame],
             geometry_render_pass,
-            swap_chain->extent);
+            { 800, 600 });
 
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(geometry_pipeline, frame);
 
-            auto handles = GeometryHandles { static_cast<u32>(c_handles[frame]), static_cast<u32>(t_handles[frame]) };
+            auto handles = GeometryHandles {
+                static_cast<u32>(c_handles[frame]),
+                static_cast<u32>(t_handles[frame])
+            };
+
             cmd->push_constant(geometry_pipeline.layout, sizeof(GeometryHandles), 0, &handles);
 
             cube_mesh->bind(&encoder);
@@ -162,7 +166,7 @@ int main() {
         cmd->begin_render_pass(
             blur_framebuffers[frame],
             blur_render_pass,
-            swap_chain->extent);
+            { 800, 600 });
 
         cmd->set_viewport(0, 0, window->get_width(), window->get_height());
         cmd->bind_managed_pipeline(blur_pipeline, frame);
@@ -176,45 +180,22 @@ int main() {
         cmd->begin_render_pass(
             swap_chain->render_target->framebuffers[frame],
             swap_chain->render_target->render_pass,
-            swap_chain->extent);
+            { 800, 600 });
 
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(post_pipeline, frame);
 
-            auto post_handle = PostHandles { static_cast<u32>(post_geometry_texture_handles[frame]), static_cast<u32>(post_blur_texture_handles[frame]) };
+            auto post_handle = PostHandles {
+                static_cast<u32>(post_geometry_texture_handles[frame]),
+                static_cast<u32>(post_blur_texture_handles[frame])
+            };
+
             cmd->push_constant(post_pipeline.layout, sizeof(PostHandles), 0, &post_handle);
 
             quad_mesh->bind(&encoder);
             cmd->draw_indexed(quad_mesh->triangle_count());
 
         cmd->end_render_pass();
-
-        /*
-        cmd->begin_render_pass(
-            blur_framebuffers[frame],
-            render_pass,
-            swap_chain->extent);
-
-            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd->bind_managed_pipeline(blur_pipeline, frame);
-            cmd->bind_vertex_buffer(quad_vb);
-            cmd->bind_index_buffer(quad_eb);
-            cmd->draw_indexed(quad_indices.size());
-        cmd->end_render_pass();
-
-        cmd->begin_render_pass(
-            swap_chain->render_target->blur_framebuffers[frame],
-            swap_chain->render_target->render_pass,
-            swap_chain->extent);
-
-            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd->bind_managed_pipeline(geometry_pipeline, frame);
-            cmd->push_constant(geometry_pipeline.layout, sizeof(GeometryHandles), 0, &handles);
-            cmd->bind_vertex_buffer(cube_vb);
-            cmd->bind_index_buffer(cube_eb);
-            cmd->draw_indexed(cube_indices.size());
-        cmd->end_render_pass();
-        */
 
         cmd->end_record();
         if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized

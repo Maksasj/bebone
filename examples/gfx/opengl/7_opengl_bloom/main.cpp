@@ -16,31 +16,22 @@ int main() {
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, 800, 600);
-
-    GLShaderProgram geometry_program(
-        GLShaderFactory::create_shader("main.vert.glsl", ShaderTypes::vertex_shader, EnableUniforms),
-        GLShaderFactory::create_shader("main.frag.glsl", ShaderTypes::fragment_shader, EnableUniforms));
-
-    GLShaderProgram blur_program(
-        GLShaderFactory::create_shader("blur.vert.glsl", ShaderTypes::vertex_shader, EnableUniforms),
-        GLShaderFactory::create_shader("blur.frag.glsl", ShaderTypes::fragment_shader, EnableUniforms));
-
-    GLShaderProgram post_program(
-            GLShaderFactory::create_shader("post.vert.glsl", ShaderTypes::vertex_shader, EnableUniforms),
-            GLShaderFactory::create_shader("post.frag.glsl", ShaderTypes::fragment_shader, EnableUniforms));
-
     GLContext::enable(GL_DEPTH_TEST);
 
     auto transform = renderer::Transform {};
     auto camera = Mat4f::translation(Vec3f(0, 0, 5)) * Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
 
     auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<OpenGLTriangleMeshBuilder>());
-    auto cube_mesh = cube_generator->generate();
-
     auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<OpenGLTriangleMeshBuilder>());
+
+    auto cube_mesh = cube_generator->generate();
     auto quad_mesh = quad_generator->generate();
 
     // Geometry pass
+    GLShaderProgram geometry_program(
+        GLShaderFactory::create_shader("main.vert.glsl", ShaderTypes::vertex_shader, EnableUniforms),
+        GLShaderFactory::create_shader("main.frag.glsl", ShaderTypes::fragment_shader, EnableUniforms));
+
     auto geometry_fbo = GLFramebuffer();
         auto geometry_texture = GLTexture2D(800, 600);
         auto grayscale_texture = GLTexture2D(800, 600);
@@ -52,6 +43,10 @@ int main() {
         geometry_fbo.attach_renderbuffer(GL_DEPTH_STENCIL_ATTACHMENT, geometry_renderbuffer);
 
     // Blur pass
+    GLShaderProgram blur_program(
+        GLShaderFactory::create_shader("blur.vert.glsl", ShaderTypes::vertex_shader, EnableUniforms),
+        GLShaderFactory::create_shader("blur.frag.glsl", ShaderTypes::fragment_shader, EnableUniforms));
+
     auto blur_fbo = GLFramebuffer();
         auto blur_texture = GLTexture2D(800, 600);
         auto blur_renderbuffer = GLRenderbuffer();
@@ -59,6 +54,11 @@ int main() {
 
         blur_fbo.attach_texture_2d(GL_COLOR_ATTACHMENT0, blur_texture);
         blur_fbo.attach_renderbuffer(GL_DEPTH_STENCIL_ATTACHMENT, blur_renderbuffer);
+
+    // Final pass
+    GLShaderProgram post_program(
+            GLShaderFactory::create_shader("post.vert.glsl", ShaderTypes::vertex_shader, EnableUniforms),
+            GLShaderFactory::create_shader("post.frag.glsl", ShaderTypes::fragment_shader, EnableUniforms));
 
     while (!window->closing()) {
         transform.rotation.x += 0.02f;
