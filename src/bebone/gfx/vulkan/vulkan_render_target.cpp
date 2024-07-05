@@ -6,12 +6,12 @@
 #include "vulkan_swap_chain.h"
 
 namespace bebone::gfx {
-    VulkanRenderTarget::VulkanRenderTarget(
+    VulkanSwapChainRenderTarget::VulkanSwapChainRenderTarget(
         VulkanDevice& device,
-        std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
+        std::vector<VulkanSwapChainImageTuple>& image_views,
         VkFormat image_format,
         VkExtent2D extent
-    ) : swap_chain_images(swap_chain_images) {
+    ) : image_views(image_views) {
         // Todo, this should be moved outside
         render_pass = device.create_render_pass({
             VulkanAttachment::color({.format = image_format }),
@@ -20,9 +20,9 @@ namespace bebone::gfx {
 
         // Create depth resources
         auto depthFormat = device.find_depth_format();
-        depth_images.reserve(swap_chain_images.size());
+        depth_image.reserve(image_views.size());
 
-        for(size_t i = 0; i < swap_chain_images.size(); ++i) {
+        for(size_t i = 0; i < image_views.size(); ++i) {
             auto image = device.create_image(depthFormat, { extent.width, extent.height, 1}, {
                 .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
             });
@@ -36,25 +36,25 @@ namespace bebone::gfx {
                 .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
             });
 
-            depth_images.emplace_back(image, view, memory);
+            depth_image.emplace_back(image, view, memory);
         }
 
         // Create frame buffers
-        for(size_t i = 0; i < swap_chain_images.size(); ++i) {
-            auto attachments = std::vector { swap_chain_images[i].view, depth_images[i].view };
+        for(size_t i = 0; i < image_views.size(); ++i) {
+            auto attachments = std::vector { image_views[i].view, depth_image[i].view };
             auto framebuffer = device.create_framebuffer(attachments, render_pass, extent);
 
             framebuffers.push_back(framebuffer);
         }
     }
 
-    void VulkanRenderTarget::destroy(VulkanDevice& device) {
+    void VulkanSwapChainRenderTarget::destroy(VulkanDevice& device) {
         render_pass->destroy(device);
 
-        for(auto& [_, view] : swap_chain_images)
+        for(auto& [_, view] : image_views)
             view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
 
-        for(auto& [memory, view, image] : depth_images) { // Todo
+        for(auto& [memory, view, image] : depth_image) { // Todo
             memory->destroy(device);
             view->destroy(device);
             image->destroy(device);

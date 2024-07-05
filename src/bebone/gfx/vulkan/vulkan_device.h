@@ -38,7 +38,7 @@ namespace bebone::gfx {
     class VulkanDescriptorSetLayout;
     class VulkanConstRange;
     class VulkanPipelineManager;
-    class VulkanRenderTarget;
+    class VulkanSwapChainRenderTarget;
     class VulkanRenderPass;
     class VulkanFramebuffer;
 
@@ -215,8 +215,8 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
-            std::shared_ptr<VulkanRenderTarget> create_render_target(
-                std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
+            std::shared_ptr<VulkanSwapChainRenderTarget> create_render_target(
+                std::vector<VulkanSwapChainImageTuple>& image_views,
                 VkFormat image_format,
                 VkExtent2D extent);
 

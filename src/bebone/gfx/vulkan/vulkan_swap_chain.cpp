@@ -157,7 +157,7 @@ namespace bebone::gfx {
         image_available_semaphores.resize(image_count);
         render_finished_semaphores.resize(image_count);
         in_flight_fences.resize(image_count);
-        images_in_flight.resize(render_target->swap_chain_images.size(), VK_NULL_HANDLE);
+        images_in_flight.resize(render_target->image_views.size(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphore_info = {};
         semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;

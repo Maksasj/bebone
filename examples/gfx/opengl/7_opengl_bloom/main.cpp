@@ -63,8 +63,8 @@ class QuadMeshGenerator : public IMeshGenerator {
             };
 
             const std::vector<u32> indices {
-                    0, 1, 3,
-                    1, 2, 3
+                0, 1, 3,
+                1, 2, 3
             };
 
             return std::make_shared<OpenGLTriangleMesh>(vertices, indices);

@@ -13,17 +13,17 @@
 namespace bebone::gfx {
     class VulkanImage;
 
-    class VulkanRenderTarget : public VulkanApi {
+    class VulkanSwapChainRenderTarget : public VulkanApi {
         public:
             std::shared_ptr<VulkanRenderPass> render_pass; // Todo, why this is there ?
 
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
-            std::vector<VulkanDepthImageTuple> depth_images;
-            std::vector<VulkanSwapChainImageTuple> swap_chain_images;
+            std::vector<VulkanDepthImageTuple> depth_image;
+            std::vector<VulkanSwapChainImageTuple> image_views;
 
-            VulkanRenderTarget(
+            VulkanSwapChainRenderTarget(
                 VulkanDevice& device,
-                std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
+                std::vector<VulkanSwapChainImageTuple>& image_views,
                 VkFormat image_format,
                 VkExtent2D extent);
 
