@@ -20,7 +20,7 @@ namespace bebone::gfx {
 
         // Create depth resources
         auto depthFormat = device.find_depth_format();
-        depth_image.reserve(image_views.size());
+        depth_images.reserve(image_views.size());
 
         for(size_t i = 0; i < image_views.size(); ++i) {
             auto image = device.create_image(depthFormat, { extent.width, extent.height, 1}, {
@@ -36,12 +36,12 @@ namespace bebone::gfx {
                 .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
             });
 
-            depth_image.emplace_back(image, view, memory);
+            depth_images.emplace_back(image, view, memory);
         }
 
         // Create frame buffers
         for(size_t i = 0; i < image_views.size(); ++i) {
-            auto attachments = std::vector { image_views[i].view, depth_image[i].view };
+            auto attachments = std::vector { image_views[i].view, depth_images[i].view };
             auto framebuffer = device.create_framebuffer(attachments, render_pass, extent);
 
             framebuffers.push_back(framebuffer);
@@ -54,11 +54,8 @@ namespace bebone::gfx {
         for(auto& [_, view] : image_views)
             view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
 
-        for(auto& [memory, view, image] : depth_image) { // Todo
-            memory->destroy(device);
-            view->destroy(device);
-            image->destroy(device);
-        }
+        for(auto& tuple : depth_images)
+            tuple.destroy(device);
 
         for (auto& framebuffer : framebuffers)
             framebuffer->destroy(device);

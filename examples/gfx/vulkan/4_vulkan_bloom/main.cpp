@@ -44,12 +44,7 @@ int main() {
         VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
     });
 
-    auto geometry_textures = std::vector<std::shared_ptr<VulkanTexture>> {
-        device->create_texture(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT),
-        device->create_texture(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT),
-        device->create_texture(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT)
-    };
-
+    auto geometry_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
     auto geometry_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
         device->create_framebuffer({ geometry_textures[0]->view }, geometry_render_pass, {800, 600}),
         device->create_framebuffer({ geometry_textures[1]->view }, geometry_render_pass, {800, 600}),
@@ -68,12 +63,7 @@ int main() {
         VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
     });
 
-    auto blur_textures = std::vector<std::shared_ptr<VulkanTexture>> {
-        device->create_texture(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT),
-        device->create_texture(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT),
-        device->create_texture(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT)
-    };
-
+    auto blur_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
     auto blur_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
         device->create_framebuffer({ blur_textures[0]->view }, blur_render_pass, {800, 600}),
         device->create_framebuffer({ blur_textures[1]->view }, blur_render_pass, {800, 600}),
@@ -125,6 +115,7 @@ int main() {
     post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[0], 0)[0]);
     post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[1], 0)[0]);
     post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[2], 0)[0]);
+
     post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[0], 0)[0]);
     post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[1], 0)[0]);
     post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[2], 0)[0]);
@@ -172,14 +163,14 @@ int main() {
             blur_render_pass,
             { 800, 600 });
 
-        cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-        cmd->bind_managed_pipeline(blur_pipeline, frame);
+            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd->bind_managed_pipeline(blur_pipeline, frame);
 
-        u32 blur_handles = blur_texture_handles[frame];
-        cmd->push_constant(blur_pipeline.layout, sizeof(u32), 0, &blur_handles);
+            u32 blur_handles = blur_texture_handles[frame];
+            cmd->push_constant(blur_pipeline.layout, sizeof(u32), 0, &blur_handles);
 
-        quad_mesh->bind(&encoder);
-        cmd->draw_indexed(quad_mesh->triangle_count());
+            quad_mesh->bind(&encoder);
+            cmd->draw_indexed(quad_mesh->triangle_count());
 
         cmd->end_render_pass();
 

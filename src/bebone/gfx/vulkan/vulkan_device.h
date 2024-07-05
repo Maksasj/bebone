@@ -204,14 +204,21 @@ namespace bebone::gfx {
                 const ShaderType& type);
 
             std::shared_ptr<VulkanTexture> create_texture(
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
                 const std::string& file_path);
 
             std::shared_ptr<VulkanTexture> create_texture(
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
                 const size_t& width,
                 const size_t& height,
                 VkFormat image_format);
+
+            std::vector<std::shared_ptr<VulkanTexture>> create_textures(
+                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
+                const size_t& width,
+                const size_t& height,
+                VkFormat image_format,
+                const size_t& count);
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
