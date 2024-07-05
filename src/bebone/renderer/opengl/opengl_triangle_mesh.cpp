@@ -35,7 +35,7 @@ namespace bebone::renderer {
         return indices_count * 3;
     }
 
-    void OpenGLTriangleMesh::bind() {
+    void OpenGLTriangleMesh::bind(ICommandEncoder* encoder) {
         vao->bind();
     }
 }

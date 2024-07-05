@@ -64,7 +64,7 @@ int main() {
 
         shader_program.enable();
 
-        mesh->bind();
+        mesh->bind(nullptr);
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
 
         GLFWContext::swap_buffers(*window);

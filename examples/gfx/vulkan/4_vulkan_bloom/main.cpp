@@ -21,38 +21,6 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     }
 };
 
-const vector<Vertex> cube_vertices {
-    {{-1.0, -1.0,  1.0},   {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-    {{ 1.0, -1.0,  1.0},   {1.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-    {{ 1.0,  1.0,  1.0},   {1.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-    {{-1.0,  1.0,  1.0},   {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-    {{-1.0, -1.0, -1.0},   {0.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-    {{ 1.0, -1.0, -1.0},   {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-    {{ 1.0,  1.0, -1.0},   {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-    {{-1.0,  1.0, -1.0},   {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}
-};
-
-const vector<u32> cube_indices {
-    0, 1, 2, 2, 3, 0,
-    1, 5, 6, 6, 2, 1,
-    7, 6, 5, 5, 4, 7,
-    4, 0, 3, 3, 7, 4,
-    4, 5, 1, 1, 0, 4,
-    3, 2, 6, 6, 7, 3
-};
-
-const std::vector<Vertex> quad_vertices {
-    {{1.0f,  1.0f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
-    {{1.0f, -1.0f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
-    {{-1.0f, -1.0f,0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
-    {{-1.0f,  1.0f,0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
-};
-
-const std::vector<u32> quad_indices {
-    0, 1, 3,
-    1, 2, 3
-};
-
 int main() {
     GLFWContext::init();
 
@@ -123,11 +91,11 @@ int main() {
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
-    auto cube_vb = device->create_buffer_memory_from(cube_vertices);
-    auto cube_eb = device->create_buffer_memory_from(cube_indices);
+    auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+    auto cube_mesh = cube_generator->generate();
 
-    auto quad_vb = device->create_buffer_memory_from(quad_vertices);
-    auto quad_eb = device->create_buffer_memory_from(quad_indices);
+    auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+    auto quad_mesh = quad_generator->generate();
 
     auto t_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
     auto c_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
@@ -168,85 +136,87 @@ int main() {
         auto mat = transform.final_matrix();
         t_ubo[frame].upload_data(device, &mat, sizeof(Mat4f));
 
-        auto& cmd = *command_buffers[frame];
-        cmd.begin_record();
+        auto& cmd = command_buffers[frame];
+        VulkanCommandEncoder encoder(cmd);
+
+        cmd->begin_record();
 
         // Render geometry
-        cmd.begin_render_pass(
+        cmd->begin_render_pass(
             geometry_framebuffers[frame],
             geometry_render_pass,
             swap_chain->extent);
 
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd.bind_managed_pipeline(geometry_pipeline, frame);
+            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd->bind_managed_pipeline(geometry_pipeline, frame);
 
             auto handles = GeometryHandles { static_cast<u32>(c_handles[frame]), static_cast<u32>(t_handles[frame]) };
-            cmd.push_constant(geometry_pipeline.layout, sizeof(GeometryHandles), 0, &handles);
+            cmd->push_constant(geometry_pipeline.layout, sizeof(GeometryHandles), 0, &handles);
 
-            cmd.bind_vertex_buffer(cube_vb);
-            cmd.bind_index_buffer(cube_eb);
-            cmd.draw_indexed(cube_indices.size());
-        cmd.end_render_pass();
+            cube_mesh->bind(&encoder);
+            cmd->draw_indexed(cube_mesh->triangle_count());
+
+        cmd->end_render_pass();
 
         // Blur pass
-        cmd.begin_render_pass(
+        cmd->begin_render_pass(
             blur_framebuffers[frame],
             blur_render_pass,
             swap_chain->extent);
 
-        cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-        cmd.bind_managed_pipeline(blur_pipeline, frame);
+        cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+        cmd->bind_managed_pipeline(blur_pipeline, frame);
 
-        cmd.bind_vertex_buffer(quad_vb);
-        cmd.bind_index_buffer(quad_eb);
-        cmd.draw_indexed(quad_indices.size());
-        cmd.end_render_pass();
+        quad_mesh->bind(&encoder);
+        cmd->draw_indexed(quad_mesh->triangle_count());
+
+        cmd->end_render_pass();
 
         // Final pass
-        cmd.begin_render_pass(
+        cmd->begin_render_pass(
             swap_chain->render_target->framebuffers[frame],
             swap_chain->render_target->render_pass,
             swap_chain->extent);
 
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd.bind_managed_pipeline(post_pipeline, frame);
+            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd->bind_managed_pipeline(post_pipeline, frame);
 
             auto post_handle = PostHandles { static_cast<u32>(post_geometry_texture_handles[frame]), static_cast<u32>(post_blur_texture_handles[frame]) };
-            cmd.push_constant(post_pipeline.layout, sizeof(PostHandles), 0, &post_handle);
+            cmd->push_constant(post_pipeline.layout, sizeof(PostHandles), 0, &post_handle);
 
-            cmd.bind_vertex_buffer(quad_vb);
-            cmd.bind_index_buffer(quad_eb);
-            cmd.draw_indexed(quad_indices.size());
-        cmd.end_render_pass();
+            quad_mesh->bind(&encoder);
+            cmd->draw_indexed(quad_mesh->triangle_count());
+
+        cmd->end_render_pass();
 
         /*
-        cmd.begin_render_pass(
+        cmd->begin_render_pass(
             blur_framebuffers[frame],
             render_pass,
             swap_chain->extent);
 
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd.bind_managed_pipeline(blur_pipeline, frame);
-            cmd.bind_vertex_buffer(quad_vb);
-            cmd.bind_index_buffer(quad_eb);
-            cmd.draw_indexed(quad_indices.size());
-        cmd.end_render_pass();
+            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd->bind_managed_pipeline(blur_pipeline, frame);
+            cmd->bind_vertex_buffer(quad_vb);
+            cmd->bind_index_buffer(quad_eb);
+            cmd->draw_indexed(quad_indices.size());
+        cmd->end_render_pass();
 
-        cmd.begin_render_pass(
+        cmd->begin_render_pass(
             swap_chain->render_target->blur_framebuffers[frame],
             swap_chain->render_target->render_pass,
             swap_chain->extent);
 
-            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd.bind_managed_pipeline(geometry_pipeline, frame);
-            cmd.push_constant(geometry_pipeline.layout, sizeof(GeometryHandles), 0, &handles);
-            cmd.bind_vertex_buffer(cube_vb);
-            cmd.bind_index_buffer(cube_eb);
-            cmd.draw_indexed(cube_indices.size());
-        cmd.end_render_pass();
+            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd->bind_managed_pipeline(geometry_pipeline, frame);
+            cmd->push_constant(geometry_pipeline.layout, sizeof(GeometryHandles), 0, &handles);
+            cmd->bind_vertex_buffer(cube_vb);
+            cmd->bind_index_buffer(cube_eb);
+            cmd->draw_indexed(cube_indices.size());
+        cmd->end_render_pass();
         */
 
-        cmd.end_record();
+        cmd->end_record();
         if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
 

@@ -76,7 +76,7 @@ int main() {
             geometry_program.set_uniform("transform", transform.final_matrix());
             geometry_program.set_uniform("cam", camera);
 
-            cube_mesh->bind();
+            cube_mesh->bind(nullptr);
             GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(cube_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
         geometry_fbo.unbind();
 
@@ -88,7 +88,7 @@ int main() {
             blur_program.enable();
             geometry_texture.bind();
 
-            quad_mesh->bind();
+            quad_mesh->bind(nullptr);
             GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(quad_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
         blur_fbo.unbind();
 
@@ -97,7 +97,7 @@ int main() {
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         post_program.enable();
-        quad_mesh->bind();
+        quad_mesh->bind(nullptr);
 
         grayscale_texture.bind_texture_unit(0);
         blur_texture.bind_texture_unit(1);

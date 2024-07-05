@@ -16,7 +16,10 @@ namespace bebone::renderer {
         return indices_count * 3;
     }
 
-    void VulkanTriangleMesh::bind() {
+    void VulkanTriangleMesh::bind(ICommandEncoder* encoder) {
+        auto cmd = static_cast<VulkanCommandEncoder*>(encoder)->get_cmd();
 
+        cmd->bind_vertex_buffer(vertices.value());
+        cmd->bind_index_buffer(indices.value());
     }
 }

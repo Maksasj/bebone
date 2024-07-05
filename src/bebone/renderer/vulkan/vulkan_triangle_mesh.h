@@ -15,6 +15,7 @@ namespace bebone::renderer {
         protected:
             VulkanDevice& device;
 
+            // This should be an IVertexBuffer and IIndexBuffer
             optional<VulkanBufferMemoryTuple> vertices;
             optional<VulkanBufferMemoryTuple> indices;
 
@@ -24,7 +25,7 @@ namespace bebone::renderer {
             u64 triangle_count() const override;
             u64 vertex_count() const override;
 
-            void bind() override;
+            void bind(ICommandEncoder* encoder) override;
     };
 }
 

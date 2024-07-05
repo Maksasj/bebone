@@ -24,7 +24,7 @@ namespace bebone::renderer {
             u64 triangle_count() const override;
             u64 vertex_count() const override;
 
-            void bind() override;
+            void bind(ICommandEncoder* encoder) override;
     };
 }
 
