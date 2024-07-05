@@ -15,6 +15,8 @@
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_const_range.h"
 #include "vulkan_pipeline_manager.h"
+#include "vulkan_render_pass.h"
+#include "vulkan_framebuffer.h"
 
 namespace bebone::gfx {
     // Todo, move this
@@ -350,16 +352,44 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
         const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig config_info
     ) {
-        auto pipeline = std::make_shared<VulkanPipeline>(*this, swap_chain, pipeline_layout, shader_modules, config_info);
+        auto pipeline = std::make_shared<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);
 
         child_objects.push_back(pipeline);
 
         return pipeline;
+    }
+
+    std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(const std::vector<VulkanAttachment>& attachments) {
+        return std::make_shared<VulkanRenderPass>(*this, attachments);
+    }
+
+    std::shared_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
+        const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
+        VkExtent2D extent
+    ) {
+        // Todo safe as child object
+        return std::make_shared<VulkanFramebuffer>(*this, attachments, render_pass, extent);
+    }
+
+    std::vector<std::shared_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
+        const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
+        VkExtent2D extent,
+        const size_t& count
+    ) {
+        auto framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {};
+        framebuffers.reserve(count);
+
+        for(size_t i = 0; i < count; ++i)
+            framebuffers.push_back(create_framebuffer(attachments, render_pass, extent));
+
+        return framebuffers;
     }
 
     std::shared_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& file_path, const ShaderType& type) {
@@ -384,6 +414,19 @@ namespace bebone::gfx {
     ) {
         auto raw = assets::Image<ColorRGBA>::load_from_file(file_path);
         auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, raw);
+
+        child_objects.push_back(texture);
+
+        return texture;
+    }
+
+    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
+        std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+        const size_t& width,
+        const size_t& height,
+        VkFormat image_format
+    ) {
+        auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, width, height, image_format);
 
         child_objects.push_back(texture);
 

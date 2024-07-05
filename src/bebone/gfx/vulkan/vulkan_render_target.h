@@ -17,7 +17,7 @@ namespace bebone::gfx {
         public:
             std::shared_ptr<VulkanRenderPass> render_pass; // Todo, why this is there ?
 
-            std::vector<std::shared_ptr<VulkanFramebuffer>> swap_chain_framebuffers;
+            std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
             std::vector<VulkanDepthImageTuple> depth_images;
             std::vector<VulkanSwapChainImageTuple> swap_chain_images;
 

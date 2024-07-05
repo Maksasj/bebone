@@ -32,7 +32,7 @@ namespace bebone::gfx {
 
     VulkanPipeline::VulkanPipeline(
         VulkanDevice& device,
-        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
         const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig& config_info
@@ -175,7 +175,7 @@ namespace bebone::gfx {
             .pDynamicState = &dynamic_state,
 
             .layout = pipeline_layout->backend,
-            .renderPass = swap_chain->render_target->render_pass->backend,
+            .renderPass = render_pass->backend, // Todo, actually swap chain is not needed there
 
             .subpass = config_info.subpass,
             .basePipelineHandle = config_info.base_pipeline_handle,

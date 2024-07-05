@@ -35,7 +35,7 @@ namespace bebone::gfx {
         return { result };
     }
 
-    VulkanResult VulkanSwapChain::submit_command_buffers(
+    VulkanResult VulkanSwapChain::submit_present_command_buffers(
         std::shared_ptr<VulkanDevice>& device,
         std::shared_ptr<VulkanCommandBuffer>& command_buffer,
         uint32_t *image_index
@@ -64,7 +64,7 @@ namespace bebone::gfx {
         if(vkQueueSubmit(device->graphics_queue, 1, &submit_info, in_flight_fences[current_frame]) != VK_SUCCESS)
             throw std::runtime_error("failed to submit draw command buffer!");
 
-        // Presenting part
+        // Todo, Presenting part
         VkSwapchainKHR swap_chains[] = { backend };
 
         VkPresentInfoKHR present_info = {};

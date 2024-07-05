@@ -53,7 +53,7 @@ int main() {
     auto pipeline_manager = device->create_pipeline_manager();
 
     auto pipeline = pipeline_manager->create_pipeline(
-        device, swap_chain, "vert.glsl", "frag.glsl",
+        device, swap_chain->render_target->render_pass, "vert.glsl", "frag.glsl",
         { VulkanConstRange::common(sizeof(Handles), 0) },
         { { BindlessUniform, 0}, { BindlessUniform, 1 } },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
@@ -105,7 +105,12 @@ int main() {
         auto& cmd = *command_buffers[frame];
 
         cmd.begin_record();
-        cmd.begin_render_pass(swap_chain, frame);
+
+        cmd.begin_render_pass(
+                swap_chain->render_target->framebuffers[frame],
+                swap_chain->render_target->render_pass,
+                swap_chain->extent);
+
         cmd.set_viewport(0, 0, window->get_width(), window->get_height());
         cmd.bind_managed_pipeline(pipeline, frame);
         cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
@@ -115,7 +120,7 @@ int main() {
         cmd.end_render_pass();
         cmd.end_record();
 
-        if(!swap_chain->submit_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
+        if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 

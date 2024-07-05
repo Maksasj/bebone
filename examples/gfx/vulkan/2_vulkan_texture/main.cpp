@@ -45,7 +45,7 @@ int main() {
     auto pipeline_manager = device->create_pipeline_manager();
 
     auto pipeline = pipeline_manager->create_pipeline(
-        device, swap_chain, "vert.glsl", "frag.glsl",
+        device, swap_chain->render_target->render_pass, "vert.glsl", "frag.glsl",
         { }, { {BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
@@ -68,17 +68,22 @@ int main() {
 
         auto& cmd = command_buffers[frame];
 
-        cmd->begin_record()
-            .begin_render_pass(swap_chain, frame)
-            .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_managed_pipeline(pipeline, frame)
-            .bind_vertex_buffer(vb)
-            .bind_index_buffer(eb)
-            .draw_indexed(indices.size())
-            .end_render_pass()
-            .end_record();
+        cmd->begin_record();
 
-        if(!swap_chain->submit_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
+        cmd->begin_render_pass(
+                swap_chain->render_target->framebuffers[frame],
+                swap_chain->render_target->render_pass,
+                swap_chain->extent);
+
+        cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+        cmd->bind_managed_pipeline(pipeline, frame);
+        cmd->bind_vertex_buffer(vb);
+        cmd->bind_index_buffer(eb);
+        cmd->draw_indexed(indices.size());
+        cmd->end_render_pass();
+        cmd->end_record();;
+
+        if(!swap_chain->submit_present_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 

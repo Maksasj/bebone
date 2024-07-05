@@ -23,6 +23,7 @@
 #include "vulkan_texture.h"
 #include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout_binding.h"
+#include "vulkan_attachment.h"
 
 #include "vulkan_buffer_tuples.h"
 #include "vulkan_image_tuples.h"
@@ -38,6 +39,8 @@ namespace bebone::gfx {
     class VulkanConstRange;
     class VulkanPipelineManager;
     class VulkanRenderTarget;
+    class VulkanRenderPass;
+    class VulkanFramebuffer;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -176,10 +179,23 @@ namespace bebone::gfx {
                 const std::vector<VulkanConstRange>& constant_ranges);
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
+                const std::shared_ptr<VulkanRenderPass>& render_pass,
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
+
+            std::shared_ptr<VulkanRenderPass> create_render_pass(const std::vector<VulkanAttachment>& attachments);
+
+            std::shared_ptr<VulkanFramebuffer> create_framebuffer(
+                    const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+                    std::shared_ptr<VulkanRenderPass>& render_pass,
+                    VkExtent2D extent);
+
+            std::vector<std::shared_ptr<VulkanFramebuffer>> create_framebuffers(
+                    const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+                    std::shared_ptr<VulkanRenderPass>& render_pass,
+                    VkExtent2D extent,
+                    const size_t& count);
 
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
 
@@ -190,6 +206,12 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanTexture> create_texture(
                 std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
                 const std::string& file_path);
+
+            std::shared_ptr<VulkanTexture> create_texture(
+                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+                const size_t& width,
+                const size_t& height,
+                VkFormat image_format);
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 

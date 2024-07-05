@@ -12,8 +12,11 @@ namespace bebone::gfx {
         VkFormat image_format,
         VkExtent2D extent
     ) : swap_chain_images(swap_chain_images) {
-        // Create render pass
-        render_pass = std::make_shared<VulkanRenderPass>(device, image_format);
+        // Todo, this should be moved outside
+        render_pass = device.create_render_pass({
+            VulkanAttachment::color({.format = image_format }),
+            VulkanAttachment::depth({.format = device.find_depth_format() }),
+        });
 
         // Create depth resources
         auto depthFormat = device.find_depth_format();
@@ -39,9 +42,9 @@ namespace bebone::gfx {
         // Create frame buffers
         for(size_t i = 0; i < swap_chain_images.size(); ++i) {
             auto attachments = std::vector { swap_chain_images[i].view, depth_images[i].view };
-            auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, render_pass, extent);
+            auto framebuffer = device.create_framebuffer(attachments, render_pass, extent);
 
-            swap_chain_framebuffers.push_back(framebuffer);
+            framebuffers.push_back(framebuffer);
         }
     }
 
@@ -57,7 +60,7 @@ namespace bebone::gfx {
             image->destroy(device);
         }
 
-        for (auto& framebuffer : swap_chain_framebuffers)
+        for (auto& framebuffer : framebuffers)
             framebuffer->destroy(device);
 
         mark_destroyed();

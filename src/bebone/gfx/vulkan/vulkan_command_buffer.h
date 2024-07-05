@@ -31,8 +31,9 @@ namespace bebone::gfx {
             VulkanCommandBuffer& end_record();
 
             VulkanCommandBuffer& begin_render_pass(
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const u32& frame_buffer);
+                const std::shared_ptr<VulkanFramebuffer>& framebuffer,
+                const std::shared_ptr<VulkanRenderPass>& render_pass,
+                const VkExtent2D& extent);
 
             VulkanCommandBuffer& end_render_pass();
 
