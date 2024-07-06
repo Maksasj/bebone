@@ -166,7 +166,7 @@ int main() {
             cmd->bind_managed_pipeline(post_pipeline, frame);
 
             auto post_handle = PostHandles {
-                static_cast<u32>(post_geometry_texture_handles[frame]),
+                static_cast<u32>(post_geometry_grayscale_texture_handles[frame]),
                 static_cast<u32>(post_blur_texture_handles[frame])
             };
 

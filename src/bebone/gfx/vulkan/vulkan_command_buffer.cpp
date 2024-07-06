@@ -55,21 +55,22 @@ namespace bebone::gfx {
         const VkExtent2D& extent
     ) {
         VkRenderPassBeginInfo render_pass_info{};
-
-        // yes so swap chain is not needed there, just a framebuffer and render pass object
-        // Todo update this
         render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         render_pass_info.renderPass = render_pass->backend;
         render_pass_info.framebuffer = framebuffer->backend;
-
         render_pass_info.renderArea.offset = {0, 0};
         render_pass_info.renderArea.extent = extent; // Todo not sure is extent is right, maybe there should be extent of render target
 
-        // Todo
-        auto clear_values = std::array<VkClearValue, 2>{}; // Todo, clear values needs to be moved outside
-        clear_values[0].color = {{ 0.2f, 0.2f, 0.2f, 1.0f }}; // Todo, clear values needs to be moved outside
-        clear_values[1].depthStencil = { 1.0f, 0 }; // Todo, clear values needs to be moved outside
-        // Todo, note you see these indexes, probably they relate to attachments, so clear colors should be moved to attachment
+        // Collect all clear values
+        auto clear_values = std::vector<VkClearValue> {};
+        clear_values.reserve(render_pass->get_attachments().size());
+
+        for(const auto& attachment : render_pass->get_attachments()) {
+            if(attachment.type == Color)
+                clear_values.push_back({ .color = { 0.2f, 0.2f, 0.2f, 1.0f } }); // Todo clear values should be allowed to be changet
+            else if(attachment.type == Depth)
+                clear_values.push_back({ .depthStencil = { 1.0f, 0 }}); // Todo clear values should be allowed to be changet
+        }
 
         render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
         render_pass_info.pClearValues = clear_values.data();

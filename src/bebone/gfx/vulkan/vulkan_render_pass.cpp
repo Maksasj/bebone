@@ -1,7 +1,10 @@
 #include "vulkan_render_pass.h"
 
 namespace bebone::gfx {
-    VulkanRenderPass::VulkanRenderPass(VulkanDevice& device, const std::vector<VulkanAttachment>& attachments) {
+    VulkanRenderPass::VulkanRenderPass(
+        VulkanDevice& device,
+        const std::vector<VulkanAttachment>& attachments
+    ) : attachments(attachments), depth_attachment_index(0), has_depth_attachment_flag(false), color_attachment_count(0) {
         auto descriptions = std::vector<VkAttachmentDescription> {};
         descriptions.reserve(attachments.size());
 
@@ -10,7 +13,6 @@ namespace bebone::gfx {
 
         auto color_attachments_ref = std::vector<VkAttachmentReference> {};
         auto depth_attachment_ref = VkAttachmentReference {}; // Only one depth attachment
-        bool has_depth_attachment = false;
 
         for(size_t i = 0; i < attachments.size(); ++i) {
             const auto& attachment = attachments[i];
@@ -19,13 +21,15 @@ namespace bebone::gfx {
             if(attachment.type == Depth) {
                 depth_attachment_ref.attachment = i;
                 depth_attachment_ref.layout = attachment.layout;
-                has_depth_attachment = true;
-                depth_attachment = attachment;
-            } else if(attachment.type == Color) {
+
+                depth_attachment_index = i;
+                has_depth_attachment_flag = true;
+            } else if(attachment.type == Color)
                 color_attachments_ref.push_back(VkAttachmentReference{ static_cast<uint32_t>(i), attachment.layout });
-                color_attachments.push_back(attachment);
-            }
         }
+
+        // We save color attachment count
+        color_attachment_count = color_attachments_ref.size();
 
         // Main subpass
         auto subpass = VkSubpassDescription {};
@@ -33,7 +37,7 @@ namespace bebone::gfx {
         subpass.colorAttachmentCount = color_attachments_ref.size();
         subpass.pColorAttachments = color_attachments_ref.data();
 
-        if(has_depth_attachment)
+        if(has_depth_attachment_flag)
             subpass.pDepthStencilAttachment = &depth_attachment_ref;
         else
             subpass.pDepthStencilAttachment = nullptr;
@@ -62,12 +66,16 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create render pass!");
     }
 
-    const optional<VulkanAttachment>& VulkanRenderPass::get_depth_attachment() {
-        return depth_attachment;
+    const bool& VulkanRenderPass::has_depth_attachment() const {
+        return has_depth_attachment_flag;
     }
 
-    const vector<VulkanAttachment>& VulkanRenderPass::get_color_attachments() {
-        return color_attachments;
+    const size_t& VulkanRenderPass::get_color_attachments_count() const {
+        return color_attachment_count;
+    }
+
+    const vector<VulkanAttachment>& VulkanRenderPass::get_attachments() const {
+        return attachments;
     }
 
     void VulkanRenderPass::destroy(VulkanDevice& device) {

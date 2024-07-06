@@ -131,9 +131,8 @@ namespace bebone::gfx {
         // Todo fix this cringe,
         auto g = config_info.color_blend_state.ptr_attachments[0];
         config_info.color_blend_state.ptr_attachments.clear();
-        for(const auto& p : render_pass->get_color_attachments()) {
+        for(size_t i = 0; i < render_pass->get_color_attachments_count(); ++i)
             config_info.color_blend_state.ptr_attachments.push_back(g);
-        }
 
         // VulkanPipelineColorBlendStateConfig
         const VkPipelineColorBlendStateCreateInfo color_blend_state = {
