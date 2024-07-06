@@ -76,7 +76,7 @@ using namespace bebone::gfx;
 int main() {
     GLFWContext::init();
     
-    auto window = WindowFactory::create_window("Example", 800, 600, GfxAPI::OpenGL);
+    auto window = WindowFactory::create_window("Example", 800, 600, OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

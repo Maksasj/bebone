@@ -19,17 +19,17 @@ namespace bebone::gfx {
         return false;
     }
 
-    GLShader GLShaderFactory::create_shader(const std::string& path, const ShaderType& shader_type, const GLShaderProperties& properties) {
+    GLShader GLShaderFactory::create_shader(const std::string& path, const ShaderType& type, const GLShaderProperties& properties) {
         const auto source = read_file(path);
 
         if (is_use_legacy_compiler(properties))
-            return GLShader(source, shader_type, properties);
+            return GLShader(source, type, properties);
 
         SpirVShaderCompiler shader_compiler;
 
-        shader_compiler.add_shader_source(ShaderSource(source, shader_type));
-        const auto code = shader_compiler.compile(shader_type);
+        shader_compiler.add_shader_source(ShaderSource(source, type));
+        const auto code = shader_compiler.compile(type);
 
-        return GLShader(code, shader_type, properties);
+        return GLShader(code, type, properties);
     }
 }
