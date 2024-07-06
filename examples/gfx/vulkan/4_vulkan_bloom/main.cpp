@@ -47,9 +47,9 @@ int main() {
     auto geometry_depth_textures = device->create_depth_image_tuples({ 800, 600, 1 }, 3);
 
     auto geometry_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-        device->create_framebuffer({ geometry_textures[0]->view, geometry_grayscale_textures[0]->view, geometry_depth_textures[0].view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[1]->view, geometry_grayscale_textures[1]->view, geometry_depth_textures[1].view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[2]->view, geometry_grayscale_textures[2]->view, geometry_depth_textures[2].view }, geometry_render_pass, {800, 600})
+        device->create_framebuffer({ geometry_textures[0]->view, geometry_grayscale_textures[0]->view, geometry_depth_textures[0]->view }, geometry_render_pass, {800, 600}),
+        device->create_framebuffer({ geometry_textures[1]->view, geometry_grayscale_textures[1]->view, geometry_depth_textures[1]->view }, geometry_render_pass, {800, 600}),
+        device->create_framebuffer({ geometry_textures[2]->view, geometry_grayscale_textures[2]->view, geometry_depth_textures[2]->view }, geometry_render_pass, {800, 600})
     };
 
     auto geometry_pipeline = pipeline_manager->create_pipeline(
@@ -104,7 +104,7 @@ int main() {
 
     auto c_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
     for(auto& ubo : c_ubo)
-        ubo.upload_data(device, &camera, sizeof(Mat4f));
+        ubo->upload_data(device, &camera, sizeof(Mat4f));
     auto c_handles = geometry_pipeline.bind_uniform_buffer(device, c_ubo, 1);
 
     auto t_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
@@ -119,7 +119,7 @@ int main() {
             continue;
 
         auto mat = transform.final_matrix();
-        t_ubo[frame].upload_data(device, &mat, sizeof(Mat4f));
+        t_ubo[frame]->upload_data(device, &mat, sizeof(Mat4f));
 
         auto& cmd = command_buffers[frame];
         VulkanCommandEncoder encoder(cmd);

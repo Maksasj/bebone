@@ -73,12 +73,12 @@ namespace bebone::gfx {
                 const size_t& size,
                 VulkanBufferInfo buffer_info = {});
 
-            VulkanBufferMemoryTuple create_buffer_memory(
+            std::shared_ptr<VulkanBufferMemoryTuple> create_buffer_memory(
                 const size_t& size,
                 VulkanBufferInfo buffer_info = {});
 
             template<typename T>
-            VulkanBufferMemoryTuple create_buffer_memory_from(
+            std::shared_ptr<VulkanBufferMemoryTuple> create_buffer_memory_from(
                 const std::vector<T>& data,
                 VulkanBufferInfo buffer_info = {}
             ) {
@@ -96,7 +96,7 @@ namespace bebone::gfx {
                 const size_t& count,
                 VulkanBufferInfo buffer_info = {});
 
-            std::vector<VulkanBufferMemoryTuple> create_buffer_memorys(
+            std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> create_buffer_memorys(
                 const size_t& size,
                 const size_t& count,
                 VulkanBufferInfo buffer_info = {});
@@ -107,7 +107,7 @@ namespace bebone::gfx {
                 VulkanImageInfo image_info = {});
 
             // Todo
-            VulkanImageMemoryTuple create_image_memory(
+            std::shared_ptr<VulkanImageMemoryTuple> create_image_memory(
                 VkFormat format,
                 VkExtent3D extent,
                 VulkanImageInfo image_info);
@@ -121,8 +121,8 @@ namespace bebone::gfx {
                 const VkFormat& image_format,
                 VulkanImageViewInfo image_view_info = {});
 
-            VulkanDepthImageTuple create_depth_image_tuple(VkExtent3D extent);
-            std::vector<VulkanDepthImageTuple> create_depth_image_tuples(VkExtent3D extent, const size_t& count);
+            std::shared_ptr<VulkanDepthImageTuple> create_depth_image_tuple(VkExtent3D extent);
+            std::vector<std::shared_ptr<VulkanDepthImageTuple>> create_depth_image_tuples(VkExtent3D extent, const size_t& count);
 
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
@@ -154,7 +154,7 @@ namespace bebone::gfx {
                 const size_t& dst_array_element);
 
             void update_descriptor_set(
-                const VulkanBufferMemoryTuple& tuple,
+                const std::shared_ptr<VulkanBufferMemoryTuple>& tuple,
                 std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
                 const size_t& binding,
                 const size_t& dst_array_element);
@@ -166,7 +166,7 @@ namespace bebone::gfx {
                 const std::vector<size_t>& dst_array_elements);
 
             void update_descriptor_sets(
-                const std::vector<VulkanBufferMemoryTuple>& tuples,
+                const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& tuples,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
                 const size_t& binding,
                 const std::vector<size_t>& dst_array_elements);
@@ -225,7 +225,7 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanRenderTarget> create_render_target(
                 std::shared_ptr<VulkanRenderPass>& render_pass,
-                std::vector<VulkanSwapChainImageTuple>& image_views,
+                std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& image_views,
                 VkExtent2D extent);
 
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);

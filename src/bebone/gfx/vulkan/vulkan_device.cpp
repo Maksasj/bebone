@@ -127,13 +127,13 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_set(
-        const VulkanBufferMemoryTuple& tuple,
+        const std::shared_ptr<VulkanBufferMemoryTuple>& tuple,
         std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
         const size_t& binding,
         const size_t& dst_array_element
     ) {
         update_descriptor_set(
-            tuple.buffer,
+            tuple->buffer,
             descriptor_set,
             binding,
             dst_array_element
@@ -159,7 +159,7 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_sets(
-        const std::vector<VulkanBufferMemoryTuple>& tuples,
+        const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& tuples,
         std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& binding,
         const std::vector<size_t>& dst_array_elements
@@ -168,7 +168,7 @@ namespace bebone::gfx {
             throw std::runtime_error("buffer an dst_array_elements count is not matching");
 
         for(size_t i = 0; i < dst_array_elements.size(); ++i) {
-            const auto& buffer = tuples[i].buffer;
+            const auto& buffer = tuples[i]->buffer;
             const auto& dst_array_element = dst_array_elements[i];
             auto& descriptor_set = descriptor_sets[i];
 
@@ -209,7 +209,7 @@ namespace bebone::gfx {
 
     std::shared_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(
         std::shared_ptr<VulkanRenderPass>& render_pass,
-        std::vector<VulkanSwapChainImageTuple>& images,
+        std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images,
         VkExtent2D extent
     ) {
         auto render_target = std::make_shared<VulkanRenderTarget>(*this, render_pass, images, extent);
@@ -265,7 +265,7 @@ namespace bebone::gfx {
         return buffer;
     }
 
-    VulkanBufferMemoryTuple VulkanDevice::create_buffer_memory(
+    std::shared_ptr<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memory(
         const size_t& size,
         VulkanBufferInfo buffer_info
     ) {
@@ -276,7 +276,7 @@ namespace bebone::gfx {
         auto memory = create_device_memory(requirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT); // Todo this should be configurable
         memory->bind_buffer_memory(*this, buffer);
 
-        return { buffer, memory };
+        return std::make_shared<VulkanBufferMemoryTuple>(buffer, memory);
     }
 
     std::vector<std::shared_ptr<VulkanBuffer>> VulkanDevice::create_buffers(
@@ -293,12 +293,12 @@ namespace bebone::gfx {
         return buffers;
     }
 
-    std::vector<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memorys(
+    std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> VulkanDevice::create_buffer_memorys(
         const size_t& size,
         const size_t& count,
         VulkanBufferInfo buffer_info
     ) {
-        auto tuples = std::vector<VulkanBufferMemoryTuple> {};
+        auto tuples = std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> {};
         tuples.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
@@ -315,7 +315,7 @@ namespace bebone::gfx {
         return image;
     }
 
-    VulkanImageMemoryTuple VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
+    std::shared_ptr<VulkanImageMemoryTuple> VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
         auto image = create_image(format, extent, image_info);
 
         auto req = image->get_memory_requirements(*this);
@@ -323,7 +323,7 @@ namespace bebone::gfx {
         auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(*this, image);
 
-        return { image, memory };
+        return std::make_shared<VulkanImageMemoryTuple>(image, memory);
     }
 
     // Todo Why this function is public ?, and probably could be static
@@ -355,7 +355,7 @@ namespace bebone::gfx {
         return view;
     }
 
-    VulkanDepthImageTuple VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
+    std::shared_ptr<VulkanDepthImageTuple> VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
         auto depthFormat = find_depth_format();
 
         auto [image, memory] = create_image_memory(depthFormat, extent, {
@@ -366,11 +366,11 @@ namespace bebone::gfx {
             .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
         });
 
-        return { image, view, memory };
+        return std::make_shared<VulkanDepthImageTuple>(image, view, memory);
     }
 
-    std::vector<VulkanDepthImageTuple> VulkanDevice::create_depth_image_tuples(VkExtent3D extent, const size_t& count) {
-        auto tuples = std::vector<VulkanDepthImageTuple> {};
+    std::vector<std::shared_ptr<VulkanDepthImageTuple>> VulkanDevice::create_depth_image_tuples(VkExtent3D extent, const size_t& count) {
+        auto tuples = std::vector<std::shared_ptr<VulkanDepthImageTuple>> {};
         tuples.reserve(count);
 
         for(size_t i = 0; i < count; ++i)

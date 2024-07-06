@@ -77,7 +77,7 @@ int main() {
     };
 
     for(auto& ubo : c_ubo)
-        ubo.upload_data(device, &c_transform, sizeof(CameraTransform));
+        ubo->upload_data(device, &c_transform, sizeof(CameraTransform));
 
     auto transform = Transform {
         Mat4f::translation(Vec3f::zero),
@@ -95,7 +95,7 @@ int main() {
             continue;
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
-        t_ubo[frame].upload_data(device, &transform, sizeof(Transform));
+        t_ubo[frame]->upload_data(device, &transform, sizeof(Transform));
 
         auto handles = Handles {
             static_cast<u32>(c_handles[frame]),

@@ -53,7 +53,7 @@ namespace bebone::gfx {
 
     std::vector<VulkanBindlessHandle> VulkanManagedPipelineTuple::bind_uniform_buffer(
         std::shared_ptr<VulkanDevice>& device,
-        const std::vector<VulkanBufferMemoryTuple>& tuples,
+        const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& tuples,
         const size_t& binding
     ) {
         auto dst_array_elements = std::vector<size_t> {};

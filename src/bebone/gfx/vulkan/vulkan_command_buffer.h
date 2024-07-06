@@ -52,10 +52,10 @@ namespace bebone::gfx {
             VulkanCommandBuffer& bind_managed_pipeline(const VulkanManagedPipelineTuple& tuple, const size_t& frame);
 
             VulkanCommandBuffer& bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            VulkanCommandBuffer& bind_vertex_buffer(const VulkanBufferMemoryTuple& tuple);
+            VulkanCommandBuffer& bind_vertex_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple);
 
             VulkanCommandBuffer& bind_index_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            VulkanCommandBuffer& bind_index_buffer(const VulkanBufferMemoryTuple& tuple);
+            VulkanCommandBuffer& bind_index_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple);
 
             VulkanCommandBuffer& bind_descriptor_set(
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,

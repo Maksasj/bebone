@@ -68,4 +68,35 @@ namespace bebone::gfx {
     }
 }
 
+// Note, this is a std template specialization and it is case-sensitive, please do not touch
+namespace std {
+    template<>
+    struct tuple_size<std::shared_ptr<bebone::gfx::VulkanBufferMemoryTuple>>
+            : std::integral_constant<std::size_t, 2> { };
+
+    template<>
+    struct tuple_element<0, std::shared_ptr<bebone::gfx::VulkanBufferMemoryTuple>> {
+        using type = std::shared_ptr<bebone::gfx::VulkanBuffer>;
+    };
+
+    template<>
+    struct tuple_element<1, std::shared_ptr<bebone::gfx::VulkanBufferMemoryTuple>> {
+        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
+    };
+}
+
+// Todo, why this needs to be in bebone::gfx namespace ?
+namespace bebone::gfx {
+    template<std::size_t i>
+    auto get(const std::shared_ptr<bebone::gfx::VulkanBufferMemoryTuple>& tuple) {
+        if constexpr (i == 0) {
+            return tuple->buffer;
+        } else if constexpr (i == 1) {
+            return tuple->memory;
+        } else {
+
+        }
+    }
+}
+
 #endif

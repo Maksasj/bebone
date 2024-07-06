@@ -138,8 +138,8 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const VulkanBufferMemoryTuple& tuple) {
-        return bind_vertex_buffer(tuple.buffer);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple) {
+        return bind_vertex_buffer(tuple->buffer);
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {
@@ -149,8 +149,8 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const VulkanBufferMemoryTuple& tuple) {
-        return bind_index_buffer(tuple.buffer);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple) {
+        return bind_index_buffer(tuple->buffer);
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertex_count) {

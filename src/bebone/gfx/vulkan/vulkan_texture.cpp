@@ -23,10 +23,10 @@ namespace bebone::gfx {
 
         auto size = raw->get_width() * raw->get_height() * sizeof(ColorRGBA);
         auto staged = device.create_buffer_memory(size);
-        staged.upload_data(device, raw->data(), size);
+        staged->upload_data(device, raw->data(), size);
 
         // Todo Probably uploading data to gpu need some sort of render graph api
-        command_buffer_pool->copy_buffer_to_image(device, staged.buffer, image);
+        command_buffer_pool->copy_buffer_to_image(device, staged->buffer, image);
 
         device.destroy_all(staged);
         device.collect_garbage();
