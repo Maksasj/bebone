@@ -35,14 +35,15 @@ namespace bebone::gfx {
             VkSurfaceFormatKHR surface_format;
             VkPresentModeKHR present_mode;
 
-            u32 image_count;
+            u32 image_count; // Todo this should be removed
 
             std::vector<VkSemaphore> image_available_semaphores;
             std::vector<VkSemaphore> render_finished_semaphores;
             std::vector<VkFence> in_flight_fences;
             std::vector<VkFence> images_in_flight;
 
-            std::shared_ptr<VulkanSwapChainRenderTarget> render_target;
+            std::shared_ptr<VulkanRenderPass> render_pass;
+            std::shared_ptr<VulkanRenderTarget> render_target;
 
             VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);
 

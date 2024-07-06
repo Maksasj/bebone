@@ -39,7 +39,7 @@ int main() {
     auto vert_shader_module = device->create_shader_module("vert.glsl", ShaderTypes::vertex_shader);
     auto frag_shader_module = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
     auto pipeline_layout = device->create_pipeline_layout({}, {});
-    auto pipeline = device->create_pipeline(swap_chain->render_target->render_pass, pipeline_layout, { vert_shader_module, frag_shader_module }, {
+    auto pipeline = device->create_pipeline(swap_chain->render_pass, pipeline_layout, { vert_shader_module, frag_shader_module }, {
         .vertex_input_state = { .vertex_descriptions = vertex_descriptions }
     });
 
@@ -62,7 +62,7 @@ int main() {
 
         cmd->begin_render_pass(
                 swap_chain->render_target->framebuffers[frame],
-                swap_chain->render_target->render_pass,
+                swap_chain->render_pass,
                 swap_chain->extent);
 
         cmd->set_viewport(0, 0, window->get_width(), window->get_height());

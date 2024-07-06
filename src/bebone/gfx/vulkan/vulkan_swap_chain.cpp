@@ -13,7 +13,15 @@ namespace bebone::gfx {
         create_swap_chain(device);
 
         auto images = create_swap_chain_images(device, surface_format.format);
-        render_target = device.create_render_target(images, surface_format.format, extent);
+
+        // This is default swap chain render pass,
+        // but I am not sure is swap chain should manage it own render pass
+        render_pass = device.create_render_pass({
+            VulkanAttachment::color({.format = surface_format.format }),
+            VulkanAttachment::depth({.format = device.find_depth_format() }),
+        });
+
+        render_target = device.create_render_target(images, render_pass, extent);
 
         create_sync_objects(device);
     }
@@ -157,7 +165,7 @@ namespace bebone::gfx {
         image_available_semaphores.resize(image_count);
         render_finished_semaphores.resize(image_count);
         in_flight_fences.resize(image_count);
-        images_in_flight.resize(render_target->image_views.size(), VK_NULL_HANDLE);
+        images_in_flight.resize(image_count, VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphore_info = {};
         semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;

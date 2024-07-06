@@ -86,7 +86,7 @@ int main() {
 
     // Post pipeline
     auto post_pipeline = pipeline_manager->create_pipeline(
-        device, swap_chain->render_target->render_pass, "post.vert.glsl", "post.frag.glsl",
+        device, swap_chain->render_pass, "post.vert.glsl", "post.frag.glsl",
         { VulkanConstRange::common(sizeof(PostHandles), 0) },
         { { BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
@@ -109,17 +109,16 @@ int main() {
     auto cube_mesh = cube_generator->generate();
     auto quad_mesh = quad_generator->generate();
 
-    auto t_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
-    auto c_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
-
     auto transform = Transform {};
     auto camera = Mat4f::translation(Vec3f(0, 0, 5)) * Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
 
+    auto c_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
     for(auto& ubo : c_ubo)
         ubo.upload_data(device, &camera, sizeof(Mat4f));
-
-    auto t_handles = geometry_pipeline.bind_uniform_buffer(device, t_ubo, 0);
     auto c_handles = geometry_pipeline.bind_uniform_buffer(device, c_ubo, 1);
+
+    auto t_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
+    auto t_handles = geometry_pipeline.bind_uniform_buffer(device, t_ubo, 0);
 
     while (!window->closing()) {
         transform.rotation.x += 0.02f;
@@ -178,7 +177,7 @@ int main() {
         // Final pass
         cmd->begin_render_pass(
             swap_chain->render_target->framebuffers[frame],
-            swap_chain->render_target->render_pass,
+            swap_chain->render_pass,
             { 800, 600 });
 
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());

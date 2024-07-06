@@ -207,12 +207,12 @@ namespace bebone::gfx {
         return { descriptor_set_layout };
     }
 
-    std::shared_ptr<VulkanSwapChainRenderTarget> VulkanDevice::create_render_target(
+    std::shared_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(
         std::vector<VulkanSwapChainImageTuple>& images,
-        VkFormat image_format,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) {
-        return std::make_unique<VulkanSwapChainRenderTarget>(*this, images, image_format, extent);
+        return std::make_unique<VulkanRenderTarget>(*this, images, render_pass, extent);
     }
 
     std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::shared_ptr<Window> &window) {

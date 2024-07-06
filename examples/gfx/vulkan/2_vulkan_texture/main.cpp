@@ -45,7 +45,7 @@ int main() {
     auto pipeline_manager = device->create_pipeline_manager();
 
     auto pipeline = pipeline_manager->create_pipeline(
-        device, swap_chain->render_target->render_pass, "vert.glsl", "frag.glsl",
+        device, swap_chain->render_pass, "vert.glsl", "frag.glsl",
         { }, { {BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
@@ -72,7 +72,7 @@ int main() {
 
         cmd->begin_render_pass(
                 swap_chain->render_target->framebuffers[frame],
-                swap_chain->render_target->render_pass,
+                swap_chain->render_pass,
                 swap_chain->extent);
 
         cmd->set_viewport(0, 0, window->get_width(), window->get_height());
