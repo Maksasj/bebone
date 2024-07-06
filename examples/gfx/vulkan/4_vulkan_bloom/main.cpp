@@ -64,6 +64,7 @@ int main() {
     });
 
     auto blur_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+
     auto blur_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
         device->create_framebuffer({ blur_textures[0]->view }, blur_render_pass, {800, 600}),
         device->create_framebuffer({ blur_textures[1]->view }, blur_render_pass, {800, 600}),
@@ -77,6 +78,12 @@ int main() {
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
+    auto blur_texture_handles = std::vector<VulkanBindlessHandle> {};
+    // Since all handles are the same, and there is only one texture we can do that like that
+    blur_texture_handles.push_back(blur_pipeline.bind_texture(device, geometry_textures[0], 0));
+    blur_texture_handles.push_back(blur_pipeline.bind_texture(device, geometry_textures[1], 0));
+    blur_texture_handles.push_back(blur_pipeline.bind_texture(device, geometry_textures[2], 0));
+
     // Post pipeline
     auto post_pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_target->render_pass, "post.vert.glsl", "post.frag.glsl",
@@ -84,6 +91,17 @@ int main() {
         { { BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
+
+    auto post_geometry_texture_handles = std::vector<VulkanBindlessHandle> {};
+    auto post_blur_texture_handles = std::vector<VulkanBindlessHandle> {};
+    // Since all handles are the same, and there is only one texture we can do that like that
+    post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[0], 0));
+    post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[1], 0));
+    post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[2], 0));
+
+    post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[0], 0));
+    post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[1], 0));
+    post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[2], 0));
 
     auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
     auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
@@ -102,23 +120,6 @@ int main() {
 
     auto t_handles = geometry_pipeline.bind_uniform_buffer(device, t_ubo, 0);
     auto c_handles = geometry_pipeline.bind_uniform_buffer(device, c_ubo, 1);
-
-    auto blur_texture_handles = std::vector<VulkanBindlessHandle> {};
-    // Since all handles are the same, and there is only one texture we can do that like that
-    blur_texture_handles.push_back(blur_pipeline.bind_texture(device, geometry_textures[0], 0)[0]);
-    blur_texture_handles.push_back(blur_pipeline.bind_texture(device, geometry_textures[1], 0)[0]);
-    blur_texture_handles.push_back(blur_pipeline.bind_texture(device, geometry_textures[2], 0)[0]);
-
-    auto post_geometry_texture_handles = std::vector<VulkanBindlessHandle> {};
-    auto post_blur_texture_handles = std::vector<VulkanBindlessHandle> {};
-    // Since all handles are the same, and there is only one texture we can do that like that
-    post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[0], 0)[0]);
-    post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[1], 0)[0]);
-    post_geometry_texture_handles.push_back(post_pipeline.bind_texture(device, geometry_textures[2], 0)[0]);
-
-    post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[0], 0)[0]);
-    post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[1], 0)[0]);
-    post_blur_texture_handles.push_back(post_pipeline.bind_texture(device, blur_textures[2], 0)[0]);
 
     while (!window->closing()) {
         transform.rotation.x += 0.02f;

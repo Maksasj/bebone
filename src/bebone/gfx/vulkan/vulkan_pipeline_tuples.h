@@ -30,12 +30,7 @@ namespace bebone::gfx {
                 const shared_ptr<VulkanPipelineLayout>& layout,
                 const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptors);
 
-            std::vector<VulkanBindlessHandle> bind_texture(
-                std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanTexture>& texture,
-                const size_t& binding);
-
-            VulkanBindlessHandle bind_texture_immutable(
+            VulkanBindlessHandle bind_texture(
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanTexture>& texture,
                 const size_t& binding);
