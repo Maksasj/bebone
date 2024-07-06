@@ -26,6 +26,14 @@ namespace bebone::gfx {
         create_sync_objects(device);
     }
 
+    const size_t& VulkanSwapChain::get_current_frame() const {
+        return current_frame;
+    }
+
+    const VkExtent2D& VulkanSwapChain::get_extent() const {
+        return extent;
+    }
+
     VulkanResult VulkanSwapChain::acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *image_index) {
         vkWaitForFences(device->device, 1, &in_flight_fences[current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 

@@ -37,6 +37,17 @@ namespace bebone::gfx {
         return *this;
     }
 
+    VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(const std::shared_ptr<VulkanSwapChain> swap_chain) {
+        const auto& frame = swap_chain->get_current_frame();
+
+        begin_render_pass(
+            swap_chain->render_target->framebuffers[frame],
+            swap_chain->render_pass,
+            swap_chain->get_extent());
+
+        return *this;
+    }
+
     // This function should have multiple variants, with swap chain or just with custom render target
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
         const std::shared_ptr<VulkanFramebuffer>& framebuffer,
@@ -45,7 +56,7 @@ namespace bebone::gfx {
     ) {
         VkRenderPassBeginInfo render_pass_info{};
 
-        // yes so swapchain is not needed there, just a framebuffer and render pass object
+        // yes so swap chain is not needed there, just a framebuffer and render pass object
         // Todo update this
         render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         render_pass_info.renderPass = render_pass->backend;
@@ -58,6 +69,7 @@ namespace bebone::gfx {
         auto clear_values = std::array<VkClearValue, 2>{}; // Todo, clear values needs to be moved outside
         clear_values[0].color = {{ 0.2f, 0.2f, 0.2f, 1.0f }}; // Todo, clear values needs to be moved outside
         clear_values[1].depthStencil = { 1.0f, 0 }; // Todo, clear values needs to be moved outside
+        // Todo, note you see these indexes, probably they relate to attachments, so clear colors should be moved to attachment
 
         render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
         render_pass_info.pClearValues = clear_values.data();
