@@ -33,6 +33,7 @@ namespace bebone::gfx {
     class VulkanPipeline;
     class VulkanDescriptorPool;
     class VulkanCommandBufferPool;
+    class VulkanCommandBuffer;
     class VulkanShaderModule;
     class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
@@ -52,6 +53,7 @@ namespace bebone::gfx {
 
             // Todo, maybe this can be optimized
             std::vector<shared_ptr<VulkanApi>> child_objects;
+            std::shared_ptr<VulkanCommandBufferPool> command_buffer_pool;
 
         public:
             VkDevice device;
@@ -187,7 +189,7 @@ namespace bebone::gfx {
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
 
-            std::shared_ptr<VulkanRenderPass> create_render_pass(const std::vector<VulkanAttachmentDesc>& attachments);
+            std::shared_ptr<VulkanRenderPass> create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
 
             std::shared_ptr<VulkanFramebuffer> create_framebuffer(
                     const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
@@ -200,23 +202,30 @@ namespace bebone::gfx {
                     VkExtent2D extent,
                     const size_t& count);
 
+            // Create new instance of command buffer pool
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
+
+            // Create command buffer from personal command buffer pool
+            std::shared_ptr<VulkanCommandBuffer> create_command_buffer();
+
+            // Create command buffers from personal command buffer pool
+            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
+
+            std::shared_ptr<VulkanCommandBuffer> begin_single_time_commands();
+            void end_single_time_commands(std::shared_ptr<VulkanCommandBuffer>& command_buffer);
 
             std::shared_ptr<VulkanShaderModule> create_shader_module(
                 const std::string& file_path,
                 const ShaderType& type);
 
             std::shared_ptr<VulkanTexture> create_texture(
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
                 const std::string& file_path);
 
             std::shared_ptr<VulkanTexture> create_texture(
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
                 VkExtent3D extent,
                 VkFormat image_format);
 
             std::vector<std::shared_ptr<VulkanTexture>> create_textures(
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
                 VkExtent3D extent,
                 VkFormat image_format,
                 const size_t& count);
@@ -224,9 +233,12 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
             std::shared_ptr<VulkanRenderTarget> create_render_target(
+                std::shared_ptr<VulkanRenderPass>& render_pass);
+
+            // Special constructor for swap chain
+            std::shared_ptr<VulkanRenderTarget> create_render_target(
                 std::shared_ptr<VulkanRenderPass>& render_pass,
-                std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& image_views,
-                VkExtent2D extent);
+                std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images);
 
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 

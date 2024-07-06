@@ -56,7 +56,7 @@ int main() {
     auto command_buffer_pool = device->create_command_buffer_pool();
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
-    auto texture = device->create_texture(command_buffer_pool, "image.png");
+    auto texture = device->create_texture("image.png");
     std::ignore = pipeline.bind_texture(device, texture, 0);
 
     while (!window->closing()) {

@@ -17,7 +17,7 @@ namespace bebone::gfx {
 
     using namespace bebone::core;
 
-    struct VulkanTexture : public VulkanApi, public IVulkanAttachment, private core::NonCopyable {
+    struct VulkanTexture : public IVulkanAttachment, private core::NonCopyable {
         std::shared_ptr<VulkanImage> image;
         std::shared_ptr<VulkanDeviceMemory> memory;
         std::shared_ptr<VulkanImageView> view;
@@ -26,12 +26,10 @@ namespace bebone::gfx {
         public:
             VulkanTexture( // Constructors that require VulkanDevice& need to protected
                 VulkanDevice& device,
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
                 const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
 
             VulkanTexture(
                 VulkanDevice& device,
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
                 VkExtent3D extent,
                 VkFormat image_format);
 

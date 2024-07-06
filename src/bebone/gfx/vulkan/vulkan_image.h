@@ -51,7 +51,6 @@ namespace bebone::gfx {
                 VulkanImageInfo image_info = {});
 
             void transition_layout(
-                VulkanCommandBufferPool& pool,
                 VulkanDevice& device,
                 VkImageLayout old_layout,
                 VkImageLayout new_layout);

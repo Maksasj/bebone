@@ -19,6 +19,18 @@ namespace bebone::gfx {
             throw std::runtime_error("Failed to allocate command buffers !");
     }
 
+    VulkanCommandBuffer::VulkanCommandBuffer(VulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool) {
+        VkCommandBufferAllocateInfo alloc_info{};
+
+        alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        alloc_info.commandPool = command_buffer_pool.backend;
+        alloc_info.commandBufferCount = static_cast<uint32_t>(1); // Todo
+
+        if(vkAllocateCommandBuffers(device.device, &alloc_info, &backend) != VK_SUCCESS)
+            throw std::runtime_error("Failed to allocate command buffers !");
+    }
+
     VulkanCommandBuffer& VulkanCommandBuffer::begin_record() {
         VkCommandBufferBeginInfo begin_info{};
 

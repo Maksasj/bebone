@@ -10,7 +10,7 @@
 namespace bebone::gfx {
         using namespace bebone::core;
 
-        struct VulkanSwapChainImageTuple : public VulkanApi, public IVulkanAttachment {
+        struct VulkanSwapChainImageTuple : public IVulkanAttachment {
             std::shared_ptr<VulkanImage> image;
             std::shared_ptr<VulkanImageView> view;
 
@@ -28,7 +28,7 @@ namespace bebone::gfx {
             void destroy(VulkanDevice& device) override;
         };
 
-        struct VulkanDepthImageTuple : public VulkanApi, public IVulkanAttachment {
+        struct VulkanDepthImageTuple : public IVulkanAttachment {
             std::shared_ptr<VulkanImage> image;
             std::shared_ptr<VulkanImageView> view;
             std::shared_ptr<VulkanDeviceMemory> memory;

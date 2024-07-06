@@ -16,12 +16,12 @@ namespace bebone::gfx {
 
         // This is default swap chain render pass,
         // but I am not sure is swap chain should manage it own render pass
-        render_pass = device.create_render_pass({
-            VulkanAttachmentDesc::color({.format = surface_format.format }),
-            VulkanAttachmentDesc::depth({.format = device.find_depth_format() }),
+        render_pass = device.create_render_pass(extent, {
+            VulkanAttachmentDesc::color2D(extent, { .format = surface_format.format }),
+            VulkanAttachmentDesc::depth2D(extent, { .format = device.find_depth_format() }),
         });
 
-        render_target = device.create_render_target(render_pass, images, extent);
+        render_target = device.create_render_target(render_pass, images);
 
         create_sync_objects(device);
     }

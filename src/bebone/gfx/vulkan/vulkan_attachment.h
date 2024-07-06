@@ -41,9 +41,13 @@ namespace bebone::gfx {
         VkAttachmentDescription description;
         VulkanAttachmentType type;
         VkImageLayout layout;
+        VkExtent3D extent;
 
-        static VulkanAttachmentDesc depth(VulkanDepthAttachmentDescription description = {});
-        static VulkanAttachmentDesc color(VulkanColorAttachmentDescription description = {});
+        static VulkanAttachmentDesc depth3D(VkExtent3D extent, VulkanDepthAttachmentDescription description = {});
+        static VulkanAttachmentDesc depth2D(VkExtent2D extent, VulkanDepthAttachmentDescription description = {});
+
+        static VulkanAttachmentDesc color3D(VkExtent3D extent, VulkanColorAttachmentDescription description = {});
+        static VulkanAttachmentDesc color2D(VkExtent2D extent, VulkanColorAttachmentDescription description = {});
     };
 
     class VulkanImage;
@@ -51,7 +55,7 @@ namespace bebone::gfx {
     class VulkanDeviceMemory;
     class VulkanSampler;
 
-    class IVulkanAttachment {
+    class IVulkanAttachment : public VulkanApi {
         private:
 
         public:

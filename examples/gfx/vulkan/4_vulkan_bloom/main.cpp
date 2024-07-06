@@ -29,21 +29,19 @@ int main() {
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
     auto swap_chain = device->create_swap_chain(window);
-
-    auto command_buffer_pool = device->create_command_buffer_pool();
-    auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
+    auto command_buffers = device->create_command_buffers(3);
 
     auto pipeline_manager = device->create_pipeline_manager();
 
     // Geometry pass
-    auto geometry_render_pass = device->create_render_pass({
-        VulkanAttachmentDesc::color({ .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
-        VulkanAttachmentDesc::color({ .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
-        VulkanAttachmentDesc::depth({ .format = device->find_depth_format() }),
+    auto geometry_render_pass = device->create_render_pass({800, 600}, {
+        VulkanAttachmentDesc::color2D({ 800,600 }, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
+        VulkanAttachmentDesc::color2D({ 800,600 }, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
+        VulkanAttachmentDesc::depth2D({ 800,600 }, { .format = device->find_depth_format() }),
     });
 
-    auto geometry_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
-    auto geometry_grayscale_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+    auto geometry_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+    auto geometry_grayscale_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
     auto geometry_depth_textures = device->create_depth_image_tuples({ 800, 600, 1 }, 3);
 
     auto geometry_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
@@ -60,11 +58,11 @@ int main() {
     );
 
     // Blur render pass
-    auto blur_render_pass = device->create_render_pass({
-        VulkanAttachmentDesc::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
+    auto blur_render_pass = device->create_render_pass({800, 600}, {
+        VulkanAttachmentDesc::color2D({800, 600}, {.format = VK_FORMAT_R32G32B32A32_SFLOAT })
     });
 
-    auto blur_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+    auto blur_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
 
     auto blur_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
         device->create_framebuffer({ blur_textures[0]->view }, blur_render_pass, {800, 600}),

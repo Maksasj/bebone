@@ -19,12 +19,17 @@ namespace bebone::gfx {
 
             size_t color_attachment_count;
 
-        public:
-            VulkanRenderPass(VulkanDevice& device, const std::vector<VulkanAttachmentDesc>& attachments);
+            // Todo, not sure is this needed there
+            VkExtent2D extent;
 
-            const bool& has_depth_attachment() const;
+        public:
+            VulkanRenderPass(VulkanDevice& device, VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
+
+            optional<VulkanAttachmentDesc> get_depth_attachment() const;
+
             const size_t& get_color_attachments_count() const;
             const vector<VulkanAttachmentDesc>& get_attachments() const;
+            const VkExtent2D& get_extent() const;
 
             void destroy(VulkanDevice& device) override;
     };

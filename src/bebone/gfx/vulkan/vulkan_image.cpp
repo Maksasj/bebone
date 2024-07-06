@@ -40,12 +40,11 @@ namespace bebone::gfx {
 
     // Todo clear out this
     void VulkanImage::transition_layout(
-        VulkanCommandBufferPool& pool,
         VulkanDevice& device,
         VkImageLayout old_layout,
         VkImageLayout new_layout
     ) {
-        VkCommandBuffer command_buffer = pool.begin_single_time_commands(device);
+        auto command_buffer = device.begin_single_time_commands();
 
         VkImageMemoryBarrier barrier{};
 
@@ -79,9 +78,9 @@ namespace bebone::gfx {
         } else
             throw std::runtime_error("unsupported layout transition!");
 
-        vkCmdPipelineBarrier(command_buffer, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+        vkCmdPipelineBarrier(command_buffer->backend, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-        pool.end_single_time_commands(device, command_buffer);
+        device.end_single_time_commands(command_buffer);
     }
 
     VkExtent3D VulkanImage::get_extent() const {

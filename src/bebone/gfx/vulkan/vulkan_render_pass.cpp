@@ -3,8 +3,9 @@
 namespace bebone::gfx {
     VulkanRenderPass::VulkanRenderPass(
         VulkanDevice& device,
+        VkExtent2D extent,
         const std::vector<VulkanAttachmentDesc>& attachments
-    ) : attachments(attachments), depth_attachment_index(0), has_depth_attachment_flag(false), color_attachment_count(0) {
+    ) : attachments(attachments), depth_attachment_index(0), has_depth_attachment_flag(false), color_attachment_count(0), extent(extent) {
         auto descriptions = std::vector<VkAttachmentDescription> {};
         descriptions.reserve(attachments.size());
 
@@ -66,8 +67,11 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create render pass!");
     }
 
-    const bool& VulkanRenderPass::has_depth_attachment() const {
-        return has_depth_attachment_flag;
+    optional<VulkanAttachmentDesc> VulkanRenderPass::get_depth_attachment() const {
+        if(!has_depth_attachment_flag)
+            return std::nullopt;
+
+        return attachments[depth_attachment_index];
     }
 
     const size_t& VulkanRenderPass::get_color_attachments_count() const {
@@ -76,6 +80,10 @@ namespace bebone::gfx {
 
     const vector<VulkanAttachmentDesc>& VulkanRenderPass::get_attachments() const {
         return attachments;
+    }
+
+    const VkExtent2D& VulkanRenderPass::get_extent() const {
+        return extent;
     }
 
     void VulkanRenderPass::destroy(VulkanDevice& device) {

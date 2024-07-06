@@ -14,6 +14,18 @@ namespace bebone::gfx {
         }
     }
 
+    std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer(VulkanDevice& device) {
+        auto command_buffer = std::make_shared<VulkanCommandBuffer>(device, *this);
+
+        // Todo, ?
+
+        return command_buffer;
+    }
+
+    std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer(std::shared_ptr<VulkanDevice>& device) {
+        return create_command_buffer(*device);
+    }
+
     std::vector<std::shared_ptr<VulkanCommandBuffer>> VulkanCommandBufferPool::create_command_buffers(
         std::shared_ptr<VulkanDevice>& device,
         const size_t& count
@@ -22,7 +34,7 @@ namespace bebone::gfx {
         command_buffers.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
-            command_buffers.push_back(std::make_shared<VulkanCommandBuffer>(device, *this));
+            command_buffers.push_back(create_command_buffer(device));
 
         return command_buffers;
     }
@@ -84,25 +96,4 @@ namespace bebone::gfx {
 //
     //     end_single_time_commands(command_buffer);
     // }
-
-    void VulkanCommandBufferPool::copy_buffer_to_image(VulkanDevice& device, std::shared_ptr<VulkanBuffer> buffer, std::shared_ptr<VulkanImage> image) {
-        VkCommandBuffer command_buffer = begin_single_time_commands(device);
-
-        VkBufferImageCopy region{};
-        region.bufferOffset = 0;
-        region.bufferRowLength = 0;
-        region.bufferImageHeight = 0;
-
-        region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        region.imageSubresource.mipLevel = 0;
-        region.imageSubresource.baseArrayLayer = 0;
-        region.imageSubresource.layerCount = 1; // Todo
-
-        region.imageOffset = {0, 0, 0};
-        region.imageExtent = image->get_extent();
-
-        vkCmdCopyBufferToImage(command_buffer, buffer->backend, image->backend, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
-
-        end_single_time_commands(device, command_buffer);
-    }
 }
