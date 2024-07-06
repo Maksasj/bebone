@@ -121,6 +121,9 @@ namespace bebone::gfx {
                 const VkFormat& image_format,
                 VulkanImageViewInfo image_view_info = {});
 
+            VulkanDepthImageTuple create_depth_image_tuple(VkExtent3D extent);
+            std::vector<VulkanDepthImageTuple> create_depth_image_tuples(VkExtent3D extent, const size_t& count);
+
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
             std::shared_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
@@ -221,8 +224,8 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
             std::shared_ptr<VulkanRenderTarget> create_render_target(
-                std::vector<VulkanSwapChainImageTuple>& image_views,
                 std::shared_ptr<VulkanRenderPass>& render_pass,
+                std::vector<VulkanSwapChainImageTuple>& image_views,
                 VkExtent2D extent);
 
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);

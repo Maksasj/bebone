@@ -208,11 +208,15 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(
-        std::vector<VulkanSwapChainImageTuple>& images,
         std::shared_ptr<VulkanRenderPass>& render_pass,
+        std::vector<VulkanSwapChainImageTuple>& images,
         VkExtent2D extent
     ) {
-        return std::make_unique<VulkanRenderTarget>(*this, images, render_pass, extent);
+        auto render_target = std::make_shared<VulkanRenderTarget>(*this, render_pass, images, extent);
+
+        child_objects.push_back(render_target);
+
+        return render_target;
     }
 
     std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::shared_ptr<Window> &window) {
@@ -349,6 +353,30 @@ namespace bebone::gfx {
         child_objects.push_back(view);
 
         return view;
+    }
+
+    VulkanDepthImageTuple VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
+        auto depthFormat = find_depth_format();
+
+        auto [image, memory] = create_image_memory(depthFormat, extent, {
+            .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+        });
+
+        auto view = create_image_view(*image, depthFormat, {
+            .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
+        });
+
+        return { image, view, memory };
+    }
+
+    std::vector<VulkanDepthImageTuple> VulkanDevice::create_depth_image_tuples(VkExtent3D extent, const size_t& count) {
+        auto tuples = std::vector<VulkanDepthImageTuple> {};
+        tuples.reserve(count);
+
+        for(size_t i = 0; i < count; ++i)
+            tuples.push_back(create_depth_image_tuple(extent));
+
+        return tuples;
     }
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(

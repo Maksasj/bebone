@@ -21,7 +21,7 @@ namespace bebone::gfx {
             VulkanAttachmentDesc::depth({.format = device.find_depth_format() }),
         });
 
-        render_target = device.create_render_target(images, render_pass, extent);
+        render_target = device.create_render_target(render_pass, images, extent);
 
         create_sync_objects(device);
     }

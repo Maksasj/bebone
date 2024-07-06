@@ -42,8 +42,7 @@ namespace bebone::gfx {
         VkExtent3D extent,
         VkFormat image_format
     ) {
-        auto [im, mem] = device.create_image_memory(image_format, // Todo this should be configurable
-            extent,
+        auto [im, mem] = device.create_image_memory(image_format, extent, // Todo, image_format should be configurable
             { .usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
         );  // Todo, usage should be configurable
 

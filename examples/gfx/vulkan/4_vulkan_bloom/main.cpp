@@ -44,24 +44,7 @@ int main() {
 
     auto geometry_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
     auto geometry_grayscale_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
-
-    // Create depth images
-    auto depthFormat = device->find_depth_format();
-
-    auto geometry_depth_textures = std::vector<VulkanDepthImageTuple> {};
-    geometry_depth_textures.reserve(3);
-
-    for(size_t i = 0; i < 3; ++i) {
-        auto [image, memory] = device->create_image_memory(depthFormat, { 800, 600, 1}, {
-            .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-        });
-
-        auto view = device->create_image_view(*image, depthFormat, {
-            .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
-        });
-
-        geometry_depth_textures.emplace_back(image, view, memory);
-    }
+    auto geometry_depth_textures = device->create_depth_image_tuples({ 800, 600, 1 }, 3);
 
     auto geometry_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
         device->create_framebuffer({ geometry_textures[0]->view, geometry_grayscale_textures[0]->view, geometry_depth_textures[0].view }, geometry_render_pass, {800, 600}),
