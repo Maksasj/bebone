@@ -15,6 +15,7 @@ namespace bebone::gfx {
 
     class VulkanRenderTarget : public VulkanApi {
         public:
+            // Todo, generalize vulkan render target, get rid of VulkanSwapChainImageTuple
             std::vector<VulkanSwapChainImageTuple> color_attachments; // Todo, framebuffer can have multiple color_attachments
             std::vector<VulkanDepthImageTuple> depth_attachments;
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;

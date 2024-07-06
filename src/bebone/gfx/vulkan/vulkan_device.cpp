@@ -365,7 +365,11 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(const std::vector<VulkanAttachment>& attachments) {
-        return std::make_shared<VulkanRenderPass>(*this, attachments);
+        auto render_pass = std::make_shared<VulkanRenderPass>(*this, attachments);
+
+        child_objects.push_back(render_pass);
+
+        return render_pass;
     }
 
     std::shared_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
