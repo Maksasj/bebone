@@ -128,6 +128,13 @@ namespace bebone::gfx {
             .maxDepthBounds = config_info.depth_stencil_state.max_depth_bounds
         };
 
+        // Todo fix this cringe,
+        auto g = config_info.color_blend_state.ptr_attachments[0];
+        config_info.color_blend_state.ptr_attachments.clear();
+        for(const auto& p : render_pass->get_color_attachments()) {
+            config_info.color_blend_state.ptr_attachments.push_back(g);
+        }
+
         // VulkanPipelineColorBlendStateConfig
         const VkPipelineColorBlendStateCreateInfo color_blend_state = {
             .sType = config_info.color_blend_state.type,
@@ -135,8 +142,11 @@ namespace bebone::gfx {
             .flags = config_info.color_blend_state.flags,
             .logicOpEnable = config_info.color_blend_state.logic_op_enable,
             .logicOp = config_info.color_blend_state.logic_op,
+
+            // Todo, since we have may have multiple color attachments, that means that this also should be computed
             .attachmentCount = static_cast<uint32_t>(config_info.color_blend_state.ptr_attachments.size()),
             .pAttachments = config_info.color_blend_state.ptr_attachments.data(),
+
             .blendConstants = {
                 config_info.color_blend_state.blend_constants[0],
                 config_info.color_blend_state.blend_constants[1],

@@ -9,22 +9,17 @@ namespace bebone::gfx {
     VulkanRenderTarget::VulkanRenderTarget(
         VulkanDevice& device,
         std::vector<VulkanSwapChainImageTuple>& image_views,
-        std::shared_ptr<VulkanRenderPass> render_pass,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent // Todo, extent should be handled in another place
     ) : color_attachments(image_views) {
-        // Create depth resources
+        // Create depth images
         auto depthFormat = device.find_depth_format();
         depth_attachments.reserve(image_views.size());
 
         for(size_t i = 0; i < image_views.size(); ++i) {
-            auto image = device.create_image(depthFormat, { extent.width, extent.height, 1}, {
+            auto [image, memory] = device.create_image_memory(depthFormat, { extent.width, extent.height, 1}, {
                 .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
             });
-
-            auto requirements = image->get_memory_requirements(device);
-
-            auto memory = device.create_device_memory(requirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-            memory->bind_image_memory(device, *image);
 
             auto view = device.create_image_view(*image, depthFormat, {
                 .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },

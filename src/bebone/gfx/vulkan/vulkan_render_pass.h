@@ -11,8 +11,15 @@
 
 namespace bebone::gfx {
     class VulkanRenderPass : public VulkanWrapper<VkRenderPass> {
+        private:
+            optional<VulkanAttachment> depth_attachment;
+            vector<VulkanAttachment> color_attachments;
+
         public:
             VulkanRenderPass(VulkanDevice& device, const std::vector<VulkanAttachment>& attachments);
+
+            const optional<VulkanAttachment>& get_depth_attachment();
+            const vector<VulkanAttachment>& get_color_attachments();
 
             void destroy(VulkanDevice& device) override;
     };

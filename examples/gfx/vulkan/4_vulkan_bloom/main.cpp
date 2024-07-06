@@ -37,14 +37,17 @@ int main() {
 
     // Geometry pass
     auto geometry_render_pass = device->create_render_pass({
+        VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT }),
         VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
     });
 
     auto geometry_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+    auto geometry_grayscale_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+
     auto geometry_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-        device->create_framebuffer({ geometry_textures[0]->view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[1]->view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[2]->view }, geometry_render_pass, {800, 600})
+        device->create_framebuffer({ geometry_textures[0]->view, geometry_grayscale_textures[0]->view }, geometry_render_pass, {800, 600}),
+        device->create_framebuffer({ geometry_textures[1]->view, geometry_grayscale_textures[1]->view }, geometry_render_pass, {800, 600}),
+        device->create_framebuffer({ geometry_textures[2]->view, geometry_grayscale_textures[2]->view }, geometry_render_pass, {800, 600})
     };
 
     auto geometry_pipeline = pipeline_manager->create_pipeline(
@@ -85,6 +88,7 @@ int main() {
     );
 
     auto post_geometry_texture_handles = post_pipeline.bind_textures(device, geometry_textures, 0);
+    auto post_geometry_grayscale_texture_handles = post_pipeline.bind_textures(device, geometry_grayscale_textures, 0);
     auto post_blur_texture_handles = post_pipeline.bind_textures(device, blur_textures, 0);
 
     auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
@@ -138,7 +142,6 @@ int main() {
 
             cube_mesh->bind(&encoder);
             cmd->draw_indexed(cube_mesh->triangle_count());
-
         cmd->end_render_pass();
 
         // Blur pass
@@ -155,15 +158,10 @@ int main() {
 
             quad_mesh->bind(&encoder);
             cmd->draw_indexed(quad_mesh->triangle_count());
-
         cmd->end_render_pass();
 
         // Final pass
-        cmd->begin_render_pass(
-            swap_chain->render_target->framebuffers[frame],
-            swap_chain->render_pass,
-            { 800, 600 });
-
+        cmd->begin_render_pass(swap_chain);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(post_pipeline, frame);
 
@@ -176,7 +174,6 @@ int main() {
 
             quad_mesh->bind(&encoder);
             cmd->draw_indexed(quad_mesh->triangle_count());
-
         cmd->end_render_pass();
 
         cmd->end_record();

@@ -20,8 +20,11 @@ namespace bebone::gfx {
                 depth_attachment_ref.attachment = i;
                 depth_attachment_ref.layout = attachment.layout;
                 has_depth_attachment = true;
-            } else if(attachment.type == Color)
+                depth_attachment = attachment;
+            } else if(attachment.type == Color) {
                 color_attachments_ref.push_back(VkAttachmentReference{ static_cast<uint32_t>(i), attachment.layout });
+                color_attachments.push_back(attachment);
+            }
         }
 
         // Main subpass
@@ -57,6 +60,14 @@ namespace bebone::gfx {
 
         if(vkCreateRenderPass(device.device, &render_pass_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create render pass!");
+    }
+
+    const optional<VulkanAttachment>& VulkanRenderPass::get_depth_attachment() {
+        return depth_attachment;
+    }
+
+    const vector<VulkanAttachment>& VulkanRenderPass::get_color_attachments() {
+        return color_attachments;
     }
 
     void VulkanRenderPass::destroy(VulkanDevice& device) {
