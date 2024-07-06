@@ -21,6 +21,15 @@ namespace bebone::sound_system {
         void stop();
         void rewind();
 
+        void set_volume(const float& volume);
+        void set_pan(const float& pan);
+        void set_pitch(const float& pitch);
+        void set_looping(const bool& loop);
+
+        bool is_playing();
+        bool at_end();
+        bool is_looping();
+
         friend class SoundEngine;
     };
 }
