@@ -45,6 +45,23 @@ namespace bebone::gfx {
         static VulkanAttachmentDesc depth(VulkanDepthAttachmentDescription description = {});
         static VulkanAttachmentDesc color(VulkanColorAttachmentDescription description = {});
     };
+
+    class VulkanImage;
+    class VulkanImageView;
+    class VulkanDeviceMemory;
+    class VulkanSampler;
+
+    class IVulkanAttachment {
+        private:
+
+        public:
+            virtual optional<std::shared_ptr<VulkanImage>> get_image() = 0;
+            virtual optional<std::shared_ptr<VulkanImageView>> get_view() = 0;
+            virtual optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() = 0;
+            virtual optional<std::shared_ptr<VulkanSampler>> get_sampler() = 0;
+
+            virtual VulkanAttachmentType get_type() const = 0;
+    };
 }
 
 #endif

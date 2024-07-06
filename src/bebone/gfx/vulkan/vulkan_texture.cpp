@@ -52,6 +52,27 @@ namespace bebone::gfx {
         view = device.create_image_view(*image, image_format);
     }
 
+    optional<std::shared_ptr<VulkanImage>> VulkanTexture::get_image() {
+        return image;
+    }
+
+    optional<std::shared_ptr<VulkanImageView>> VulkanTexture::get_view() {
+        return view;
+    }
+
+    optional<std::shared_ptr<VulkanDeviceMemory>> VulkanTexture::get_memory() {
+        return memory;
+    }
+
+    optional<std::shared_ptr<VulkanSampler>> VulkanTexture::get_sampler() {
+        return sampler;
+    }
+
+
+    VulkanAttachmentType VulkanTexture::get_type() const {
+        return Color; // Todo, this may not be always true
+    }
+
     void VulkanTexture::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
