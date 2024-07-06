@@ -42,8 +42,8 @@ int main() {
         VulkanAttachmentDesc::depth({ .format = device->find_depth_format() }),
     });
 
-    auto geometry_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
-    auto geometry_grayscale_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+    auto geometry_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+    auto geometry_grayscale_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
 
     // Create depth images
     auto depthFormat = device->find_depth_format();
@@ -81,7 +81,7 @@ int main() {
         VulkanAttachmentDesc::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
     });
 
-    auto blur_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+    auto blur_textures = device->create_textures(command_buffer_pool, {800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
 
     auto blur_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
         device->create_framebuffer({ blur_textures[0]->view }, blur_render_pass, {800, 600}),

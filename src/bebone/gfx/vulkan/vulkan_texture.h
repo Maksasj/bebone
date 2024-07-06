@@ -31,8 +31,7 @@ namespace bebone::gfx {
             VulkanTexture(
                 VulkanDevice& device,
                 std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
-                const size_t& width,
-                const size_t& height,
+                VkExtent3D extent,
                 VkFormat image_format);
 
             void destroy(VulkanDevice& device) override;

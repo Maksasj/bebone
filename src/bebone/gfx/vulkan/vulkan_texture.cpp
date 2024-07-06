@@ -39,12 +39,11 @@ namespace bebone::gfx {
 
     VulkanTexture::VulkanTexture(VulkanDevice& device,
         std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
-        const size_t& width,
-        const size_t& height,
+        VkExtent3D extent,
         VkFormat image_format
     ) {
         auto [im, mem] = device.create_image_memory(image_format, // Todo this should be configurable
-            { static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1},
+            extent,
             { .usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
         );  // Todo, usage should be configurable
 

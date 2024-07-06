@@ -209,14 +209,12 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanTexture> create_texture(
                 std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
-                const size_t& width,
-                const size_t& height,
+                VkExtent3D extent,
                 VkFormat image_format);
 
             std::vector<std::shared_ptr<VulkanTexture>> create_textures(
                 std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool, // Todo, Do not really like that command_buffer_pool is there
-                const size_t& width,
-                const size_t& height,
+                VkExtent3D extent,
                 VkFormat image_format,
                 const size_t& count);
 

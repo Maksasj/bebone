@@ -429,11 +429,10 @@ namespace bebone::gfx {
 
     std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
         std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
-        const size_t& width,
-        const size_t& height,
+        VkExtent3D extent,
         VkFormat image_format
     ) {
-        auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, width, height, image_format);
+        auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, extent, image_format);
 
         child_objects.push_back(texture);
 
@@ -441,17 +440,16 @@ namespace bebone::gfx {
     }
 
     std::vector<std::shared_ptr<VulkanTexture>> VulkanDevice::create_textures(
-            std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
-            const size_t& width,
-            const size_t& height,
-            VkFormat image_format,
-            const size_t& count
+        std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
+        VkExtent3D extent,
+        VkFormat image_format,
+        const size_t& count
     ) {
         auto textures = std::vector<std::shared_ptr<VulkanTexture>> {};
         textures.reserve(3);
 
         for(size_t i = 0; i < count; ++i)
-            textures.push_back(create_texture(command_buffer_pool, width, height, image_format));
+            textures.push_back(create_texture(command_buffer_pool, extent, image_format));
 
         return textures;
     }
