@@ -184,7 +184,7 @@ namespace bebone::gfx {
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
 
-            std::shared_ptr<VulkanRenderPass> create_render_pass(const std::vector<VulkanAttachment>& attachments);
+            std::shared_ptr<VulkanRenderPass> create_render_pass(const std::vector<VulkanAttachmentDesc>& attachments);
 
             std::shared_ptr<VulkanFramebuffer> create_framebuffer(
                     const std::vector<std::shared_ptr<VulkanImageView>>& attachments,

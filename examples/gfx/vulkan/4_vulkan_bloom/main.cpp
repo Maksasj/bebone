@@ -37,29 +37,48 @@ int main() {
 
     // Geometry pass
     auto geometry_render_pass = device->create_render_pass({
-        VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT }),
-        VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
+        VulkanAttachmentDesc::color({ .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
+        VulkanAttachmentDesc::color({ .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
+        VulkanAttachmentDesc::depth({ .format = device->find_depth_format() }),
     });
 
     auto geometry_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
     auto geometry_grayscale_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
 
+    // Create depth images
+    auto depthFormat = device->find_depth_format();
+
+    auto geometry_depth_textures = std::vector<VulkanDepthImageTuple> {};
+    geometry_depth_textures.reserve(3);
+
+    for(size_t i = 0; i < 3; ++i) {
+        auto [image, memory] = device->create_image_memory(depthFormat, { 800, 600, 1}, {
+            .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+        });
+
+        auto view = device->create_image_view(*image, depthFormat, {
+            .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
+        });
+
+        geometry_depth_textures.emplace_back(image, view, memory);
+    }
+
     auto geometry_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-        device->create_framebuffer({ geometry_textures[0]->view, geometry_grayscale_textures[0]->view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[1]->view, geometry_grayscale_textures[1]->view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[2]->view, geometry_grayscale_textures[2]->view }, geometry_render_pass, {800, 600})
+        device->create_framebuffer({ geometry_textures[0]->view, geometry_grayscale_textures[0]->view, geometry_depth_textures[0].view }, geometry_render_pass, {800, 600}),
+        device->create_framebuffer({ geometry_textures[1]->view, geometry_grayscale_textures[1]->view, geometry_depth_textures[1].view }, geometry_render_pass, {800, 600}),
+        device->create_framebuffer({ geometry_textures[2]->view, geometry_grayscale_textures[2]->view, geometry_depth_textures[2].view }, geometry_render_pass, {800, 600})
     };
 
     auto geometry_pipeline = pipeline_manager->create_pipeline(
         device, geometry_render_pass, "geometry.vert.glsl", "geometry.frag.glsl",
         { VulkanConstRange::common(sizeof(GeometryHandles), 0) },
         { { BindlessUniform, 0}, { BindlessUniform, 1 } },
-        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } }
     );
 
     // Blur render pass
     auto blur_render_pass = device->create_render_pass({
-        VulkanAttachment::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
+        VulkanAttachmentDesc::color({.format = VK_FORMAT_R32G32B32A32_SFLOAT })
     });
 
     auto blur_textures = device->create_textures(command_buffer_pool, 800, 600, VK_FORMAT_R32G32B32A32_SFLOAT, 3);

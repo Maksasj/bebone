@@ -15,6 +15,7 @@ int main() {
     auto window = WindowFactory::create_window("7. OpenGL bloom example", 800, 600, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
+    glfwSwapInterval(0); // Todo
     GLContext::set_viewport(0, 0, 800, 600);
     GLContext::enable(GL_DEPTH_TEST);
 

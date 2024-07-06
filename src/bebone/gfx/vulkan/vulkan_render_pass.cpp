@@ -3,7 +3,7 @@
 namespace bebone::gfx {
     VulkanRenderPass::VulkanRenderPass(
         VulkanDevice& device,
-        const std::vector<VulkanAttachment>& attachments
+        const std::vector<VulkanAttachmentDesc>& attachments
     ) : attachments(attachments), depth_attachment_index(0), has_depth_attachment_flag(false), color_attachment_count(0) {
         auto descriptions = std::vector<VkAttachmentDescription> {};
         descriptions.reserve(attachments.size());
@@ -74,7 +74,7 @@ namespace bebone::gfx {
         return color_attachment_count;
     }
 
-    const vector<VulkanAttachment>& VulkanRenderPass::get_attachments() const {
+    const vector<VulkanAttachmentDesc>& VulkanRenderPass::get_attachments() const {
         return attachments;
     }
 

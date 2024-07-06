@@ -1,8 +1,8 @@
 #include "vulkan_attachment.h"
 
 namespace bebone::gfx {
-    VulkanAttachment VulkanAttachment::depth(VulkanDepthAttachmentDescription description) {
-        return VulkanAttachment {
+    VulkanAttachmentDesc VulkanAttachmentDesc::depth(VulkanDepthAttachmentDescription description) {
+        return VulkanAttachmentDesc {
             .description {
                 .flags = description.flags,
                 .format = description.format,
@@ -19,8 +19,8 @@ namespace bebone::gfx {
         };
     }
 
-    VulkanAttachment VulkanAttachment::color(VulkanColorAttachmentDescription description) {
-        return VulkanAttachment {
+    VulkanAttachmentDesc VulkanAttachmentDesc::color(VulkanColorAttachmentDescription description) {
+        return VulkanAttachmentDesc {
             .description {
                 .flags = description.flags,
                 .format = description.format,

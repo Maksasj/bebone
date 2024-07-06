@@ -312,7 +312,7 @@ namespace bebone::gfx {
     }
 
     VulkanImageMemoryTuple VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
-        auto image = std::make_shared<VulkanImage>(*this, format, extent, image_info);
+        auto image = create_image(format, extent, image_info);
 
         auto req = image->get_memory_requirements(*this);
 
@@ -364,7 +364,7 @@ namespace bebone::gfx {
         return pipeline;
     }
 
-    std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(const std::vector<VulkanAttachment>& attachments) {
+    std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(const std::vector<VulkanAttachmentDesc>& attachments) {
         auto render_pass = std::make_shared<VulkanRenderPass>(*this, attachments);
 
         child_objects.push_back(render_pass);

@@ -37,13 +37,13 @@ namespace bebone::gfx {
         Color
     };
 
-    struct VulkanAttachment {
+    struct VulkanAttachmentDesc {
         VkAttachmentDescription description;
         VulkanAttachmentType type;
         VkImageLayout layout;
 
-        static VulkanAttachment depth(VulkanDepthAttachmentDescription description = {});
-        static VulkanAttachment color(VulkanColorAttachmentDescription description = {});
+        static VulkanAttachmentDesc depth(VulkanDepthAttachmentDescription description = {});
+        static VulkanAttachmentDesc color(VulkanColorAttachmentDescription description = {});
     };
 }
 
