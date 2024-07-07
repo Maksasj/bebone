@@ -1,12 +1,18 @@
 #include "vulkan_renderer.h"
 
 namespace bebone::renderer {
-    VulkanRenderer::VulkanRenderer(std::shared_ptr<gfx::Window>& window) : IRenderer(Vulkan) {
+    VulkanRenderer::VulkanRenderer(std::shared_ptr<gfx::Window>& window) 
+        : IRenderer(Vulkan), window(window) 
+    {
+        instance = VulkanInstance::create_instance();
+        device = instance->create_device(window);
+        swap_chain = device->create_swap_chain(window);
 
+        pipeline_manager = device->create_pipeline_manager();
     }
 
     VulkanRenderer::~VulkanRenderer() {
-
+        instance->destroy();
     }
 
     SpriteHandle VulkanRenderer::load_sprite(const std::string& file_path) {

@@ -4,8 +4,17 @@
 #include "../irenderer.h"
 
 namespace bebone::renderer {
+    using namespace bebone::gfx;
+
     class VulkanRenderer : public IRenderer {
         private:
+            std::shared_ptr<Window> window;
+
+            std::shared_ptr<VulkanInstance> instance;
+            std::shared_ptr<VulkanDevice> device;
+            std::shared_ptr<VulkanSwapChain> swap_chain;
+
+            std::shared_ptr<VulkanPipelineManager> pipeline_manager;
 
         public:
             VulkanRenderer(std::shared_ptr<gfx::Window>& window);
