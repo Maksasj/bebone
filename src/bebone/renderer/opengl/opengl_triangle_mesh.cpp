@@ -1,7 +1,11 @@
 #include "opengl_triangle_mesh.h"
 
 namespace bebone::renderer {
-    OpenGLTriangleMesh::OpenGLTriangleMesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) : indices_count(indices.size()) {
+    OpenGLTriangleMesh::OpenGLTriangleMesh(
+        const std::vector<Vertex>& vertices,
+        const std::vector<u32>& indices
+    ) : indices_count(indices.size()) {
+
         vao = make_unique<GLVertexArrayObject>();
         vao->bind();
 
@@ -31,7 +35,7 @@ namespace bebone::renderer {
         return indices_count * 3;
     }
 
-    void OpenGLTriangleMesh::bind() {
+    void OpenGLTriangleMesh::bind(ICommandEncoder* encoder) {
         vao->bind();
     }
 }

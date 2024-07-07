@@ -23,6 +23,7 @@
 #include "vulkan_texture.h"
 #include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout_binding.h"
+#include "vulkan_attachment.h"
 
 #include "vulkan_buffer_tuples.h"
 #include "vulkan_image_tuples.h"
@@ -32,12 +33,15 @@ namespace bebone::gfx {
     class VulkanPipeline;
     class VulkanDescriptorPool;
     class VulkanCommandBufferPool;
+    class VulkanCommandBuffer;
     class VulkanShaderModule;
     class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
     class VulkanConstRange;
     class VulkanPipelineManager;
     class VulkanRenderTarget;
+    class VulkanRenderPass;
+    class VulkanFramebuffer;
 
     class VulkanDevice : private core::NonCopyable {
         private:
@@ -49,6 +53,7 @@ namespace bebone::gfx {
 
             // Todo, maybe this can be optimized
             std::vector<shared_ptr<VulkanApi>> child_objects;
+            std::shared_ptr<VulkanCommandBufferPool> command_buffer_pool;
 
         public:
             VkDevice device;
@@ -70,12 +75,12 @@ namespace bebone::gfx {
                 const size_t& size,
                 VulkanBufferInfo buffer_info = {});
 
-            VulkanBufferMemoryTuple create_buffer_memory(
+            std::shared_ptr<VulkanBufferMemoryTuple> create_buffer_memory(
                 const size_t& size,
                 VulkanBufferInfo buffer_info = {});
 
             template<typename T>
-            VulkanBufferMemoryTuple create_buffer_memory_from(
+            std::shared_ptr<VulkanBufferMemoryTuple> create_buffer_memory_from(
                 const std::vector<T>& data,
                 VulkanBufferInfo buffer_info = {}
             ) {
@@ -93,7 +98,7 @@ namespace bebone::gfx {
                 const size_t& count,
                 VulkanBufferInfo buffer_info = {});
 
-            std::vector<VulkanBufferMemoryTuple> create_buffer_memorys(
+            std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> create_buffer_memorys(
                 const size_t& size,
                 const size_t& count,
                 VulkanBufferInfo buffer_info = {});
@@ -104,7 +109,7 @@ namespace bebone::gfx {
                 VulkanImageInfo image_info = {});
 
             // Todo
-            VulkanImageMemoryTuple create_image_memory(
+            std::shared_ptr<VulkanImageMemoryTuple> create_image_memory(
                 VkFormat format,
                 VkExtent3D extent,
                 VulkanImageInfo image_info);
@@ -118,6 +123,9 @@ namespace bebone::gfx {
                 const VkFormat& image_format,
                 VulkanImageViewInfo image_view_info = {});
 
+            std::shared_ptr<VulkanDepthImageTuple> create_depth_image_tuple(VkExtent3D extent);
+            std::vector<std::shared_ptr<VulkanDepthImageTuple>> create_depth_image_tuples(VkExtent3D extent, const size_t& count);
+
             std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
             std::shared_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
@@ -126,19 +134,12 @@ namespace bebone::gfx {
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
+            // Update descriptor set for single
             void update_descriptor_set(
                 const std::shared_ptr<VulkanBuffer>& buffer,
                 std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
                 const size_t& binding,
-                const size_t& dst_array_element
-            );
-
-            void update_descriptor_set(
-                const std::shared_ptr<VulkanTexture>& texture,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element
-            );
+                const size_t& dst_array_element);
 
             void update_descriptor_set(
                 const std::shared_ptr<VulkanSampler>& sampler,
@@ -147,12 +148,7 @@ namespace bebone::gfx {
                 const size_t& binding,
                 const size_t& dst_array_element);
 
-            void update_descriptor_set(
-                const VulkanBufferMemoryTuple& tuple,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element);
-
+            // Update descriptor sets for multiple descriptors
             void update_descriptor_sets(
                 const std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
@@ -160,43 +156,79 @@ namespace bebone::gfx {
                 const std::vector<size_t>& dst_array_elements);
 
             void update_descriptor_sets(
-                const std::vector<VulkanBufferMemoryTuple>& tuples,
+                const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& tuples,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
                 const size_t& binding,
                 const std::vector<size_t>& dst_array_elements);
 
             void update_descriptor_sets(
-                const std::shared_ptr<VulkanTexture>& texture,
+                const std::shared_ptr<VulkanSampler>& sampler,
+                const std::shared_ptr<VulkanImageView>& view,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
                 const size_t& binding,
                 const std::vector<size_t>& dst_array_elements);
 
+            // Other
             std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
                 const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
                 const std::vector<VulkanConstRange>& constant_ranges);
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
+                const std::shared_ptr<VulkanRenderPass>& render_pass,
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
 
+            std::shared_ptr<VulkanRenderPass> create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
+
+            std::shared_ptr<VulkanFramebuffer> create_framebuffer(
+                    const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+                    std::shared_ptr<VulkanRenderPass>& render_pass,
+                    VkExtent2D extent);
+
+            std::vector<std::shared_ptr<VulkanFramebuffer>> create_framebuffers(
+                    const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+                    std::shared_ptr<VulkanRenderPass>& render_pass,
+                    VkExtent2D extent,
+                    const size_t& count);
+
+            // Create new instance of command buffer pool
             std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
+
+            // Create command buffer from personal command buffer pool
+            std::shared_ptr<VulkanCommandBuffer> create_command_buffer();
+
+            // Create command buffers from personal command buffer pool
+            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
+
+            std::shared_ptr<VulkanCommandBuffer> begin_single_time_commands();
+            void end_single_time_commands(std::shared_ptr<VulkanCommandBuffer>& command_buffer);
 
             std::shared_ptr<VulkanShaderModule> create_shader_module(
                 const std::string& file_path,
                 const ShaderType& type);
 
             std::shared_ptr<VulkanTexture> create_texture(
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
                 const std::string& file_path);
+
+            std::shared_ptr<VulkanTexture> create_texture(
+                VkExtent3D extent,
+                VkFormat image_format);
+
+            std::vector<std::shared_ptr<VulkanTexture>> create_textures(
+                VkExtent3D extent,
+                VkFormat image_format,
+                const size_t& count);
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
             std::shared_ptr<VulkanRenderTarget> create_render_target(
-                std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
-                VkFormat image_format,
-                VkExtent2D extent);
+                std::shared_ptr<VulkanRenderPass>& render_pass);
+
+            // Special constructor for swap chain
+            std::shared_ptr<VulkanRenderTarget> create_render_target(
+                std::shared_ptr<VulkanRenderPass>& render_pass,
+                std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images);
 
             std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
 

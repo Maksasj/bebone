@@ -3,6 +3,9 @@
 
 #include "../irenderer.h"
 
+#include "vulkan_triangle_mesh.h"
+#include "vulkan_triangle_mesh_builder.h"
+
 namespace bebone::renderer {
     using namespace bebone::gfx;
 

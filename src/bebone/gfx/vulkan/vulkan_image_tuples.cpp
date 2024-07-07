@@ -11,6 +11,26 @@ namespace bebone::gfx {
 
         }
 
+        optional<std::shared_ptr<VulkanImage>> VulkanSwapChainImageTuple::get_image() {
+            return image;
+        }
+
+        optional<std::shared_ptr<VulkanImageView>> VulkanSwapChainImageTuple::get_view() {
+            return view;
+        }
+
+        optional<std::shared_ptr<VulkanDeviceMemory>> VulkanSwapChainImageTuple::get_memory() {
+            return std::nullopt;
+        }
+
+        optional<std::shared_ptr<VulkanSampler>> VulkanSwapChainImageTuple::get_sampler() {
+            return std::nullopt;
+        }
+
+        VulkanAttachmentType VulkanSwapChainImageTuple::get_type() const {
+            return Color;
+        }
+
         void VulkanSwapChainImageTuple::destroy(VulkanDevice &device)  {
             view->destroy(device);
 
@@ -23,6 +43,26 @@ namespace bebone::gfx {
             const shared_ptr<VulkanDeviceMemory>& memory
         ) : image(image), view(view), memory(memory) {
 
+        }
+
+        optional<std::shared_ptr<VulkanImage>> VulkanDepthImageTuple::get_image() {
+            return image;
+        }
+
+        optional<std::shared_ptr<VulkanImageView>> VulkanDepthImageTuple::get_view() {
+            return view;
+        }
+
+        optional<std::shared_ptr<VulkanDeviceMemory>> VulkanDepthImageTuple::get_memory() {
+            return memory;
+        }
+
+        optional<std::shared_ptr<VulkanSampler>> VulkanDepthImageTuple::get_sampler() {
+            return std::nullopt;
+        }
+
+        VulkanAttachmentType VulkanDepthImageTuple::get_type() const {
+            return Depth;
         }
 
         void VulkanDepthImageTuple::destroy(VulkanDevice &device) {
