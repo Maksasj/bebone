@@ -134,19 +134,18 @@ namespace bebone::gfx {
             std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
+            // Update descriptor set for single
             void update_descriptor_set(
                 const std::shared_ptr<VulkanBuffer>& buffer,
                 std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
                 const size_t& binding,
-                const size_t& dst_array_element
-            );
+                const size_t& dst_array_element);
 
             void update_descriptor_set(
                 const std::shared_ptr<VulkanTexture>& texture,
                 std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
                 const size_t& binding,
-                const size_t& dst_array_element
-            );
+                const size_t& dst_array_element);
 
             void update_descriptor_set(
                 const std::shared_ptr<VulkanSampler>& sampler,
@@ -161,6 +160,7 @@ namespace bebone::gfx {
                 const size_t& binding,
                 const size_t& dst_array_element);
 
+            // Update descriptor sets for multiple descriptors
             void update_descriptor_sets(
                 const std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,

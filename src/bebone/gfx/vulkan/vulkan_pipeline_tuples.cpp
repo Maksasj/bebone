@@ -4,6 +4,7 @@
 #include "vulkan_texture.h"
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_buffer_tuples.h"
+#include "vulkan_attachment.h"
 
 namespace bebone::gfx {
     VulkanManagedPipelineTuple::VulkanManagedPipelineTuple(
@@ -41,12 +42,49 @@ namespace bebone::gfx {
         std::vector<std::shared_ptr<VulkanTexture>>& textures,
         const size_t& binding
     ) {
-
         auto dst_array_elements = std::vector<VulkanBindlessHandle> {};
         dst_array_elements.reserve(descriptors.size()); // FIF
 
         for(auto& t : textures)
             dst_array_elements.push_back(bind_texture(device, t, binding));
+
+        return dst_array_elements;
+    }
+
+    VulkanBindlessHandle VulkanManagedPipelineTuple::bind_attachment(
+        std::shared_ptr<VulkanDevice>& device,
+        std::shared_ptr<IVulkanAttachment>& attachment,
+        const size_t& binding
+    ) {
+        auto dst_array_elements = std::vector<VulkanBindlessHandle> {};
+        dst_array_elements.reserve(descriptors.size()); // FIF
+
+        for(auto& _ : descriptors) {
+            std::ignore = _;
+            dst_array_elements.emplace_back(bindless_samplers_index);
+        }
+
+        ++bindless_samplers_index;
+
+        auto
+
+        device->update_descriptor_sets(texture, descriptors, binding, dst_array_elements);
+
+        // Since there is a single texture, it has only single gpu handle, so there is no need
+        // for returning entire dst_array_elements array
+        return dst_array_elements[0];
+    }
+
+    std::vector<VulkanBindlessHandle> VulkanManagedPipelineTuple::bind_attachments(
+        std::shared_ptr<VulkanDevice>& device,
+        std::vector<std::shared_ptr<IVulkanAttachment>>& attachments,
+        const size_t& binding
+    ) {
+        auto dst_array_elements = std::vector<VulkanBindlessHandle> {};
+        dst_array_elements.reserve(descriptors.size()); // FIF
+
+        for(auto& attachment : attachments)
+            dst_array_elements.push_back(bind_attachment(device, attachment, binding));
 
         return dst_array_elements;
     }

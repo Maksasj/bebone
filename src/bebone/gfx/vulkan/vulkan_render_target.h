@@ -15,7 +15,7 @@ namespace bebone::gfx {
 
     class VulkanRenderTarget : public VulkanApi {
         public:
-            // FIF vector per multiple color attachments, for only one depth attachment possible
+            // Vector of all FIFO attachments
             vector<vector<shared_ptr<IVulkanAttachment>>> color_attachments;
             vector<shared_ptr<IVulkanAttachment>> depth_attachments;
             vector<shared_ptr<VulkanFramebuffer>> framebuffers;
@@ -29,6 +29,9 @@ namespace bebone::gfx {
                 VulkanDevice& device,
                 std::shared_ptr<VulkanRenderPass>& render_pass,
                 std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images);
+
+            const vector<shared_ptr<IVulkanAttachment>>& get_color_attachment(const size_t& index);
+            const vector<shared_ptr<IVulkanAttachment>>& depth_attachment();
 
             void destroy(VulkanDevice& device);
     };

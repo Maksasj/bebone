@@ -94,6 +94,14 @@ namespace bebone::gfx {
         }
     }
 
+    const vector<shared_ptr<IVulkanAttachment>>& VulkanRenderTarget::get_color_attachment(const size_t& index) {
+        return color_attachments[index];
+    }
+
+    const vector<shared_ptr<IVulkanAttachment>>& VulkanRenderTarget::depth_attachment() {
+        return depth_attachments;
+    }
+
     void VulkanRenderTarget::destroy(VulkanDevice& device) {
         // Todo
         for(auto& frame : color_attachments)

@@ -40,6 +40,9 @@ int main() {
         VulkanAttachmentDesc::depth2D({ 800,600 }, { .format = device->find_depth_format() }),
     });
 
+    auto geometry_render_target = device->create_render_target(geometry_render_pass);
+
+    /*
     auto geometry_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
     auto geometry_grayscale_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
     auto geometry_depth_textures = device->create_depth_image_tuples({ 800, 600, 1 }, 3);
@@ -49,6 +52,7 @@ int main() {
         device->create_framebuffer({ geometry_textures[1]->view, geometry_grayscale_textures[1]->view, geometry_depth_textures[1]->view }, geometry_render_pass, {800, 600}),
         device->create_framebuffer({ geometry_textures[2]->view, geometry_grayscale_textures[2]->view, geometry_depth_textures[2]->view }, geometry_render_pass, {800, 600})
     };
+    */
 
     auto geometry_pipeline = pipeline_manager->create_pipeline(
         device, geometry_render_pass, "geometry.vert.glsl", "geometry.frag.glsl",
