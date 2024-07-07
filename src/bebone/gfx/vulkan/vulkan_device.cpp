@@ -88,17 +88,6 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_set(
-        const std::shared_ptr<VulkanTexture>& texture,
-        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-        const size_t& binding,
-        const size_t& dst_array_element
-    ) {
-        const auto& [image, memory, view, sampler] = *texture;
-
-        update_descriptor_set(sampler, view, descriptor_set, binding, dst_array_element);
-    }
-
-    void VulkanDevice::update_descriptor_set(
         const std::shared_ptr<VulkanSampler>& sampler,
         const std::shared_ptr<VulkanImageView>& view,
         std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
@@ -126,20 +115,6 @@ namespace bebone::gfx {
         descriptor_write.pTexelBufferView = nullptr; // Optional
 
         vkUpdateDescriptorSets(device, 1, &descriptor_write, 0, nullptr);
-    }
-
-    void VulkanDevice::update_descriptor_set(
-        const std::shared_ptr<VulkanBufferMemoryTuple>& tuple,
-        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-        const size_t& binding,
-        const size_t& dst_array_element
-    ) {
-        update_descriptor_set(
-            tuple->buffer,
-            descriptor_set,
-            binding,
-            dst_array_element
-        );
     }
 
     void VulkanDevice::update_descriptor_sets(
@@ -179,7 +154,8 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_sets(
-        const std::shared_ptr<VulkanTexture>& texture,
+        const std::shared_ptr<VulkanSampler>& sampler,
+        const std::shared_ptr<VulkanImageView>& view,
         std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& binding,
         const std::vector<size_t>& dst_array_elements
@@ -188,7 +164,7 @@ namespace bebone::gfx {
             auto& dst_array_element = dst_array_elements[i];
             auto& descriptor_set = descriptor_sets[i];
 
-            update_descriptor_set(texture, descriptor_set, binding, dst_array_element);
+            update_descriptor_set(sampler, view, descriptor_set, binding, dst_array_element);
         }
     }
 

@@ -42,18 +42,6 @@ int main() {
 
     auto geometry_render_target = device->create_render_target(geometry_render_pass);
 
-    /*
-    auto geometry_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
-    auto geometry_grayscale_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
-    auto geometry_depth_textures = device->create_depth_image_tuples({ 800, 600, 1 }, 3);
-
-    auto geometry_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-        device->create_framebuffer({ geometry_textures[0]->view, geometry_grayscale_textures[0]->view, geometry_depth_textures[0]->view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[1]->view, geometry_grayscale_textures[1]->view, geometry_depth_textures[1]->view }, geometry_render_pass, {800, 600}),
-        device->create_framebuffer({ geometry_textures[2]->view, geometry_grayscale_textures[2]->view, geometry_depth_textures[2]->view }, geometry_render_pass, {800, 600})
-    };
-    */
-
     auto geometry_pipeline = pipeline_manager->create_pipeline(
         device, geometry_render_pass, "geometry.vert.glsl", "geometry.frag.glsl",
         { VulkanConstRange::common(sizeof(GeometryHandles), 0) },
@@ -66,13 +54,7 @@ int main() {
         VulkanAttachmentDesc::color2D({800, 600}, {.format = VK_FORMAT_R32G32B32A32_SFLOAT })
     });
 
-    auto blur_textures = device->create_textures({800, 600, 1}, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
-
-    auto blur_framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-        device->create_framebuffer({ blur_textures[0]->view }, blur_render_pass, {800, 600}),
-        device->create_framebuffer({ blur_textures[1]->view }, blur_render_pass, {800, 600}),
-        device->create_framebuffer({ blur_textures[2]->view }, blur_render_pass, {800, 600})
-    };
+    auto blur_render_target = device->create_render_target(blur_render_pass);
 
     auto blur_pipeline = pipeline_manager->create_pipeline(
         device, blur_render_pass, "blur.vert.glsl", "blur.frag.glsl",
@@ -81,7 +63,7 @@ int main() {
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
-    auto blur_texture_handles = blur_pipeline.bind_textures(device, geometry_textures, 0);
+    auto blur_texture_handles = blur_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(0), 0);
 
     // Post pipeline
     auto post_pipeline = pipeline_manager->create_pipeline(
@@ -91,9 +73,9 @@ int main() {
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
-    auto post_geometry_texture_handles = post_pipeline.bind_textures(device, geometry_textures, 0);
-    auto post_geometry_grayscale_texture_handles = post_pipeline.bind_textures(device, geometry_grayscale_textures, 0);
-    auto post_blur_texture_handles = post_pipeline.bind_textures(device, blur_textures, 0);
+    auto post_geometry_texture_handles = post_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(0), 0);
+    auto post_geometry_grayscale_texture_handles = post_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(1), 0);
+    auto post_blur_texture_handles = post_pipeline.bind_attachments(device, blur_render_target->get_color_attachment(0), 0);
 
     auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
     auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
@@ -129,11 +111,7 @@ int main() {
         cmd->begin_record();
 
         // Render geometry
-        cmd->begin_render_pass(
-            geometry_framebuffers[frame],
-            geometry_render_pass,
-            { 800, 600 });
-
+        cmd->begin_render_pass(geometry_render_target, geometry_render_pass, frame);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(geometry_pipeline, frame);
 
@@ -149,11 +127,7 @@ int main() {
         cmd->end_render_pass();
 
         // Blur pass
-        cmd->begin_render_pass(
-            blur_framebuffers[frame],
-            blur_render_pass,
-            { 800, 600 });
-
+        cmd->begin_render_pass(blur_render_target, blur_render_pass, frame);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(blur_pipeline, frame);
 

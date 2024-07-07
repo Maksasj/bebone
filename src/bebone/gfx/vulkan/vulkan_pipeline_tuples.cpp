@@ -30,7 +30,7 @@ namespace bebone::gfx {
 
         ++bindless_samplers_index;
 
-        device->update_descriptor_sets(texture, descriptors, binding, dst_array_elements);
+        device->update_descriptor_sets(texture->sampler, texture->view, descriptors, binding, dst_array_elements);
 
         // Since there is a single texture, it has only single gpu handle, so there is no need
         // for returning entire dst_array_elements array
@@ -66,9 +66,11 @@ namespace bebone::gfx {
 
         ++bindless_samplers_index;
 
-        auto
+        // Todo
+        auto sampler = attachment->get_sampler().value();
+        auto view = attachment->get_view().value();
 
-        device->update_descriptor_sets(texture, descriptors, binding, dst_array_elements);
+        device->update_descriptor_sets(sampler, view, descriptors, binding, dst_array_elements);
 
         // Since there is a single texture, it has only single gpu handle, so there is no need
         // for returning entire dst_array_elements array

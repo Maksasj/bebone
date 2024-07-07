@@ -54,8 +54,19 @@ namespace bebone::gfx {
 
         begin_render_pass(
             swap_chain->render_target->framebuffers[frame],
-            swap_chain->render_pass,
-            swap_chain->get_extent());
+            swap_chain->render_pass);
+
+        return *this;
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
+        const std::shared_ptr<VulkanRenderTarget>& render_target,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
+        const size_t& frame
+    ) {
+        begin_render_pass(
+            render_target->framebuffers[frame],
+            render_pass);
 
         return *this;
     }
@@ -63,15 +74,14 @@ namespace bebone::gfx {
     // This function should have multiple variants, with swap chain or just with custom render target
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
         const std::shared_ptr<VulkanFramebuffer>& framebuffer,
-        const std::shared_ptr<VulkanRenderPass>& render_pass,
-        const VkExtent2D& extent
+        const std::shared_ptr<VulkanRenderPass>& render_pass
     ) {
         VkRenderPassBeginInfo render_pass_info{};
         render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         render_pass_info.renderPass = render_pass->backend;
         render_pass_info.framebuffer = framebuffer->backend;
         render_pass_info.renderArea.offset = {0, 0};
-        render_pass_info.renderArea.extent = extent; // Todo not sure is extent is right, maybe there should be extent of render target
+        render_pass_info.renderArea.extent = render_pass->get_extent(); // Todo not sure is extent is right, maybe there should be extent of render target
 
         // Collect all clear values
         auto clear_values = std::vector<VkClearValue> {};

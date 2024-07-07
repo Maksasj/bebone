@@ -41,19 +41,19 @@ namespace bebone::gfx {
 
         // Create frame buffers
         for(size_t i = 0; i < 3; ++i) { // Todo, 3 should be configurable
-            // auto attachments = std::vector { image_views[i]->get_view().value(), depth_attachments[i]->get_view().value() };
-
             auto attachments = std::vector<std::shared_ptr<VulkanImageView>> {};
             attachments.reserve(color_attachments.size());
 
-            for(auto& attachment : color_attachments[i])
+            for(size_t a = 0; a < color_attachments.size(); ++a) {
+                auto attachment = color_attachments[a][i];
                 attachments.push_back(attachment->get_view().value());
+            }
 
+            // Todo, depth attachment order should be configurable
             if(!depth_attachments.empty())
                 attachments.push_back(depth_attachments[i]->get_view().value());
 
             auto framebuffer = device.create_framebuffer(attachments, render_pass, render_pass->get_extent());
-
             framebuffers.push_back(framebuffer);
         }
     }
@@ -94,11 +94,11 @@ namespace bebone::gfx {
         }
     }
 
-    const vector<shared_ptr<IVulkanAttachment>>& VulkanRenderTarget::get_color_attachment(const size_t& index) {
+    vector<shared_ptr<IVulkanAttachment>>& VulkanRenderTarget::get_color_attachment(const size_t& index) {
         return color_attachments[index];
     }
 
-    const vector<shared_ptr<IVulkanAttachment>>& VulkanRenderTarget::depth_attachment() {
+    vector<shared_ptr<IVulkanAttachment>>& VulkanRenderTarget::depth_attachment() {
         return depth_attachments;
     }
 

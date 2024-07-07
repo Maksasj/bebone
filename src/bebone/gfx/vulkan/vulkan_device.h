@@ -142,20 +142,8 @@ namespace bebone::gfx {
                 const size_t& dst_array_element);
 
             void update_descriptor_set(
-                const std::shared_ptr<VulkanTexture>& texture,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element);
-
-            void update_descriptor_set(
                 const std::shared_ptr<VulkanSampler>& sampler,
                 const std::shared_ptr<VulkanImageView>& view,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element);
-
-            void update_descriptor_set(
-                const std::shared_ptr<VulkanBufferMemoryTuple>& tuple,
                 std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
                 const size_t& binding,
                 const size_t& dst_array_element);
@@ -174,11 +162,13 @@ namespace bebone::gfx {
                 const std::vector<size_t>& dst_array_elements);
 
             void update_descriptor_sets(
-                const std::shared_ptr<VulkanTexture>& texture,
+                const std::shared_ptr<VulkanSampler>& sampler,
+                const std::shared_ptr<VulkanImageView>& view,
                 std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
                 const size_t& binding,
                 const std::vector<size_t>& dst_array_elements);
 
+            // Other
             std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
                 const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
                 const std::vector<VulkanConstRange>& constant_ranges);
