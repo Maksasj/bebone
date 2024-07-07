@@ -36,13 +36,12 @@ if(BEBONE_BUILD_CORE)
     target_link_libraries(bebone bebone_core)
 endif()
 
-<<<<<<< HEAD
 if(BEBONE_BUILD_RENDERER)
     target_link_libraries(bebone bebone_renderer)
-=======
+endif()
+
 if(BEBONE_BUILD_SOUND)
     target_link_libraries(bebone bebone_sound)
->>>>>>> 591ff4397b28b050d48b7a0b55902d3196a3f757
 endif()
 
 set(BEBONE_INCLUDES "${CMAKE_SOURCE_DIR}/src")
