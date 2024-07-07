@@ -12,23 +12,23 @@ namespace bebone::sound_system {
         std::shared_ptr<ma_sound> loaded_sound;
 
         void free();
-        ma_sound* get_raw_sound();
+        ma_sound* get_raw_sound() const;
     public:
         Sound();
         ~Sound();
 
-        void play();
-        void stop();
-        void rewind();
+        void play() const;
+        void stop() const;
+        void rewind() const;
 
-        void set_volume(const float& volume);
-        void set_pan(const float& pan);
-        void set_pitch(const float& pitch);
-        void set_looping(const bool& loop);
+        void set_volume(const float& volume) const;
+        void set_pan(const float& pan) const;
+        void set_pitch(const float& pitch) const;
+        void set_looping(const bool& loop) const;
 
-        bool is_playing();
-        bool at_end();
-        bool is_looping();
+        bool is_playing() const;
+        bool at_end() const;
+        bool is_looping() const;
 
         friend class SoundEngine;
     };
