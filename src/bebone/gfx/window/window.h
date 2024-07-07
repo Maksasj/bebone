@@ -5,6 +5,7 @@
 #include <exception>
 
 #include "../gfx_backend.h"
+#include "../gfx_api.h"
 
 #include "events/window_event.h"
 #include "events/input_event.h"
@@ -71,9 +72,10 @@ namespace bebone::gfx {
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
 
-            void end_frame();
+            /// Gfx api
+            virtual GfxAPI get_api() const = 0;
 
-            virtual shared_ptr<renderer::IRenderer> create_renderer() {};
+            void end_frame();
 
         private:
             /// GLFW window position change callbacks

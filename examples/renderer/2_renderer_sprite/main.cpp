@@ -7,7 +7,7 @@ int main() {
     GLFWContext::init(); // this should be moved somewhere else
 
     auto window = WindowFactory::create_window("2. Renderer sprite", 800, 600, GfxAPI::OpenGL);
-    auto renderer = window->create_renderer();
+    auto renderer = RendererFactory::create_renderer(window);
 
     auto sprite = renderer->load_sprite("image.png");
 
