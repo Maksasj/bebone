@@ -13,9 +13,25 @@ namespace bebone::gfx {
         create_swap_chain(device);
 
         auto images = create_swap_chain_images(device, surface_format.format);
-        render_target = device.create_render_target(images, surface_format.format, extent);
+
+        // This is default swap chain render pass,
+        // but I am not sure is swap chain should manage it own render pass
+        render_pass = device.create_render_pass(extent, {
+            VulkanAttachmentDesc::color2D(extent, { .format = surface_format.format }),
+            VulkanAttachmentDesc::depth2D(extent, { .format = device.find_depth_format() }),
+        });
+
+        render_target = device.create_render_target(render_pass, images);
 
         create_sync_objects(device);
+    }
+
+    const size_t& VulkanSwapChain::get_current_frame() const {
+        return current_frame;
+    }
+
+    const VkExtent2D& VulkanSwapChain::get_extent() const {
+        return extent;
     }
 
     VulkanResult VulkanSwapChain::acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *image_index) {
@@ -35,7 +51,7 @@ namespace bebone::gfx {
         return { result };
     }
 
-    VulkanResult VulkanSwapChain::submit_command_buffers(
+    VulkanResult VulkanSwapChain::submit_present_command_buffers(
         std::shared_ptr<VulkanDevice>& device,
         std::shared_ptr<VulkanCommandBuffer>& command_buffer,
         uint32_t *image_index
@@ -64,7 +80,7 @@ namespace bebone::gfx {
         if(vkQueueSubmit(device->graphics_queue, 1, &submit_info, in_flight_fences[current_frame]) != VK_SUCCESS)
             throw std::runtime_error("failed to submit draw command buffer!");
 
-        // Presenting part
+        // Todo, Presenting part
         VkSwapchainKHR swap_chains[] = { backend };
 
         VkPresentInfoKHR present_info = {};
@@ -85,14 +101,14 @@ namespace bebone::gfx {
         return { result };
     }
 
-    std::vector<VulkanSwapChainImageTuple> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat image_format) {
+    std::vector<std::shared_ptr<VulkanSwapChainImageTuple>> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat image_format) {
         uint32_t image_count;
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, nullptr);
         auto images = std::vector<VkImage> {};
         images.resize(image_count);
 
-        auto out = std::vector<VulkanSwapChainImageTuple> {};
+        auto out = std::vector<std::shared_ptr<VulkanSwapChainImageTuple>> {};
         out.reserve(image_count);
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, images.data());
@@ -101,7 +117,7 @@ namespace bebone::gfx {
             auto image = device.create_image(vk_image);
             auto view = device.create_image_view(*image, image_format);
 
-            out.emplace_back(image, view);
+            out.push_back(std::make_shared<VulkanSwapChainImageTuple>(image, view));
         }
 
         return out;
@@ -157,7 +173,7 @@ namespace bebone::gfx {
         image_available_semaphores.resize(image_count);
         render_finished_semaphores.resize(image_count);
         in_flight_fences.resize(image_count);
-        images_in_flight.resize(render_target->swap_chain_images.size(), VK_NULL_HANDLE);
+        images_in_flight.resize(image_count, VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphore_info = {};
         semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;

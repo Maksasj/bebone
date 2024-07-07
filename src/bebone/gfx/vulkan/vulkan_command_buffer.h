@@ -23,16 +23,30 @@ namespace bebone::gfx {
 
     class VulkanCommandBuffer : public VulkanWrapper<VkCommandBuffer>, private core::NonCopyable {
         public:
+                // Todo, probably only one of these constructors is actually needed
             VulkanCommandBuffer(
                 std::shared_ptr<VulkanDevice>& device,
+                VulkanCommandBufferPool& command_buffer_pool);
+
+            VulkanCommandBuffer(
+                VulkanDevice& device,
                 VulkanCommandBufferPool& command_buffer_pool);
 
             VulkanCommandBuffer& begin_record();
             VulkanCommandBuffer& end_record();
 
+            // Swap chain specific begin render pass
             VulkanCommandBuffer& begin_render_pass(
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const u32& frame_buffer);
+                const std::shared_ptr<VulkanSwapChain> swap_chain);
+
+            VulkanCommandBuffer& begin_render_pass(
+                const std::shared_ptr<VulkanRenderTarget>& render_target,
+                const std::shared_ptr<VulkanRenderPass>& render_pass,
+                const size_t& frame);
+
+            VulkanCommandBuffer& begin_render_pass(
+                const std::shared_ptr<VulkanFramebuffer>& framebuffer,
+                const std::shared_ptr<VulkanRenderPass>& render_pass); // Extent probably could be encapsulated by framebuffer or render_pass
 
             VulkanCommandBuffer& end_render_pass();
 
@@ -47,10 +61,10 @@ namespace bebone::gfx {
             VulkanCommandBuffer& bind_managed_pipeline(const VulkanManagedPipelineTuple& tuple, const size_t& frame);
 
             VulkanCommandBuffer& bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            VulkanCommandBuffer& bind_vertex_buffer(const VulkanBufferMemoryTuple& tuple);
+            VulkanCommandBuffer& bind_vertex_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple);
 
             VulkanCommandBuffer& bind_index_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            VulkanCommandBuffer& bind_index_buffer(const VulkanBufferMemoryTuple& tuple);
+            VulkanCommandBuffer& bind_index_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple);
 
             VulkanCommandBuffer& bind_descriptor_set(
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,

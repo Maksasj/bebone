@@ -54,6 +54,8 @@ namespace bebone::gfx {
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
+            void copy_to_image(VulkanDevice& device, std::shared_ptr<VulkanImage>& image);
+
             const size_t& get_size() const;
 
             void destroy(VulkanDevice& device) override;

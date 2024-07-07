@@ -5,11 +5,12 @@
 
 #include "../gfx_backend.h"
 #include "vulkan_image.h"
+#include "vulkan_attachment.h"
 
 namespace bebone::gfx {
         using namespace bebone::core;
 
-        struct VulkanSwapChainImageTuple : public VulkanApi {
+        struct VulkanSwapChainImageTuple : public IVulkanAttachment {
             std::shared_ptr<VulkanImage> image;
             std::shared_ptr<VulkanImageView> view;
 
@@ -17,10 +18,17 @@ namespace bebone::gfx {
                 const shared_ptr<VulkanImage>& image,
                 const shared_ptr<VulkanImageView>& view);
 
+            optional<std::shared_ptr<VulkanImage>> get_image() override;
+            optional<std::shared_ptr<VulkanImageView>> get_view() override;
+            optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
+            optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+
+            VulkanAttachmentType get_type() const override;
+
             void destroy(VulkanDevice& device) override;
         };
 
-        struct VulkanDepthImageTuple : public VulkanApi {
+        struct VulkanDepthImageTuple : public IVulkanAttachment {
             std::shared_ptr<VulkanImage> image;
             std::shared_ptr<VulkanImageView> view;
             std::shared_ptr<VulkanDeviceMemory> memory;
@@ -29,6 +37,13 @@ namespace bebone::gfx {
                 const shared_ptr<VulkanImage>& image,
                 const shared_ptr<VulkanImageView>& view,
                 const shared_ptr<VulkanDeviceMemory>& memory);
+
+            optional<std::shared_ptr<VulkanImage>> get_image() override;
+            optional<std::shared_ptr<VulkanImageView>> get_view() override;
+            optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
+            optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+
+            VulkanAttachmentType get_type() const override;
 
             void destroy(VulkanDevice& device) override;
         };
@@ -139,6 +154,36 @@ namespace bebone::gfx {
             return tuple.image;
         } else if constexpr (i == 1) {
             return tuple.memory;
+        } else {
+
+        }
+    }
+}
+
+namespace std {
+    template<>
+    struct tuple_size<std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>>
+            : std::integral_constant<std::size_t, 2> { };
+
+    template<>
+    struct tuple_element<0, std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>> {
+        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
+    };
+
+    template<>
+    struct tuple_element<1, std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>> {
+        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
+    };
+}
+
+// Todo, why this needs to be in bebone::gfx namespace ?
+namespace bebone::gfx {
+    template<std::size_t i>
+    auto get(const std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>& tuple) {
+        if constexpr (i == 0) {
+            return tuple->image;
+        } else if constexpr (i == 1) {
+            return tuple->memory;
         } else {
 
         }

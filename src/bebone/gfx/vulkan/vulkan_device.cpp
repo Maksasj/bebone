@@ -15,6 +15,8 @@
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_const_range.h"
 #include "vulkan_pipeline_manager.h"
+#include "vulkan_render_pass.h"
+#include "vulkan_framebuffer.h"
 
 namespace bebone::gfx {
     // Todo, move this
@@ -32,6 +34,8 @@ namespace bebone::gfx {
 
         pick_physical_device(instance);
         create_logical_device();
+
+        command_buffer_pool = create_command_buffer_pool();
     }
 
     void VulkanDevice::pick_physical_device(VulkanInstance& instance) {
@@ -84,17 +88,6 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_set(
-        const std::shared_ptr<VulkanTexture>& texture,
-        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-        const size_t& binding,
-        const size_t& dst_array_element
-    ) {
-        const auto& [image, memory, view, sampler] = *texture;
-
-        update_descriptor_set(sampler, view, descriptor_set, binding, dst_array_element);
-    }
-
-    void VulkanDevice::update_descriptor_set(
         const std::shared_ptr<VulkanSampler>& sampler,
         const std::shared_ptr<VulkanImageView>& view,
         std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
@@ -124,20 +117,6 @@ namespace bebone::gfx {
         vkUpdateDescriptorSets(device, 1, &descriptor_write, 0, nullptr);
     }
 
-    void VulkanDevice::update_descriptor_set(
-        const VulkanBufferMemoryTuple& tuple,
-        std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-        const size_t& binding,
-        const size_t& dst_array_element
-    ) {
-        update_descriptor_set(
-            tuple.buffer,
-            descriptor_set,
-            binding,
-            dst_array_element
-        );
-    }
-
     void VulkanDevice::update_descriptor_sets(
         const std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
         std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
@@ -157,7 +136,7 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_sets(
-        const std::vector<VulkanBufferMemoryTuple>& tuples,
+        const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& tuples,
         std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& binding,
         const std::vector<size_t>& dst_array_elements
@@ -166,7 +145,7 @@ namespace bebone::gfx {
             throw std::runtime_error("buffer an dst_array_elements count is not matching");
 
         for(size_t i = 0; i < dst_array_elements.size(); ++i) {
-            const auto& buffer = tuples[i].buffer;
+            const auto& buffer = tuples[i]->buffer;
             const auto& dst_array_element = dst_array_elements[i];
             auto& descriptor_set = descriptor_sets[i];
 
@@ -175,7 +154,8 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_sets(
-        const std::shared_ptr<VulkanTexture>& texture,
+        const std::shared_ptr<VulkanSampler>& sampler,
+        const std::shared_ptr<VulkanImageView>& view,
         std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& binding,
         const std::vector<size_t>& dst_array_elements
@@ -184,7 +164,7 @@ namespace bebone::gfx {
             auto& dst_array_element = dst_array_elements[i];
             auto& descriptor_set = descriptor_sets[i];
 
-            update_descriptor_set(texture, descriptor_set, binding, dst_array_element);
+            update_descriptor_set(sampler, view, descriptor_set, binding, dst_array_element);
         }
     }
 
@@ -205,12 +185,23 @@ namespace bebone::gfx {
         return { descriptor_set_layout };
     }
 
-    std::shared_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(
-        std::vector<VulkanSwapChainImageTuple>& images,
-        VkFormat image_format,
-        VkExtent2D extent
+    std::shared_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(std::shared_ptr<VulkanRenderPass>& render_pass) {
+        auto render_target = std::make_shared<VulkanRenderTarget>(*this, render_pass);
+
+        child_objects.push_back(render_target);
+
+        return render_target;
+    }
+
+    std::shared_ptr<VulkanRenderTarget>  VulkanDevice::create_render_target(
+        std::shared_ptr<VulkanRenderPass>& render_pass,
+        std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images
     ) {
-        return std::make_unique<VulkanRenderTarget>(*this, images, image_format, extent);
+        auto render_target = std::make_shared<VulkanRenderTarget>(*this, render_pass, images);
+
+        child_objects.push_back(render_target);
+
+        return render_target;
     }
 
     std::shared_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::shared_ptr<Window> &window) {
@@ -237,6 +228,46 @@ namespace bebone::gfx {
         return command_buffer_pool;
     }
 
+    std::shared_ptr<VulkanCommandBuffer> VulkanDevice::create_command_buffer() {
+        auto command_buffer = std::make_shared<VulkanCommandBuffer>(*this, *command_buffer_pool);
+
+        // Todo, ?
+
+        return command_buffer;
+    }
+
+    std::vector<std::shared_ptr<VulkanCommandBuffer>> VulkanDevice::create_command_buffers(const size_t& count) {
+        auto command_buffers = std::vector<std::shared_ptr<VulkanCommandBuffer>> {};
+        command_buffers.reserve(count);
+
+        for(size_t i = 0; i < count; ++i)
+            command_buffers.push_back(create_command_buffer());
+
+        return command_buffers;
+    }
+
+    std::shared_ptr<VulkanCommandBuffer> VulkanDevice::begin_single_time_commands() {
+        auto command_buffer = command_buffer_pool->create_command_buffer(*this);
+
+        command_buffer->begin_record();
+
+        return command_buffer;
+    }
+
+    void VulkanDevice::end_single_time_commands(std::shared_ptr<VulkanCommandBuffer>& command_buffer) {
+        command_buffer->end_record();
+
+        VkSubmitInfo submit_info{};
+        submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submit_info.commandBufferCount = 1;
+        submit_info.pCommandBuffers = &command_buffer->backend;
+
+        vkQueueSubmit(graphics_queue, 1, &submit_info, VK_NULL_HANDLE);
+        vkQueueWaitIdle(graphics_queue);
+
+        vkFreeCommandBuffers(device, command_buffer_pool->backend, 1, &command_buffer->backend);
+    }
+
     std::shared_ptr<VulkanDeviceMemory> VulkanDevice::create_device_memory(
         VkMemoryRequirements requirements,
         VkMemoryPropertyFlags local_properties
@@ -259,7 +290,7 @@ namespace bebone::gfx {
         return buffer;
     }
 
-    VulkanBufferMemoryTuple VulkanDevice::create_buffer_memory(
+    std::shared_ptr<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memory(
         const size_t& size,
         VulkanBufferInfo buffer_info
     ) {
@@ -270,7 +301,7 @@ namespace bebone::gfx {
         auto memory = create_device_memory(requirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT); // Todo this should be configurable
         memory->bind_buffer_memory(*this, buffer);
 
-        return { buffer, memory };
+        return std::make_shared<VulkanBufferMemoryTuple>(buffer, memory);
     }
 
     std::vector<std::shared_ptr<VulkanBuffer>> VulkanDevice::create_buffers(
@@ -287,12 +318,12 @@ namespace bebone::gfx {
         return buffers;
     }
 
-    std::vector<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memorys(
+    std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> VulkanDevice::create_buffer_memorys(
         const size_t& size,
         const size_t& count,
         VulkanBufferInfo buffer_info
     ) {
-        auto tuples = std::vector<VulkanBufferMemoryTuple> {};
+        auto tuples = std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> {};
         tuples.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
@@ -309,15 +340,15 @@ namespace bebone::gfx {
         return image;
     }
 
-    VulkanImageMemoryTuple VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
-        auto image = std::make_shared<VulkanImage>(*this, format, extent, image_info);
+    std::shared_ptr<VulkanImageMemoryTuple> VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
+        auto image = create_image(format, extent, image_info);
 
         auto req = image->get_memory_requirements(*this);
 
         auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(*this, image);
 
-        return { image, memory };
+        return std::make_shared<VulkanImageMemoryTuple>(image, memory);
     }
 
     // Todo Why this function is public ?, and probably could be static
@@ -349,17 +380,76 @@ namespace bebone::gfx {
         return view;
     }
 
+    std::shared_ptr<VulkanDepthImageTuple> VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
+        auto depthFormat = find_depth_format();
+
+        auto [image, memory] = create_image_memory(depthFormat, extent, {
+            .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+        });
+
+        auto view = create_image_view(*image, depthFormat, {
+            .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
+        });
+
+        return std::make_shared<VulkanDepthImageTuple>(image, view, memory);
+    }
+
+    std::vector<std::shared_ptr<VulkanDepthImageTuple>> VulkanDevice::create_depth_image_tuples(VkExtent3D extent, const size_t& count) {
+        auto tuples = std::vector<std::shared_ptr<VulkanDepthImageTuple>> {};
+        tuples.reserve(count);
+
+        for(size_t i = 0; i < count; ++i)
+            tuples.push_back(create_depth_image_tuple(extent));
+
+        return tuples;
+    }
+
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
         const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig config_info
     ) {
-        auto pipeline = std::make_shared<VulkanPipeline>(*this, swap_chain, pipeline_layout, shader_modules, config_info);
+        auto pipeline = std::make_shared<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);
 
         child_objects.push_back(pipeline);
 
         return pipeline;
+    }
+
+    std::shared_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments) {
+        auto render_pass = std::make_shared<VulkanRenderPass>(*this, extent, attachments);
+
+        child_objects.push_back(render_pass);
+
+        return render_pass;
+    }
+
+    std::shared_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
+        const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
+        VkExtent2D extent
+    ) {
+        auto framebuffer = std::make_shared<VulkanFramebuffer>(*this, attachments, render_pass, extent);
+
+        child_objects.push_back(framebuffer);
+
+        return framebuffer;
+    }
+
+    std::vector<std::shared_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
+        const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
+        std::shared_ptr<VulkanRenderPass>& render_pass,
+        VkExtent2D extent,
+        const size_t& count
+    ) {
+        auto framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {};
+        framebuffers.reserve(count);
+
+        for(size_t i = 0; i < count; ++i)
+            framebuffers.push_back(create_framebuffer(attachments, render_pass, extent));
+
+        return framebuffers;
     }
 
     std::shared_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& file_path, const ShaderType& type) {
@@ -379,15 +469,39 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
-        std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
         const std::string& file_path
     ) {
         auto raw = assets::Image<ColorRGBA>::load_from_file(file_path);
-        auto texture = std::make_shared<VulkanTexture>(*this, command_buffer_pool, raw);
+        auto texture = std::make_shared<VulkanTexture>(*this, raw);
 
         child_objects.push_back(texture);
 
         return texture;
+    }
+
+    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
+        VkExtent3D extent,
+        VkFormat image_format
+    ) {
+        auto texture = std::make_shared<VulkanTexture>(*this, extent, image_format);
+
+        child_objects.push_back(texture);
+
+        return texture;
+    }
+
+    std::vector<std::shared_ptr<VulkanTexture>> VulkanDevice::create_textures(
+        VkExtent3D extent,
+        VkFormat image_format,
+        const size_t& count
+    ) {
+        auto textures = std::vector<std::shared_ptr<VulkanTexture>> {};
+        textures.reserve(3);
+
+        for(size_t i = 0; i < count; ++i)
+            textures.push_back(create_texture(extent, image_format));
+
+        return textures;
     }
 
     std::shared_ptr<VulkanPipelineManager> VulkanDevice::create_pipeline_manager() {

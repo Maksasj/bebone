@@ -21,6 +21,15 @@ const std::vector<Vertex> vertices = {
     {{-1.0,  1.0,  1.0}, {1.0f, 0.0f, 0.0f}},
 };
 
+const std::vector<int> indices = {
+    0, 1, 2, 2, 3, 0,
+    1, 5, 6, 6, 2, 1,
+    7, 6, 5, 5, 4, 7,
+    4, 0, 3, 3, 7, 4,
+    4, 5, 1, 1, 0, 4,
+    3, 2, 6, 6, 7, 3
+};
+
 // Todo make this nicer
 const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     .binding_descriptions = {
@@ -32,19 +41,10 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     }
 };
 
-const std::vector<int> indices = {
-    0, 1, 2, 2, 3, 0,
-    1, 5, 6, 6, 2, 1,
-    7, 6, 5, 5, 4, 7,
-    4, 0, 3, 3, 7, 4,
-    4, 5, 1, 1, 0, 4,
-    3, 2, 6, 6, 7, 3
-};
-
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("2. Vulkan 3d cube example", 800, 600, Vulkan);
+    auto window = WindowFactory::create_window("3. Vulkan 3d cube example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
@@ -53,7 +53,7 @@ int main() {
     auto pipeline_manager = device->create_pipeline_manager();
 
     auto pipeline = pipeline_manager->create_pipeline(
-        device, swap_chain, "vert.glsl", "frag.glsl",
+        device, swap_chain->render_pass, "vert.glsl", "frag.glsl",
         { VulkanConstRange::common(sizeof(Handles), 0) },
         { { BindlessUniform, 0}, { BindlessUniform, 1 } },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
@@ -77,7 +77,7 @@ int main() {
     };
 
     for(auto& ubo : c_ubo)
-        ubo.upload_data(device, &c_transform, sizeof(CameraTransform));
+        ubo->upload_data(device, &c_transform, sizeof(CameraTransform));
 
     auto transform = Transform {
         Mat4f::translation(Vec3f::zero),
@@ -95,7 +95,7 @@ int main() {
             continue;
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
-        t_ubo[frame].upload_data(device, &transform, sizeof(Transform));
+        t_ubo[frame]->upload_data(device, &transform, sizeof(Transform));
 
         auto handles = Handles {
             static_cast<u32>(c_handles[frame]),
@@ -105,17 +105,19 @@ int main() {
         auto& cmd = *command_buffers[frame];
 
         cmd.begin_record();
-        cmd.begin_render_pass(swap_chain, frame);
-        cmd.set_viewport(0, 0, window->get_width(), window->get_height());
-        cmd.bind_managed_pipeline(pipeline, frame);
-        cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
-        cmd.bind_vertex_buffer(vb);
-        cmd.bind_index_buffer(eb);
-        cmd.draw_indexed(indices.size());
+
+        cmd.begin_render_pass(swap_chain);
+            cmd.set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd.bind_managed_pipeline(pipeline, frame);
+            cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
+            cmd.bind_vertex_buffer(vb);
+            cmd.bind_index_buffer(eb);
+            cmd.draw_indexed(indices.size());
         cmd.end_render_pass();
+
         cmd.end_record();
 
-        if(!swap_chain->submit_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
+        if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 
