@@ -9,6 +9,7 @@
 namespace bebone::sound_system {
     class SoundFactory {
     public:
+        virtual ~SoundFactory() = default;
         virtual std::shared_ptr<ma_sound> create_sound(ma_engine& engine, const std::string& path) = 0;
     };
 
