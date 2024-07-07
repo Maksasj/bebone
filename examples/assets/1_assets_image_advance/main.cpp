@@ -7,7 +7,6 @@ const unsigned int SCR_HEIGHT = 512;
 
 using namespace bebone::assets;
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;

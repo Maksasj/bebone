@@ -4,7 +4,7 @@
 #include "opengl_buffer_object.h"
 #include "opengl_vertex_buffer_object.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     /// VAO

@@ -3,10 +3,9 @@
 #include "bebone/bebone.h"
 
 #include "core/game.h"
-#include "core/game_time.h"
 
-const unsigned int SCR_WIDTH = 600;
-const unsigned int SCR_HEIGHT = 800;
+const unsigned int screen_width = 600;
+const unsigned int screen_height = 800;
 
 using namespace bebone::core;
 using namespace bebone::gfx;
@@ -16,10 +15,10 @@ using namespace game::core;
 int main() {
     glfwInit();
     
-    auto window = WindowFactory::create_window("5. Flappy Bird", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OpenGL);
+    auto window = WindowFactory::create_window("5. Flappy Bird", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
     glfwSwapInterval(1);
 
     glEnable(GL_DEPTH_TEST);
@@ -27,27 +26,29 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Game game(SCR_WIDTH, SCR_HEIGHT);
+    auto input = std::make_shared<Input>();
+    auto input_executor = std::make_shared<InputExecutor>(input);
 
-    double beginTime = Time::get_time();
-    double endTime;
+    KeyListener key_listener(input_executor);
+    MouseListener mouse_listener(input_executor);
+
+    window->add_listener(key_listener);
+    window->add_listener(mouse_listener);
+
+    Game game(screen_width, screen_height, input);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        window->execute_input_actions();
+        input_executor->execute_input_actions();
 
-        if (Time::deltaTime >= 0) {
-            game.update();
-        }
+        game.update();
 
         glfwSwapBuffers(window->get_backend());
         GLFWContext::poll_events();
 
-        endTime = Time::get_time();
-        Time::deltaTime = endTime - beginTime;
-        beginTime = endTime;
+        window->end_frame();
     }
     
     GLFWContext::terminate();

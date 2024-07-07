@@ -9,7 +9,7 @@
 namespace game::core::fsm {
     class StateMachine : private bebone::core::NonCopyable {
     private:
-        static std::shared_ptr<State> currentState;
+        static std::shared_ptr<State> current_state;
 
     public:
         void static set_state(std::shared_ptr<State> state);

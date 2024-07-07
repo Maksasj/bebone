@@ -5,6 +5,7 @@
 #include "core/core.h"
 #include "assets/assets.h"
 #include "gfx/gfx.h"
+#include "sound/sound_engine.h"
 
 // Second API layer
 #include "renderer/renderer.h"

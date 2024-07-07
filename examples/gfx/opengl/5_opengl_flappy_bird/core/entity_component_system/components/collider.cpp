@@ -1,22 +1,22 @@
 #include "collider.h"
 
 namespace game::core::ecs {
-    Collider::Collider(const Vec2f& localTopLeft, const Vec2f& localBottomRight, const bool& isTrigger) : topLeft(localTopLeft), bottomRight(localBottomRight), isTrigger(isTrigger) { }
+    Collider::Collider(const Vec2f& local_top_left, const Vec2f& local_bottom_right, const bool& is_trigger) : top_left(local_top_left), bottom_right(local_bottom_right), trigger(is_trigger) { }
 
     Vec2f Collider::get_top_left() const {
-        return topLeft;
+        return top_left;
     }
 
     Vec2f Collider::get_bottom_right() const {
-        return bottomRight;
+        return bottom_right;
     }
 
     bool Collider::is_trigger() const {
-        return isTrigger;
+        return trigger;
     }
 
     void Collider::enter_trigger() {
-        if (isTrigger) {
+        if (trigger) {
             triggered = true;
         }
     }
@@ -26,7 +26,7 @@ namespace game::core::ecs {
     }
 
     bool Collider::is_triggered() const {
-        if (isTrigger) {
+        if (trigger) {
             return triggered;
         }
 

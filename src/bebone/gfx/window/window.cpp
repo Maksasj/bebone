@@ -30,9 +30,6 @@ namespace bebone::gfx {
         glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
         glfwSetKeyCallback(window, glfw_key_callback);
 
-        add_listener(input_handler.get_key_listener());
-        add_listener(input_handler.get_mouse_listener());
-
         add_listener(window_handler.get_window_size_listener());
     }
 
@@ -115,7 +112,9 @@ namespace bebone::gfx {
         return static_cast<f32>(width) / static_cast<f32>(height);
     }
 
-    void Window::execute_input_actions() const {
-        input_handler.execute_input_actions();
+    void Window::end_frame() {
+        double time_diff = watch.get_time_difference();
+        Time::set_delta_time(time_diff);
+        watch.update_timestamp();
     }
 }

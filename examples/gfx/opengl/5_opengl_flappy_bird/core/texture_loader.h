@@ -11,17 +11,17 @@
 #include <map>
 
 namespace game::core {
-    using namespace bebone::gfx::opengl;
+    using namespace bebone::gfx;
     using namespace bebone::core;
 
     class TextureLoader : private NonCopyable {
         private:
-            static std::map<const std::string, std::shared_ptr<GLTexture2D>> loadedTextures;
-            static std::string assetsPath;
+            static std::map<const std::string, std::shared_ptr<GLTexture2D>> loaded_textures;
+            static std::string assets_path;
 
         public:
-            static void load_textures(const std::string& assetsPath);
-            static std::shared_ptr<GLTexture2D> get_texture(const std::string& fileName);
+            static void load_textures(const std::string& path);
+            static std::shared_ptr<GLTexture2D> get_texture(const std::string& file_name);
     };
 }
 

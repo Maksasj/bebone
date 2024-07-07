@@ -18,13 +18,13 @@ namespace game::core::ecs {
             Transform(const Vec3f& position, const f32& rotation, const f32& scale);
 
             const Vec3f& get_position() const;
-            void set_position(const Vec3f& newPosition);
+            void set_position(const Vec3f& new_position);
 
             const f32& get_rotation() const;
-            void set_rotation(const f32& newRotation);
+            void set_rotation(const f32& new_rotation);
 
             const f32& get_scale() const;
-            void set_scale(const f32& newScale);
+            void set_scale(const f32& new_scale);
 
             void move(const Vec3f& v);
     };

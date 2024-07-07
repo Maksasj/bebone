@@ -4,68 +4,77 @@
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_descriptor_set.h"
+#include "vulkan_pipeline_tuples.h"
 
-namespace bebone::gfx::vulkan {
-    VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& commandBufferPool) {
-        VkCommandBufferAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandPool = commandBufferPool.backend;
-        allocInfo.commandBufferCount = static_cast<uint32_t>(1);
+namespace bebone::gfx {
+    VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& command_buffer_pool) {
+        VkCommandBufferAllocateInfo alloc_info{};
 
-        if(vkAllocateCommandBuffers(device->device(), &allocInfo, &backend) != VK_SUCCESS) {
+        alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        alloc_info.commandPool = command_buffer_pool.backend;
+        alloc_info.commandBufferCount = static_cast<uint32_t>(1); // Todo
+
+        if(vkAllocateCommandBuffers(device->device, &alloc_info, &backend) != VK_SUCCESS)
             throw std::runtime_error("Failed to allocate command buffers !");
-        }
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::begin_record() {
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        VkCommandBufferBeginInfo begin_info{};
 
-        if(vkBeginCommandBuffer(backend, &beginInfo) != VK_SUCCESS) {
+        begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+        if(vkBeginCommandBuffer(backend, &begin_info) != VK_SUCCESS)
             throw std::runtime_error("failed to being recording command buffer");
-        }
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::end_record() {
-        if (vkEndCommandBuffer(backend) != VK_SUCCESS) {
+        if(vkEndCommandBuffer(backend) != VK_SUCCESS)
             throw std::runtime_error("failed to end command buffer");
-        }
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(std::shared_ptr<VulkanSwapChain>& swapChain, const u32& frameBuffer) {
-        VkRenderPassBeginInfo renderPassInfo{};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = swapChain->renderTarget->renderPass->backend;
-        renderPassInfo.framebuffer = swapChain->renderTarget->swapChainFramebuffers[frameBuffer]->backend;
+    VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
+        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const u32& frame_buffer
+    ) {
+        VkRenderPassBeginInfo render_pass_info{};
 
-        renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChain->extent; // Todo not sure is extent is right, maybe there should be extent of render target
+        render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        render_pass_info.renderPass = swap_chain->render_target->render_pass->backend;
+        render_pass_info.framebuffer = swap_chain->render_target->swap_chain_framebuffers[frame_buffer]->backend;
 
-        std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = {{ 0.2f, 0.2f, 0.2f, 1.0f }};
-        clearValues[1].depthStencil = { 1.0f, 0 };
+        render_pass_info.renderArea.offset = {0, 0};
+        render_pass_info.renderArea.extent = swap_chain->extent; // Todo not sure is extent is right, maybe there should be extent of render target
 
-        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-        renderPassInfo.pClearValues = clearValues.data();
+        // Todo
+        auto clear_values = std::array<VkClearValue, 2>{};
+        clear_values[0].color = {{ 0.2f, 0.2f, 0.2f, 1.0f }};
+        clear_values[1].depthStencil = { 1.0f, 0 };
 
-        vkCmdBeginRenderPass(backend, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
+        render_pass_info.pClearValues = clear_values.data();
+
+        vkCmdBeginRenderPass(backend, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(const i32& x, const i32& y, const u32& width, const u32& height) {
+    VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(
+        const i32& x,
+        const i32& y,
+        const u32& width,
+        const u32& height
+    ) {
         VkViewport viewport;
 
         viewport.x = static_cast<float>(x);
         viewport.y = static_cast<float>(y);
         viewport.width = static_cast<float>(width);
         viewport.height = static_cast<float>(height);
-
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;   // Todo for now this set as default
 
@@ -83,82 +92,125 @@ namespace bebone::gfx::vulkan {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(VulkanPipeline& pipeline) {
+    // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const VulkanPipeline& pipeline) {
         vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.backend);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(std::shared_ptr<VulkanPipeline>& pipeline) {
+    // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const std::shared_ptr<VulkanPipeline>& pipeline) {
         vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->backend);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(std::shared_ptr<VulkanBuffer>& buffer) {
-        VkBuffer buffers[] = {buffer->backend};
-        VkDeviceSize offset[] = {0};
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_managed_pipeline(const VulkanManagedPipelineTuple& tuple, const size_t& frame) {
+        auto& [pipeline, pipeline_layout, descriptors] = tuple;
+
+        return bind_pipeline(pipeline).bind_descriptor_set(pipeline_layout, descriptors, frame);
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {
+        VkBuffer buffers[] = { buffer->backend };
+        VkDeviceSize offset[] = { 0 }; // Todo
+
         vkCmdBindVertexBuffers(backend, 0, 1, buffers, offset);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(std::shared_ptr<VulkanBuffer>& indexBuffer) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const VulkanBufferMemoryTuple& tuple) {
+        return bind_vertex_buffer(tuple.buffer);
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {
         // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
-        vkCmdBindIndexBuffer(backend, indexBuffer->backend, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(backend, buffer->backend, 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertexCount) {
-        vkCmdDraw(backend, vertexCount, 1, 0, 0);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const VulkanBufferMemoryTuple& tuple) {
+        return bind_index_buffer(tuple.buffer);
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertex_count) {
+        vkCmdDraw(backend, vertex_count, 1, 0, 0);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::draw_indexed(const size_t& indexCount) {
-        vkCmdDrawIndexed(backend, static_cast<uint32_t>(indexCount), 1, 0, 0, 0);
+    VulkanCommandBuffer& VulkanCommandBuffer::draw_indexed(const size_t& index_count) {
+        vkCmdDrawIndexed(backend, static_cast<uint32_t>(index_count), 1, 0, 0, 0);
 
         return *this;
     }
 
-
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, std::shared_ptr<VulkanDescriptorSet>& descriptorSet) {
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSet->backend, 0, nullptr);
-
-        return *this;
-    }
-
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets, const size_t& frame) {
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, 1, &descriptorSets[frame]->backend, 0, nullptr);
+    // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::shared_ptr<VulkanDescriptorSet>& descriptor_set
+    ) {
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_set->backend, 0, nullptr);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_sets(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptorSets) {
-        std::vector<VkDescriptorSet> sets;
+    // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
+        const size_t& frame
+    ) {
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_sets[frame]->backend, 0, nullptr);
 
-        for(const auto& descriptor : descriptorSets)
+        return *this;
+    }
+
+    // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_sets(
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets
+    ) {
+        auto sets = std::vector<VkDescriptorSet> { };
+        sets.reserve(descriptor_sets.size());
+
+        for(const auto& descriptor : descriptor_sets)
             sets.push_back(descriptor->backend);
 
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->get_layout(), 0, sets.size(), sets.data(), 0, nullptr);
+        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, sets.size(), sets.data(), 0, nullptr);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const void* constantPtr) {
-        vkCmdPushConstants(backend, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, constantPtr);
+    // Todo VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT should be configured
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const u32& size,
+        const void* ptr
+    ) {
+        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(std::shared_ptr<VulkanPipelineLayout>& pipelineLayout, const uint32_t& size, const size_t& offset, const void* constantPtr) {
-        vkCmdPushConstants(backend, pipelineLayout->get_layout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, constantPtr);
+    // Todo VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT should be configured
+    VulkanCommandBuffer& VulkanCommandBuffer::push_constant(
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const uint32_t& size,
+        const size_t& offset,
+        const void* ptr
+    ) {
+        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }
 
     void VulkanCommandBuffer::destroy(VulkanDevice&) {
-
+        // Todo
+        
+        mark_destroyed();
     }
 }

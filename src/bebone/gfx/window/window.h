@@ -12,6 +12,9 @@
 #include "window_properties.h"
 #include "window_handler.h"
 
+#include "../../core/timestamp/timestamp.h"
+#include "../../core/timestamp/watch.h"
+
 namespace bebone::gfx {
     using namespace core;
 
@@ -20,8 +23,9 @@ namespace bebone::gfx {
         private:
             GLFWwindow* window;
 
-            InputHandler input_handler;
             WindowHandler window_handler;
+
+            Watch watch;
 
         protected:
             int width;
@@ -63,8 +67,7 @@ namespace bebone::gfx {
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
 
-            /// Function that executes all queued input actions
-            void execute_input_actions() const;
+            void end_frame();
 
         private:
             /// GLFW window position change callbacks

@@ -1,6 +1,6 @@
 #include "opengl_shader_program.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLShaderProgram::GLShaderProgram(const GLShader& vertex, const GLShader& fragment) {
         create_shader_program(vertex, fragment);
 

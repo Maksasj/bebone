@@ -1,17 +1,27 @@
-#ifndef _BEBONE_GFX_VULKAN_VULKAN_WRAPPER_TPP_
-#define _BEBONE_GFX_VULKAN_VULKAN_WRAPPER_TPP_
+#ifndef _BEBONE_GFX_VULKAN_WRAPPER_TPP_
+#define _BEBONE_GFX_VULKAN_WRAPPER_TPP_
 
-namespace bebone::gfx::vulkan {
+namespace bebone::gfx {
     class VulkanDevice;
 
+    class VulkanApi {
+        private:
+            bool destroyed = false;
+
+        protected:
+            void mark_destroyed();
+
+        public:
+            virtual ~VulkanApi() = default;
+
+            const bool& is_destroyed() const;
+            virtual void destroy(VulkanDevice& device) = 0;
+    };
+
     template<class T>
-    class VulkanWrapper {
+    class VulkanWrapper : public VulkanApi {
         public:
             T backend;
-
-            virtual ~VulkanWrapper() = default;
-
-            virtual void destroy(VulkanDevice& device) = 0;
     };
 }
 
