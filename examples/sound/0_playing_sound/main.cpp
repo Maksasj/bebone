@@ -13,11 +13,5 @@ int main() {
     std::cout << "Press enter to exit...";
     getchar();
 
-    sound_engine.load_sound("jump.mp3", sound);
-    sound->play();
-
-    std::cout << "Press enter to exit...";
-    getchar();
-
     return 0;
 }
