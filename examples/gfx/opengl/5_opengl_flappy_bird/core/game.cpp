@@ -20,8 +20,8 @@ namespace game::core {
  
         const auto shader_flags = EnableUniforms;
 
-        auto vertex_shader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderTypes::vertex_shader, shader_flags);
-        auto fragment_shader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderTypes::fragment_shader, shader_flags);
+        auto vertex_shader = GLShaderFactory::create_shader("assets/vertex.glsl", VertexShader, shader_flags);
+        auto fragment_shader = GLShaderFactory::create_shader("assets/fragment.glsl", FragmentShader, shader_flags);
         auto shader_program = make_shared<GLShaderProgram>(vertex_shader, fragment_shader);
 
         TextureLoader::load_textures("assets/gfx");

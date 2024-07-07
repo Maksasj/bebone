@@ -2,7 +2,7 @@
 
 namespace bebone::gfx {
     ShaderCode SpirVShaderCompiler::compile(const ShaderType& shader_type) {
-        const auto target_shader_type = shader_type.to_glslang();
+        const auto target_shader_type = to_glslang(shader_type);
 
         // First we check if all shader source type match
         for(auto& shader_source : shader_sources)

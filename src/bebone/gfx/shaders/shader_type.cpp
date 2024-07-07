@@ -1,38 +1,19 @@
 #include "shader_type.h"
 
 namespace bebone::gfx {
-    const ShaderType ShaderTypes::fragment_shader = ShaderType(0);
-    const ShaderType ShaderTypes::vertex_shader = ShaderType(1);
-
-    ShaderType::ShaderType(const u32 &value)
-            : value(value) {
-
-    }
-
-    bool ShaderType::operator==(const ShaderType &another) const {
-        return value == another.value;
-    }
-
-    bool ShaderType::operator!=(const ShaderType &another) const {
-        return value != another.value;
-    }
-
-    std::string ShaderType::to_string() const {
-        switch (value) {
-            case 0:
-                return "fragment_shader";
-            case 1:
-                return "vertex_shader";
+    std::string to_string(const ShaderType& type) {
+        switch (type) {
+            case FragmentShader:
+                return "FragmentShader";
+            case VertexShader:
+                return "VertexShader";
             default:
                 throw std::runtime_error("undefined shader type");
         }
-
-        // Just do not want to have any warnings
-        return "";
     }
 
-    EShLanguage ShaderType::to_glslang() const {
-        switch (value) {
+    EShLanguage to_glslang(const ShaderType& shader_type) {
+        switch (shader_type) {
             case 0:
                 return EShLanguage::EShLangFragment;
             case 1:
@@ -45,8 +26,8 @@ namespace bebone::gfx {
         return EShLanguage::EShLangVertex;
     }
 
-    GLuint ShaderType::to_opengl() const {
-        switch (value) {
+    GLuint to_opengl(const ShaderType& type) {
+        switch (type) {
             case 0:
                 return GL_FRAGMENT_SHADER;
             case 1:

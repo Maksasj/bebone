@@ -19,9 +19,9 @@ namespace bebone::gfx {
             stage.pName = "main";
             stage.pSpecializationInfo = nullptr;
 
-            if(shader_module->type == ShaderTypes::vertex_shader)
+            if(shader_module->type == VertexShader)
                 stage.stage = VK_SHADER_STAGE_VERTEX_BIT;
-            else if(shader_module->type == ShaderTypes::fragment_shader)
+            else if(shader_module->type == FragmentShader)
                 stage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
             stages.push_back(stage);
