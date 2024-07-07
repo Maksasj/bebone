@@ -11,6 +11,18 @@ namespace bebone::renderer {
         private:
 
         public:
+            GLRenderer(std::shared_ptr<Window>& window);
+            ~GLRenderer() override;
+
+            SpriteHandle load_sprite(const std::string& file_path) override;
+            ModelHandle load_model(const std::string& file_path) override;
+            MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
+
+            void render(const SpriteHandle& handle, const Transform& transform = {}) override;
+            void render(const MeshHandle& handle, const Transform& transform = {}) override;
+            void render(const ModelHandle& handle, const Transform& transform = {}) override;
+
+            void present() override;
     };
 }
 

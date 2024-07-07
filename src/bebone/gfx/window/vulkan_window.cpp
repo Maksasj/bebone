@@ -10,4 +10,8 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create window surface");
         }
     }
+
+    GfxAPI VulkanWindow::get_api() const {
+        return GfxAPI::Vulkan;
+    }
 }

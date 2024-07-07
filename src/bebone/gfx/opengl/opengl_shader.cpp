@@ -4,7 +4,7 @@ namespace bebone::gfx {
     GLShader::GLShader(const ShaderCode& code, const ShaderType& shader_type, const GLShaderProperties& properties)
             : properties(properties) {
 
-        shader = glCreateShader(shader_type.to_opengl());
+        shader = glCreateShader(to_opengl(shader_type));
 
         const auto& source = code.get_byte_code();
 
@@ -22,7 +22,7 @@ namespace bebone::gfx {
     GLShader::GLShader(const std::string& code, const ShaderType& shader_type, const GLShaderProperties& properties)
             : properties(properties) {
 
-        shader = glCreateShader(shader_type.to_opengl());
+        shader = glCreateShader(to_opengl(shader_type));
 
         const auto str = code.c_str();
 

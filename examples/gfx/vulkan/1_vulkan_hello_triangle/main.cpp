@@ -30,14 +30,14 @@ const std::vector<int> indices = { 0, 1, 2 };
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::Vulkan);
+    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
     auto swap_chain = device->create_swap_chain(window);
 
-    auto vert_shader_module = device->create_shader_module("vert.glsl", ShaderTypes::vertex_shader);
-    auto frag_shader_module = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
+    auto vert_shader_module = device->create_shader_module("vert.glsl", VertexShader);
+    auto frag_shader_module = device->create_shader_module("frag.glsl", FragmentShader);
     auto pipeline_layout = device->create_pipeline_layout({}, {});
     auto pipeline = device->create_pipeline(swap_chain->render_pass, pipeline_layout, { vert_shader_module, frag_shader_module }, {
         .vertex_input_state = { .vertex_descriptions = vertex_descriptions }

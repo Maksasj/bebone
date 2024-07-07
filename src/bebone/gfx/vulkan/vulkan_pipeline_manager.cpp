@@ -28,8 +28,8 @@ namespace bebone::gfx {
 
         auto pipeline_layout = device->create_pipeline_layout({ descriptor_set_layout }, constant_ranges);
 
-        auto vert_shader_module = device->create_shader_module(vertex_shader_file_path, ShaderTypes::vertex_shader);
-        auto frag_shader_module = device->create_shader_module(fragment_shader_file_path, ShaderTypes::fragment_shader);
+        auto vert_shader_module = device->create_shader_module(vertex_shader_file_path, VertexShader);
+        auto frag_shader_module = device->create_shader_module(fragment_shader_file_path, FragmentShader);
 
         auto pipeline = device->create_pipeline(render_pass, pipeline_layout, { vert_shader_module, frag_shader_module }, std::move(config_info));
         device->destroy_all(vert_shader_module, frag_shader_module);

@@ -35,6 +35,7 @@ option(BEBONE_BUILD_CORE        "Bebone build core module"      ON)
 option(BEBONE_BUILD_ASSETS      "Bebone build assets module"    ON)
 option(BEBONE_BUILD_GFX         "Bebone build gfx module"       ON)
 option(BEBONE_BUILD_RENDERER    "Bebone build renderer module"  ON)
+option(BEBONE_BUILD_SOUND       "Bebone build sound module"     ON)
 
 add_subdirectory(3dparty)
 add_subdirectory(src)

@@ -2,6 +2,7 @@
 #define _BEBONE_RENDERER_H_
 
 #include "irenderer.h"
+#include "renderer_factory.h"
 
 #include "mesh/imesh.h"
 #include "mesh/imesh_builder.h"
