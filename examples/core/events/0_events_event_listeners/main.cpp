@@ -18,7 +18,7 @@ struct WindowPosEventListener : EventListener<WindowPosEvent> {
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("0. OpenGL window example", screen_width, screen_height, GfxAPI::OpenGL);
+    auto window = WindowFactory::create_window("0. OpenGL window example", screen_width, screen_height, OpenGL);
 
     WindowPosEventListener listener;
     window->add_listener(listener);
