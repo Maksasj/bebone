@@ -19,7 +19,7 @@ Cool looking widgets
 2. Community Discord [discord.gg/bebone](https://discord.gg/v4mcTmuDTb)
 3. **Bebone** documentation available at [github.com/Maksasj/bebone](github.com/Maksasj/bebone/docs/DOCUMENTATION.md)
 
-## Architecture
+## Architecture ⚙️
 
 **Bebone** provides multi layer APIs where each level build on top of previous:
 
@@ -29,7 +29,7 @@ Cool looking widgets
 
 
 
-## Features
+## Features ✨
 
 For now **bebone** have severall modules:
 
@@ -37,16 +37,15 @@ For now **bebone** have severall modules:
 * [Graphics module (GFX module)](). **Abstraction layer** module, implements basic abstractions on top of **Graphical APIs** such as **OpenGL** and **Vulkan**. **GFX module**
  depends on **Core**, **Assets** modules
 * [Assets module](). Module designed for loading and managing different **assets** such as **images**, **models**, **materals**. **Assets module** depends on **Core module** only 
-* [Renderer module]() **System layer** module, provides high-level generalized graphical functionality. It abstracts all low-level **OpenGL** or **Vulkan** under one convenient interface. **Renderer module** build on top of **GFX module**
+* [Renderer module]() **System layer** module, provides high-level generalized graphical functionality. It abstracts all low-level **OpenGL** or **Vulkan** under one convenient interface. This module is build on top of **GFX module**
+* [Sound module]() *Todo*
 
 ### Planned modules
-
-* [Sound module]()
 * [Physics module]()
 * [Entity component system module (ECS module)]()
 * [App module]()
 
-## Build
+## Build 🛠
 For now there is only one build method
 
 ### Build manually
@@ -57,7 +56,7 @@ First of all requirements
   - C++ compiler (Have test with Clang 15.0.5 and GCC 12.2.0) 
   - *[Vulkan SDK](https://www.lunarg.com/vulkan-sdk/) (if you want to build [GFX module]())*
 
-  Firstly lets clone **bebone** locally *(note that you also need to clone all bebone git submodules)*
+  Firstly lets clone **bebone** locally *(note that you also need to clone all bebone git submodules with `--recursive` flag)*
 
   ```bash
   git clone --recursive git@github.com:Maksasj/bebone.git
@@ -73,14 +72,14 @@ First of all requirements
   cmake --build build
   ```
 
-## Testing
+## Testing 💊
 ### Unit testing
 The testing process is similar to the **Building**. After a successful build, all you have to do is run [CTest](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html) from ```build\tests\unit``` directory
 
 ### Integration testing
-As for integration tests we use our examples, so see **[Examples]() section**
+As for integration tests we use our examples, so see **[Examples]()** section
 
-## Dependencies
+## Dependencies 🗃
 For convenience, we tried to reduce the use of third-party libraries, as it complicates code management and readability.
 At the moment, bebone is only dependent on these third-party libraries:
   - [Glad](https://github.com/Maksasj/glad/tree/all-extensions) *(OpenGL function header)*
@@ -91,22 +90,45 @@ At the moment, bebone is only dependent on these third-party libraries:
   - [stb](https://github.com/Maksasj/stb/tree/master) *(Image management library and others)* 
   - [miniaudio](https://github.com/Maksasj/miniaudio/tree/master) *(Sound and Music library)*
 
-## Examples
+## Examples 🤡
 You can find examples in [examples](https://github.com/Maksasj/bebone/tree/master/examples) directory.
 
-## Documentation
+### Minimal example
+```c++
+#include "bebone/bebone.h"
+
+using namespace bebone::renderer;
+using namespace bebone::gfx;
+
+int main() {
+    auto window = WindowFactory::create_window("Example", 800, 600);
+    auto renderer = RendererFactory::create_renderer(window);
+
+    auto sprite = renderer->load_sprite("sprite.png");
+
+    while(!window->closing()) {
+        renderer->render(sprite, { .position = Vec3f::zero });
+        renderer->present();
+    }
+
+    return 0;
+}
+```
+
+## Documentation 📑
   - [Core module](https://github.com/Maksasj/bebone/blob/master/docs/core/CORE.md)
   - [Assets module](https://github.com/Maksasj/bebone/blob/master/docs/assets/ASSETS.md)
   - [GFX module](https://github.com/Maksasj/bebone/blob/master/docs/gfx/GFX.md)
   - [Renderer module](https://github.com/Maksasj/bebone/blob/master/docs/renderer/RENDERER.md)
+  - [Sound module](https://github.com/Maksasj/bebone/blob/master/docs/sound/SOUND.md)
 
 For full documentation see [DOCUMENTATION.md](https://github.com/Maksasj/bebone/blob/master/docs/DOCUMENTATION.md) file
 
-## Contribution
-Since for now no one cares about **bebone** we do not have any instructions or pull request templates, so just open [issue](https://github.com/Maksasj/bebone/issues) or something.
+## Contribution 🫶
+Since for now no one cares about **bebone** we do not have any instructions or pull request templates, so just open [issue](https://github.com/Maksasj/bebone/issues).
 
-## License
-**Bebone** is free and open source game development framework. All code in this repository **FOR NOW** is licensed under
+## License 🛡
+**Bebone** is free and open source game development framework. All code in this repository is licensed under
 -  Apache-2.0 license ([LICENSE.md](https://github.com/Maksasj/bebone/blob/master/LICENSE.md) or http://www.apache.org/licenses/LICENSE-2.0)
 
-*Copyright 2023-9999 © Maksim Jaroslavcevas, Oskaras Vištorskis*
+*Copyright 2023 © Maksim Jaroslavcevas, Oskaras Vištorskis*
