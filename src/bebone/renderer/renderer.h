@@ -4,6 +4,9 @@
 #include "irenderer.h"
 #include "renderer_factory.h"
 
+#include "irender_graph.h"
+#include "irender_pass.h"
+
 #include "mesh/imesh.h"
 #include "mesh/imesh_builder.h"
 #include "mesh/imesh_generator.h"
