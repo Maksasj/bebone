@@ -18,10 +18,10 @@ namespace bebone::gfx {
                 const shared_ptr<VulkanImage>& image,
                 const shared_ptr<VulkanImageView>& view);
 
-            optional<std::shared_ptr<VulkanImage>> get_image() override;
-            optional<std::shared_ptr<VulkanImageView>> get_view() override;
-            optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
-            optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+            std::optional<std::shared_ptr<VulkanImage>> get_image() override;
+            std::optional<std::shared_ptr<VulkanImageView>> get_view() override;
+            std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
+            std::optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
 
             VulkanAttachmentType get_type() const override;
 
@@ -38,10 +38,10 @@ namespace bebone::gfx {
                 const shared_ptr<VulkanImageView>& view,
                 const shared_ptr<VulkanDeviceMemory>& memory);
 
-            optional<std::shared_ptr<VulkanImage>> get_image() override;
-            optional<std::shared_ptr<VulkanImageView>> get_view() override;
-            optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
-            optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+            std::optional<std::shared_ptr<VulkanImage>> get_image() override;
+            std::optional<std::shared_ptr<VulkanImageView>> get_view() override;
+            std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
+            std::optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
 
             VulkanAttachmentType get_type() const override;
 

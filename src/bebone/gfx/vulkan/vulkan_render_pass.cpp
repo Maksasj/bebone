@@ -67,7 +67,7 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create render pass!");
     }
 
-    optional<VulkanAttachmentDesc> VulkanRenderPass::get_depth_attachment() const {
+    std::optional<VulkanAttachmentDesc> VulkanRenderPass::get_depth_attachment() const {
         if(!has_depth_attachment_flag)
             return std::nullopt;
 

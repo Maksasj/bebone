@@ -1,6 +1,8 @@
 #ifndef _BEBONE_GFX_VULKAN_ATTACHMENT_H_
 #define _BEBONE_GFX_VULKAN_ATTACHMENT_H_
 
+#include <optional>
+
 #include "../gfx_backend.h"
 
 #include "vulkan_wrapper.tpp"
@@ -59,10 +61,10 @@ namespace bebone::gfx {
         private:
 
         public:
-            virtual optional<std::shared_ptr<VulkanImage>> get_image() = 0;
-            virtual optional<std::shared_ptr<VulkanImageView>> get_view() = 0;
-            virtual optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() = 0;
-            virtual optional<std::shared_ptr<VulkanSampler>> get_sampler() = 0;
+            virtual std::optional<std::shared_ptr<VulkanImage>> get_image() = 0;
+            virtual std::optional<std::shared_ptr<VulkanImageView>> get_view() = 0;
+            virtual std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() = 0;
+            virtual std::optional<std::shared_ptr<VulkanSampler>> get_sampler() = 0;
 
             virtual VulkanAttachmentType get_type() const = 0;
     };

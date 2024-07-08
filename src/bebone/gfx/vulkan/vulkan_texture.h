@@ -33,10 +33,10 @@ namespace bebone::gfx {
                 VkExtent3D extent,
                 VkFormat image_format);
 
-            optional<std::shared_ptr<VulkanImage>> get_image() override;
-            optional<std::shared_ptr<VulkanImageView>> get_view() override;
-            optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
-            optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+            std::optional<std::shared_ptr<VulkanImage>> get_image() override;
+            std::optional<std::shared_ptr<VulkanImageView>> get_view() override;
+            std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
+            std::optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
 
             VulkanAttachmentType get_type() const override;
 
