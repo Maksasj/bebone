@@ -11,7 +11,38 @@ namespace bebone::renderer {
             std::string name;
 
         public:
+            IRenderPass(const std::string& name);
+
+            virtual void execute() = 0;
+            virtual void reset() = 0;
+
             const std::string& get_name() const;
+    };
+
+    class IBindingPass : public IRenderPass {
+        private:
+
+        public:
+    };
+
+    class IRenderQueuePass : public IBindingPass {
+        private:
+
+        public:
+
+    };
+
+    // Not sure about this
+    class IFullScreenPass : public IBindingPass {
+        private:
+
+        public:
+    };
+
+    class ISwapChainPresentPass : public IRenderPass {
+        private:
+
+        public:
     };
 }
 

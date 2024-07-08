@@ -3,6 +3,9 @@
 
 #include "../irenderer.h"
 
+#include "vulkan_render_graph.h"
+#include "vulkan_render_pass.h"
+
 #include "vulkan_triangle_mesh.h"
 #include "vulkan_triangle_mesh_builder.h"
 

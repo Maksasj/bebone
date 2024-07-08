@@ -8,9 +8,16 @@
 namespace bebone::renderer {
     class IRenderGraph {
         private:
+            std::vector<std::shared_ptr<IRenderPass>> render_passes;
 
         public:
-            virtual std::shared_ptr<IRenderPass> get_render_pass(const std::string& name) const;
+            IRenderGraph();
+
+            virtual void execute() = 0;
+            virtual void reset() = 0;
+
+            void append_pass(std::shared_ptr<IRenderPass>& render_pass);
+            std::optional<std::shared_ptr<IRenderPass>> get_render_pass(const std::string& name) const;
     };
 }
 
