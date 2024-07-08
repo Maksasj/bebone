@@ -11,19 +11,19 @@ namespace bebone::gfx {
 
         }
 
-        optional<std::shared_ptr<VulkanImage>> VulkanSwapChainImageTuple::get_image() {
+        std::optional<std::shared_ptr<VulkanImage>> VulkanSwapChainImageTuple::get_image() {
             return image;
         }
 
-        optional<std::shared_ptr<VulkanImageView>> VulkanSwapChainImageTuple::get_view() {
+        std::optional<std::shared_ptr<VulkanImageView>> VulkanSwapChainImageTuple::get_view() {
             return view;
         }
 
-        optional<std::shared_ptr<VulkanDeviceMemory>> VulkanSwapChainImageTuple::get_memory() {
+        std::optional<std::shared_ptr<VulkanDeviceMemory>> VulkanSwapChainImageTuple::get_memory() {
             return std::nullopt;
         }
 
-        optional<std::shared_ptr<VulkanSampler>> VulkanSwapChainImageTuple::get_sampler() {
+        std::optional<std::shared_ptr<VulkanSampler>> VulkanSwapChainImageTuple::get_sampler() {
             return std::nullopt;
         }
 
@@ -45,19 +45,19 @@ namespace bebone::gfx {
 
         }
 
-        optional<std::shared_ptr<VulkanImage>> VulkanDepthImageTuple::get_image() {
+        std::optional<std::shared_ptr<VulkanImage>> VulkanDepthImageTuple::get_image() {
             return image;
         }
 
-        optional<std::shared_ptr<VulkanImageView>> VulkanDepthImageTuple::get_view() {
+        std::optional<std::shared_ptr<VulkanImageView>> VulkanDepthImageTuple::get_view() {
             return view;
         }
 
-        optional<std::shared_ptr<VulkanDeviceMemory>> VulkanDepthImageTuple::get_memory() {
+        std::optional<std::shared_ptr<VulkanDeviceMemory>> VulkanDepthImageTuple::get_memory() {
             return memory;
         }
 
-        optional<std::shared_ptr<VulkanSampler>> VulkanDepthImageTuple::get_sampler() {
+        std::optional<std::shared_ptr<VulkanSampler>> VulkanDepthImageTuple::get_sampler() {
             return std::nullopt;
         }
 
