@@ -19,16 +19,6 @@
 #include "vulkan_framebuffer.h"
 
 namespace bebone::gfx {
-    // Todo, move this
-    std::string vulkan_device_read_file(const std::string& path) {
-        std::ifstream file(path);
-        std::stringstream ss;
-
-        ss << file.rdbuf();
-
-        return ss.str();
-    }
-
     VulkanDevice::VulkanDevice(VulkanInstance& instance, VulkanWindow &window) {
         window.create_window_surface(instance.get_instance(), &surface);
 
@@ -452,11 +442,11 @@ namespace bebone::gfx {
         return framebuffers;
     }
 
-    std::shared_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& file_path, const ShaderType& type) {
+    std::shared_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& source_code, const ShaderType& type) {
         auto shader_compiler = SpirVShaderCompiler();
 
         shader_compiler.add_shader_source(ShaderSource(
-            vulkan_device_read_file(file_path),
+            source_code,
             type
         ));
 
