@@ -4,11 +4,14 @@
 #include "../idepth_resource.h"
 
 namespace bebone::renderer {
+    using namespace bebone::gfx;
+
     class VulkanDepthResource : public IDepthResource {
         private:
+            std::vector<std::shared_ptr<VulkanDepthImageTuple>> depth_textures;
 
         public:
-            VulkanDepthResource(const std::string& name);
+            VulkanDepthResource(const std::string& name, std::shared_ptr<VulkanDevice>& device);
 
     };
 }

@@ -3,12 +3,19 @@
 
 #include "ipass.h"
 
+#include "itexture_resource.h"
+#include "idepth_resource.h"
+
 namespace bebone::renderer {
     using RenderTask = std::function<void(ICommandEncoder*)>;
 
     class IGeometryPass : public IPass {
         private:
             std::queue<RenderTask> render_tasks;
+
+        protected:
+            std::shared_ptr<IResource> texture_resource;
+            std::shared_ptr<IResource> depth_resource;
 
         public:
             IGeometryPass(const std::string& pass_name);

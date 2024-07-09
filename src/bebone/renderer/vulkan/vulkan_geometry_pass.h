@@ -9,7 +9,6 @@ namespace bebone::renderer {
     class VulkanGeometryPass : public IGeometryPass {
         private:
             std::shared_ptr<VulkanDevice> device;
-            std::shared_ptr<VulkanSwapChain> swap_chain;
 
             std::optional<VulkanManagedPipelineTuple> pipeline;
             std::shared_ptr<VulkanRenderTarget> render_target;
@@ -19,8 +18,9 @@ namespace bebone::renderer {
             VulkanGeometryPass(
                 const std::string& pass_name,
                 std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanSwapChain>& swap_chain,
                 std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
+
+            void assemble(IPassAssembler* assember) override;
 
             void record(ICommandEncoder* encoder) override;
             void reset() override;

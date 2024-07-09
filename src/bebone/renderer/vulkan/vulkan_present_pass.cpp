@@ -70,6 +70,10 @@ namespace bebone::renderer {
         device->collect_garbage();
     }
 
+    void VulkanPresentPass::assemble(IPassAssembler* assember) {
+
+    }
+
     void VulkanPresentPass::record(ICommandEncoder* encoder) {
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 

@@ -7,6 +7,9 @@ namespace bebone::renderer {
     class IPresentPass : public IPass {
         private:
 
+        protected:
+            std::shared_ptr<IResource> texture_resource;
+
         public:
             IPresentPass(const std::string& pass_name);
     };

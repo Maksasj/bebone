@@ -7,9 +7,8 @@ namespace bebone::renderer {
     VulkanGeometryPass::VulkanGeometryPass(
         const std::string& pass_name,
         std::shared_ptr<VulkanDevice>& device,
-        std::shared_ptr<VulkanSwapChain>& swap_chain,
         std::shared_ptr<VulkanPipelineManager>& pipeline_manager
-    ) : IGeometryPass(pass_name), device(device), swap_chain(swap_chain) {
+    ) : IGeometryPass(pass_name), device(device) {
         render_pass = device->create_render_pass({800, 600}, {
             VulkanAttachmentDesc::color2D({ 800,600 }, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
             VulkanAttachmentDesc::depth2D({ 800,600 }, { .format = device->find_depth_format() }),
@@ -60,7 +59,7 @@ namespace bebone::renderer {
 
         // Post pipeline
         pipeline = pipeline_manager->create_pipeline(
-            device, swap_chain->render_pass, vert_shader_module, frag_shader_module,
+            device, render_pass, vert_shader_module, frag_shader_module,
             { },
             {
                 { BindlessSampler, 0}
@@ -75,7 +74,12 @@ namespace bebone::renderer {
         device->collect_garbage();
     }
 
+    void VulkanGeometryPass::assemble(IPassAssembler* assember) {
+
+    }
+
     void VulkanGeometryPass::record(ICommandEncoder* encoder) {
+        /*
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 
         auto cmd = vulkan_encoder->get_command_buffer();
@@ -93,7 +97,8 @@ namespace bebone::renderer {
         }
 
         cmd->end_render_pass();
-    }
+        */
+     }
 
     void VulkanGeometryPass::reset() {
 

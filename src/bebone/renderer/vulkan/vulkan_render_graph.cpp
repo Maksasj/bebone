@@ -9,6 +9,13 @@ namespace bebone::renderer {
         command_buffers = device->create_command_buffers(3);
     }
 
+    void VulkanRenderGraph::assemble() {
+        VulkanPassAssembler assembler;
+
+        for(auto& pass : get_render_passes())
+            pass->assemble(&assembler);
+    }
+
     void VulkanRenderGraph::record() {
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             return;
@@ -18,15 +25,10 @@ namespace bebone::renderer {
 
         cmd->begin_record();
 
-        for(auto& pass : get_render_passes()) {
+        for(auto& pass : get_render_passes())
             pass->record(&encoder);
-        }
 
         cmd->end_record();
-    }
-
-    void VulkanRenderGraph::build() {
-
     }
 
     void VulkanRenderGraph::submit() {
@@ -43,6 +45,6 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IResourceFactory> VulkanRenderGraph::create_resource_factory() const {
-        return std::make_shared<VulkanResourceFactory>();
+        return std::make_shared<VulkanResourceFactory>(device);
     }
 }

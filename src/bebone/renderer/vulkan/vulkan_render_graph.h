@@ -6,6 +6,7 @@
 #include "vulkan_command_encoder.h"
 #include "vulkan_pass_factory.h"
 #include "vulkan_resource_factory.h"
+#include "vulkan_pass_assembler.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -25,9 +26,9 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain);
 
-            void record() override;
-            void build() override;
+            void assemble() override;
 
+            void record() override;
             void submit() override;
             void reset() override;
 

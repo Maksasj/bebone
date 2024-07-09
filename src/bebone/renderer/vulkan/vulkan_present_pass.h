@@ -22,6 +22,8 @@ namespace bebone::renderer {
                 std::shared_ptr<VulkanSwapChain>& swap_chain,
                 std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
 
+            void assemble(IPassAssembler* assember) override;
+
             void record(ICommandEncoder* encoder) override;
             void reset() override;
     };

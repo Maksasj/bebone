@@ -4,11 +4,14 @@
 #include "../itexture_resource.h"
 
 namespace bebone::renderer {
+    using namespace bebone::gfx;
+
     class VulkanTextureResource : public ITextureResource {
         private:
+            std::vector<std::shared_ptr<VulkanTexture>> textures;
 
         public:
-            VulkanTextureResource(const std::string& name);
+            VulkanTextureResource(const std::string& name, std::shared_ptr<VulkanDevice>& device);
 
     };
 }

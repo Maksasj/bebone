@@ -18,13 +18,16 @@ namespace bebone::renderer {
         auto geometry_depth = resource_factory->create_depth_resource("geometry_depth");
         render_graph->add_resource(geometry_depth);
 
-        // auto geometry = pass_factory->create_geometry_pass("geometry");
-        // render_graph->add_pass(geometry);
+        auto geometry = pass_factory->create_geometry_pass("geometry");
+        geometry->plug_output("texture", geometry_texture);
+        geometry->plug_output("depth", geometry_depth);
+        render_graph->add_pass(geometry);
 
         auto present = pass_factory->create_present_pass("present");
+        present->plug_input("texture", geometry_texture);
         render_graph->add_pass(present);
 
-        render_graph->build();
+        render_graph->assemble();
     }
 
     VulkanRenderer::~VulkanRenderer() {
