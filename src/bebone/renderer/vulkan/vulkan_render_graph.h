@@ -17,7 +17,7 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanPipelineManager> pipeline_manager;
             std::vector<std::shared_ptr<VulkanCommandBuffer>> command_buffers;
 
-            // uint32_t frame;
+            uint32_t frame;
 
         public:
             VulkanRenderGraph(

@@ -10,8 +10,6 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderGraph::record() {
-        uint32_t frame;
-
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             return;
 
@@ -25,13 +23,11 @@ namespace bebone::renderer {
         }
 
         cmd->end_record();
-
-        if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
-            return;
     }
 
     void VulkanRenderGraph::submit() {
-
+        if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
+            return;
     }
 
     void VulkanRenderGraph::reset() {

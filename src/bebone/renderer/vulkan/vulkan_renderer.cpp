@@ -6,12 +6,7 @@ namespace bebone::renderer {
         device = instance->create_device(window);
         swap_chain = device->create_swap_chain(window);
 
-        /*
-        pipeline_manager = device->create_pipeline_manager();
-
-        command_buffers = device->create_command_buffers(3);
-        */
-
+        // Create default render graph
         render_graph = std::make_shared<VulkanRenderGraph>(device, swap_chain);
         auto factory = render_graph->create_pass_factory();
 
@@ -20,9 +15,6 @@ namespace bebone::renderer {
 
         auto present = factory->create_present_pass("present");
         render_graph->append_pass(present);
-
-        // auto present = std::make_shared<ISwapChainPresentPass>("present");
-        // present->link_resource("present_texture", "geometry.geometry_texture")
     }
 
     VulkanRenderer::~VulkanRenderer() {
