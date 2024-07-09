@@ -10,12 +10,19 @@ namespace bebone::renderer {
         render_graph = std::make_shared<VulkanRenderGraph>(device, swap_chain);
 
         auto pass_factory = render_graph->create_pass_factory();
+        auto resource_factory = render_graph->create_resource_factory();
+
+        auto geometry_texture = resource_factory->create_texture_resource("geometry_texture");
+        render_graph->add_resource(geometry_texture);
+
+        auto geometry_depth = resource_factory->create_depth_resource("geometry_depth");
+        render_graph->add_resource(geometry_depth);
 
         // auto geometry = pass_factory->create_geometry_pass("geometry");
-        // render_graph->append_pass(geometry);
+        // render_graph->add_pass(geometry);
 
         auto present = pass_factory->create_present_pass("present");
-        render_graph->append_pass(present);
+        render_graph->add_pass(present);
 
         render_graph->build();
     }

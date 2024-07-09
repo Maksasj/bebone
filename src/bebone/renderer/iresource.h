@@ -7,6 +7,11 @@
 #include "icommand_encoder.h"
 
 namespace bebone::renderer {
+    enum class ResourceType {
+        Color,
+        Depth
+    };
+
     class IResource {
         private:
             std::string name;
