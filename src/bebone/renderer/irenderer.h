@@ -4,7 +4,7 @@
 #include "renderer_backend.h"
 
 #include "irender_graph.h"
-#include "irender_pass.h"
+#include "ipass.h"
 
 #include "iprogram.h"
 #include "itexture.h"

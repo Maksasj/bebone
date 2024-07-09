@@ -3,12 +3,13 @@
 
 #include "renderer_backend.h"
 
-#include "irender_pass.h"
+#include "ipass.h"
+#include "ipass_factory.h"
 
 namespace bebone::renderer {
     class IRenderGraph {
         private:
-            std::vector<std::shared_ptr<IRenderPass>> render_passes;
+            std::vector<std::shared_ptr<IPass>> render_passes;
 
         public:
             IRenderGraph();
@@ -16,8 +17,11 @@ namespace bebone::renderer {
             virtual void execute() = 0;
             virtual void reset() = 0;
 
-            void append_pass(std::shared_ptr<IRenderPass>& render_pass);
-            std::optional<std::shared_ptr<IRenderPass>> get_render_pass(const std::string& name) const;
+
+            virtual std::shared_ptr<IPassFactory> create_pass_factory() const;
+
+            void append_pass(std::shared_ptr<IPass>& render_pass);
+            std::optional<std::shared_ptr<IPass>> get_render_pass(const std::string& pass_name) const;
     };
 }
 

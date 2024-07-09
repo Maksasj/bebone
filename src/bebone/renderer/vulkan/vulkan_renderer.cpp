@@ -13,9 +13,7 @@ namespace bebone::renderer {
         }
     };
 
-    VulkanRenderer::VulkanRenderer(std::shared_ptr<gfx::Window>& window) 
-        : IRenderer(Vulkan), window(window) 
-    {
+    VulkanRenderer::VulkanRenderer(std::shared_ptr<gfx::Window>& window) : IRenderer(Vulkan), window(window) {
         instance = VulkanInstance::create_instance();
         device = instance->create_device(window);
         swap_chain = device->create_swap_chain(window);
@@ -60,6 +58,31 @@ namespace bebone::renderer {
             { { BindlessSampler, 0} },
             { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
         );
+
+        /*
+        auto graph = std::make_shared<VulkanRenderGraph>();
+
+        auto factory = std::make_shared<VulkanRenderPassFactory>();
+
+        auto geometry = factory->create_geometry_pass("geometry");
+
+
+        auto geometry_texture = create_texture();
+        graph->append_resource(geometry_texture);
+
+        auto depth_texture = create_texture();
+        graph->append_resource(depth_texture);
+
+        auto geometry = std::make_shared<VulkanGeometryPass>("geometry");
+        geometry->link_resource("geometry_texture", "$.geometry_texture");
+        geometry->link_resource("depth_texture", "$.depth_texture");
+        graph->append_pass(geometry);
+
+        auto present = std::make_shared<ISwapChainPresentPass>("present");
+        present->link_resource("present_texture", "geometry.geometry_texture")
+
+        graph->append_pass(present);
+        */
     }
 
     VulkanRenderer::~VulkanRenderer() {

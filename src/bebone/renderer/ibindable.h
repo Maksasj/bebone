@@ -12,6 +12,7 @@ namespace bebone::renderer {
     // IBindable is a some sort of object that can be binded* to render pass ?
     class IBindable {
         private:
+
         public:
             // Probably need to pass information about render pass | Render graph
             virtual void bind(ICommandEncoder* encoder) = 0;
