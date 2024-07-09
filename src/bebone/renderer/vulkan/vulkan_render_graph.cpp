@@ -10,7 +10,7 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderGraph::assemble() {
-        VulkanPassAssembler assembler;
+        VulkanPassAssembler assembler(device, swap_chain, pipeline_manager);
 
         for(auto& pass : get_render_passes())
             pass->assemble(&assembler);
@@ -21,7 +21,7 @@ namespace bebone::renderer {
             return;
 
         auto& cmd = command_buffers[frame];
-        VulkanCommandEncoder encoder(cmd, frame);
+        VulkanCommandEncoder encoder(swap_chain, cmd, frame);
 
         cmd->begin_record();
 

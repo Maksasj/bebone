@@ -4,12 +4,17 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     // Present pass
-    VulkanPresentPass::VulkanPresentPass(
-        const std::string& pass_name,
-        std::shared_ptr<VulkanDevice>& device,
-        std::shared_ptr<VulkanSwapChain>& swap_chain,
-        std::shared_ptr<VulkanPipelineManager>& pipeline_manager
-    ) : IPresentPass(pass_name), device(device), swap_chain(swap_chain) {
+    VulkanPresentPass::VulkanPresentPass(const std::string& pass_name) : IPresentPass(pass_name) {
+
+    }
+
+    void VulkanPresentPass::assemble(IPassAssembler* assember) {
+        auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
+
+        auto device = vulkan_assembler->get_device();
+        auto pipeline_manager = vulkan_assembler->get_pipeline_manager();
+        auto swap_chain = vulkan_assembler->get_swap_chain();
+
         auto vert_shader_module = device->create_shader_module(
             "#version 450 core\n"
             "#extension GL_EXT_nonuniform_qualifier : enable\n"
@@ -37,8 +42,13 @@ namespace bebone::renderer {
             "\n"
             "layout (location = 0) out vec4 out_color;\n"
             "\n"
+            "layout(binding = 0) uniform sampler2D textures[];\n"
+            "\n"
+            "layout( push_constant ) uniform Handles {\n"
+            "    int texture;\n"
+            "} handles;\n"
             "void main() {\n"
-            "   out_color = vec4(texcoord, 1.0, 1.0);\n"
+            "   out_color = texture(textures[handles.texture], texcoord);\n"
             "}", FragmentShader);
 
         // Todo move this outside
@@ -56,7 +66,7 @@ namespace bebone::renderer {
         // Post pipeline
         pipeline = pipeline_manager->create_pipeline(
             device, swap_chain->render_pass, vert_shader_module, frag_shader_module,
-            { },
+            { VulkanConstRange::common(sizeof(u32), 0) },
             {
                 { BindlessSampler, 0}
             },
@@ -66,12 +76,14 @@ namespace bebone::renderer {
             }
         );
 
+        auto texture = static_pointer_cast<VulkanTextureResource>(texture_resource)->get_textures();
+        texture_handles = pipeline->bind_textures(device, texture, 0);
+
+        auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+        quad_mesh = quad_generator->generate();
+
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
-    }
-
-    void VulkanPresentPass::assemble(IPassAssembler* assember) {
-
     }
 
     void VulkanPresentPass::record(ICommandEncoder* encoder) {
@@ -80,15 +92,15 @@ namespace bebone::renderer {
         auto cmd = vulkan_encoder->get_command_buffer();
         const auto& frame = vulkan_encoder->get_frame();
 
-        cmd->begin_render_pass(swap_chain);
+        cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
             cmd->set_viewport(0, 0, 800, 600);
             cmd->bind_managed_pipeline(pipeline.value(), frame);
 
-            // for (; !render_queue.empty(); render_queue.pop()) {
-            //     auto mesh = render_queue.front();
-            //     mesh->bind(&encoder);
-            //     cmd->draw_indexed(mesh->triangle_count());
-            // }
+            auto handles = u32(texture_handles[frame]);
+            cmd->push_constant(pipeline->layout, sizeof(u32), 0, &handles);
+
+            quad_mesh->bind(encoder);
+            cmd->draw_indexed(quad_mesh->triangle_count());
         cmd->end_render_pass();
     }
 

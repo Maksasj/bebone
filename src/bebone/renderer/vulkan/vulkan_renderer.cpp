@@ -8,7 +8,6 @@ namespace bebone::renderer {
 
         // Create default render graph
         render_graph = std::make_shared<VulkanRenderGraph>(device, swap_chain);
-
         auto pass_factory = render_graph->create_pass_factory();
         auto resource_factory = render_graph->create_resource_factory();
 
@@ -54,7 +53,6 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderer::render(const MeshHandle& handle, const Transform& transform) {
-        /*
         auto pass = static_pointer_cast<IGeometryPass>(render_graph->get_render_pass("geometry").value());
 
         pass->queue_task([&](ICommandEncoder* encoder) {
@@ -65,7 +63,6 @@ namespace bebone::renderer {
             mesh_pool[handle.index]->bind(encoder);
             cmd->draw_indexed(mesh->triangle_count());
         });
-        */
     }
 
     void VulkanRenderer::render(const ModelHandle& handle, const Transform& transform) {

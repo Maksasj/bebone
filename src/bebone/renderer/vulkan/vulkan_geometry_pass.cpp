@@ -4,11 +4,16 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     // Present pass
-    VulkanGeometryPass::VulkanGeometryPass(
-        const std::string& pass_name,
-        std::shared_ptr<VulkanDevice>& device,
-        std::shared_ptr<VulkanPipelineManager>& pipeline_manager
-    ) : IGeometryPass(pass_name), device(device) {
+    VulkanGeometryPass::VulkanGeometryPass(const std::string& pass_name) : IGeometryPass(pass_name) {
+
+    }
+
+    void VulkanGeometryPass::assemble(IPassAssembler* assember) {
+        auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
+
+        auto device = vulkan_assembler->get_device();
+        auto pipeline_manager = vulkan_assembler->get_pipeline_manager();
+
         render_pass = device->create_render_pass({800, 600}, {
             VulkanAttachmentDesc::color2D({ 800,600 }, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
             VulkanAttachmentDesc::depth2D({ 800,600 }, { .format = device->find_depth_format() }),
@@ -62,7 +67,7 @@ namespace bebone::renderer {
             device, render_pass, vert_shader_module, frag_shader_module,
             { },
             {
-                { BindlessSampler, 0}
+                { BindlessSampler, 0 }
             },
             {
                 .vertex_input_state = { .vertex_descriptions = vertex_descriptions },
@@ -72,20 +77,25 @@ namespace bebone::renderer {
 
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
-    }
 
-    void VulkanGeometryPass::assemble(IPassAssembler* assember) {
+        // Setting render target
+        auto texture = static_pointer_cast<VulkanTextureResource>(texture_resource)->get_textures();
+        auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_textures();
 
+        framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
+            device->create_framebuffer({ texture[0]->view, depth[0]->view }, render_pass, {800, 600}),
+            device->create_framebuffer({ texture[1]->view, depth[1]->view }, render_pass, {800, 600}),
+            device->create_framebuffer({ texture[2]->view, depth[2]->view }, render_pass, {800, 600})
+        };
     }
 
     void VulkanGeometryPass::record(ICommandEncoder* encoder) {
-        /*
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 
         auto cmd = vulkan_encoder->get_command_buffer();
         const auto& frame = vulkan_encoder->get_frame();
 
-        cmd->begin_render_pass(render_target, render_pass, frame);
+        cmd->begin_render_pass(framebuffers[frame], render_pass);
         cmd->set_viewport(0, 0, 800, 600);
         cmd->bind_managed_pipeline(pipeline.value(), frame);
 
@@ -97,7 +107,6 @@ namespace bebone::renderer {
         }
 
         cmd->end_render_pass();
-        */
      }
 
     void VulkanGeometryPass::reset() {

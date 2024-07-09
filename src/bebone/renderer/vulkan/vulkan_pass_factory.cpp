@@ -12,10 +12,10 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IPresentPass> VulkanPassFactory::create_present_pass(const std::string& pass_name) {
-        return std::make_shared<VulkanPresentPass>(pass_name, device, swap_chain, pipeline_manager);
+        return std::make_shared<VulkanPresentPass>(pass_name);
     }
 
     std::shared_ptr<IGeometryPass> VulkanPassFactory::create_geometry_pass(const std::string& pass_name) {
-        return std::make_shared<VulkanGeometryPass>(pass_name, device, pipeline_manager);
+        return std::make_shared<VulkanGeometryPass>(pass_name);
     }
 }

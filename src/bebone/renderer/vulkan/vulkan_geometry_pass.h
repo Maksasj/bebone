@@ -4,21 +4,19 @@
 #include "../irenderer.h"
 #include "../ipass.h"
 #include "vulkan_command_encoder.h"
+#include "vulkan_pass_assembler.h"
+#include "vulkan_texture_resource.h"
+#include "vulkan_depth_resource.h"
 
 namespace bebone::renderer {
     class VulkanGeometryPass : public IGeometryPass {
         private:
-            std::shared_ptr<VulkanDevice> device;
-
             std::optional<VulkanManagedPipelineTuple> pipeline;
-            std::shared_ptr<VulkanRenderTarget> render_target;
             std::shared_ptr<VulkanRenderPass> render_pass;
+            std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
 
         public:
-            VulkanGeometryPass(
-                const std::string& pass_name,
-                std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
+            VulkanGeometryPass(const std::string& pass_name);
 
             void assemble(IPassAssembler* assember) override;
 
