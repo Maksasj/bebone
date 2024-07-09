@@ -8,9 +8,7 @@ namespace bebone::renderer {
         private:
 
         public:
-            IPresentPass(const std::string& pass_name) : IPass(pass_name) {
-
-            }
+            IPresentPass(const std::string& pass_name);
     };
 }
 

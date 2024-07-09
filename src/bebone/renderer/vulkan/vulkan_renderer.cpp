@@ -8,13 +8,16 @@ namespace bebone::renderer {
 
         // Create default render graph
         render_graph = std::make_shared<VulkanRenderGraph>(device, swap_chain);
-        auto factory = render_graph->create_pass_factory();
 
-        // auto geometry = factory->create_geometry_pass("geometry");
+        auto pass_factory = render_graph->create_pass_factory();
+
+        // auto geometry = pass_factory->create_geometry_pass("geometry");
         // render_graph->append_pass(geometry);
 
-        auto present = factory->create_present_pass("present");
+        auto present = pass_factory->create_present_pass("present");
         render_graph->append_pass(present);
+
+        render_graph->build();
     }
 
     VulkanRenderer::~VulkanRenderer() {
@@ -41,8 +44,18 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderer::render(const MeshHandle& handle, const Transform& transform) {
-        std::ignore = handle;
-        std::ignore = transform;
+        /*
+        auto pass = static_pointer_cast<IGeometryPass>(render_graph->get_render_pass("geometry").value());
+
+        pass->queue_task([&](ICommandEncoder* encoder) {
+            auto cmd = static_cast<VulkanCommandEncoder*>(encoder)->get_command_buffer();
+
+            auto mesh = mesh_pool[handle.index];
+
+            mesh_pool[handle.index]->bind(encoder);
+            cmd->draw_indexed(mesh->triangle_count());
+        });
+        */
     }
 
     void VulkanRenderer::render(const ModelHandle& handle, const Transform& transform) {
@@ -52,6 +65,7 @@ namespace bebone::renderer {
 
     void VulkanRenderer::present() {
         render_graph->record();
+
         render_graph->submit();
     }
 }

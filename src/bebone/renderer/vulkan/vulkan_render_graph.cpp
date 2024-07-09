@@ -25,6 +25,10 @@ namespace bebone::renderer {
         cmd->end_record();
     }
 
+    void VulkanRenderGraph::build() {
+
+    }
+
     void VulkanRenderGraph::submit() {
         if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             return;
@@ -36,5 +40,9 @@ namespace bebone::renderer {
 
     std::shared_ptr<IPassFactory> VulkanRenderGraph::create_pass_factory() const {
         return std::make_shared<VulkanPassFactory>(device, swap_chain, pipeline_manager);
+    }
+
+    std::shared_ptr<IResourceFactory> VulkanRenderGraph::create_resource_factory() const {
+        return std::make_shared<VulkanResourceFactory>();
     }
 }

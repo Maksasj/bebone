@@ -3,8 +3,9 @@
 
 #include "../irenderer.h"
 #include "../irender_graph.h"
-#include "vulkan_pass_factory.h"
 #include "vulkan_command_encoder.h"
+#include "vulkan_pass_factory.h"
+#include "vulkan_resource_factory.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -25,10 +26,14 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanSwapChain>& swap_chain);
 
             void record() override;
+            void build() override;
+
             void submit() override;
             void reset() override;
 
             std::shared_ptr<IPassFactory> create_pass_factory() const override;
+            std::shared_ptr<IResourceFactory> create_resource_factory() const override;
+
     };
 }
 
