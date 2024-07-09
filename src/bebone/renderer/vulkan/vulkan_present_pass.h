@@ -1,5 +1,5 @@
-#ifndef _BEBONE_RENDERER_VULKAN_PASS_H_
-#define _BEBONE_RENDERER_VULKAN_PASS_H_
+#ifndef _BEBONE_RENDERER_VULKAN_PRESENT_PASS_H_
+#define _BEBONE_RENDERER_VULKAN_PRESENT_PASS_H_
 
 #include "../irenderer.h"
 #include "../ipass.h"
@@ -21,16 +21,6 @@ namespace bebone::renderer {
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanSwapChain>& swap_chain,
                 std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
-
-            void record(ICommandEncoder* encoder) override;
-            void reset() override;
-    };
-
-    class VulkanGeometryPass : public IGeometryPass {
-        private:
-
-        public:
-            VulkanGeometryPass(const std::string& pass_name);
 
             void record(ICommandEncoder* encoder) override;
             void reset() override;

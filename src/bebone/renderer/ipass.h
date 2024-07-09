@@ -20,24 +20,6 @@ namespace bebone::renderer {
 
             const std::string& get_name() const;
     };
-
-    class IGeometryPass : public IPass {
-        private:
-
-        public:
-            IGeometryPass(const std::string& pass_name) : IPass(pass_name) {
-
-            }
-    };
-
-    class IPresentPass : public IPass {
-        private:
-
-        public:
-            IPresentPass(const std::string& pass_name) : IPass(pass_name) {
-
-            }
-    };
 }
 
 #endif

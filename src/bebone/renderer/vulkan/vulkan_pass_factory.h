@@ -2,7 +2,9 @@
 #define _BEBONE_RENDERER_VULKAN_PASS_FACTORY_H_
 
 #include "../irenderer.h"
-#include "vulkan_pass.h"
+
+#include "vulkan_present_pass.h"
+#include "vulkan_geometry_pass.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;

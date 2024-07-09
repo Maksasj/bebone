@@ -3,8 +3,9 @@
 
 #include <string>
 
-#include "renderer_backend.h"
 #include "ipass.h"
+#include "ipresent_pass.h"
+#include "igeometry_pass.h"
 
 namespace bebone::renderer {
     class IPassFactory {
