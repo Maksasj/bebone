@@ -14,14 +14,15 @@ namespace bebone::renderer {
         public:
             IRenderGraph();
 
-            virtual void execute() = 0;
+            virtual void record() = 0;
+            virtual void submit() = 0;
             virtual void reset() = 0;
 
+            virtual std::shared_ptr<IPassFactory> create_pass_factory() const = 0;
 
-            virtual std::shared_ptr<IPassFactory> create_pass_factory() const;
-
-            void append_pass(std::shared_ptr<IPass>& render_pass);
+            void append_pass(const std::shared_ptr<IPass>& render_pass);
             std::optional<std::shared_ptr<IPass>> get_render_pass(const std::string& pass_name) const;
+            std::vector<std::shared_ptr<IPass>>& get_render_passes();
     };
 }
 

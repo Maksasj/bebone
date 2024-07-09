@@ -4,6 +4,7 @@
 #include <string>
 
 #include "renderer_backend.h"
+#include "icommand_encoder.h"
 
 namespace bebone::renderer {
     class IPass {
@@ -14,7 +15,7 @@ namespace bebone::renderer {
             IPass(const std::string& name);
             virtual ~IPass() = default;
 
-            virtual void execute() = 0;
+            virtual void record(ICommandEncoder* encoder) = 0;
             virtual void reset() = 0;
 
             const std::string& get_name() const;

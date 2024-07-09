@@ -20,14 +20,9 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
 
-            std::shared_ptr<VulkanPipelineManager> pipeline_manager;
-            std::optional<VulkanManagedPipelineTuple> pipeline;
-
-            std::vector<std::shared_ptr<VulkanCommandBuffer>> command_buffers;
-
             std::vector<std::shared_ptr<IMesh>> mesh_pool;
 
-            std::queue<std::shared_ptr<IMesh>> render_queue;
+            std::shared_ptr<VulkanRenderGraph> render_graph;
 
         public:
             VulkanRenderer(std::shared_ptr<gfx::Window>& window);

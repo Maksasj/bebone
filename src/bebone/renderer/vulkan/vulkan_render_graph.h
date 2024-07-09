@@ -11,11 +11,21 @@ namespace bebone::renderer {
 
     class VulkanRenderGraph : public IRenderGraph {
         private:
+            std::shared_ptr<VulkanDevice> device;
+            std::shared_ptr<VulkanSwapChain> swap_chain;
+
+            std::shared_ptr<VulkanPipelineManager> pipeline_manager;
+            std::vector<std::shared_ptr<VulkanCommandBuffer>> command_buffers;
+
+            // uint32_t frame;
 
         public:
-            VulkanRenderGraph();
+            VulkanRenderGraph(
+                const std::shared_ptr<VulkanDevice>& device,
+                const std::shared_ptr<VulkanSwapChain>& swap_chain);
 
-            void execute() override;
+            void record() override;
+            void submit() override;
             void reset() override;
 
             std::shared_ptr<IPassFactory> create_pass_factory() const override;

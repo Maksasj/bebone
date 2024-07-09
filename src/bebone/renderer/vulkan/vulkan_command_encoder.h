@@ -9,11 +9,13 @@ namespace bebone::renderer {
     class VulkanCommandEncoder : public ICommandEncoder {
         private:
             std::shared_ptr<VulkanCommandBuffer> command_buffer;
+            size_t frame;
 
         public:
-            VulkanCommandEncoder(const std::shared_ptr<VulkanCommandBuffer>& command_buffer);
+            VulkanCommandEncoder(const std::shared_ptr<VulkanCommandBuffer>& command_buffer, const size_t& frame);
 
             std::shared_ptr<VulkanCommandBuffer>& get_command_buffer();
+            const size_t& get_frame() const;
     };
 }
 #endif

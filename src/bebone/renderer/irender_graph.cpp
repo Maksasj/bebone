@@ -5,7 +5,7 @@ namespace bebone::renderer {
 
     }
 
-    void IRenderGraph::append_pass(std::shared_ptr<IPass>& render_pass) {
+    void IRenderGraph::append_pass(const std::shared_ptr<IPass>& render_pass) {
         render_passes.push_back(render_pass);
     }
 
@@ -15,5 +15,9 @@ namespace bebone::renderer {
                 return pass;
 
         return std::nullopt;
+    }
+
+    std::vector<std::shared_ptr<IPass>>& IRenderGraph::get_render_passes() {
+        return render_passes;
     }
 }

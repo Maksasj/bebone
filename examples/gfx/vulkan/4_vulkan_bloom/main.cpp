@@ -106,7 +106,7 @@ int main() {
         t_ubo[frame]->upload_data(device, &mat, sizeof(Mat4f));
 
         auto& cmd = command_buffers[frame];
-        VulkanCommandEncoder encoder(cmd);
+        VulkanCommandEncoder encoder(cmd, frame);
 
         cmd->begin_record();
 

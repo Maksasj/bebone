@@ -3,17 +3,26 @@
 
 #include "../irenderer.h"
 #include "../ipass.h"
+#include "vulkan_command_encoder.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
     class VulkanPresentPass : public IPresentPass {
         private:
+            std::shared_ptr<VulkanDevice> device;
+            std::shared_ptr<VulkanSwapChain> swap_chain;
+
+            std::optional<VulkanManagedPipelineTuple> pipeline;
 
         public:
-            VulkanPresentPass(const std::string& pass_name);
+            VulkanPresentPass(
+                const std::string& pass_name,
+                std::shared_ptr<VulkanDevice>& device,
+                std::shared_ptr<VulkanSwapChain>& swap_chain,
+                std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
 
-            void execute() override;
+            void record(ICommandEncoder* encoder) override;
             void reset() override;
     };
 
@@ -23,7 +32,7 @@ namespace bebone::renderer {
         public:
             VulkanGeometryPass(const std::string& pass_name);
 
-            void execute() override;
+            void record(ICommandEncoder* encoder) override;
             void reset() override;
     };
 }
