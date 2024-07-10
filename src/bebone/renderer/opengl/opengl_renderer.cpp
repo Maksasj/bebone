@@ -56,7 +56,7 @@ namespace bebone::renderer {
         glfwSwapBuffers(window->get_backend());
     }
 
-    std::shared_ptr<IRenderGraph> GLRenderer::create_render_graph(const std::string& name) {
+    std::shared_ptr<IRenderGraphImpl> GLRenderer::create_render_graph(const std::string& name) {
 
     }
 }

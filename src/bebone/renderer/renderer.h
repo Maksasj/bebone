@@ -4,7 +4,7 @@
 #include "irenderer.h"
 #include "renderer_factory.h"
 
-#include "irender_graph.h"
+#include "irender_graph_impl.h"
 #include "ipass.h"
 
 #include "iprogram.h"

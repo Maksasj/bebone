@@ -26,7 +26,7 @@ namespace bebone::renderer {
 
             void present() override;
 
-            std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) override;
+            std::shared_ptr<IRenderGraphImpl> create_render_graph(const std::string& name) override;
     };
 }
 

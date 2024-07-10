@@ -3,7 +3,7 @@
 
 #include "renderer_backend.h"
 
-#include "irender_graph.h"
+#include "irender_graph_impl.h"
 #include "ipass.h"
 
 #include "iprogram.h"
@@ -61,7 +61,7 @@ namespace bebone::renderer {
 
             virtual void present() = 0;
 
-            virtual std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) = 0;
+            virtual std::shared_ptr<IRenderGraphImpl> create_render_graph(const std::string& name) = 0;
     };
 }
 

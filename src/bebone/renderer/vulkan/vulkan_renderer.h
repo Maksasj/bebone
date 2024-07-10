@@ -21,7 +21,7 @@ namespace bebone::renderer {
 
             std::vector<std::shared_ptr<IMesh>> mesh_pool;
 
-            std::shared_ptr<IRenderGraph> render_graph;
+            std::shared_ptr<IRenderGraphImpl> render_graph;
 
         public:
             VulkanRenderer(std::shared_ptr<gfx::Window>& window);
@@ -37,7 +37,7 @@ namespace bebone::renderer {
 
             void present() override;
 
-            std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) override;
+            std::shared_ptr<IRenderGraphImpl> create_render_graph(const std::string& name) override;
     };
 }
 

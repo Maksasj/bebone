@@ -1,5 +1,5 @@
-#ifndef _BEBONE_RENDERER_IRENDER_GRAPH_H_
-#define _BEBONE_RENDERER_IRENDER_GRAPH_H_
+#ifndef _BEBONE_RENDERER_IRENDER_GRAPH_IMPL_H_
+#define _BEBONE_RENDERER_IRENDER_GRAPH_IMPL_H_
 
 #include "renderer_backend.h"
 
@@ -8,7 +8,7 @@
 #include "iresource_factory.h"
 
 namespace bebone::renderer {
-    class IRenderGraph {
+    class IRenderGraphImpl {
         private:
             std::string name;
 
@@ -16,8 +16,8 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<IResource>> render_resources;
 
         public:
-            IRenderGraph(const std::string& name);
-            virtual ~IRenderGraph() = default;
+            IRenderGraphImpl(const std::string& name);
+            virtual ~IRenderGraphImpl() = default;
 
             virtual void assemble() = 0;
 
