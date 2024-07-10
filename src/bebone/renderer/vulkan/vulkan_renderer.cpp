@@ -59,6 +59,7 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IRenderGraph> VulkanRenderer::create_render_graph(const std::string& name) {
-        return std::make_shared<IRenderGraph>(name, std::move(std::make_unique<VulkanRenderGraphImpl>(device, swap_chain)));
+        auto impl = std::make_shared<VulkanRenderGraphImpl>(device, swap_chain);
+        return std::make_shared<IRenderGraph>(name, static_pointer_cast<IRenderGraphImpl>(impl));
     }
 }

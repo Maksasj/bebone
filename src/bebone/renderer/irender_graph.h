@@ -11,15 +11,10 @@ namespace bebone::renderer {
     class IRenderGraph {
         private:
             std::string name;
-            std::unique_ptr<IRenderGraphImpl> impl;
-
-        protected:
-            IRenderGraph(const std::string& name, std::unique_ptr<IRenderGraphImpl> impl);
+            std::shared_ptr<IRenderGraphImpl> impl;
 
         public:
-            friend class IRenderer;
-            friend class GLRenderer;
-            friend class VulkanRenderer;
+            IRenderGraph(const std::string& name, const std::shared_ptr<IRenderGraphImpl>& impl);
 
             virtual ~IRenderGraph() = default;
 

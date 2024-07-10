@@ -3,7 +3,7 @@
 namespace bebone::renderer {
     IRenderGraph::IRenderGraph(
         const std::string& name, 
-        std::unique_ptr<IRenderGraphImpl> impl
+        const std::shared_ptr<IRenderGraphImpl>& impl
     ) : name(name), impl(std::move(impl)) {
 
     }
