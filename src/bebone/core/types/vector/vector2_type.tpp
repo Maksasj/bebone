@@ -68,7 +68,11 @@ namespace bebone::core {
         
         inline Vec2<T>& abs();
         inline T length() const;
-        inline Vec2<T> normalize();
+        inline Vec2<T> normalize() const;
+
+        inline T dot(const Vec2<T>& other) const;
+        inline Vec2<T> project(const Vec2<T>& other) const;
+        inline Vec2<T> reject(const Vec2<T>& other) const;
     };
 }
 
@@ -210,8 +214,23 @@ namespace bebone::core {
     }
 
     template<typename T>
-    Vec2<T> Vec2<T>::normalize() {
+    Vec2<T> Vec2<T>::normalize() const {
         return *this / length();
+    }
+
+    template<typename T>
+    T Vec2<T>::dot(const Vec2<T>& other) const {
+        return x * other.x + y * other.y;
+    }
+
+    template<typename T>
+    Vec2<T> Vec2<T>::project(const Vec2<T>& other) const {
+        return other * (dot(other) / other.dot(other));
+    }
+
+    template<typename T>
+    Vec2<T> Vec2<T>::reject(const Vec2<T>& other) const {
+        return *this - project(other);
     }
 }
 
