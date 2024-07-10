@@ -4,7 +4,7 @@ namespace bebone::renderer {
     IRenderGraph::IRenderGraph(
         const std::string& name, 
         const std::shared_ptr<IRenderGraphImpl>& impl
-    ) : name(name), impl(std::move(impl)) {
+    ) : name(name), impl(impl) {
 
     }
 

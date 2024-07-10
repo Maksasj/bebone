@@ -17,17 +17,7 @@
 #include "transform.h"
 
 namespace bebone::renderer {
-    // Handle types
-    struct ProgramHandle { size_t index; };
-    struct UniformBufferHandle { size_t index; };
-    struct VertexBufferHandle { size_t index; };
-    struct IndexBufferHandle { size_t index; };
-    struct TextureHandle { size_t index; };
-
     struct MeshHandle { size_t index; };
-    struct MaterialHandle { size_t index; };
-    struct SpriteHandle { size_t index; };
-    struct ModelHandle { size_t index; };
 
     class IRenderer {
         private:
