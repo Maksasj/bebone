@@ -3,7 +3,7 @@
 
 #include "renderer_backend.h"
 
-#include "irender_graph_impl.h"
+#include "irender_graph.h"
 #include "ipass.h"
 
 #include "iprogram.h"
@@ -48,20 +48,14 @@ namespace bebone::renderer {
 
             virtual ~IRenderer() = default;
 
-            // Todo, implement
-            virtual SpriteHandle load_sprite(const std::string& file_path) = 0;
-            virtual ModelHandle load_model(const std::string& file_path) = 0;
-
             virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
 
             // Todo, implement
-            virtual void render(const SpriteHandle& handle, const Transform& transform) = 0;
             virtual void render(const MeshHandle& handle, const Transform& transform) = 0;
-            virtual void render(const ModelHandle& handle, const Transform& transform) = 0;
 
             virtual void present() = 0;
 
-            virtual std::shared_ptr<IRenderGraphImpl> create_render_graph(const std::string& name) = 0;
+            virtual std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) = 0;
     };
 }
 

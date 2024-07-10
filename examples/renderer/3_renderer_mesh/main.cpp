@@ -13,6 +13,7 @@ struct Camera {
 };
 
 int main() {
+    /*
     glfwInit();
 
     auto window = WindowFactory::create_window("3. Renderer mesh", 800, 600, OpenGL);
@@ -77,6 +78,6 @@ int main() {
     shader_program.destroy();
 
     GLFWContext::terminate();
-
+*/
     return 0;
 }

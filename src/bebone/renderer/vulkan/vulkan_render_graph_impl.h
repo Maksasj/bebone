@@ -1,5 +1,5 @@
-#ifndef _BEBONE_RENDERER_VULKAN_RENDER_GRAPH_H_
-#define _BEBONE_RENDERER_VULKAN_RENDER_GRAPH_H_
+#ifndef _BEBONE_RENDERER_VULKAN_RENDER_GRAPH_IMPL_H_
+#define _BEBONE_RENDERER_VULKAN_RENDER_GRAPH_IMPL_H_
 
 #include "../irenderer.h"
 #include "../irender_graph_impl.h"
@@ -11,7 +11,7 @@
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    class VulkanRenderGraph : public IRenderGraphImpl {
+    class VulkanRenderGraphImpl : public IRenderGraphImpl {
         private:
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
@@ -22,8 +22,7 @@ namespace bebone::renderer {
             uint32_t frame;
 
         public:
-            VulkanRenderGraph(
-                const std::string& name,
+            VulkanRenderGraphImpl(
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain);
 

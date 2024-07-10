@@ -34,23 +34,10 @@ namespace bebone::renderer {
         instance->destroy();
     }
 
-    SpriteHandle VulkanRenderer::load_sprite(const std::string& file_path) {
-
-    }
-
-    ModelHandle VulkanRenderer::load_model(const std::string& file_path) {
-
-    }
-
     MeshHandle VulkanRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) {
         auto mesh = std::make_shared<VulkanTriangleMesh>(*device, vertices, indicies);
         mesh_pool.push_back(mesh);
         return { mesh_pool.size() - 1 };
-    }
-
-    void VulkanRenderer::render(const SpriteHandle& handle, const Transform& transform) {
-        std::ignore = handle;
-        std::ignore = transform;
     }
 
     void VulkanRenderer::render(const MeshHandle& handle, const Transform& transform) {
@@ -66,17 +53,12 @@ namespace bebone::renderer {
         });
     }
 
-    void VulkanRenderer::render(const ModelHandle& handle, const Transform& transform) {
-        std::ignore = handle;
-        std::ignore = transform;
-    }
-
     void VulkanRenderer::present() {
         render_graph->record();
         render_graph->submit();
     }
 
-    std::shared_ptr<IRenderGraphImpl> VulkanRenderer::create_render_graph(const std::string& name) {
-        return std::make_shared<VulkanRenderGraph>(name, device, swap_chain);
+    std::shared_ptr<IRenderGraph> VulkanRenderer::create_render_graph(const std::string& name) {
+        return std::make_shared<IRenderGraph>(name, std::move(std::make_unique<VulkanRenderGraphImpl>(device, swap_chain)));
     }
 }
