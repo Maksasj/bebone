@@ -28,9 +28,8 @@ namespace bebone::renderer {
     MeshHandle GLRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) {
         auto mesh = std::make_shared<OpenGLTriangleMesh>(vertices, indices);
         meshes_to_render.push_back(mesh);
-        return MeshHandle(meshes_to_render.size() - 1);
+        return { .index = meshes_to_render.size() - 1 };
     };
-
 
     void GLRenderer::render(const SpriteHandle& handle, const Transform& transform) {
 
