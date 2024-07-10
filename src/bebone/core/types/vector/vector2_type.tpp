@@ -68,8 +68,6 @@ namespace bebone::core {
         
         inline Vec2<T>& abs();
         inline T length() const;
-
-        inline float magnitude();
         inline Vec2<T> normalize();
     };
 }
@@ -212,13 +210,8 @@ namespace bebone::core {
     }
 
     template<typename T>
-    float Vec2<T>::magnitude() {
-        return sqrt(x * x + y * y);
-    }
-
-    template<typename T>
     Vec2<T> Vec2<T>::normalize() {
-        return *this / magnitude();
+        return *this / length();
     }
 }
 
