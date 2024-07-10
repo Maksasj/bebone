@@ -3,6 +3,19 @@
 
 #include "renderer_backend.h"
 
+#include "irender_graph.h"
+#include "ipass.h"
+
+#include "iprogram.h"
+#include "itexture.h"
+#include "iindex_buffer.h"
+#include "ivertex_buffer.h"
+#include "iuniform_buffer.h"
+
+#include "imaterial.h"
+#include "isprite.h"
+#include "imodel.h"
+
 #include "mesh/imesh.h"
 #include "mesh/imesh_builder.h"
 #include "mesh/imesh_generator.h"
@@ -14,24 +27,6 @@
 #include "transform.h"
 
 namespace bebone::renderer {
-    class IRenderer;
-
-    // class IBindable {}; // ?
-    // Abstract classes
-    class IProgram {}; // This is shader
-    // class IRenderPass;
-
-    class IUniformBuffer {};
-    class IVertexBuffer {};
-    class IIndexBuffer {};
-    class ITexture {};
-
-    // class IMesh {};
-    class IMaterial {};
-
-    class ISprite {};
-    class IModel {};
-
     // Handle types
     struct ProgramHandle { size_t index; };
     struct UniformBufferHandle { size_t index; };
@@ -44,11 +39,6 @@ namespace bebone::renderer {
     struct SpriteHandle { size_t index; };
     struct ModelHandle { size_t index; };
 
-    // Helper classes
-    // struct Vertex {};
-
-    class RendererFactory;
-
     class IRenderer {
         private:
             const GfxAPI api;
@@ -59,17 +49,19 @@ namespace bebone::renderer {
             virtual ~IRenderer() = default;
 
             // Todo, implement
-            virtual SpriteHandle load_sprite(const std::string& file_path) {};
-            virtual ModelHandle load_model(const std::string& file_path) {};
+            virtual SpriteHandle load_sprite(const std::string& file_path) = 0;
+            virtual ModelHandle load_model(const std::string& file_path) = 0;
 
             virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
 
             // Todo, implement
-            virtual void render(const SpriteHandle&, const Transform&) {};
-            virtual void render(const MeshHandle&, const Transform&) {};
-            virtual void render(const ModelHandle&, const Transform&) {};
+            virtual void render(const SpriteHandle& handle, const Transform& transform) = 0;
+            virtual void render(const MeshHandle& handle, const Transform& transform) = 0;
+            virtual void render(const ModelHandle& handle, const Transform& transform) = 0;
 
             virtual void present() = 0;
+
+            virtual std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) = 0;
     };
 }
 

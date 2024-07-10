@@ -5,6 +5,8 @@
 #include "../mesh/imesh.h"
 #include "../vertex.h"
 
+#include "vulkan_command_encoder.h"
+
 namespace bebone::renderer {
     using namespace bebone::gfx;
 

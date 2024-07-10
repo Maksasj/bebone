@@ -205,7 +205,7 @@ namespace bebone::gfx {
             void end_single_time_commands(std::shared_ptr<VulkanCommandBuffer>& command_buffer);
 
             std::shared_ptr<VulkanShaderModule> create_shader_module(
-                const std::string& file_path,
+                const std::string& source_code,
                 const ShaderType& type);
 
             std::shared_ptr<VulkanTexture> create_texture(

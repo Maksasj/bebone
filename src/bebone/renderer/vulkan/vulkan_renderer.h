@@ -3,12 +3,25 @@
 
 #include "../irenderer.h"
 
+#include "vulkan_render_graph.h"
+
 #include "vulkan_triangle_mesh.h"
 #include "vulkan_triangle_mesh_builder.h"
 
 namespace bebone::renderer {
+    using namespace bebone::gfx;
+
     class VulkanRenderer : public IRenderer {
         private:
+            std::shared_ptr<Window> window;
+
+            std::shared_ptr<VulkanInstance> instance;
+            std::shared_ptr<VulkanDevice> device;
+            std::shared_ptr<VulkanSwapChain> swap_chain;
+
+            std::vector<std::shared_ptr<IMesh>> mesh_pool;
+
+            std::shared_ptr<IRenderGraph> render_graph;
 
         public:
             VulkanRenderer(std::shared_ptr<gfx::Window>& window);
@@ -23,6 +36,8 @@ namespace bebone::renderer {
             void render(const ModelHandle& handle, const Transform& transform = {}) override;
 
             void present() override;
+
+            std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) override;
     };
 }
 

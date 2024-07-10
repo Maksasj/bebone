@@ -4,6 +4,19 @@
 #include "irenderer.h"
 #include "renderer_factory.h"
 
+#include "irender_graph.h"
+#include "ipass.h"
+
+#include "iprogram.h"
+#include "itexture.h"
+#include "iindex_buffer.h"
+#include "ivertex_buffer.h"
+#include "iuniform_buffer.h"
+
+#include "imaterial.h"
+#include "isprite.h"
+#include "imodel.h"
+
 #include "mesh/imesh.h"
 #include "mesh/imesh_builder.h"
 #include "mesh/imesh_generator.h"

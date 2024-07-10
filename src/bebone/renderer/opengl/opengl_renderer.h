@@ -23,6 +23,8 @@ namespace bebone::renderer {
             void render(const ModelHandle& handle, const Transform& transform = {}) override;
 
             void present() override;
+
+            std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) override;
     };
 }
 
