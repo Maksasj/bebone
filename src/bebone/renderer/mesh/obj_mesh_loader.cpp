@@ -84,7 +84,7 @@ namespace bebone::renderer {
 
                         auto texcoord = rep_texcoord[o];
 
-                        if(v.size() >= 3 && raw_texcoord.size() >= 0 && !v[1].empty())
+                        if(v.size() >= 3 && !v[1].empty())
                             texcoord = raw_texcoord[stoi(v[1]) - 1];
 
                         vertices.push_back(Vertex{vertex, normal, texcoord});

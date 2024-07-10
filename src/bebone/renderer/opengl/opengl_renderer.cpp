@@ -24,6 +24,7 @@ namespace bebone::renderer {
     };
 
     void GLRenderer::render(const MeshHandle& handle, const Transform& transform) {
+        std::ignore = transform;
         auto mesh = meshes_to_render[handle.index];
         auto triangle = static_pointer_cast<OpenGLTriangleMesh>(mesh);
         triangle->bind(nullptr);
@@ -41,6 +42,6 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IRenderGraph> GLRenderer::create_render_graph(const std::string& name) {
-
+        std::ignore = name;
     }
 }
