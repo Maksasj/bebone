@@ -37,4 +37,8 @@ namespace bebone::renderer {
     void GLRenderer::present() {
 
     }
+
+    std::shared_ptr<IRenderGraph> GLRenderer::create_render_graph(const std::string& name) {
+
+    }
 }

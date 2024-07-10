@@ -2,9 +2,10 @@
 
 namespace bebone::renderer {
     VulkanRenderGraph::VulkanRenderGraph(
+        const std::string& name,
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain
-    ) : IRenderGraph(), device(device), swap_chain(swap_chain) {
+    ) : IRenderGraph(name), device(device), swap_chain(swap_chain) {
         pipeline_manager = device->create_pipeline_manager();
         command_buffers = device->create_command_buffers(3);
     }
@@ -37,7 +38,8 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderGraph::reset() {
-
+        for(auto& pass : get_render_passes())
+            pass->reset();
     }
 
     std::shared_ptr<IPassFactory> VulkanRenderGraph::create_pass_factory() const {

@@ -7,7 +7,8 @@ namespace bebone::renderer {
         swap_chain = device->create_swap_chain(window);
 
         // Create default render graph
-        render_graph = std::make_shared<VulkanRenderGraph>(device, swap_chain);
+        render_graph = create_render_graph("my_graph");
+
         auto pass_factory = render_graph->create_pass_factory();
         auto resource_factory = render_graph->create_resource_factory();
 
@@ -72,7 +73,10 @@ namespace bebone::renderer {
 
     void VulkanRenderer::present() {
         render_graph->record();
-
         render_graph->submit();
+    }
+
+    std::shared_ptr<IRenderGraph> VulkanRenderer::create_render_graph(const std::string& name) {
+        return std::make_shared<VulkanRenderGraph>(name, device, swap_chain);
     }
 }

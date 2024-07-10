@@ -23,6 +23,7 @@ namespace bebone::renderer {
 
         public:
             VulkanRenderGraph(
+                const std::string& name,
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain);
 

@@ -60,6 +60,8 @@ namespace bebone::renderer {
             virtual void render(const ModelHandle& handle, const Transform& transform) = 0;
 
             virtual void present() = 0;
+
+            virtual std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) = 0;
     };
 }
 

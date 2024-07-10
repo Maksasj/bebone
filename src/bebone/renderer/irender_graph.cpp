@@ -1,7 +1,7 @@
 #include "irender_graph.h"
 
 namespace bebone::renderer {
-    IRenderGraph::IRenderGraph() {
+    IRenderGraph::IRenderGraph(const std::string& name) : name(name) {
 
     }
 

@@ -10,11 +10,13 @@
 namespace bebone::renderer {
     class IRenderGraph {
         private:
+            std::string name;
+
             std::vector<std::shared_ptr<IPass>> render_passes;
             std::vector<std::shared_ptr<IResource>> render_resources;
 
         public:
-            IRenderGraph();
+            IRenderGraph(const std::string& name);
             virtual ~IRenderGraph() = default;
 
             virtual void assemble() = 0;

@@ -79,6 +79,7 @@ namespace bebone::renderer {
         auto texture = static_pointer_cast<VulkanTextureResource>(texture_resource)->get_textures();
         texture_handles = pipeline->bind_textures(device, texture, 0);
 
+        // Todo, move this outside, to assembler
         auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
         quad_mesh = quad_generator->generate();
 
