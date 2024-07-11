@@ -29,6 +29,8 @@ namespace bebone::core {
         inline Matrix<f32, 3, 3> operator *(const f32& scalar) const;
         inline Vec3f operator *(const Vec3f& v) const;
 
+        inline bool operator ==(const Matrix<f32, 3, 3>& other) const;
+
         std::string to_string() const;
     };
 
@@ -94,6 +96,14 @@ namespace bebone::core {
                 m(1, 0) * v.x + m(1, 1) * v.y + m(1, 2) * v.z,
                 m(2, 0) * v.x + m(2, 1) * v.y + m(2, 2) * v.z
         };
+    }
+
+    inline bool Matrix<f32, 3, 3>::operator ==(const Matrix<f32, 3, 3>& other) const {
+        const Matrix<f32, 3, 3>& m = *this;
+
+        return m(0, 0) == other(0, 0) && m(0, 1) == other(0, 1) && m(0, 2) == other(0, 2) &&
+               m(1, 0) == other(1, 0) && m(1, 1) == other(1, 1) && m(1, 2) == other(1, 2) &&
+               m(2, 0) == other(2, 0) && m(2, 1) == other(2, 1) && m(2, 2) == other(2, 2);
     }
 }
 

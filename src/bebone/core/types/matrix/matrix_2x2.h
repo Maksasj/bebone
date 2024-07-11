@@ -28,6 +28,8 @@ namespace bebone::core {
         inline Matrix<f32, 2, 2> operator *(const f32& scalar) const;
         inline Vec2f operator *(const Vec2f& v) const;
 
+        inline bool operator ==(const Matrix<f32, 2, 2>& other) const;
+
         std::string to_string() const;
 
         inline static Matrix<f32, 2, 2> get_rotation_matrix(const f32 &rotationAngle);
@@ -95,6 +97,13 @@ namespace bebone::core {
                 m(0, 0) * v.x + m(0, 1) * v.y,
                 m(1, 0) * v.x + m(1, 1) * v.y
         };
+    }
+
+    inline bool Matrix<f32, 2, 2>::operator ==(const Matrix<f32, 2, 2>& other) const {
+        const Matrix<f32, 2, 2>& m = *this;
+
+        return m(0, 0) == other(0, 0) && m(0, 1) == other(0, 1) &&
+            m(1, 0) == other(1, 0) && m(1, 1) == other(1, 1);
     }
 
     // inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::get_rotation_matrix(const f32 &rotationAngle) {
