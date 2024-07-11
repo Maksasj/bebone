@@ -26,8 +26,13 @@ namespace bebone::core {
         inline Matrix<f32, 3, 3> operator +(const Matrix<f32, 3, 3>& other) const;
         inline Matrix<f32, 3, 3> operator -(const Matrix<f32, 3, 3>& other) const;
         inline Matrix<f32, 3, 3> operator *(const Matrix<f32, 3, 3>& other) const;
-        inline Matrix<f32, 3, 3> operator *(const f32& scalar) const;
+
         inline Vec3f operator *(const Vec3f& v) const;
+
+        inline Matrix<f32, 3, 3> operator +(const f32& scalar) const;
+        inline Matrix<f32, 3, 3> operator -(const f32& scalar) const;
+        inline Matrix<f32, 3, 3> operator *(const f32& scalar) const;
+        inline Matrix<f32, 3, 3> operator /(f32 scalar) const;
 
         inline bool operator ==(const Matrix<f32, 3, 3>& other) const;
 
@@ -98,14 +103,31 @@ namespace bebone::core {
         };
     }
 
+    inline Matrix<f32, 3, 3> Matrix<f32, 3, 3>::operator +(const f32& scalar) const {
+        const Matrix<f32, 3, 3>& m = *this;
+
+        return {
+                m(0, 0) + scalar, m(0, 1) + scalar, m(0, 2) + scalar,
+                m(1, 0) + scalar, m(1, 1) + scalar, m(1, 2) + scalar,
+                m(2, 0) + scalar, m(2, 1) + scalar, m(2, 2) + scalar
+        };
+    }
+
     inline Matrix<f32, 3, 3> Matrix<f32, 3, 3>::operator *(const f32& scalar) const {
         const Matrix<f32, 3, 3>& m = *this;
 
         return {
-                m(0, 0) * scalar, m(0, 1) * scalar, m(0, 2) * scalar,
-                m(1, 0) * scalar, m(1, 1) * scalar, m(1, 2) * scalar,
-                m(2, 0) * scalar, m(2, 1) * scalar, m(2, 2) * scalar
+                m(0, 0) - scalar, m(0, 1) - scalar, m(0, 2) - scalar,
+                m(1, 0) - scalar, m(1, 1) - scalar, m(1, 2) - scalar,
+                m(2, 0) - scalar, m(2, 1) - scalar, m(2, 2) - scalar
         };
+    }
+
+    inline Matrix<f32, 3, 3> Matrix<f32, 3, 3>::operator /(f32 scalar) const {
+        const Matrix<f32, 3, 3>& m = *this;
+        scalar = 1.0f / scalar;
+
+        return m * scalar;
     }
 
     inline bool Matrix<f32, 3, 3>::operator ==(const Matrix<f32, 3, 3>& other) const {

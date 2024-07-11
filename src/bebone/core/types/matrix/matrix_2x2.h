@@ -25,8 +25,13 @@ namespace bebone::core {
         inline Matrix<f32, 2, 2> operator +(const Matrix<f32, 2, 2>& other) const;
         inline Matrix<f32, 2, 2> operator -(const Matrix<f32, 2, 2>& other) const;
         inline Matrix<f32, 2, 2> operator *(const Matrix<f32, 2, 2>& other) const;
-        inline Matrix<f32, 2, 2> operator *(const f32& scalar) const;
+
         inline Vec2f operator *(const Vec2f& v) const;
+
+        inline Matrix<f32, 2, 2> operator +(const f32& scalar) const;
+        inline Matrix<f32, 2, 2> operator -(const f32& scalar) const;
+        inline Matrix<f32, 2, 2> operator *(const f32& scalar) const;
+        inline Matrix<f32, 2, 2> operator /(f32 scalar) const;
 
         inline bool operator ==(const Matrix<f32, 2, 2>& other) const;
 
@@ -70,15 +75,6 @@ namespace bebone::core {
         };
     }
 
-    inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::operator *(const f32& scalar) const {
-        const Matrix<f32, 2, 2>& m = *this;
-
-        return {
-                m(0, 0) * scalar, m(0, 1) * scalar,
-                m(1, 0) * scalar, m(1, 1) * scalar
-        };
-    }
-
     inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::operator *(const Matrix<f32, 2, 2>& other) const {
         const Matrix<f32, 2, 2>& m = *this;
 
@@ -97,6 +93,40 @@ namespace bebone::core {
                 m(0, 0) * v.x + m(0, 1) * v.y,
                 m(1, 0) * v.x + m(1, 1) * v.y
         };
+    }
+
+    inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::operator +(const f32& scalar) const {
+        const Matrix<f32, 2, 2>& m = *this;
+
+        return {
+                m(0, 0) + scalar, m(0, 1) + scalar,
+                m(1, 0) + scalar, m(1, 1) + scalar
+        };
+    }
+
+    inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::operator -(const f32& scalar) const {
+        const Matrix<f32, 2, 2>& m = *this;
+
+        return {
+                m(0, 0) - scalar, m(0, 1) - scalar,
+                m(1, 0) - scalar, m(1, 1) - scalar
+        };
+    }
+
+    inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::operator *(const f32& scalar) const {
+        const Matrix<f32, 2, 2>& m = *this;
+
+        return {
+                m(0, 0) * scalar, m(0, 1) * scalar,
+                m(1, 0) * scalar, m(1, 1) * scalar
+        };
+    }
+
+    inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::operator /(f32 scalar) const {
+        const Matrix<f32, 2, 2>& m = *this;
+        scalar = 1.0f / scalar;
+
+        return m * scalar;
     }
 
     inline bool Matrix<f32, 2, 2>::operator ==(const Matrix<f32, 2, 2>& other) const {
