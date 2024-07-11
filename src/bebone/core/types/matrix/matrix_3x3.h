@@ -17,6 +17,8 @@ namespace bebone::core {
 
         Matrix(const Vec3f& a, const Vec3f& b, const Vec3f& c);
 
+        inline Matrix<f32, 3, 3> transpose() const;
+
         inline f32& operator()(const size_t& row, const size_t& col);
         inline const f32& operator()(const size_t& row, const size_t& col) const;
 
@@ -136,6 +138,16 @@ namespace bebone::core {
         return m(0, 0) == other(0, 0) && m(0, 1) == other(0, 1) && m(0, 2) == other(0, 2) &&
                m(1, 0) == other(1, 0) && m(1, 1) == other(1, 1) && m(1, 2) == other(1, 2) &&
                m(2, 0) == other(2, 0) && m(2, 1) == other(2, 1) && m(2, 2) == other(2, 2);
+    }
+
+    inline Matrix<f32, 3, 3> Matrix<f32, 3, 3>::transpose() const {
+        const Matrix<f32, 3, 3>& m = *this;
+
+        return {
+                m(0, 0), m(1, 0), m(2, 0),
+                m(0, 1), m(1, 1), m(2, 1),
+                m(0, 2), m(1, 2), m(2, 2)
+        };
     }
 }
 

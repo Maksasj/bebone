@@ -33,8 +33,7 @@ namespace bebone::core {
         inline static Matrix<f32, 4, 4> rotation_y(const f32& angle);
         inline static Matrix<f32, 4, 4> rotation_z(const f32& angle);
 
-        inline static Matrix<f32, 4, 4> transpose(const Matrix<f32, 4, 4>& matrix);
-        inline void transpose();
+        inline Matrix<f32, 4, 4> transpose() const;
 
         inline f32& operator()(const size_t& row, const size_t& col);
         inline const f32& operator()(const size_t& row, const size_t& col) const;
@@ -76,18 +75,15 @@ namespace bebone::core {
         };
     }
 
-    inline void Matrix<f32, 4, 4>::transpose() {
-        const Matrix<f32, 4, 4> old = *this;
-        *this = transpose(old);
-    }
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::transpose() const {
+        const Matrix<f32, 4, 4>& m = *this;
 
-    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::transpose(const Matrix<f32, 4, 4>& matrix) {
-        return {{
-            matrix[0], matrix[4], matrix[8], matrix[12],
-            matrix[1], matrix[5], matrix[9], matrix[13],
-            matrix[2], matrix[6], matrix[10], matrix[14],
-            matrix[3], matrix[7], matrix[11], matrix[15]
-        }};
+        return {
+                m(0, 0), m(1, 0), m(2, 0), m(3, 0),
+                m(0, 1), m(1, 1), m(2, 1), m(3, 1),
+                m(0, 2), m(1, 2), m(2, 2), m(3, 2),
+                m(0, 3), m(1, 3), m(2, 3), m(3, 3)
+        };
     }
 
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::translation(const Vec3<f32>& vector) {

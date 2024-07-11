@@ -16,6 +16,8 @@ namespace bebone::core {
 
         Matrix(const Vec2f& a, const Vec2f& b);
 
+        inline Matrix<f32, 2, 2> transpose() const;
+
         inline f32& operator()(const size_t& row, const size_t& col);
         inline const f32& operator()(const size_t& row, const size_t& col) const;
 
@@ -134,6 +136,15 @@ namespace bebone::core {
 
         return m(0, 0) == other(0, 0) && m(0, 1) == other(0, 1) &&
             m(1, 0) == other(1, 0) && m(1, 1) == other(1, 1);
+    }
+
+    inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::transpose() const {
+        const Matrix<f32, 2, 2>& m = *this;
+
+        return {
+            m(0, 0), m(1, 0),
+            m(0, 1), m(1, 1)
+        };
     }
 
     // inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::get_rotation_matrix(const f32 &rotationAngle) {
