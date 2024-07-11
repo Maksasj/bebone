@@ -21,14 +21,15 @@ namespace bebone::core {
         /**
          * @brief Raw matrix values
         */
-        T e[width * height];
+        //T e[width * height];
+        T e[width][height];
 
         T& operator()(const size_t& row, const size_t& col) {
-            return e[width * row + col];
+            return e[col][row];
         }
 
         const T& operator()(const size_t& row, const size_t& col) const {
-            return e[width * row + col];
+            return e[col][row];
         }
 
         /**
@@ -36,14 +37,18 @@ namespace bebone::core {
          * 
          * @return std::string string representation 
         */
-        std::string to_string() const {
-            std::stringstream ss;
+         std::string to_string() const {
+             std::stringstream ss;
 
-            for(i32 i = 0; i < width * height; ++i)
-                ss << e[i] << " ";
-            
-            return ss.str();
-        }
+             for (i32 i = 0; i < width; ++i) {
+                 for (i32 j = 0; j < height; ++j) {
+                     ss << e[i][j] << " ";
+                 }
+                 ss << std::endl;
+             }
+
+             return ss.str();
+         }
     };
 
     /**
@@ -54,13 +59,16 @@ namespace bebone::core {
      * 
      * @return std::ostream& reference to the stream instance 
     */
-    template<typename T, u32 width, u32 height>
-    std::ostream& operator<<(std::ostream& os, const Matrix<T, width, height>& mat) {
-        for(i32 i = 0; i < width * height; ++i)
-            os << mat.e[i] << " ";
+     template<typename T, u32 width, u32 height>
+     std::ostream& operator<<(std::ostream& os, const Matrix<T, width, height>& mat) {
+         for (i32 i = 0; i < width; ++i) {
+             for (i32 j = 0; j < height; ++j) {
+                 os << mat.e[i][j] << " ";
+             }
+         }
 
-        return os;
-    } 
+         return os;
+     }
 
     /**
      * @brief Constructs object from it string representation
@@ -70,13 +78,16 @@ namespace bebone::core {
      * 
      * @return std::istream& reference to the stream instance 
     */
-    template<typename T, u32 width, u32 height>
-    std::istream& operator>>(std::istream& os, const Matrix<T, width, height>& mat) {
-        for(i32 i = 0; i < width * height; ++i)
-            os >> mat.e[i];
+     template<typename T, u32 width, u32 height>
+     std::istream& operator>>(std::istream& os, const Matrix<T, width, height>& mat) {
+        for (i32 i = 0; i < width; ++i) {
+            for (i32 j = 0; j < height; ++j) {
+                os >> mat.e[i][j];
+            }
+        }
 
-        return os;
-    }
+         return os;
+     }
 }
 
 #endif
