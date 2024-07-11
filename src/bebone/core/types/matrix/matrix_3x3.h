@@ -85,6 +85,16 @@ namespace bebone::core {
                 m(2, 0) * other(0, 2) + m(2, 1) * other(1, 2) + m(2, 2) * other(2, 2)
         };
     }
+
+    inline Vec3f Matrix<f32, 3, 3>::operator *(const Vec3f& v) const {
+        const Matrix<f32, 3, 3>& m = *this;
+
+        return {
+                m(0, 0) * v.x + m(0, 1) * v.y + m(0, 2) * v.z,
+                m(1, 0) * v.x + m(1, 1) * v.y + m(1, 2) * v.z,
+                m(2, 0) * v.x + m(2, 1) * v.y + m(2, 2) * v.z
+        };
+    }
 }
 
 #endif
