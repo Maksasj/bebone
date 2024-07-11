@@ -19,8 +19,8 @@ namespace bebone::core {
         inline f32& operator()(const size_t& row, const size_t& col);
         inline const f32& operator()(const size_t& row, const size_t& col) const;
 
-        inline Vec2f& operator[](const size_t& row);
-        inline const Vec2f& operator[](const size_t& row) const;
+        inline Vec2f& operator[](const size_t& col);
+        inline const Vec2f& operator[](const size_t& col) const;
 
         inline std::string to_string() const;
 
@@ -31,8 +31,8 @@ namespace bebone::core {
 
 namespace bebone::core {
     Matrix<f32, 2, 2>::Matrix(f32 n00, f32 n01, f32 n10, f32 n11) {
-        e[0][0] = n00; e[0][1] = n01;
-        e[1][0] = n10; e[1][1] = n11;
+        e[0][0] = n00; e[0][1] = n10;
+        e[1][0] = n01; e[1][1] = n11;
     }
 
     Matrix<f32, 2, 2>::Matrix(const Vec2f& a, const Vec2f& b) {
@@ -48,20 +48,20 @@ namespace bebone::core {
         return e[col][row];
     }
 
-    inline Vec2f& Matrix<f32, 2, 2>::operator[](const size_t& row) {
-        return (*reinterpret_cast<Vec2f*>(e[row]));
+    inline Vec2f& Matrix<f32, 2, 2>::operator[](const size_t& col) {
+        return (*reinterpret_cast<Vec2f*>(e[col]));
     }
 
-    inline const Vec2f& Matrix<f32, 2, 2>::operator[](const size_t& row) const {
-        return (*reinterpret_cast<const Vec2f*>(e[row]));
+    inline const Vec2f& Matrix<f32, 2, 2>::operator[](const size_t& col) const {
+        return (*reinterpret_cast<const Vec2f*>(e[col]));
     }
 
     inline std::string Matrix<f32, 2, 2>::to_string() const {
         std::stringstream ss;
 
-        for (auto i : e) {
-            for (i32 j = 0; j < 2; ++j) {
-                ss << i[j] << " ";
+        for (i32 i = 0; i < 2; ++i) {
+            for (auto j : e) {
+                ss << j[i] << " ";
             }
             ss << std::endl;
         }

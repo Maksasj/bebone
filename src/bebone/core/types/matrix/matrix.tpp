@@ -18,12 +18,12 @@ namespace bebone::core {
     */
     template<typename T, u32 width, u32 height>
     struct Matrix {
+    private:
         /**
          * @brief Raw matrix values
         */
-        //T e[width * height];
         T e[width][height];
-
+    public:
         T& operator()(const size_t& row, const size_t& col) {
             return e[col][row];
         }
