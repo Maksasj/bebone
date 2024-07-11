@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_OPENGL_TRIANGLE_MESH_H_
 
 #include "../renderer_backend.h"
-#include "../mesh/imesh.h"
+#include "../imesh.h"
 #include "../vertex.h"
 
 namespace bebone::renderer {

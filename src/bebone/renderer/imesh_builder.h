@@ -1,8 +1,8 @@
 #ifndef _BEBONE_RENDERER_IMESH_BUILDER_H_
 #define _BEBONE_RENDERER_IMESH_BUILDER_H_
 
-#include "../renderer_backend.h"
-#include "../vertex_triangle.h"
+#include "renderer_backend.h"
+#include "vertex_triangle.h"
 
 #include "imesh.h"
 

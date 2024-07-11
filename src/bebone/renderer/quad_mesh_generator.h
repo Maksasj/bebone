@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_QUAD_MESH_GENERATOR_H_
 #define _BEBONE_RENDERER_QUAD_MESH_GENERATOR_H_
 
-#include "../renderer_backend.h"
+#include "renderer_backend.h"
 #include "imesh_generator.h"
 
 namespace bebone::renderer {

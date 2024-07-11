@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "../renderer_backend.h"
+#include "renderer_backend.h"
 #include "imesh_builder.h"
 
 namespace bebone::renderer {

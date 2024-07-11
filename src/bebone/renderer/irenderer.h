@@ -6,11 +6,11 @@
 #include "irender_graph.h"
 #include "ipass.h"
 
-#include "mesh/imesh.h"
-#include "mesh/imesh_builder.h"
-#include "mesh/imesh_generator.h"
-#include "mesh/imesh_loader.h"
-#include "mesh/obj_mesh_loader.h"
+#include "imesh.h"
+#include "imesh_builder.h"
+#include "imesh_generator.h"
+#include "imesh_loader.h"
+#include "obj_mesh_loader.h"
 
 #include "vertex.h"
 #include "vertex_triangle.h"

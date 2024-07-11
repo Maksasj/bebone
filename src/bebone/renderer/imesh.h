@@ -1,9 +1,9 @@
 #ifndef _BEBONE_RENDERER_IMESH_H_
 #define _BEBONE_RENDERER_IMESH_H_
 
-#include "../renderer_backend.h"
-#include "../vertex.h"
-#include "../icommand_encoder.h"
+#include "renderer_backend.h"
+#include "vertex.h"
+#include "icommand_encoder.h"
 
 namespace bebone::renderer {
         // Todo, probably need to inherit from some sort of Bindable,

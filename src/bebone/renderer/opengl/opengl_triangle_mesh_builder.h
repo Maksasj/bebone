@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_OPENGL_TRIANGLE_MESH_BUILDER_H_
 
 #include "../renderer_backend.h"
-#include "../mesh/imesh_builder.h"
+#include "../imesh_builder.h"
 #include "../vertex.h"
 
 #include "opengl_triangle_mesh.h"
