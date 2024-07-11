@@ -1,7 +1,7 @@
 #ifndef _BEBONE_CORE_TYPES_PROPER_EULER_ANGLES_
 #define _BEBONE_CORE_TYPES_PROPER_EULER_ANGLES_
 
-#include "../matrix/matrix_4x4.tpp"
+#include "../matrix/matrix_4x4.h"
 
 namespace bebone::core {
     static inline Matrix<f32, 4, 4> proper_euler_angle_xzx(const Vec3f& rotation) {

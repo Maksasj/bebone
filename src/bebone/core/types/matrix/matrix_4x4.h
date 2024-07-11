@@ -6,7 +6,18 @@
 namespace bebone::core {
     template<>
     struct Matrix<f32, 4, 4> {
-        f32 e[4 * 4];
+    private:
+        f32 e[4][4];
+
+    public:
+        Matrix() = default;
+
+        Matrix(f32 n00, f32 n01, f32 n02, f32 n03,
+               f32 n10, f32 n11, f32 n12, f32 n13,
+               f32 n20, f32 n21, f32 n22, f32 n23,
+               f32 n30, f32 n31, f32 n32, f32 n33);
+
+        Matrix(const Vec4f& a, const Vec4f& b, const Vec4f& c, const Vec4f& d);
 
         inline static Matrix<f32, 4, 4> splat(const f32& value);
         inline static Matrix<f32, 4, 4> identity();
@@ -25,58 +36,44 @@ namespace bebone::core {
         inline static Matrix<f32, 4, 4> transpose(const Matrix<f32, 4, 4>& matrix);
         inline void transpose();
 
-        // Todo optimse, or use something like simd
-        inline Matrix<f32, 4, 4> operator*(const Matrix<f32, 4, 4>& b) const;
+        inline f32& operator()(const size_t& row, const size_t& col);
+        inline const f32& operator()(const size_t& row, const size_t& col) const;
 
-        f32& operator[](const size_t& index);
-        const f32& operator[](const size_t& index) const;
+        inline Vec4f& operator[](const size_t& col);
+        inline const Vec4f& operator[](const size_t& col) const;
 
-        inline Vec4<f32> operator*(const Vec4<f32>& vec) const {
-            return {
-                vec.x * e[0] + vec.y * e[4] + vec.z * e[8] + vec.w * e[12],
-                vec.x * e[1] + vec.y * e[5] + vec.z * e[9] + vec.w * e[13],
-                vec.x * e[2] + vec.y * e[6] + vec.z * e[10] + vec.w * e[14],
-                vec.x * e[3] + vec.y * e[7] + vec.z * e[11] + vec.w * e[15]
-            };
-        }
+        inline Matrix<f32, 4, 4> operator +(const Matrix<f32, 4, 4>& other) const;
+        inline Matrix<f32, 4, 4> operator -(const Matrix<f32, 4, 4>& other) const;
+        inline Matrix<f32, 4, 4> operator *(const Matrix<f32, 4, 4>& other) const;
+        inline Vec4f operator *(const Vec4f& v) const;
 
-        inline Matrix<f32, 4, 4> operator+(const f32& value) const;
-        inline Matrix<f32, 4, 4> operator-(const f32& value) const;
-        inline Matrix<f32, 4, 4> operator*(const f32& value) const;
-        inline Matrix<f32, 4, 4> operator/(const f32& value) const;
+        inline Matrix<f32, 4, 4> operator+(const f32& scalar) const;
+        inline Matrix<f32, 4, 4> operator-(const f32& scalar) const;
+        inline Matrix<f32, 4, 4> operator*(const f32& scalar) const;
+        inline Matrix<f32, 4, 4> operator/(f32 scalar) const;
 
         inline bool operator==(const Matrix<f32, 4, 4>& other) const;
         inline bool operator!=(const Matrix<f32, 4, 4>& other) const;
 
         inline std::string to_string() const;
     };
-}
 
-namespace bebone::core {
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::splat(const f32& value) {
-        return {{
+        return {
             value, value, value, value,
             value, value, value, value,
             value, value, value, value,
             value, value, value, value
-        }};
+        };
     }
 
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::identity() {
-        return {{
+        return {
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
-        }};
-    }
-
-    inline f32& Matrix<f32, 4, 4>::operator[](const size_t& index) {
-        return e[index];
-    }
-
-    inline const f32& Matrix<f32, 4, 4>::operator[](const size_t& index) const {
-        return e[index];
+        };
     }
 
     inline void Matrix<f32, 4, 4>::transpose() {
@@ -92,7 +89,6 @@ namespace bebone::core {
             matrix[3], matrix[7], matrix[11], matrix[15]
         }};
     }
-
 
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::translation(const Vec3<f32>& vector) {
         #ifndef BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
@@ -205,81 +201,128 @@ namespace bebone::core {
         return view(origin, dir, up);
     }
 
-    inline std::string Matrix<f32, 4, 4>::to_string() const {
-        std::stringstream ss;
-
-        for(const f32& i : e)
-            ss << i << " ";
-        
-        return ss.str();
+    inline f32& Matrix<f32, 4, 4>::operator()(const size_t& row, const size_t& col) {
+        return e[col][row];
     }
 
-    // Todo optimse, or use something like simd
-    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator*(const Matrix<f32, 4, 4>& b) const {
-        return {{ 
-            e[0]    * b.e[0] + e[1]     * b.e[4] + e[2]     * b.e[8]        + e[3]  * b.e[12], 
-            e[0]    * b.e[1] + e[1]     * b.e[5] + e[2]     * b.e[9]        + e[3]  * b.e[13], 
-            e[0]    * b.e[2] + e[1]     * b.e[6] + e[2]     * b.e[10]       + e[3]  * b.e[14], 
-            e[0]    * b.e[3] + e[1]     * b.e[7] + e[2]     * b.e[11]       + e[3]  * b.e[15], 
-            e[4]    * b.e[0] + e[5]     * b.e[4] + e[6]     * b.e[8]        + e[7]  * b.e[12], 
-            e[4]    * b.e[1] + e[5]     * b.e[5] + e[6]     * b.e[9]        + e[7]  * b.e[13], 
-            e[4]    * b.e[2] + e[5]     * b.e[6] + e[6]     * b.e[10]       + e[7]  * b.e[14], 
-            e[4]    * b.e[3] + e[5]     * b.e[7] + e[6]     * b.e[11]       + e[7]  * b.e[15], 
-            e[8]    * b.e[0] + e[9]     * b.e[4] + e[10]    * b.e[8]        + e[11] * b.e[12], 
-            e[8]    * b.e[1] + e[9]     * b.e[5] + e[10]    * b.e[9]        + e[11] * b.e[13], 
-            e[8]    * b.e[2] + e[9]     * b.e[6] + e[10]    * b.e[10]       + e[11] * b.e[14], 
-            e[8]    * b.e[3] + e[9]     * b.e[7] + e[10]    * b.e[11]       + e[11] * b.e[15], 
-            e[12]   * b.e[0] + e[13]    * b.e[4] + e[14]    * b.e[8]        + e[15] * b.e[12], 
-            e[12]   * b.e[1] + e[13]    * b.e[5] + e[14]    * b.e[9]        + e[15] * b.e[13], 
-            e[12]   * b.e[2] + e[13]    * b.e[6] + e[14]    * b.e[10]       + e[15] * b.e[14], 
-            e[12]   * b.e[3] + e[13]    * b.e[7] + e[14]    * b.e[11]       + e[15] * b.e[15]
-        }};
+    inline const f32& Matrix<f32, 4, 4>::operator()(const size_t& row, const size_t& col) const {
+        return e[col][row];
     }
 
-    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator*(const f32& value) const {
-        Matrix<f32, 4, 4> mat = *this;
-
-        for(f32& i : mat.e)
-            i *= value;
-
-        return mat;
+    inline Vec4f& Matrix<f32, 4, 4>::operator[](const size_t& col) {
+        return (*reinterpret_cast<Vec4f*>(e[col]));
     }
 
-    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator/(const f32& value) const {
-        Matrix<f32, 4, 4> mat = *this;
-
-        for(f32& i : mat.e)
-            i /= value;
-
-        return mat;
+    inline const Vec4f& Matrix<f32, 4, 4>::operator[](const size_t& col) const {
+        return (*reinterpret_cast<const Vec4f*>(e[col]));
     }
 
-    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator+(const f32& value) const {
-        Matrix<f32, 4, 4> mat = *this;
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator +(const Matrix<f32, 4, 4>& other) const {
+        const Matrix<f32, 4, 4>& m = *this;
 
-        for(f32& i : mat.e)
-            i += value;
-
-        return mat;
+        return {
+                m(0, 0) + other(0, 0), m(0, 1) + other(0, 1), m(0, 2) + other(0, 2), m(0, 3) + other(0, 3),
+                m(1, 0) + other(1, 0), m(1, 1) + other(1, 1), m(1, 2) + other(1, 2), m(1, 3) + other(1, 3),
+                m(2, 0) + other(2, 0), m(2, 1) + other(2, 1), m(2, 2) + other(2, 2), m(2, 3) + other(2, 3),
+                m(3, 0) + other(3, 0), m(3, 1) + other(3, 1), m(3, 2) + other(3, 2), m(3, 3) + other(3, 3)
+        };
     }
 
-    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator-(const f32& value) const {
-        Matrix<f32, 4, 4> mat = *this;
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator -(const Matrix<f32, 4, 4>& other) const {
+        const Matrix<f32, 4, 4>& m = *this;
 
-        for(f32& i : mat.e)
-            i -= value;
+        return {
+                m(0, 0) - other(0, 0), m(0, 1) - other(0, 1), m(0, 2) - other(0, 2), m(0, 3) - other(0, 3),
+                m(1, 0) - other(1, 0), m(1, 1) - other(1, 1), m(1, 2) - other(1, 2), m(1, 3) - other(1, 3),
+                m(2, 0) - other(2, 0), m(2, 1) - other(2, 1), m(2, 2) - other(2, 2), m(2, 3) - other(2, 3),
+                m(3, 0) - other(3, 0), m(3, 1) - other(3, 1), m(3, 2) - other(3, 2), m(3, 3) - other(3, 3)
+        };
+    }
 
-        return mat;
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator *(const Matrix<f32, 4, 4>& other) const {
+        const Matrix<f32, 4, 4>& m = *this;
+
+        return {
+                m(0, 0) * other(0, 0) + m(0, 1) * other(1, 0) + m(0, 2) * other(2, 0) + m(0, 3) * other(3, 0),
+                m(0, 0) * other(0, 1) + m(0, 1) * other(1, 1) + m(0, 2) * other(2, 1) + m(0, 3) * other(3, 1),
+                m(0, 0) * other(0, 2) + m(0, 1) * other(1, 2) + m(0, 2) * other(2, 2) + m(0, 3) * other(3, 2),
+                m(0, 0) * other(0, 3) + m(0, 1) * other(1, 3) + m(0, 2) * other(2, 3) + m(0, 3) * other(3, 3),
+
+                m(1, 0) * other(0, 0) + m(1, 1) * other(1, 0) + m(1, 2) * other(2, 0) + m(1, 3) * other(3, 0),
+                m(1, 0) * other(0, 1) + m(1, 1) * other(1, 1) + m(1, 2) * other(2, 1) + m(1, 3) * other(3, 1),
+                m(1, 0) * other(0, 2) + m(1, 1) * other(1, 2) + m(1, 2) * other(2, 2) + m(1, 3) * other(3, 2),
+                m(1, 0) * other(0, 3) + m(1, 1) * other(1, 3) + m(1, 2) * other(2, 3) + m(1, 3) * other(3, 3),
+
+                m(2, 0) * other(0, 0) + m(2, 1) * other(1, 0) + m(2, 2) * other(2, 0) + m(2, 3) * other(3, 0),
+                m(2, 0) * other(0, 1) + m(2, 1) * other(1, 1) + m(2, 2) * other(2, 1) + m(2, 3) * other(3, 1),
+                m(2, 0) * other(0, 2) + m(2, 1) * other(1, 2) + m(2, 2) * other(2, 2) + m(2, 3) * other(3, 2),
+                m(2, 0) * other(0, 3) + m(2, 1) * other(1, 3) + m(2, 2) * other(2, 3) + m(2, 3) * other(3, 3),
+
+                m(3, 0) * other(0, 0) + m(3, 1) * other(1, 0) + m(3, 2) * other(2, 0) + m(3, 3) * other(3, 0),
+                m(3, 0) * other(0, 1) + m(3, 1) * other(1, 1) + m(3, 2) * other(2, 1) + m(3, 3) * other(3, 1),
+                m(3, 0) * other(0, 2) + m(3, 1) * other(1, 2) + m(3, 2) * other(2, 2) + m(3, 3) * other(3, 2),
+                m(3, 0) * other(0, 3) + m(3, 1) * other(1, 3) + m(3, 2) * other(2, 3) + m(3, 3) * other(3, 3)
+        };
+    }
+
+    inline Vec4f Matrix<f32, 4, 4>::operator *(const Vec4f& v) const {
+        const Matrix<f32, 4, 4>& m = *this;
+
+        return {
+                m(0, 0) * v.x + m(0, 1) * v.y + m(0, 2) * v.z + m(0, 3) * v.w,
+                m(1, 0) * v.x + m(1, 1) * v.y + m(1, 2) * v.z + m(1, 3) * v.w,
+                m(2, 0) * v.x + m(2, 1) * v.y + m(2, 2) * v.z + m(2, 3) * v.w,
+                m(3, 0) * v.x + m(3, 1) * v.y + m(3, 2) * v.z + m(3, 3) * v.w
+        };
+    }
+
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator*(const f32& scalar) const {
+        Matrix<f32, 4, 4> m = *this;
+
+        return {
+                m(0, 0) * scalar, m(0, 1) * scalar, m(0, 2) * scalar, m(0, 3) * scalar,
+                m(1, 0) * scalar, m(1, 1) * scalar, m(1, 2) * scalar, m(1, 3) * scalar,
+                m(2, 0) * scalar, m(2, 1) * scalar, m(2, 2) * scalar, m(2, 3) * scalar,
+                m(3, 0) * scalar, m(3, 1) * scalar, m(3, 2) * scalar, m(3, 3) * scalar
+        };
+    }
+
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator/(f32 scalar) const {
+        Matrix<f32, 4, 4> m = *this;
+        scalar = 1.0f / scalar;
+
+        return m * scalar;
+    }
+
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator+(const f32& scalar) const {
+        Matrix<f32, 4, 4> m = *this;
+
+        return {
+                m(0, 0) + scalar, m(0, 1) + scalar, m(0, 2) + scalar, m(0, 3) + scalar,
+                m(1, 0) + scalar, m(1, 1) + scalar, m(1, 2) + scalar, m(1, 3) + scalar,
+                m(2, 0) + scalar, m(2, 1) + scalar, m(2, 2) + scalar, m(2, 3) + scalar,
+                m(3, 0) + scalar, m(3, 1) + scalar, m(3, 2) + scalar, m(3, 3) + scalar
+        };
+    }
+
+    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::operator-(const f32& scalar) const {
+        Matrix<f32, 4, 4> m = *this;
+
+        return {
+                m(0, 0) - scalar, m(0, 1) - scalar, m(0, 2) - scalar, m(0, 3) - scalar,
+                m(1, 0) - scalar, m(1, 1) - scalar, m(1, 2) - scalar, m(1, 3) - scalar,
+                m(2, 0) - scalar, m(2, 1) - scalar, m(2, 2) - scalar, m(2, 3) - scalar,
+                m(3, 0) - scalar, m(3, 1) - scalar, m(3, 2) - scalar, m(3, 3) - scalar
+        };
     }
 
     inline bool Matrix<f32, 4, 4>::operator==(const Matrix<f32, 4, 4>& other) const {
-        for(size_t i = 0; i < 16; ++i) {
-            if(e[i] != other.e[i]) {
-                return false;
-            }
-        }
+        Matrix<f32, 4, 4> m = *this;
 
-        return true;
+        return m(0, 0) == other(0, 0) && m(0, 1) == other(0, 1) && m(0, 2) == other(0, 2) && m(0, 3) == other(0, 3) &&
+               m(1, 0) == other(1, 0) && m(1, 1) == other(1, 1) && m(1, 2) == other(1, 2) && m(1, 3) == other(1, 3) &&
+               m(2, 0) == other(2, 0) && m(2, 1) == other(2, 1) && m(2, 2) == other(2, 2) && m(2, 3) == other(2, 3) &&
+               m(3, 0) == other(3, 0) && m(3, 1) == other(3, 1) && m(3, 2) == other(3, 2) && m(3, 3) == other(3, 3);
     }
 
     inline bool Matrix<f32, 4, 4>::operator!=(const Matrix<f32, 4, 4>& other) const {
