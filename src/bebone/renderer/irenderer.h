@@ -23,8 +23,11 @@ namespace bebone::renderer {
         private:
             const GfxAPI api;
 
+        protected:
+            virtual void handle_resize(const Vec2i& new_size) = 0;
+
         public:
-            explicit IRenderer(const GfxAPI& api);
+            IRenderer(const GfxAPI& api);
 
             virtual ~IRenderer() = default;
 

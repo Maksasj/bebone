@@ -22,6 +22,9 @@ namespace bebone::renderer {
 
             std::shared_ptr<IRenderGraph> render_graph;
 
+        protected:
+            void handle_resize(const Vec2i& new_size) override;
+
         public:
             VulkanRenderer(std::shared_ptr<gfx::Window>& window);
             ~VulkanRenderer() override;

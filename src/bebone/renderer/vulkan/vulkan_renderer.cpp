@@ -28,10 +28,44 @@ namespace bebone::renderer {
         render_graph->add_pass(present);
 
         render_graph->assemble();
+
+        window->add_listener([&](WindowSizeEvent event) {
+            handle_resize({ event.width, event.height });
+        });
     }
 
     VulkanRenderer::~VulkanRenderer() {
         instance->destroy();
+    }
+
+    void VulkanRenderer::handle_resize(const Vec2i& new_size) {
+        device->wait_idle();
+        device->destroy_all(swap_chain);
+        device->collect_garbage();
+
+        swap_chain = device->create_swap_chain(window);
+
+        render_graph = create_render_graph("my_graph");
+
+        auto pass_factory = render_graph->create_pass_factory();
+        auto resource_factory = render_graph->create_resource_factory();
+
+        auto geometry_texture = resource_factory->create_texture_resource("geometry_texture");
+        render_graph->add_resource(geometry_texture);
+
+        auto geometry_depth = resource_factory->create_depth_resource("geometry_depth");
+        render_graph->add_resource(geometry_depth);
+
+        auto geometry = pass_factory->create_deferred_g_pass("geometry", { new_size.x, new_size.y });
+        geometry->plug_output("texture", geometry_texture);
+        geometry->plug_output("depth", geometry_depth);
+        render_graph->add_pass(geometry);
+
+        auto present = pass_factory->create_present_pass("present", { new_size.x, new_size.y });
+        present->plug_input("texture", geometry_texture);
+        render_graph->add_pass(present);
+
+        render_graph->assemble();
     }
 
     MeshHandle VulkanRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) {

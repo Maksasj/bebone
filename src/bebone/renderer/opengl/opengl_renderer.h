@@ -12,6 +12,10 @@ namespace bebone::renderer {
             std::shared_ptr<Window> window;
             std::unique_ptr<GLShaderProgram> shader_program;
             std::vector<std::shared_ptr<IMesh>> meshes_to_render;
+
+        protected:
+            void handle_resize(const Vec2i& new_size) override;
+
         public:
             GLRenderer(std::shared_ptr<Window>& window);
             ~GLRenderer() override;

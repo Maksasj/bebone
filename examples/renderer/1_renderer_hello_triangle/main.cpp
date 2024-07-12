@@ -6,7 +6,7 @@ using namespace bebone::gfx;
 int main() {
     GLFWContext::init(); // this should be moved somewhere else
 
-    auto window = WindowFactory::create_window("1. Renderer hello triangle", 800, 600, Vulkan);
+    auto window = WindowFactory::create_window("1. Renderer hello triangle", 800, 600, Vulkan, { .enable_resize = true });
     auto renderer = RendererFactory::create_renderer(window);
 
     const std::vector<Vertex> vertices = {

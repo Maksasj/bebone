@@ -17,6 +17,10 @@ namespace bebone::renderer {
         shader_program->destroy();
     }
 
+    void GLRenderer::handle_resize(const Vec2i& new_size) {
+        // Todo
+    }
+
     MeshHandle GLRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) {
         auto mesh = std::make_shared<OpenGLTriangleMesh>(vertices, indices);
         meshes_to_render.push_back(mesh);
