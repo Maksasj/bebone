@@ -12,7 +12,6 @@ namespace bebone::renderer {
             void reset() override;
             std::shared_ptr<IMesh> generate() override;
     };
-
 }
 
 #endif

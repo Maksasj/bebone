@@ -39,7 +39,8 @@ namespace bebone::renderer {
 
             virtual void present() = 0;
 
-            virtual std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name) = 0;
+            virtual std::shared_ptr<IRenderGraphImpl> create_render_graph_impl() = 0;
+            std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name);
     };
 }
 

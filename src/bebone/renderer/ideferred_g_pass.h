@@ -11,7 +11,11 @@ namespace bebone::renderer {
 
     class IDeferredGPass : public IRenderQueuePass {
         protected:
-            std::shared_ptr<IResource> texture_resource;
+            std::shared_ptr<IResource> position_resource;
+            std::shared_ptr<IResource> normals_resource;
+            std::shared_ptr<IResource> albedo_resource;
+            std::shared_ptr<IResource> specular_resource;
+
             std::shared_ptr<IResource> depth_resource;
 
         public:

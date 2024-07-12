@@ -19,6 +19,13 @@ namespace bebone::renderer {
     void VulkanTriangleMesh::bind(ICommandEncoder* encoder) {
         auto cmd = static_cast<VulkanCommandEncoder*>(encoder)->get_command_buffer();
 
+        // Todo
+        if(!vertices.has_value())
+            std::cout << "Vertices are not provided\n";
+        
+        if(!indices.has_value())
+            std::cout << "Vertices are not provided\n";
+
         cmd->bind_vertex_buffer(vertices.value());
         cmd->bind_index_buffer(indices.value());
     }

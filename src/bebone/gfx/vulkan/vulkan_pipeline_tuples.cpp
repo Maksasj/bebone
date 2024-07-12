@@ -67,6 +67,14 @@ namespace bebone::gfx {
         ++bindless_samplers_index;
 
         // Todo
+        if(!attachment->get_sampler().has_value())
+            std::cout << "Sampler does not have any value";
+
+        // Todo
+        if(!attachment->get_view().has_value())
+            std::cout << "View does not have any value";
+
+        // Todo
         auto sampler = attachment->get_sampler().value();
         auto view = attachment->get_view().value();
 

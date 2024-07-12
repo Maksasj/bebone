@@ -13,7 +13,6 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "\n"
     "void main() {\n"
     "    gl_Position = vec4(position, 1.0);\n"
-    "\n"
     "    out_normal = normal;\n"
     "    out_texcoord = texcoord;\n"
     "}";
@@ -25,10 +24,13 @@ static const char vulkan_deferred_g_pass_fragment_shader_code[] =
     "layout (location = 0) in vec3 normal;\n"
     "layout (location = 1) in vec2 texcoord;\n"
     "\n"
-    "layout (location = 0) out vec4 out_color;\n"
+    "layout (location = 0) out vec4 out_position;\n"
+    "layout (location = 1) out vec4 out_normals;\n"
+    "layout (location = 2) out vec4 out_albedo;\n"
+    "layout (location = 3) out vec4 out_specular;\n"
     "\n"
     "void main() {\n"
-    "   out_color = vec4(texcoord, 1.0, 1.0);\n"
+    "   out_albedo = vec4(texcoord, 1.0, 1.0);\n"
     "}";
 
 const auto vulkan_present_pass_vertex_descriptions = bebone::gfx::VulkanPipelineVertexInputStateTuple {
@@ -62,8 +64,11 @@ namespace bebone::renderer {
         auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
 
         render_pass = device->create_render_pass(viewport, {
-            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
-            VulkanAttachmentDesc::depth2D(viewport, { .format = device->find_depth_format() }),
+            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* position */
+            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* normals */
+            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* albedo */
+            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* specular */
+            VulkanAttachmentDesc::depth2D(viewport, { .format = device->find_depth_format() }),   /* depth */
         });
 
         auto vert_shader_module = device->create_shader_module(vulkan_deferred_g_pass_vertex_shader_code, VertexShader);
@@ -84,13 +89,17 @@ namespace bebone::renderer {
         device->collect_garbage();
 
         // Setting render target
-        auto texture = static_pointer_cast<VulkanTextureResource>(texture_resource)->get_textures();
+        auto position = static_pointer_cast<VulkanTextureResource>(position_resource)->get_textures();
+        auto normals = static_pointer_cast<VulkanTextureResource>(normals_resource)->get_textures();
+        auto albedo = static_pointer_cast<VulkanTextureResource>(albedo_resource)->get_textures();
+        auto specular = static_pointer_cast<VulkanTextureResource>(specular_resource)->get_textures();
+
         auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_textures();
 
         framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-            device->create_framebuffer({ texture[0]->view, depth[0]->view }, render_pass, viewport),
-            device->create_framebuffer({ texture[1]->view, depth[1]->view }, render_pass, viewport),
-            device->create_framebuffer({ texture[2]->view, depth[2]->view }, render_pass, viewport)
+            device->create_framebuffer({ position[0]->view, normals[0]->view, albedo[0]->view, specular[0]->view, depth[0]->view }, render_pass, viewport),
+            device->create_framebuffer({ position[1]->view, normals[1]->view, albedo[1]->view, specular[1]->view, depth[1]->view }, render_pass, viewport),
+            device->create_framebuffer({ position[2]->view, normals[2]->view, albedo[2]->view, specular[2]->view, depth[2]->view }, render_pass, viewport)
         };
 
         set_program(std::make_shared<VulkanProgram>(pipeline));
