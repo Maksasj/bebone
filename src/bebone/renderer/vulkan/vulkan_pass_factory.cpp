@@ -15,7 +15,7 @@ namespace bebone::renderer {
         return std::make_shared<VulkanPresentPass>(pass_name);
     }
 
-    std::shared_ptr<IGeometryPass> VulkanPassFactory::create_geometry_pass(const std::string& pass_name) {
+    std::shared_ptr<IRenderQueuePass> VulkanPassFactory::create_geometry_pass(const std::string& pass_name) {
         return std::make_shared<VulkanGeometryPass>(pass_name);
     }
 }

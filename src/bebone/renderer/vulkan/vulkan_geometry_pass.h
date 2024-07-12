@@ -9,7 +9,7 @@
 #include "vulkan_depth_resource.h"
 
 namespace bebone::renderer {
-    class VulkanGeometryPass : public IGeometryPass {
+    class VulkanGeometryPass : public IRenderQueuePass {
         private:
             std::optional<VulkanManagedPipelineTuple> pipeline;
             std::shared_ptr<VulkanRenderPass> render_pass;

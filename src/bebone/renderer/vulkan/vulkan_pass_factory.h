@@ -22,7 +22,7 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
 
             std::shared_ptr<IPresentPass> create_present_pass(const std::string& pass_name) override;
-            std::shared_ptr<IGeometryPass> create_geometry_pass(const std::string& pass_name) override;
+            std::shared_ptr<IRenderQueuePass> create_geometry_pass(const std::string& pass_name) override;
     };
 }
 

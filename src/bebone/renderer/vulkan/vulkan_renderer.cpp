@@ -43,7 +43,7 @@ namespace bebone::renderer {
     void VulkanRenderer::render(const MeshHandle& handle, const Transform& transform) {
         std::ignore = transform;
 
-        auto pass = static_pointer_cast<IGeometryPass>(render_graph->get_render_pass("geometry").value());
+        auto pass = static_pointer_cast<IRenderQueuePass>(render_graph->get_render_pass("geometry").value());
 
         pass->queue_task([&](ICommandEncoder* encoder) {
             auto cmd = static_cast<VulkanCommandEncoder*>(encoder)->get_command_buffer();

@@ -4,7 +4,7 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     // Present pass
-    VulkanGeometryPass::VulkanGeometryPass(const std::string& pass_name) : IGeometryPass(pass_name) {
+    VulkanGeometryPass::VulkanGeometryPass(const std::string& pass_name) : IRenderQueuePass(pass_name) {
 
     }
 

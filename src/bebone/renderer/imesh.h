@@ -7,7 +7,6 @@
 
 namespace bebone::renderer {
         // Todo, probably need to inherit from some sort of Bindable,
-        // and maybe should have child's like IVertexMesh and ITriangleMesh ?
         class IMesh {
             private:
 
