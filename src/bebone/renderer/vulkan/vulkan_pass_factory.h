@@ -4,7 +4,7 @@
 #include "../irenderer.h"
 
 #include "vulkan_present_pass.h"
-#include "vulkan_geometry_pass.h"
+#include "vulkan_deferred_g_pass.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -20,9 +20,9 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,
                 const std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
-
-            std::shared_ptr<IPresentPass> create_present_pass(const std::string& pass_name) override;
-            std::shared_ptr<IRenderQueuePass> create_geometry_pass(const std::string& pass_name) override;
+        
+            std::shared_ptr<IPresentPass> create_present_pass(const std::string& pass_name, const Vec2i& viewport) override;
+            std::shared_ptr<IDeferredGPass> create_deferred_g_pass(const std::string& pass_name, const Vec2i& viewport) override;
     };
 }
 

@@ -11,7 +11,7 @@ namespace bebone::renderer {
             std::shared_ptr<IResource> texture_resource;
 
         public:
-            IPresentPass(const std::string& pass_name);
+            IPresentPass(const std::string& pass_name, const Vec2i& viewport);
     };
 }
 

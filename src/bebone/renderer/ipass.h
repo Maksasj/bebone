@@ -27,6 +27,7 @@ namespace bebone::renderer {
             virtual ~IPass() = default;
 
             virtual void assemble(IPassAssembler* assember) = 0;
+            virtual void check_requirements() = 0;
 
             virtual void record(ICommandEncoder* encoder) = 0;
             virtual void reset() = 0;

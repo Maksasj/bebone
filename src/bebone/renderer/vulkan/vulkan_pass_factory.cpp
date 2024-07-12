@@ -11,11 +11,11 @@ namespace bebone::renderer {
 
     }
 
-    std::shared_ptr<IPresentPass> VulkanPassFactory::create_present_pass(const std::string& pass_name) {
-        return std::make_shared<VulkanPresentPass>(pass_name);
+    std::shared_ptr<IPresentPass> VulkanPassFactory::create_present_pass(const std::string& pass_name, const Vec2i& viewport) {
+        return std::make_shared<VulkanPresentPass>(pass_name, viewport);
     }
 
-    std::shared_ptr<IRenderQueuePass> VulkanPassFactory::create_geometry_pass(const std::string& pass_name) {
-        return std::make_shared<VulkanGeometryPass>(pass_name);
+    std::shared_ptr<IDeferredGPass> VulkanPassFactory::create_deferred_g_pass(const std::string& pass_name, const Vec2i& viewport) {
+        return std::make_shared<VulkanDeferredGPass>(pass_name, viewport);
     }
 }

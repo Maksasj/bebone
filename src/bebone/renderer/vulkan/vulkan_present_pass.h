@@ -20,7 +20,7 @@ namespace bebone::renderer {
             std::vector<VulkanBindlessHandle> texture_handles;
 
         public:
-            VulkanPresentPass(const std::string& pass_name);
+            VulkanPresentPass(const std::string& pass_name, const Vec2i& viewport);
 
             void assemble(IPassAssembler* assember) override;
 

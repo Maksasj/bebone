@@ -1,6 +1,6 @@
-#include "vulkan_present_pass.h"
+#include "vulkan_deferred_g_pass.h"
 
-static const char vulkan_present_pass_vertex_shader_code[] =
+static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
     "\n"
@@ -18,7 +18,7 @@ static const char vulkan_present_pass_vertex_shader_code[] =
     "    out_texcoord = texcoord;\n"
     "}";
 
-static const char vulkan_present_pass_fragment_shader_code[] =
+static const char vulkan_deferred_g_pass_fragment_shader_code[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
     "\n"
@@ -27,13 +27,8 @@ static const char vulkan_present_pass_fragment_shader_code[] =
     "\n"
     "layout (location = 0) out vec4 out_color;\n"
     "\n"
-    "layout(binding = 0) uniform sampler2D textures[];\n"
-    "\n"
-    "layout( push_constant ) uniform Handles {\n"
-    "    int texture;\n"
-    "} handles;\n"
     "void main() {\n"
-    "   out_color = texture(textures[handles.texture], texcoord);\n"
+    "   out_color = vec4(texcoord, 1.0, 1.0);\n"
     "}";
 
 const auto vulkan_present_pass_vertex_descriptions = bebone::gfx::VulkanPipelineVertexInputStateTuple {
@@ -51,70 +46,75 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     // Present pass
-    VulkanPresentPass::VulkanPresentPass(
+    VulkanDeferredGPass::VulkanDeferredGPass(
         const std::string& pass_name,
         const Vec2i& viewport
-    ) : IPresentPass(pass_name, viewport) {
+    ) : IDeferredGPass(pass_name, viewport) {
 
     }
 
-    void VulkanPresentPass::assemble(IPassAssembler* assember) {
+    void VulkanDeferredGPass::assemble(IPassAssembler* assember) {
         auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
 
         auto device = vulkan_assembler->get_device();
         auto pipeline_manager = vulkan_assembler->get_pipeline_manager();
-        auto swap_chain = vulkan_assembler->get_swap_chain();
 
-        auto vert_shader_module = device->create_shader_module(vulkan_present_pass_vertex_shader_code, VertexShader);
-        auto frag_shader_module = device->create_shader_module(vulkan_present_pass_fragment_shader_code, FragmentShader);
+        render_pass = device->create_render_pass({800, 600}, {
+            VulkanAttachmentDesc::color2D({ 800,600 }, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
+            VulkanAttachmentDesc::depth2D({ 800,600 }, { .format = device->find_depth_format() }),
+        });
+
+        auto vert_shader_module = device->create_shader_module(vulkan_deferred_g_pass_vertex_shader_code, VertexShader);
+        auto frag_shader_module = device->create_shader_module(vulkan_deferred_g_pass_fragment_shader_code, FragmentShader);
 
         // Post pipeline
         auto pipeline = pipeline_manager->create_pipeline(
-            device, swap_chain->render_pass, vert_shader_module, frag_shader_module,
-            { VulkanConstRange::common(sizeof(u32), 0) },
-            { { BindlessSampler, 0} },
+            device, render_pass, vert_shader_module, frag_shader_module,
+            { },
+            { { BindlessSampler, 0 } },
             {
                 .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
                 .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE }
             }
         );
 
-        set_program(std::make_shared<VulkanProgram>(pipeline));
-
-        auto texture = static_pointer_cast<VulkanTextureResource>(texture_resource)->get_textures();
-        texture_handles = pipeline.bind_textures(device, texture, 0);
-
-        // Todo, move this outside, to assembler
-        auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
-        quad_mesh = quad_generator->generate();
-
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
+
+        // Setting render target
+        auto texture = static_pointer_cast<VulkanTextureResource>(texture_resource)->get_textures();
+        auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_textures();
+
+        framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
+            device->create_framebuffer({ texture[0]->view, depth[0]->view }, render_pass, {800, 600}),
+            device->create_framebuffer({ texture[1]->view, depth[1]->view }, render_pass, {800, 600}),
+            device->create_framebuffer({ texture[2]->view, depth[2]->view }, render_pass, {800, 600})
+        };
+
+        set_program(std::make_shared<VulkanProgram>(pipeline));
     }
 
-    void VulkanPresentPass::record(ICommandEncoder* encoder) {
+    void VulkanDeferredGPass::record(ICommandEncoder* encoder) {
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 
         auto cmd = vulkan_encoder->get_command_buffer();
         const auto& frame = vulkan_encoder->get_frame();
 
-        cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
-            auto& viewport = get_viewport();
-
+        cmd->begin_render_pass(framebuffers[frame], render_pass);
             cmd->set_viewport(0, 0, viewport.x, viewport.y);
             program->bind(encoder);
 
-            auto handles = u32(texture_handles[frame]);
+            auto& render_queue = get_tasks();
 
-            auto& pipeline = static_pointer_cast<VulkanProgram>(get_program())->get_pipeline();
-            cmd->push_constant(pipeline.layout, sizeof(u32), 0, &handles);
+            for (; !render_queue.empty(); render_queue.pop()) {
+                auto task = render_queue.front();
+                task(encoder);
+            }
 
-            quad_mesh->bind(encoder);
-            cmd->draw_indexed(quad_mesh->triangle_count());
         cmd->end_render_pass();
-    }
+     }
 
-    void VulkanPresentPass::reset() {
+    void VulkanDeferredGPass::reset() {
 
     }
 }

@@ -1,12 +1,14 @@
 #include "irender_queue_pass.h"
 
 namespace bebone::renderer {
-    IRenderQueuePass::IRenderQueuePass(const std::string& pass_name) : IPass(pass_name) {
-        register_output("texture", texture_resource);
-        register_output("depth", depth_resource);
+    IRenderQueuePass::IRenderQueuePass(
+        const std::string& pass_name,
+        const Vec2i& viewport
+    ) : IGraphicsPass(pass_name, viewport) {
+
     }
 
-    void IRenderQueuePass::queue_task(const RenderTask& task) {
+    void IRenderQueuePass::submit_task(const RenderTask& task) {
         render_tasks.push(task);
     }
 

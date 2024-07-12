@@ -10,10 +10,14 @@ namespace bebone::renderer {
     class IGraphicsPass : public IPass {
         protected:
             std::shared_ptr<IProgram> program;
+            bool program_set_flag;
+
             Vec2i viewport;
 
         public:
-            IGraphicsPass(const std::string& pass_name);
+            IGraphicsPass(const std::string& pass_name, const Vec2i& viewport);
+
+            void check_requirements() override;
 
             void set_program(const std::shared_ptr<IProgram>& arg_program);
             std::shared_ptr<IProgram> get_program() const;

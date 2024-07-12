@@ -18,12 +18,12 @@ namespace bebone::renderer {
         auto geometry_depth = resource_factory->create_depth_resource("geometry_depth");
         render_graph->add_resource(geometry_depth);
 
-        auto geometry = pass_factory->create_geometry_pass("geometry");
+        auto geometry = pass_factory->create_deferred_g_pass("geometry", { 800, 600 });
         geometry->plug_output("texture", geometry_texture);
         geometry->plug_output("depth", geometry_depth);
         render_graph->add_pass(geometry);
 
-        auto present = pass_factory->create_present_pass("present");
+        auto present = pass_factory->create_present_pass("present", { 800, 600 });
         present->plug_input("texture", geometry_texture);
         render_graph->add_pass(present);
 
@@ -45,7 +45,7 @@ namespace bebone::renderer {
 
         auto pass = static_pointer_cast<IRenderQueuePass>(render_graph->get_render_pass("geometry").value());
 
-        pass->queue_task([&](ICommandEncoder* encoder) {
+        pass->submit_task([&](ICommandEncoder* encoder) {
             auto cmd = static_cast<VulkanCommandEncoder*>(encoder)->get_command_buffer();
 
             auto mesh = mesh_pool[handle.index];

@@ -6,6 +6,7 @@
 #include "ipass.h"
 #include "ipresent_pass.h"
 #include "irender_queue_pass.h"
+#include "ideferred_g_pass.h"
 
 namespace bebone::renderer {
     class IPassFactory {
@@ -14,8 +15,8 @@ namespace bebone::renderer {
         public:
             virtual ~IPassFactory() = default;
 
-            virtual std::shared_ptr<IPresentPass> create_present_pass(const std::string& pass_name) = 0;
-            virtual std::shared_ptr<IRenderQueuePass> create_geometry_pass(const std::string& pass_name) = 0;
+            virtual std::shared_ptr<IPresentPass> create_present_pass(const std::string& pass_name, const Vec2i& viewport) = 0;
+            virtual std::shared_ptr<IDeferredGPass> create_deferred_g_pass(const std::string& pass_name, const Vec2i& viewport) = 0;
     };
 }
 
