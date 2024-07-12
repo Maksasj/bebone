@@ -108,6 +108,10 @@ namespace bebone::gfx {
         return height;
     }
 
+    Vec2i Window::get_size() const {
+        return Vec2i(width, height);
+    }
+
     f32 Window::get_aspect() const {
         return static_cast<f32>(width) / static_cast<f32>(height);
     }

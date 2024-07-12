@@ -11,7 +11,7 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<VulkanDepthImageTuple>> depth_textures;
 
         public:
-            VulkanDepthResource(const std::string& name, std::shared_ptr<VulkanDevice>& device);
+            VulkanDepthResource(const std::string& name, const Vec2i& size, std::shared_ptr<VulkanDevice>& device);
 
             std::vector<std::shared_ptr<VulkanDepthImageTuple>>& get_textures();
     };

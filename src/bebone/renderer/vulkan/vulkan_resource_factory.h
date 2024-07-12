@@ -16,8 +16,8 @@ namespace bebone::renderer {
         public:
             VulkanResourceFactory(const std::shared_ptr<VulkanDevice>& device);
 
-            std::shared_ptr<ITextureResource> create_texture_resource(const std::string& resource_name) override;
-            std::shared_ptr<IDepthResource> create_depth_resource(const std::string& resource_name) override;
+            std::shared_ptr<ITextureResource> create_texture_resource(const std::string& resource_name, const Vec2i& size) override;
+            std::shared_ptr<IDepthResource> create_depth_resource(const std::string& resource_name, const Vec2i& size) override;
     };
 }
 

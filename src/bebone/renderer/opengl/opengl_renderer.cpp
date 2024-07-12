@@ -21,6 +21,13 @@ namespace bebone::renderer {
         // Todo
     }
 
+    MeshHandle GLRenderer::load_mesh(const std::string& file_path) {
+        auto loader = std::make_shared<OBJMeshLoader>(std::make_shared<OpenGLTriangleMeshBuilder>());
+        auto mesh = loader->load_from_file(file_path);
+        meshes_to_render.push_back(mesh);
+        return { meshes_to_render.size() - 1 };
+    }
+
     MeshHandle GLRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) {
         auto mesh = std::make_shared<OpenGLTriangleMesh>(vertices, indices);
         meshes_to_render.push_back(mesh);

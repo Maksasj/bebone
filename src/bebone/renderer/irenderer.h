@@ -31,6 +31,7 @@ namespace bebone::renderer {
 
             virtual ~IRenderer() = default;
 
+            virtual MeshHandle load_mesh(const std::string& file_path) = 0;
             virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
 
             // Todo, implement

@@ -59,9 +59,11 @@ namespace bebone::renderer {
         auto device = vulkan_assembler->get_device();
         auto pipeline_manager = vulkan_assembler->get_pipeline_manager();
 
-        render_pass = device->create_render_pass({800, 600}, {
-            VulkanAttachmentDesc::color2D({ 800,600 }, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
-            VulkanAttachmentDesc::depth2D({ 800,600 }, { .format = device->find_depth_format() }),
+        auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
+
+        render_pass = device->create_render_pass(viewport, {
+            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }),
+            VulkanAttachmentDesc::depth2D(viewport, { .format = device->find_depth_format() }),
         });
 
         auto vert_shader_module = device->create_shader_module(vulkan_deferred_g_pass_vertex_shader_code, VertexShader);
@@ -86,9 +88,9 @@ namespace bebone::renderer {
         auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_textures();
 
         framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-            device->create_framebuffer({ texture[0]->view, depth[0]->view }, render_pass, {800, 600}),
-            device->create_framebuffer({ texture[1]->view, depth[1]->view }, render_pass, {800, 600}),
-            device->create_framebuffer({ texture[2]->view, depth[2]->view }, render_pass, {800, 600})
+            device->create_framebuffer({ texture[0]->view, depth[0]->view }, render_pass, viewport),
+            device->create_framebuffer({ texture[1]->view, depth[1]->view }, render_pass, viewport),
+            device->create_framebuffer({ texture[2]->view, depth[2]->view }, render_pass, viewport)
         };
 
         set_program(std::make_shared<VulkanProgram>(pipeline));

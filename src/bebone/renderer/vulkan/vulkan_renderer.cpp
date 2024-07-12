@@ -12,18 +12,18 @@ namespace bebone::renderer {
         auto pass_factory = render_graph->create_pass_factory();
         auto resource_factory = render_graph->create_resource_factory();
 
-        auto geometry_texture = resource_factory->create_texture_resource("geometry_texture");
+        auto geometry_texture = resource_factory->create_texture_resource("geometry_texture", window->get_size());
         render_graph->add_resource(geometry_texture);
 
-        auto geometry_depth = resource_factory->create_depth_resource("geometry_depth");
+        auto geometry_depth = resource_factory->create_depth_resource("geometry_depth", window->get_size());
         render_graph->add_resource(geometry_depth);
 
-        auto geometry = pass_factory->create_deferred_g_pass("geometry", { 800, 600 });
+        auto geometry = pass_factory->create_deferred_g_pass("geometry", window->get_size());
         geometry->plug_output("texture", geometry_texture);
         geometry->plug_output("depth", geometry_depth);
         render_graph->add_pass(geometry);
 
-        auto present = pass_factory->create_present_pass("present", { 800, 600 });
+        auto present = pass_factory->create_present_pass("present", window->get_size());
         present->plug_input("texture", geometry_texture);
         render_graph->add_pass(present);
 
@@ -50,22 +50,29 @@ namespace bebone::renderer {
         auto pass_factory = render_graph->create_pass_factory();
         auto resource_factory = render_graph->create_resource_factory();
 
-        auto geometry_texture = resource_factory->create_texture_resource("geometry_texture");
+        auto geometry_texture = resource_factory->create_texture_resource("geometry_texture", new_size);
         render_graph->add_resource(geometry_texture);
 
-        auto geometry_depth = resource_factory->create_depth_resource("geometry_depth");
+        auto geometry_depth = resource_factory->create_depth_resource("geometry_depth", new_size);
         render_graph->add_resource(geometry_depth);
 
-        auto geometry = pass_factory->create_deferred_g_pass("geometry", { new_size.x, new_size.y });
+        auto geometry = pass_factory->create_deferred_g_pass("geometry", new_size);
         geometry->plug_output("texture", geometry_texture);
         geometry->plug_output("depth", geometry_depth);
         render_graph->add_pass(geometry);
 
-        auto present = pass_factory->create_present_pass("present", { new_size.x, new_size.y });
+        auto present = pass_factory->create_present_pass("present", new_size);
         present->plug_input("texture", geometry_texture);
         render_graph->add_pass(present);
 
         render_graph->assemble();
+    }
+
+    MeshHandle VulkanRenderer::load_mesh(const std::string& file_path) {
+        auto loader = std::make_shared<OBJMeshLoader>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+        auto mesh = loader->load_from_file(file_path);
+        mesh_pool.push_back(mesh);
+        return { mesh_pool.size() - 1 };
     }
 
     MeshHandle VulkanRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) {

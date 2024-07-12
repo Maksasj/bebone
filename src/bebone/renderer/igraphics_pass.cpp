@@ -22,6 +22,15 @@ namespace bebone::renderer {
         return program;
     }
 
+    void IGraphicsPass::set_camera(const std::shared_ptr<ICamera>& arg_camera) {
+        this->camera = arg_camera;
+        this->camera_set_flag = true;
+    }
+
+    std::shared_ptr<ICamera> IGraphicsPass::get_camera() const {
+        return camera;
+    }
+
     const Vec2i& IGraphicsPass::get_viewport() const {
         return viewport;
     }

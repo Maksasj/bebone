@@ -66,6 +66,8 @@ namespace bebone::gfx {
             /// Function that returns window height
             const int& get_height() const;
 
+            Vec2i get_size() const;
+
             /// Function that returns current window aspect ration
             f32 get_aspect() const;
 

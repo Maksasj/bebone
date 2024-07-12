@@ -20,6 +20,7 @@ namespace bebone::renderer {
             GLRenderer(std::shared_ptr<Window>& window);
             ~GLRenderer() override;
 
+            MeshHandle load_mesh(const std::string& file_path) override;
             MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) override;
 
             void render(const MeshHandle& handle, const Transform& transform = {}) override;
