@@ -6,6 +6,7 @@
 #include "ipass.h"
 #include "ipass_factory.h"
 #include "iresource_factory.h"
+#include "idebug_camera.h"
 
 namespace bebone::renderer {
     class IRenderGraphImpl {

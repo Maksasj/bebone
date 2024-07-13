@@ -14,7 +14,7 @@ namespace bebone::renderer {
             handle_resize({ event.width, event.height });
         });
 
-        camera = std::make_shared<IPerspectiveCamera>();
+        camera = std::make_shared<IDebugCamera>(window);
         auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
         pass->set_camera(camera);
     }

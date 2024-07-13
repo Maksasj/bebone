@@ -19,6 +19,10 @@ namespace bebone::renderer {
 
             virtual Mat4f calculate_matrix(const f32& aspect_ratio) const = 0;
 
+            void apply_position(const Vec3f& position);
+            void apply_rotation(const Vec3f& rotation);
+            void apply_direction(const Vec3f& direction);
+
             void set_position(const Vec3f& position);
             void set_rotation(const Vec3f& rotation);
             void set_direction(const Vec3f& direction);

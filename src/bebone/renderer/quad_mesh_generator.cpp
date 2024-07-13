@@ -11,15 +11,15 @@ namespace bebone::renderer {
 
     std::shared_ptr<IMesh> QuadMeshGenerator::generate() {
         const std::vector<Vertex> vertices {
-                {{1.0f,  1.0f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
-                {{1.0f, -1.0f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
-                {{-1.0f, -1.0f,0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
-                {{-1.0f,  1.0f,0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
+            {{1.0f,  1.0f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
+            {{1.0f, -1.0f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
+            {{-1.0f, -1.0f,0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
+            {{-1.0f,  1.0f,0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
         };
 
         const std::vector<u32> indices {
-                0, 1, 3,
-                1, 2, 3
+            0, 1, 3,
+            1, 2, 3
         };
 
         builder->append_raw(vertices.data(), vertices.size(), indices.data(), indices.size());

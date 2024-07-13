@@ -5,6 +5,18 @@ namespace bebone::renderer {
 
     }
 
+    void ICamera::apply_position(const Vec3f& position) {
+        cam_position += position;
+    }
+
+    void ICamera::apply_rotation(const Vec3f& rotation) {
+        cam_rotation += rotation;
+    }
+
+    void ICamera::apply_direction(const Vec3f& direction) {
+        cam_direction += direction;
+    }
+
     void ICamera::set_position(const Vec3f& position) {
         this->cam_position = position;
     }
