@@ -35,23 +35,25 @@ namespace bebone::core {
         inline static Vec3<T> project(const Vec3<T>& a, const Vec3<T>& b);
         inline static Vec3<T> reject(const Vec3<T>& a, const Vec3<T>& b);
 
-        inline Vec3<T> operator +(const Vec3<T>& v) const;
-        inline Vec3<T> operator -(const Vec3<T>& v) const;
-        inline Vec3<T> operator *(const Vec3<T>& v) const;
-        inline Vec3<T> operator /(const Vec3<T>& v) const;
+        inline Vec3 operator +(const Vec3<T>& v) const;
+        inline Vec3 operator -(const Vec3<T>& v) const;
+        inline Vec3 operator *(const Vec3<T>& v) const;
+        inline Vec3 operator /(const Vec3<T>& v) const;
         inline Vec3<T>& operator +=(const Vec3<T>& v);
         inline Vec3<T>& operator -=(const Vec3<T>& v);
         inline Vec3<T>& operator *=(const Vec3<T>& v);
         inline Vec3<T>& operator /=(const Vec3<T>& v);
 
-        inline Vec3<T> operator +(const T& scalar) const;
-        inline Vec3<T> operator -(const T& scalar) const;
-        inline Vec3<T> operator *(const T& scalar) const;
-        inline Vec3<T> operator /(T scalar) const;
+        inline Vec3 operator +(const T& scalar) const;
+        inline Vec3 operator -(const T& scalar) const;
+        inline Vec3 operator *(const T& scalar) const;
+        inline Vec3 operator /(T scalar) const;
         inline Vec3<T>& operator +=(const T& scalar);
         inline Vec3<T>& operator -=(const T& scalar);
         inline Vec3<T>& operator *=(const T& scalar);
         inline Vec3<T>& operator /=(T scalar);
+
+        inline Vec3 operator -() const;
 
         inline bool operator ==(const Vec3<T>& v) const;
         inline bool operator !=(const Vec3<T>& v) const;
@@ -97,16 +99,16 @@ namespace bebone::core {
     const Vec3<float> Vec3<T>::forward{ 0.0f, 0.0f, 1.0f };
 
     template<typename T>
-    Vec3<T> Vec3<T>::operator +(const Vec3& v) const { { x + v.x, y + v.y, z + v.z; } }
+    Vec3<T> Vec3<T>::operator +(const Vec3& v) const { return Vec3(x + v.x, y + v.y, z + v.z); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator -(const Vec3& v) const { { x - v.x, y - v.y, z - v.z; } }
+    Vec3<T> Vec3<T>::operator -(const Vec3& v) const { return Vec3(x - v.x, y - v.y, z - v.z); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator *(const Vec3& v) const { { x * v.x, y * v.y, z * v.z; } }
+    Vec3<T> Vec3<T>::operator *(const Vec3& v) const { return Vec3(x * v.x, y * v.y, z * v.z); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator /(const Vec3& v) const { { x / v.x, y / v.y, z / v.z; } }
+    Vec3<T> Vec3<T>::operator /(const Vec3& v) const { return Vec3(x / v.x, y / v.y, z / v.z); }
 
     template<typename T>
     Vec3<T>& Vec3<T>::operator +=(const Vec3<T>& v) { x += v.x; y += v.y; z += v.z; return *this; }
@@ -121,13 +123,13 @@ namespace bebone::core {
     Vec3<T>& Vec3<T>::operator /=(const Vec3<T>& v) { x /= v.x; y /= v.y; z /= v.z; return *this; }
 
     template<typename T>
-    Vec3<T> Vec3<T>::operator +(const T& scalar) const { { x + scalar, y + scalar, z + scalar; } }
+    Vec3<T> Vec3<T>::operator +(const T& scalar) const { return Vec3(x + scalar, y + scalar, z + scalar); }
 
     template<typename T>
-    Vec3<T> Vec3<T>::operator -(const T& scalar) const { { x - scalar, y - scalar, z - scalar; } }
+    Vec3<T> Vec3<T>::operator -(const T& scalar) const { return Vec3(x - scalar, y - scalar, z - scalar); }
 
     template<typename T>
-    Vec3<T> Vec3<T>::operator *(const T& scalar) const { { x * scalar, y * scalar, z * scalar; } }
+    Vec3<T> Vec3<T>::operator *(const T& scalar) const { return Vec3(x * scalar, y * scalar, z * scalar); }
 
     template<typename T>
     Vec3<T> Vec3<T>::operator /(T scalar) const {
@@ -151,7 +153,10 @@ namespace bebone::core {
     }
 
     template<typename T>
-    Vec3<T>::operator Vec2<T>() const { { x, y; } }
+    Vec3<T> Vec3<T>::operator -() const { return Vec3(-x, -y, -z); }
+
+    template<typename T>
+    Vec3<T>::operator Vec2<T>() const { return Vec2(x, y); }
 
     template<typename T>
     bool Vec3<T>::operator ==(const Vec3<T>& v) const { return x == v.x && y == v.y && z == v.z; }
@@ -275,6 +280,7 @@ namespace bebone::core {
 
     template<typename T>
     bool Vec3<T>::is_normalized() const {
+        // TODO: FIX THIS
         return length() == 1;
     }
 }

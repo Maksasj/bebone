@@ -32,7 +32,7 @@ namespace bebone::core {
         static Matrix<f32, 4, 4> get_rotation_x(const f32& angle);
         static Matrix<f32, 4, 4> get_rotation_y(const f32& angle);
         static Matrix<f32, 4, 4> get_rotation_z(const f32& angle);
-        static Matrix<f32, 4, 4> get_rotation_matrix(const f32& angle, const Vec3f& axis);
+        static Matrix<f32, 4, 4> get_rotation_matrix(const f32& angle, Vec3f axis);
 
         inline Matrix<f32, 4, 4> transpose() const;
         inline Matrix<f32, 4, 4> inverse() const;
@@ -102,27 +102,27 @@ namespace bebone::core {
         const float& z = m(3, 2);
         const float& w = m(3, 3);
 
-        Vec3f s = a.cross(b);
-        Vec3f t = c.cross(d);
+        Vec3f s = Vec3f::cross(a, b);
+        Vec3f t = Vec3f::cross(c, d);
         Vec3f u = a * y - b * x;
         Vec3f v = c * w - d * z;
 
-        f32 inv_det = 1.0f / (s.dot(v) + t.dot(u));
+        f32 inv_det = 1.0f / (Vec3f::dot(s, v) + Vec3f::dot(t, u));
         s *= inv_det;
         t *= inv_det;
         u *= inv_det;
         v *= inv_det;
 
-        Vec3f r0 = b.cross(v) + t * y;
-        Vec3f r1 = v.cross(a) - t * x;
-        Vec3f r2 = d.cross(u) + s * w;
-        Vec3f r3 = u.cross(c) - s * z;
+        Vec3f r0 = Vec3f::cross(b, v) + t * y;
+        Vec3f r1 = Vec3f::cross(v, a) - t * x;
+        Vec3f r2 = Vec3f::cross(d, u) + s * w;
+        Vec3f r3 = Vec3f::cross(u, c) - s * z;
 
         return {
-            r0.x, r0.y, r0.z, -b.dot(t),
-            r1.x, r1.y, r1.z, a.dot(t),
-            r2.x, r2.y, r2.z, -d.dot(s),
-            r3.x, r3.y, r3.z, c.dot(s)
+            r0.x, r0.y, r0.z, Vec3f::dot(-b, t),
+            r1.x, r1.y, r1.z, Vec3f::dot(a, t),
+            r2.x, r2.y, r2.z, Vec3f::dot(-d, s),
+            r3.x, r3.y, r3.z, Vec3f::dot(c, s)
         };
     }
 

@@ -36,23 +36,25 @@ namespace bebone::core {
         inline static Vec2<T> project(const Vec2<T>& a, const Vec2<T>& b);
         inline static Vec2<T> reject(const Vec2<T>& a, const Vec2<T>& b);
 
-        inline Vec2<T> operator +(const Vec2& v) const;
-        inline Vec2<T> operator -(const Vec2& v) const;
-        inline Vec2<T> operator *(const Vec2& v) const;
-        inline Vec2<T> operator /(const Vec2& v) const;
+        inline Vec2 operator +(const Vec2& v) const;
+        inline Vec2 operator -(const Vec2& v) const;
+        inline Vec2 operator *(const Vec2& v) const;
+        inline Vec2 operator /(const Vec2& v) const;
         inline Vec2<T>& operator +=(const Vec2<T>& v);
         inline Vec2<T>& operator -=(const Vec2<T>& v);
         inline Vec2<T>& operator *=(const Vec2<T>& v);
         inline Vec2<T>& operator /=(const Vec2<T>& v);
 
-        inline Vec2<T> operator +(const T& scalar) const;
-        inline Vec2<T> operator -(const T& scalar) const;
-        inline Vec2<T> operator *(const T& scalar) const;
-        inline Vec2<T> operator /(T scalar) const;
+        inline Vec2 operator +(const T& scalar) const;
+        inline Vec2 operator -(const T& scalar) const;
+        inline Vec2 operator *(const T& scalar) const;
+        inline Vec2 operator /(T scalar) const;
         inline Vec2<T>& operator +=(const T& scalar);
         inline Vec2<T>& operator -=(const T& scalar);
         inline Vec2<T>& operator *=(const T& scalar);
         inline Vec2<T>& operator /=(T scalar);
+
+        inline Vec2 operator -() const;
 
         inline bool operator ==(const Vec2<T>& v) const;
         inline bool operator !=(const Vec2<T>& v) const;
@@ -90,16 +92,16 @@ namespace bebone::core {
     const Vec2<float> Vec2<T>::down{ 0.0f, -1.0f };
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator +(const Vec2& v) const { { x + v.x, y + v.y; } }
+    Vec2<T> Vec2<T>::operator +(const Vec2& v) const { return Vec2(x + v.x, y + v.y); }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator -(const Vec2& v) const { { x - v.x, y - v.y; } }
+    Vec2<T> Vec2<T>::operator -(const Vec2& v) const { return Vec2(x - v.x, y - v.y); }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator *(const Vec2& v) const { { x * v.x, y * v.y; } }
+    Vec2<T> Vec2<T>::operator *(const Vec2& v) const { return Vec2(x * v.x, y * v.y); }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator /(const Vec2& v) const { { x / v.x, y / v.y; } }
+    Vec2<T> Vec2<T>::operator /(const Vec2& v) const { return Vec2(x / v.x, y / v.y); }
 
     template<typename T>
     Vec2<T>& Vec2<T>::operator +=(const Vec2<T>& v) { x += v.x; y += v.y; return *this; }
@@ -114,13 +116,13 @@ namespace bebone::core {
     Vec2<T>& Vec2<T>::operator /=(const Vec2<T>& v) { x /= v.x; y /= v.y; return *this; }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator +(const T& scalar) const { { x + scalar, y + scalar; } }
+    Vec2<T> Vec2<T>::operator +(const T& scalar) const { return Vec2(x + scalar, y + scalar); }
     
     template<typename T>
-    Vec2<T> Vec2<T>::operator -(const T& scalar) const { { x - scalar, y - scalar; } }
+    Vec2<T> Vec2<T>::operator -(const T& scalar) const { return Vec2(x - scalar, y - scalar); }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator *(const T& scalar) const { { x * scalar, y * scalar; } }
+    Vec2<T> Vec2<T>::operator *(const T& scalar) const { return Vec2(x * scalar, y * scalar); }
     
     template<typename T>
     Vec2<T> Vec2<T>::operator /(T scalar) const {
@@ -144,6 +146,9 @@ namespace bebone::core {
     }
 
     template<typename T>
+    Vec2<T> Vec2<T>::operator -() const { return Vec2(-x, -y); }
+
+    template<typename T>
     bool Vec2<T>::operator ==(const Vec2<T>& other) const { return x == other.x && y == other.y; }
     
     template<typename T>
@@ -162,7 +167,7 @@ namespace bebone::core {
     }
 
     template<typename T>
-    inline Vec2<T> Vec2<T>::splat(const T& value) { { value, value; } }
+    inline Vec2<T> Vec2<T>::splat(const T& value) { return Vec2(value, value); }
 
     template<typename T>
     T Vec2<T>::dot(const Vec2<T>& a, const Vec2<T>& b) {
