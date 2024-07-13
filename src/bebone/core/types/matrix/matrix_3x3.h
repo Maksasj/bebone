@@ -20,6 +20,10 @@ namespace bebone::core {
         inline Matrix<f32, 3, 3> transpose() const;
         inline Matrix<f32, 3, 3> inverse() const;
 
+        static Matrix<f32, 3, 3> get_rotation_x(const float& angle);
+        static Matrix<f32, 3, 3> get_rotation_y(const float& angle);
+        static Matrix<f32, 3, 3> get_rotation_z(const float& angle);
+
         inline f32& operator()(const size_t& row, const size_t& col);
         inline const f32& operator()(const size_t& row, const size_t& col) const;
 
