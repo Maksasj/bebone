@@ -109,10 +109,10 @@ namespace bebone::renderer {
         device->collect_garbage();
 
         // Setup render target
-        auto position = static_pointer_cast<VulkanTextureResource>(position_resource)->get_textures();
-        auto normals = static_pointer_cast<VulkanTextureResource>(normals_resource)->get_textures();
-        auto albedo = static_pointer_cast<VulkanTextureResource>(albedo_resource)->get_textures();
-        auto specular = static_pointer_cast<VulkanTextureResource>(specular_resource)->get_textures();
+        auto position = static_pointer_cast<VulkanHDRTextureResource>(position_resource)->get_textures();
+        auto normals = static_pointer_cast<VulkanHDRTextureResource>(normals_resource)->get_textures();
+        auto albedo = static_pointer_cast<VulkanHDRTextureResource>(albedo_resource)->get_textures();
+        auto specular = static_pointer_cast<VulkanHDRTextureResource>(specular_resource)->get_textures();
 
         auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_textures();
 

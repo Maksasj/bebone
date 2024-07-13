@@ -9,16 +9,16 @@ namespace bebone::renderer {
         auto pass_factory = create_pass_factory();
         auto resource_factory = create_resource_factory();
 
-        auto gpass_position_texture = resource_factory->create_texture_resource("gpass_position_texture", size);
+        auto gpass_position_texture = resource_factory->create_hdr_texture_resource("gpass_position_texture", size);
         add_resource(gpass_position_texture);
 
-        auto gpass_normals_texture = resource_factory->create_texture_resource("gpass_normals_texture", size);
+        auto gpass_normals_texture = resource_factory->create_hdr_texture_resource("gpass_normals_texture", size);
         add_resource(gpass_normals_texture);
 
-        auto gpass_albedo_texture = resource_factory->create_texture_resource("gpass_albedo_texture", size);
+        auto gpass_albedo_texture = resource_factory->create_hdr_texture_resource("gpass_albedo_texture", size);
         add_resource(gpass_albedo_texture);
 
-        auto gpass_specular_texture = resource_factory->create_texture_resource("gpass_specular_texture", size);
+        auto gpass_specular_texture = resource_factory->create_hdr_texture_resource("gpass_specular_texture", size);
         add_resource(gpass_specular_texture);
 
         auto gpass_depth = resource_factory->create_depth_resource("gpass_depth", size);

@@ -4,7 +4,9 @@
 #include <string>
 
 #include "iresource.h"
+
 #include "itexture_resource.h"
+#include "ihdr_texture_resource.h"
 #include "idepth_resource.h"
 
 namespace bebone::renderer {
@@ -17,6 +19,7 @@ namespace bebone::renderer {
             virtual ~IResourceFactory() = default;
 
             virtual std::shared_ptr<ITextureResource> create_texture_resource(const std::string& pass_name, const Vec2i& size) = 0;
+            virtual std::shared_ptr<IHDRTextureResource> create_hdr_texture_resource(const std::string& pass_name, const Vec2i& size) = 0;
             virtual std::shared_ptr<IDepthResource> create_depth_resource(const std::string& pass_name, const Vec2i& size) = 0;
     };
 }

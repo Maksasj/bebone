@@ -3,7 +3,7 @@
 
 #include <string>
 #include "irender_queue_pass.h"
-#include "itexture_resource.h"
+#include "ihdr_texture_resource.h"
 #include "idepth_resource.h"
 
 namespace bebone::renderer {

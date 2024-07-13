@@ -81,7 +81,7 @@ namespace bebone::renderer {
 
         set_program(std::make_shared<VulkanProgram>(pipeline));
 
-        auto texture = static_pointer_cast<VulkanTextureResource>(texture_resource)->get_textures();
+        auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource)->get_textures();
         texture_handles = pipeline.bind_textures(device, texture, 0);
 
         // Todo, move this outside, to assembler
