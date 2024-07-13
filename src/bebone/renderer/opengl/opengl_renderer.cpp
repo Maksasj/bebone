@@ -53,6 +53,6 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IRenderGraphImpl> GLRenderer::create_render_graph_impl() {
-
+        return std::shared_ptr<IRenderGraphImpl>(nullptr); // Todo
     }
 }

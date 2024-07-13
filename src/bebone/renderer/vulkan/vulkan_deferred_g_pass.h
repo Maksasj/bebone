@@ -12,11 +12,38 @@
 
 namespace bebone::renderer {
     using namespace bebone::core;
+    using namespace bebone::gfx;
+
+    struct VulkanDeferredGPassModelData {
+        Mat4f transform;
+    };
+
+    struct VulkanDeferredGPassCameraData {
+        Mat4f matrix;
+    };
+
+    struct VulkanDeferredGPassHandles {
+        u32 model_handle;
+        u32 model_instance;
+        u32 camera_handle;
+    };
 
     class VulkanDeferredGPass : public IDeferredGPass {
         private:
             std::shared_ptr<VulkanRenderPass> render_pass;
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
+
+            std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> model_ubo;
+            std::vector<VulkanBindlessHandle> model_ubo_handles;
+
+            std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
+            std::vector<VulkanBindlessHandle> camera_ubo_handles;
+
+            // Jobs
+            static const u32 max_queued_jobs = 50;
+            std::vector<std::shared_ptr<IMesh>> queued_jobs_mesh;
+            std::vector<Mat4f> queued_jobs_transform;
+            std::array<VulkanDeferredGPassHandles, 50> queued_jobs_handles;
 
         public:
             VulkanDeferredGPass(const std::string& pass_name, const Vec2i& viewport);
@@ -25,6 +52,8 @@ namespace bebone::renderer {
 
             void record(ICommandEncoder* encoder) override;
             void reset() override;
+
+            void submit_task(const std::shared_ptr<IMesh>& mesh, const Transform& transform) override;
     };
 }
 

@@ -102,11 +102,11 @@ int main() {
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             continue;
 
-        auto mat = transform.final_matrix();
+        auto mat = calculate_transform_matrix(transform);
         t_ubo[frame]->upload_data(device, &mat, sizeof(Mat4f));
 
         auto& cmd = command_buffers[frame];
-        VulkanCommandEncoder encoder(swap_chain, cmd, frame);
+        VulkanCommandEncoder encoder(device, swap_chain, cmd, frame);
 
         cmd->begin_record();
 

@@ -23,6 +23,8 @@ namespace bebone::renderer {
 
             std::shared_ptr<IRenderGraph> render_graph;
 
+            std::shared_ptr<ICamera> camera;
+
         protected:
             void handle_resize(const Vec2i& new_size) override;
 

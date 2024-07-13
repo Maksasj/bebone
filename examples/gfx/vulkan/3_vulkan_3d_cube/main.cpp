@@ -85,16 +85,14 @@ int main() {
         Mat4f::identity()
     };
 
-    f32 t = 0.0f;
     while (!window->closing()) {
         GLFWContext::poll_events();
-        t += Time::get_delta_time();
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             continue;
 
-        transform.rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(Time::get_seconds_elapsed(), Time::get_seconds_elapsed(), 0.0f));
         t_ubo[frame]->upload_data(device, &transform, sizeof(Transform));
 
         auto handles = Handles {

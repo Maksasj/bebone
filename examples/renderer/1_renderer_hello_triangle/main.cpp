@@ -1,3 +1,5 @@
+#define BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
+#define BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
 using namespace bebone::renderer;
@@ -20,7 +22,18 @@ int main() {
     MeshHandle triangle = renderer->create_mesh(vertices, indices);
 
     while(!window->closing()) {
-        renderer->render(triangle, { .position = Vec3f::zero });
+        renderer->render(triangle, { .position = {
+            0.5, 0.0, 0.0,
+        } });
+
+        renderer->render(triangle, { .position = {
+            0.0, 0.0, 0.5,
+        } });
+
+        renderer->render(triangle, { .position = {
+            0, sin(Time::get_seconds_elapsed()), 0,
+        } });
+
         renderer->present();
 
         GLFWContext::poll_events();

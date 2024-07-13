@@ -11,8 +11,24 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "layout (location = 0) out vec3 out_normal;\n"
     "layout (location = 1) out vec2 out_texcoord;\n"
     "\n"
+    "layout(binding = 0) uniform ModelUBO {\n"
+    "   mat4 transforms[50];\n"
+    "} modelUBO[];\n"
+    "\n"
+    "layout(binding = 1) uniform CameraUBO {\n"
+    "   mat4 matrix;\n"
+    "} cameraUBO [];\n"
+    "\n"
+    "layout( push_constant ) uniform Handles {\n"
+    "    int model_handle;\n"
+    "    int model_instance;\n"
+    "    int camera_handle;\n"
+    "} handles;\n"
+    "\n"
     "void main() {\n"
-    "    gl_Position = vec4(position, 1.0);\n"
+    "    mat4 model = modelUBO[handles.model_handle].transforms[handles.model_instance];"
+    "    mat4 cam = cameraUBO[handles.camera_handle].matrix;"
+    "    gl_Position = cam * model * vec4(position, 1.0);\n"
     "    out_normal = normal;\n"
     "    out_texcoord = texcoord;\n"
     "}";
@@ -52,7 +68,8 @@ namespace bebone::renderer {
         const std::string& pass_name,
         const Vec2i& viewport
     ) : IDeferredGPass(pass_name, viewport) {
-
+        queued_jobs_mesh.reserve(max_queued_jobs);
+        queued_jobs_transform.reserve(max_queued_jobs);
     }
 
     void VulkanDeferredGPass::assemble(IPassAssembler* assember) {
@@ -63,32 +80,35 @@ namespace bebone::renderer {
 
         auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
 
+        // Create render pass
         render_pass = device->create_render_pass(viewport, {
             VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* position */
-            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* normals */
-            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* albedo */
+            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* normals  */
+            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* albedo   */
             VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* specular */
-            VulkanAttachmentDesc::depth2D(viewport, { .format = device->find_depth_format() }),   /* depth */
+            VulkanAttachmentDesc::depth2D(viewport, { .format = device->find_depth_format() }),   /* depth    */
         });
 
+        // Create shader modules
         auto vert_shader_module = device->create_shader_module(vulkan_deferred_g_pass_vertex_shader_code, VertexShader);
         auto frag_shader_module = device->create_shader_module(vulkan_deferred_g_pass_fragment_shader_code, FragmentShader);
 
-        // Post pipeline
+        // Create pipeline
         auto pipeline = pipeline_manager->create_pipeline(
             device, render_pass, vert_shader_module, frag_shader_module,
-            { },
-            { { BindlessSampler, 0 } },
+            { VulkanConstRange::common(sizeof(VulkanDeferredGPassHandles), 0) },
+            { { BindlessUniform, 0}, { BindlessUniform, 1 } },
             {
                 .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
                 .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE }
             }
         );
 
+        // Delete shader modules and clear memory
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
 
-        // Setting render target
+        // Setup render target
         auto position = static_pointer_cast<VulkanTextureResource>(position_resource)->get_textures();
         auto normals = static_pointer_cast<VulkanTextureResource>(normals_resource)->get_textures();
         auto albedo = static_pointer_cast<VulkanTextureResource>(albedo_resource)->get_textures();
@@ -102,6 +122,14 @@ namespace bebone::renderer {
             device->create_framebuffer({ position[2]->view, normals[2]->view, albedo[2]->view, specular[2]->view, depth[2]->view }, render_pass, viewport)
         };
 
+        // Create and bind model and camera uniform buffer objects
+        model_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassModelData) * max_queued_jobs, 3);
+        model_ubo_handles = pipeline.bind_uniform_buffer(device, model_ubo, 0);
+
+        camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
+        camera_ubo_handles = pipeline.bind_uniform_buffer(device, camera_ubo, 1);
+
+        // Bind program
         set_program(std::make_shared<VulkanProgram>(pipeline));
     }
 
@@ -111,21 +139,53 @@ namespace bebone::renderer {
         auto cmd = vulkan_encoder->get_command_buffer();
         const auto& frame = vulkan_encoder->get_frame();
 
+        // Upload frame specific data to GPU
+        model_ubo[frame]->upload_data(
+            vulkan_encoder->get_device(),
+            queued_jobs_transform.data(),
+            queued_jobs_transform.size() * sizeof(VulkanDeferredGPassModelData));
+
+        auto aspect_ratio = static_cast<f32>(viewport.x) / static_cast<f32>(viewport.y);
+        auto camera_data = VulkanDeferredGPassCameraData { .matrix = camera->calculate_matrix(aspect_ratio) };
+
+        camera_ubo[frame]->upload_data(
+            vulkan_encoder->get_device(),
+            &camera_data,
+            sizeof(VulkanDeferredGPassCameraData));
+
+        // Record draw commands
         cmd->begin_render_pass(framebuffers[frame], render_pass);
             cmd->set_viewport(0, 0, viewport.x, viewport.y);
             program->bind(encoder);
 
-            auto& render_queue = get_tasks();
+            for(size_t i = 0; i < queued_jobs_mesh.size(); ++i) {
+                const auto& mesh = queued_jobs_mesh[i];
 
-            for (; !render_queue.empty(); render_queue.pop()) {
-                auto task = render_queue.front();
-                task(encoder);
+                queued_jobs_handles[i].model_handle = model_ubo_handles[frame];
+                queued_jobs_handles[i].model_instance = i;
+                queued_jobs_handles[i].camera_handle = camera_ubo_handles[frame];
+
+                auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
+
+                cmd->push_constant(
+                    vulkan_program->get_pipeline().layout,
+                    sizeof(VulkanDeferredGPassHandles),
+                    0,
+                    &queued_jobs_handles[i]);
+
+                mesh->bind(encoder);
+                cmd->draw_indexed(mesh->triangle_count());
             }
-
         cmd->end_render_pass();
-     }
+    }
 
     void VulkanDeferredGPass::reset() {
+        queued_jobs_mesh.clear();
+        queued_jobs_transform.clear();
+    }
 
+    void VulkanDeferredGPass::submit_task(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
+        queued_jobs_mesh.push_back(mesh);
+        queued_jobs_transform.push_back(calculate_transform_matrix(transform));
     }
 }

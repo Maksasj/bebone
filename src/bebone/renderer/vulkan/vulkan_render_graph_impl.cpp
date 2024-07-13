@@ -21,7 +21,7 @@ namespace bebone::renderer {
             return;
 
         auto& cmd = command_buffers[frame];
-        VulkanCommandEncoder encoder(swap_chain, cmd, frame);
+        VulkanCommandEncoder encoder(device, swap_chain, cmd, frame);
 
         cmd->begin_record();
 

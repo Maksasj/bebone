@@ -13,6 +13,10 @@ namespace bebone::renderer {
         window->add_listener([&](WindowSizeEvent event) {
             handle_resize({ event.width, event.height });
         });
+
+        camera = std::make_shared<IPerspectiveCamera>();
+        auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
+        pass->set_camera(camera);
     }
 
     VulkanRenderer::~VulkanRenderer() {
@@ -47,22 +51,15 @@ namespace bebone::renderer {
     void VulkanRenderer::render(const MeshHandle& handle, const Transform& transform) {
         std::ignore = transform;
 
-        // Todo
         auto pass = static_pointer_cast<IRenderQueuePass>(render_graph->get_render_pass("gpass").value());
-
-        pass->submit_task([&](ICommandEncoder* encoder) {
-            auto cmd = static_cast<VulkanCommandEncoder*>(encoder)->get_command_buffer();
-
-            auto mesh = mesh_pool[handle.index];
-
-            mesh_pool[handle.index]->bind(encoder);
-            cmd->draw_indexed(mesh->triangle_count());
-        });
+        auto mesh = mesh_pool[handle.index];
+        pass->submit_task(mesh, transform);
     }
 
     void VulkanRenderer::present() {
         render_graph->record();
         render_graph->submit();
+        render_graph->reset();
     }
 
     std::shared_ptr<IRenderGraphImpl> VulkanRenderer::create_render_graph_impl() {

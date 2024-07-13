@@ -1,6 +1,7 @@
 #ifndef _BEBONE_RENDERER_IRENDER_GRAPH_H_
 #define _BEBONE_RENDERER_IRENDER_GRAPH_H_
 
+#include "iperspective_camera.h"
 #include "irender_graph_impl.h"
 
 namespace bebone::renderer {

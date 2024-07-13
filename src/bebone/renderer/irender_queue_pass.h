@@ -4,21 +4,17 @@
 #include "igraphics_pass.h"
 #include "itexture_resource.h"
 #include "idepth_resource.h"
+#include "imesh.h"
+#include "transform.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    using RenderTask = std::function<void(ICommandEncoder*)>;
-
     class IRenderQueuePass : public IGraphicsPass {
-        private:
-            std::queue<RenderTask> render_tasks;
-
         public:
             IRenderQueuePass(const std::string& pass_name, const Vec2i& viewport);
 
-            void submit_task(const RenderTask& task);
-            std::queue<RenderTask>& get_tasks();
+            virtual void submit_task(const std::shared_ptr<IMesh>& mesh, const Transform& transform) = 0;
     };
 }
 

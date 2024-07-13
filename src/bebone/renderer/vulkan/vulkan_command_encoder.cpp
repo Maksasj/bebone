@@ -4,11 +4,16 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     VulkanCommandEncoder::VulkanCommandEncoder(
+        const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
         const std::shared_ptr<VulkanCommandBuffer>& command_buffer,
         const size_t& frame
-    ) : swap_chain(swap_chain), command_buffer(command_buffer), frame(frame) {
+    ) : device(device), swap_chain(swap_chain), command_buffer(command_buffer), frame(frame) {
 
+    }
+
+    std::shared_ptr<VulkanDevice>& VulkanCommandEncoder::get_device() {
+        return device;
     }
 
     std::shared_ptr<VulkanSwapChain>& VulkanCommandEncoder::get_swap_chain() {

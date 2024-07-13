@@ -74,7 +74,7 @@ int main() {
             GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             geometry_program.enable();
-            geometry_program.set_uniform("transform", transform.final_matrix());
+            geometry_program.set_uniform("transform", calculate_transform_matrix(transform));
             geometry_program.set_uniform("cam", camera);
 
             cube_mesh->bind(nullptr);

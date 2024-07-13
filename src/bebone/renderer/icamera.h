@@ -17,6 +17,8 @@ namespace bebone::renderer {
         public:
             ICamera();
 
+            virtual Mat4f calculate_matrix(const f32& aspect_ratio) const = 0;
+
             void set_position(const Vec3f& position);
             void set_rotation(const Vec3f& rotation);
             void set_direction(const Vec3f& direction);

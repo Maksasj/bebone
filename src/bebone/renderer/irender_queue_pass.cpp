@@ -7,12 +7,4 @@ namespace bebone::renderer {
     ) : IGraphicsPass(pass_name, viewport) {
 
     }
-
-    void IRenderQueuePass::submit_task(const RenderTask& task) {
-        render_tasks.push(task);
-    }
-
-    std::queue<RenderTask>& IRenderQueuePass::get_tasks() {
-        return render_tasks;
-    }
 }
