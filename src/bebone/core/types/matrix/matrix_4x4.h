@@ -6,7 +6,7 @@
 namespace bebone::core {
     template<>
     struct Matrix<f32, 4, 4> {
-    private:
+    public:
         f32 e[4][4];
 
     public:
@@ -24,10 +24,10 @@ namespace bebone::core {
         inline static Matrix<f32, 4, 4> translation(const Vec3<f32>& vector);
         inline static Matrix<f32, 4, 4> scale(const f32& rate);
         
-        inline static Matrix<f32, 4, 4> orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far);
-        inline static Matrix<f32, 4, 4> perspective(const f32& fovy, const f32& aspect, const f32& near, const f32& far);
-        inline static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up);
-        inline static Matrix<f32, 4, 4> look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up);
+        // inline static Matrix<f32, 4, 4> orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far);
+        // inline static Matrix<f32, 4, 4> perspective(const f32& fovy, const f32& aspect, const f32& near, const f32& far);
+        // inline static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up);
+        // inline static Matrix<f32, 4, 4> look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up);
 
         inline static Matrix<f32, 4, 4> rotation_x(const f32& angle);
         inline static Matrix<f32, 4, 4> rotation_y(const f32& angle);
@@ -56,6 +56,7 @@ namespace bebone::core {
         inline bool operator!=(const Matrix<f32, 4, 4>& other) const;
 
         std::string to_string() const;
+        const f32* get_raw() const;
     };
 
     inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::splat(const f32& value) {
@@ -230,10 +231,10 @@ namespace bebone::core {
     //     return view_matrix;
     // }
 
-    inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
-        const auto dir = center - origin;
-        return view(origin, dir, up);
-    }
+    // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
+    //     const auto dir = center - origin;
+    //     return view(origin, dir, up);
+    // }
 
     inline f32& Matrix<f32, 4, 4>::operator()(const size_t& row, const size_t& col) {
         return e[col][row];

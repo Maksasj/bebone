@@ -18,6 +18,10 @@ namespace bebone::core {
         e[3][0] = d.x; e[3][1] = d.y; e[3][2] = d.z; e[3][3] = c.w;
     }
 
+    const f32* Matrix<f32, 4, 4>::get_raw() const {
+        return &e[0][0];
+    }
+
     std::string Matrix<f32, 4, 4>::to_string() const {
         std::stringstream ss;
 

@@ -12,12 +12,12 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        return {{
+        return {
             c2,     -c3*s2,             s2*s3,                  0.0f,
             c1*s2,  c1*c2*c3 - s1*s3,   -c3*s1 - c1*c2*s3,      0.0f,
             s1*s2,  c1*s3 + c2*c3*s1,   c1*c3 - c2*s1*s3,       0.0f,
             0.0f,   0.0f,               0.0f,                   1.0f
-        }};
+        };
     }
 
     static inline Matrix<f32, 4, 4> proper_euler_angle_xyx(const Vec3f& rotation) {
@@ -28,12 +28,12 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        return {{
+        return {
             c2,         s2*s3,              c3*s2,              0.0f,
             -s1*s2,     c1*c3 - c2*s1*s3,   -c1*s3 - c2*c3*s1,  0.0f,
             -c1*s2,     c3*s1 + c1*c2*s3,   c1*c2*c3 - s1*s3,   0.0f,
             0.0f,       0.0f,               0.0f,               1.0f
-        }};
+        };
     }
 
     static inline Matrix<f32, 4, 4> proper_euler_angle_yxy(const Vec3f& rotation) {
@@ -44,12 +44,12 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        return {{
+        return {
             c1*c3 - c2*s1*s3,   s1*s2,      c1*s3 + c2*c3*s1,   0.0f,
             s2*s3,              c2,         -c3*s2,             0.0f,
             -c3*s1 - c1*c2*s3,  c1*s2,      c1*c2*c3 - s1*s3,   0.0f,
             0.0f,               0.0f,       0.0f,               1.0f
-        }};
+        };
     }
 
     static inline Matrix<f32, 4, 4> proper_euler_angle_yzy(const Vec3f& rotation) {
@@ -60,12 +60,12 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        return {{
+        return {
             c1*c2*c3 - s1*s2,   -c1*s3,     c3*s1 + c1*c2*s3,   0.0f,
             c3*s2,              c2,         s2*s3,              0.0f,
             -c1*s3 - c2*c3*s1,  s1*s2,      c1*c3 - c2*s1*s3,   0.0f,
             0.0f,               0.0f,       0.0f,               1.0f
-        }};
+        };
     }
 
     static inline Matrix<f32, 4, 4> proper_euler_angle_zyz(const Vec3f& rotation) {
@@ -76,12 +76,12 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        return {{
+        return {
             c1*c2*c3 - s1*s3,   -c3*s1 - c1*c2*s3,  c1*s2,      0.0f,
             c1*s3 + c2*c3*s1,   c1*c3 - c2*s1*s3,   s1*s2,      0.0f,
             -c3*s2,             s2*s3,              c2,         0.0f,
             0.0f,               0.0f,               0.0f,       1.0f
-        }};
+        };
     }
 
     static inline Matrix<f32, 4, 4> proper_euler_angle_zxz(const Vec3f& rotation) {
@@ -92,12 +92,12 @@ namespace bebone::core {
         const f32 c1 = std::cos(rotation.y);
         const f32 s1 = std::sin(rotation.y);
 
-        return {{
+        return {
             c1*c3 - c2*s1*s3,   -c1*s3 - c2*c3*s1,  s1*s2,      0.0f,
             c3*s1 + c1*c2*s3,   c1*c2*c3 - s1*s3,   -c1*s2,     0.0f,
             s2*s3,              c3*s2,              c2,         0.0f,
             0.0f,               0.0f,               0.0f,       1.0f
-        }};
+        };
     }
 }
 
