@@ -20,7 +20,7 @@ namespace bebone::core {
         T x;
         T y;
 
-        constexpr Vec2() {}
+        constexpr Vec2() = default;
         constexpr Vec2(const T& x, const T& y) : x(x), y(y) {}
 
         static const Vec2<float> zero;
@@ -31,35 +31,31 @@ namespace bebone::core {
         static const Vec2<float> up;
         static const Vec2<float> down;
 
-        inline static Vec2<T> splat(const T& value) {
-            return Vec2(value, value);
-        }
+        inline static Vec2<T> splat(const T& value);
+        inline static T dot(const Vec2<T>& a, const Vec2<T>& b);
+        inline static Vec2<T> project(const Vec2<T>& a, const Vec2<T>& b);
+        inline static Vec2<T> reject(const Vec2<T>& a, const Vec2<T>& b);
 
-        /** @brief Some overoaded operators */
-        inline Vec2 operator+(const Vec2& vec) const;
-        inline Vec2 operator-(const Vec2& vec) const;
-        inline Vec2 operator*(const Vec2& vec) const;
-        inline Vec2 operator/(const Vec2& vec) const;
+        inline Vec2<T> operator +(const Vec2& v) const;
+        inline Vec2<T> operator -(const Vec2& v) const;
+        inline Vec2<T> operator *(const Vec2& v) const;
+        inline Vec2<T> operator /(const Vec2& v) const;
+        inline Vec2<T>& operator +=(const Vec2<T>& v);
+        inline Vec2<T>& operator -=(const Vec2<T>& v);
+        inline Vec2<T>& operator *=(const Vec2<T>& v);
+        inline Vec2<T>& operator /=(const Vec2<T>& v);
 
-        inline Vec2 operator+(const T& value) const;
-        inline Vec2 operator-(const T& value) const;
-        inline Vec2 operator*(const T& value) const;
-        inline Vec2 operator/(const T& value) const;
+        inline Vec2<T> operator +(const T& scalar) const;
+        inline Vec2<T> operator -(const T& scalar) const;
+        inline Vec2<T> operator *(const T& scalar) const;
+        inline Vec2<T> operator /(T scalar) const;
+        inline Vec2<T>& operator +=(const T& scalar);
+        inline Vec2<T>& operator -=(const T& scalar);
+        inline Vec2<T>& operator *=(const T& scalar);
+        inline Vec2<T>& operator /=(T scalar);
 
-        /* Vector x= Vector */
-        inline Vec2<T>& operator+=(const Vec2<T>& other);
-        inline Vec2<T>& operator-=(const Vec2<T>& other);
-        inline Vec2<T>& operator*=(const Vec2<T>& other);
-        inline Vec2<T>& operator/=(const Vec2<T>& other);
-
-        /* Vector x= arbirary values */
-        inline Vec2<T>& operator+=(const T& other);
-        inline Vec2<T>& operator-=(const T& other);
-        inline Vec2<T>& operator*=(const T& other);
-        inline Vec2<T>& operator/=(const T& other);
-
-        inline bool operator==(const Vec2<T>& other) const;
-        inline bool operator!=(const Vec2<T>& other) const;
+        inline bool operator ==(const Vec2<T>& v) const;
+        inline bool operator !=(const Vec2<T>& v) const;
 
         inline std::string to_string() const;
 
@@ -69,10 +65,6 @@ namespace bebone::core {
         inline Vec2<T>& abs();
         inline T length() const;
         inline Vec2<T> normalize() const;
-
-        inline T dot(const Vec2<T>& other) const;
-        inline Vec2<T> project(const Vec2<T>& other) const;
-        inline Vec2<T> reject(const Vec2<T>& other) const;
 
         inline bool is_normalized() const;
     };
@@ -98,60 +90,94 @@ namespace bebone::core {
     const Vec2<float> Vec2<T>::down{ 0.0f, -1.0f };
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator+(const Vec2& vec) const { return Vec2(x + vec.x, y + vec.y); }
+    Vec2<T> Vec2<T>::operator +(const Vec2& v) const { { x + v.x, y + v.y; } }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator-(const Vec2& vec) const { return Vec2(x - vec.x, y - vec.y); }
+    Vec2<T> Vec2<T>::operator -(const Vec2& v) const { { x - v.x, y - v.y; } }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator*(const Vec2& vec) const { return Vec2(x * vec.x, y * vec.y); }
+    Vec2<T> Vec2<T>::operator *(const Vec2& v) const { { x * v.x, y * v.y; } }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator/(const Vec2& vec) const { return Vec2(x / vec.x, y / vec.y); }
+    Vec2<T> Vec2<T>::operator /(const Vec2& v) const { { x / v.x, y / v.y; } }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator+(const T& value) const { return Vec2(x + value, y + value); }
+    Vec2<T>& Vec2<T>::operator +=(const Vec2<T>& v) { x += v.x; y += v.y; return *this; }
+
+    template<typename T>
+    Vec2<T>& Vec2<T>::operator -=(const Vec2<T>& v) { x -= v.x; y -= v.y; return *this; }
+
+    template<typename T>
+    Vec2<T>& Vec2<T>::operator *=(const Vec2<T>& v) { x *= v.x; y *= v.y; return *this; }
+
+    template<typename T>
+    Vec2<T>& Vec2<T>::operator /=(const Vec2<T>& v) { x /= v.x; y /= v.y; return *this; }
+
+    template<typename T>
+    Vec2<T> Vec2<T>::operator +(const T& scalar) const { { x + scalar, y + scalar; } }
     
     template<typename T>
-    Vec2<T> Vec2<T>::operator-(const T& value) const { return Vec2(x - value, y - value); }
+    Vec2<T> Vec2<T>::operator -(const T& scalar) const { { x - scalar, y - scalar; } }
 
     template<typename T>
-    Vec2<T> Vec2<T>::operator*(const T& value) const { return Vec2(x * value, y * value); }
+    Vec2<T> Vec2<T>::operator *(const T& scalar) const { { x * scalar, y * scalar; } }
     
     template<typename T>
-    Vec2<T> Vec2<T>::operator/(const T& value) const { return Vec2(x / value, y / value); }
-
-    /* Vector x= Vector */
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator+=(const Vec2<T>& other) { x += other.x; y += other.y; return *this; }
-
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator-=(const Vec2<T>& other) { x -= other.x; y -= other.y; return *this; }
-    
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator*=(const Vec2<T>& other) { x *= other.x; y *= other.y; return *this; }
-    
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator/=(const Vec2<T>& other) { x /= other.x; y /= other.y; return *this; }
-
-    /* Vector x= arbirary values */
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator+=(const T& other) { x += other; y += other; return *this; }
-    
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator-=(const T& other) { x -= other; y -= other; return *this; }
-    
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator*=(const T& other) { x *= other; y *= other; return *this; }
-    
-    template<typename T>
-    Vec2<T>& Vec2<T>::operator/=(const T& other) { x /= other; y /= other; return *this; }
+    Vec2<T> Vec2<T>::operator /(T scalar) const {
+        scalar = 1.0f / scalar;
+        return *this * scalar;
+    }
 
     template<typename T>
-    bool Vec2<T>::operator==(const Vec2<T>& other) const { return x == other.x && y == other.y; }
+    Vec2<T>& Vec2<T>::operator +=(const T& scalar) { x += scalar; y += scalar; return *this; }
     
     template<typename T>
-    bool Vec2<T>::operator!=(const Vec2<T>& other) const { return !(*this == other); }
+    Vec2<T>& Vec2<T>::operator -=(const T& scalar) { x -= scalar; y -= scalar; return *this; }
+    
+    template<typename T>
+    Vec2<T>& Vec2<T>::operator *=(const T& scalar) { x *= scalar; y *= scalar; return *this; }
+    
+    template<typename T>
+    Vec2<T>& Vec2<T>::operator /=(T scalar) {
+        scalar = 1.0f / scalar;
+        return *this *= scalar;
+    }
+
+    template<typename T>
+    bool Vec2<T>::operator ==(const Vec2<T>& other) const { return x == other.x && y == other.y; }
+    
+    template<typename T>
+    bool Vec2<T>::operator !=(const Vec2<T>& other) const { return !(*this == other); }
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, const Vec2<T>& v) {
+        os << v.x << " " << v.y;
+        return os;
+    }
+
+    template<typename T>
+    std::istream& operator>>(std::istream& os, const Vec2<T>& v) {
+        os >> v.x >> v.y;
+        return os;
+    }
+
+    template<typename T>
+    inline Vec2<T> Vec2<T>::splat(const T& value) { { value, value; } }
+
+    template<typename T>
+    T Vec2<T>::dot(const Vec2<T>& a, const Vec2<T>& b) {
+        return a.x * b.x + a.y * b.y;
+    }
+
+    template<typename T>
+    Vec2<T> Vec2<T>::project(const Vec2<T>& a, const Vec2<T>& b) {
+        return b * (dot(a, b) / dot(b, b));
+    }
+
+    template<typename T>
+    Vec2<T> Vec2<T>::reject(const Vec2<T>& a, const Vec2<T>& b) {
+        return a - project(a, b);
+    }
 
     template<typename T>
     Vec2<T>& Vec2<T>::clamp(const T& min_value, const T& max_value) {
@@ -168,18 +194,6 @@ namespace bebone::core {
 
         return *this;
     }
-
-    template<typename T>
-    std::ostream& operator<<(std::ostream& os, const Vec2<T>& vec) {
-        os << vec.x << " " << vec.y;
-        return os;
-    }
-
-    template<typename T>
-    std::istream& operator>>(std::istream& os, const Vec2<T>& vec) {
-        os >> vec.x >> vec.y;
-        return os;
-    } 
 
     /**
      * @brief Method used to get string representation of object instance
@@ -218,21 +232,6 @@ namespace bebone::core {
     template<typename T>
     Vec2<T> Vec2<T>::normalize() const {
         return *this / length();
-    }
-
-    template<typename T>
-    T Vec2<T>::dot(const Vec2<T>& other) const {
-        return x * other.x + y * other.y;
-    }
-
-    template<typename T>
-    Vec2<T> Vec2<T>::project(const Vec2<T>& other) const {
-        return other * (dot(other) / other.dot(other));
-    }
-
-    template<typename T>
-    Vec2<T> Vec2<T>::reject(const Vec2<T>& other) const {
-        return *this - project(other);
     }
 
     template<typename T>

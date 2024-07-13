@@ -17,41 +17,40 @@ namespace bebone::core {
         T z;
         T w;
 
-        constexpr Vec4() {}
+        constexpr Vec4() = default;
         constexpr Vec4(const T& x, const T& y, const T& z, const T& w) : x(x), y(y), z(z), w(w) {}
-
-        static Vec4<T> splat(const T& value) {
-            return Vec4(value, value, value, value);
-        }
 
         static const Vec4<float> zero;
         static const Vec4<float> one;
 
-        /** @brief Some overoaded operators */
-        inline Vec4 operator+(const Vec4& vec) const;
-        inline Vec4 operator-(const Vec4& vec) const;
-        inline Vec4 operator*(const Vec4& vec) const;
-        inline Vec4 operator/(const Vec4& vec) const;
+        static Vec4<T> splat(const T& value);
+        inline static T dot(const Vec3<T>& a, const Vec3<T>& b);
+        inline static Vec3<T> project(const Vec3<T>& a, const Vec3<T>& b);
+        inline static Vec3<T> reject(const Vec3<T>& a, const Vec3<T>& b);
 
-        inline Vec4 operator+(const T& value) const;
-        inline Vec4 operator-(const T& value) const;
-        inline Vec4 operator*(const T& value) const;
-        inline Vec4 operator/(const T& value) const;
+        inline Vec4<T> operator +(const Vec4& v) const;
+        inline Vec4<T> operator -(const Vec4& v) const;
+        inline Vec4<T> operator *(const Vec4& v) const;
+        inline Vec4<T> operator /(const Vec4& v) const;
+        inline Vec4<T>& operator +=(const Vec4<T>& v);
+        inline Vec4<T>& operator -=(const Vec4<T>& v);
+        inline Vec4<T>& operator *=(const Vec4<T>& v);
+        inline Vec4<T>& operator /=(const Vec4<T>& v);
 
-        /* Vector x= Vector */
-        inline Vec4<T>& operator+=(const Vec4<T>& other);
-        inline Vec4<T>& operator-=(const Vec4<T>& other);
-        inline Vec4<T>& operator*=(const Vec4<T>& other);
-        inline Vec4<T>& operator/=(const Vec4<T>& other);
+        inline Vec4<T> operator +(const T& scalar) const;
+        inline Vec4<T> operator -(const T& scalar) const;
+        inline Vec4<T> operator *(const T& scalar) const;
+        inline Vec4<T> operator /(T scalar) const;
+        inline Vec4<T>& operator +=(const T& scalar);
+        inline Vec4<T>& operator -=(const T& scalar);
+        inline Vec4<T>& operator *=(const T& scalar);
+        inline Vec4<T>& operator /=(T scalar);
 
-        /* Vector x= arbirary values */
-        inline Vec4<T>& operator+=(const T& other);
-        inline Vec4<T>& operator-=(const T& other);
-        inline Vec4<T>& operator*=(const T& other);
-        inline Vec4<T>& operator/=(const T& other);
+        inline bool operator ==(const Vec4<T>& v) const;
+        inline bool operator !=(const Vec4<T>& v) const;
 
-        inline bool operator==(const Vec4<T>& other) const;
-        inline bool operator!=(const Vec4<T>& other) const;
+        inline explicit operator Vec2<T>() const;
+        inline explicit operator Vec3<T>() const;
 
         inline std::string to_string() const;
 
@@ -73,65 +72,89 @@ namespace bebone::core {
     template<typename T>
     const Vec4<float> Vec4<T>::one{ 1.0f, 1.0f, 1.0f, 1.0f };
 
-    /**
-     * @brief Some overoaded operators
-    */
     template<typename T>
-    Vec4<T> Vec4<T>::operator+(const Vec4& vec) const { return Vec4(x + vec.x, y + vec.y, z + vec.z, w + vec.w); }
+    Vec4<T> Vec4<T>::operator +(const Vec4& v) const { { x + v.x, y + v.y, z + v.z, w + v.w; } }
     
     template<typename T>
-    Vec4<T> Vec4<T>::operator-(const Vec4& vec) const { return Vec4(x - vec.x, y - vec.y, z - vec.z, w - vec.w); }
+    Vec4<T> Vec4<T>::operator -(const Vec4& v) const { { x - v.x, y - v.y, z - v.z, w - v.w; } }
     
     template<typename T>
-    Vec4<T> Vec4<T>::operator*(const Vec4& vec) const { return Vec4(x * vec.x, y * vec.y, z * vec.z, w * vec.w); }
+    Vec4<T> Vec4<T>::operator *(const Vec4& v) const { { x * v.x, y * v.y, z * v.z, w * v.w; } }
     
     template<typename T>
-    Vec4<T> Vec4<T>::operator/(const Vec4& vec) const { return Vec4(x / vec.x, y / vec.y, z / vec.z, w / vec.w); }
+    Vec4<T> Vec4<T>::operator /(const Vec4& v) const { { x / v.x, y / v.y, z / v.z, w / v.w; } }
 
     template<typename T>
-    Vec4<T> Vec4<T>::operator+(const T& value) const { return Vec4(x + value, y + value, z + value, w + value); }
-    
-    template<typename T>
-    Vec4<T> Vec4<T>::operator-(const T& value) const { return Vec4( x - value, y - value, z - value, w - value); }
+    Vec4<T>& Vec4<T>::operator +=(const Vec4<T>& v) { x += v.x; y += v.y; z += v.z; w += v.w; return *this; }
 
     template<typename T>
-    Vec4<T> Vec4<T>::operator*(const T& value) const { return Vec4(x * value, y * value, z * value, w * value); }
-    
-    template<typename T>
-    Vec4<T> Vec4<T>::operator/(const T& value) const { return Vec4( x / value, y / value, z / value, w / value); }
-
-    /* Vector x= Vector */
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator+=(const Vec4<T>& other) { x += other.x; y += other.y; z += other.z; w += other.w; return *this; }
-    
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator-=(const Vec4<T>& other) { x -= other.x; y -= other.y; z -= other.z; w -= other.w; return *this; }
-    
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator*=(const Vec4<T>& other) { x *= other.x; y *= other.y; z *= other.z; w *= other.w; return *this; }
-    
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator/=(const Vec4<T>& other) { x /= other.x; y /= other.y; z /= other.z; w /= other.w; return *this; }
-
-    /* Vector x= arbirary values */
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator+=(const T& other) { x += other; y += other; z += other; w += other; return *this; }
-    
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator-=(const T& other) { x -= other; y -= other; z -= other; w -= other; return *this; }
-    
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator*=(const T& other) { x *= other; y *= other; z *= other; w *= other; return *this; }
-    
-    template<typename T>
-    Vec4<T>& Vec4<T>::operator/=(const T& other) { x /= other; y /= other; z /= other; w /= other; return *this; }
-
+    Vec4<T>& Vec4<T>::operator -=(const Vec4<T>& v) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; return *this; }
 
     template<typename T>
-    bool Vec4<T>::operator==(const Vec4<T>& other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
+    Vec4<T>& Vec4<T>::operator *=(const Vec4<T>& v) { x *= v.x; y *= v.y; z *= v.z; w *= v.w; return *this; }
+
+    template<typename T>
+    Vec4<T>& Vec4<T>::operator /=(const Vec4<T>& v) { x /= v.x; y /= v.y; z /= v.z; w /= v.w; return *this; }
+
+    template<typename T>
+    Vec4<T> Vec4<T>::operator +(const T& scalar) const { { x + scalar, y + scalar, z + scalar, w + scalar; } }
     
     template<typename T>
-    bool Vec4<T>::operator!=(const Vec4<T>& other) const { return !(*this == other); }
+    Vec4<T> Vec4<T>::operator -(const T& scalar) const { { x - scalar, y - scalar, z - scalar, w - scalar; } }
+
+    template<typename T>
+    Vec4<T> Vec4<T>::operator *(const T& scalar) const { { x * scalar, y * scalar, z * scalar, w * scalar; } }
+    
+    template<typename T>
+    Vec4<T> Vec4<T>::operator /(T scalar) const {
+        scalar = 1.0f / scalar;
+        return *this * scalar;
+    }
+
+    template<typename T>
+    Vec4<T>& Vec4<T>::operator +=(const T& scalar) { x += scalar; y += scalar; z += scalar; w += scalar; return *this; }
+    
+    template<typename T>
+    Vec4<T>& Vec4<T>::operator -=(const T& scalar) { x -= scalar; y -= scalar; z -= scalar; w -= scalar; return *this; }
+    
+    template<typename T>
+    Vec4<T>& Vec4<T>::operator *=(const T& scalar) { x *= scalar; y *= scalar; z *= scalar; w *= scalar; return *this; }
+    
+    template<typename T>
+    Vec4<T>& Vec4<T>::operator /=(T scalar) {
+        scalar = 1.0f / scalar;
+        return *this *= scalar;
+    }
+
+    template<typename T>
+    bool Vec4<T>::operator ==(const Vec4<T>& v) const { return x == v.x && y == v.y && z == v.z && w == v.w; }
+    
+    template<typename T>
+    bool Vec4<T>::operator !=(const Vec4<T>& v) const { return !(*this == v); }
+
+    template<typename T>
+    Vec4<T>::operator Vec2<T>() const { { x, y; } }
+
+    template<typename T>
+    Vec4<T>::operator Vec3<T>() const { { x, y, z; } }
+
+    template<typename T>
+    Vec4<T> Vec4<T>::splat(const T& value) { { value, value, value, value; } }
+
+    template<typename T>
+    T Vec4<T>::dot(const Vec3<T>& a, const Vec3<T>& b) {
+        return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+    }
+
+    template<typename T>
+    Vec3<T> Vec4<T>::project(const Vec3<T>& a, const Vec3<T>& b) {
+        return b * (dot(a, b) / dot(b, b));
+    }
+
+    template<typename T>
+    Vec3<T> Vec4<T>::reject(const Vec3<T>& a, const Vec3<T>& b) {
+        return a - project(a, b);
+    }
 
     template<typename T>
     Vec4<T>& Vec4<T>::clamp(const T& min_value, const T& max_value) {
@@ -157,13 +180,13 @@ namespace bebone::core {
      * @brief Puts string representation of the object to the out stream
      * 
      * @param os - reference to the out stream
-     * @param vec - reference to the object instance
+     * @param v - reference to the object instance
      * 
      * @return std::ostream& reference to the stream instance 
     */
     template<typename T>
-    std::ostream& operator<<(std::ostream& os, const Vec4<T>& vec) {
-        os << vec.x << " " << vec.y << " " << vec.z << " " << vec.w; 
+    std::ostream& operator<<(std::ostream& os, const Vec4<T>& v) {
+        os << v.x << " " << v.y << " " << v.z << " " << v.w; 
         return os;
     } 
 
@@ -171,13 +194,13 @@ namespace bebone::core {
      * @brief Constructs object from it string representation
      * 
      * @param os - reference to the in stream
-     * @param vec - reference to the object instance
+     * @param v - reference to the object instance
      * 
      * @return std::istream& reference to the stream instance 
     */
     template<typename T>
-    std::istream& operator>>(std::istream& os, const Vec4<T>& vec) {
-        os >> vec.x >> vec.y >> vec.z >> vec.w;
+    std::istream& operator>>(std::istream& os, const Vec4<T>& v) {
+        os >> v.x >> v.y >> v.z >> v.w;
 
         return os;
     } 
