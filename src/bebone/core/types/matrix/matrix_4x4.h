@@ -32,6 +32,7 @@ namespace bebone::core {
         static Matrix<f32, 4, 4> get_rotation_x(const f32& angle);
         static Matrix<f32, 4, 4> get_rotation_y(const f32& angle);
         static Matrix<f32, 4, 4> get_rotation_z(const f32& angle);
+        static Matrix<f32, 4, 4> get_rotation_matrix(const f32& angle, const Vec3f& axis);
 
         inline Matrix<f32, 4, 4> transpose() const;
         inline Matrix<f32, 4, 4> inverse() const;

@@ -28,8 +28,8 @@ namespace bebone::core {
 
         return {
             1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f,  c,    s,   0.0f,
-            0.0f, -s,    c,   0.0f,
+            0.0f,  c,   -s,   0.0f,
+            0.0f,  s,    c,   0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
         };
     }
@@ -39,9 +39,9 @@ namespace bebone::core {
         f32 s = std::sin(angle);
 
         return {
-            c,   0.0f, -s,   0.0f,
+             c,   0.0f,  s,   0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
-            s,   0.0f,  c,   0.0f,
+            -s,   0.0f,  c,   0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
         };
     }
@@ -55,6 +55,27 @@ namespace bebone::core {
              s,    c,   0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_rotation_matrix(const f32& angle, const Vec3f& axis) {
+        f32 c = std::cos(angle);
+        f32 s = std::sin(angle);
+        f32 d = 1.0f - c;
+
+        f32 x = axis.x * d;
+        f32 y = axis.y * d;
+        f32 z = axis.z * d;
+
+        f32 axay = x * axis.y;
+        f32 axaz = x * axis.z;
+        f32 ayaz = y * axis.z;
+
+        return {
+             c + x * axis.x,   axay - s * axis.z, axaz + s * axis.y, 0.0f,
+            axay + s * axis.z,   c + y * axis.y,  ayaz - s * axis.x, 0.0f,
+            axaz - s * axis.y, ayaz + s * axis.x,   c + z * axis.z,  0.0f,
+                 0.0f,               0.0f,              0.0f,        1.0f
         };
     }
 
