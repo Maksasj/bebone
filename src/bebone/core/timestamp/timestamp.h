@@ -11,28 +11,28 @@ namespace bebone::core {
     using namespace std::chrono;
 
     class Time {
-    private:
-        static double delta_time;
+        private:
+            static double delta_time;
 
-        static void set_delta_time(const double& time);
+            static void set_delta_time(const double& time);
 
-    public:
-        static const steady_clock::time_point startup_time;
+        public:
+            static const steady_clock::time_point startup_time;
 
-        static double get_delta_time();
-        static double get_seconds_elapsed();
+            static double get_delta_time();
+            static double get_seconds_elapsed();
 
-        friend class bebone::gfx::Window;
+            friend class bebone::gfx::Window;
     };
 
     struct Timestamp {
-    public:
-        double time;
+        public:
+            double time;
 
-        Timestamp();
+            Timestamp();
 
-        double operator-(const Timestamp& timestamp) const;
-        double operator+(const Timestamp& timestamp) const;
+            double operator-(const Timestamp& timestamp) const;
+            double operator+(const Timestamp& timestamp) const;
     };
 }
 

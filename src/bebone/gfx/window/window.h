@@ -77,6 +77,8 @@ namespace bebone::gfx {
             /// Gfx api
             virtual GfxAPI get_api() const = 0;
 
+            const Watch& get_watch() const;
+
             void end_frame();
 
         private:

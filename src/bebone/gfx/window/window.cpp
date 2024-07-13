@@ -116,6 +116,10 @@ namespace bebone::gfx {
         return static_cast<f32>(width) / static_cast<f32>(height);
     }
 
+    const Watch& Window::get_watch() const {
+        return watch;
+    }
+
     void Window::end_frame() {
         double time_diff = watch.get_time_difference();
         Time::set_delta_time(time_diff);
