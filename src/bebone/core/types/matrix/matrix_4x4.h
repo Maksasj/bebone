@@ -29,9 +29,9 @@ namespace bebone::core {
         // inline static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up);
         // inline static Matrix<f32, 4, 4> look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up);
 
-        inline static Matrix<f32, 4, 4> rotation_x(const f32& angle);
-        inline static Matrix<f32, 4, 4> rotation_y(const f32& angle);
-        inline static Matrix<f32, 4, 4> rotation_z(const f32& angle);
+        static Matrix<f32, 4, 4> get_rotation_x(const f32& angle);
+        static Matrix<f32, 4, 4> get_rotation_y(const f32& angle);
+        static Matrix<f32, 4, 4> get_rotation_z(const f32& angle);
 
         inline Matrix<f32, 4, 4> transpose() const;
         inline Matrix<f32, 4, 4> inverse() const;
@@ -363,69 +363,6 @@ namespace bebone::core {
     inline bool Matrix<f32, 4, 4>::operator!=(const Matrix<f32, 4, 4>& other) const {
         return !(*this == other);
     }
-
-    // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::rotation_x(const f32& angle) {
-    //     const f32 cos0 = std::cos(angle);
-    //     const f32 sin0 = std::sin(angle);
-//
-    //     #ifndef BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
-    //     return {{
-    //         1.0f, 0.0f,  0.0f, 0.0f,
-    //         0.0f, cos0, -sin0, 0.0f,
-    //         0.0f, sin0,  cos0, 0.0f,
-    //         0.0f, 0.0f,  0.0f, 1.0f
-    //     }};
-    //     #else
-    //     return {{
-    //         1.0f,  0.0f,  0.0f, 0.0f,
-    //         0.0f,  cos0,  sin0, 0.0f,
-    //         0.0f, -sin0,  cos0, 0.0f,
-    //         0.0f,  0.0f,  0.0f, 1.0f
-    //     }};
-    //     #endif
-    // }
-
-    // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::rotation_y(const f32& angle) {
-    //     const f32 cos0 = std::cos(angle);
-    //     const f32 sin0 = std::sin(angle);
-//
-    //     #ifndef BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
-    //     return {{
-    //             cos0, 0.0f, sin0, 0.0f,
-    //             0.0f, 1.0f, 0.0f, 0.0f,
-    //         -sin0, 0.0f, cos0, 0.0f,
-    //             0.0f, 0.0f, 0.0f, 1.0f
-    //     }};
-    //     #else
-    //     return {{
-    //             cos0, 0.0f, -sin0, 0.0f,
-    //             0.0f, 1.0f,  0.0f, 0.0f,
-    //             sin0, 0.0f,  cos0, 0.0f,
-    //             0.0f, 0.0f,  0.0f, 1.0f
-    //     }};
-    //     #endif
-    // }
-
-    // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::rotation_z(const f32& angle) {
-    //     const f32 cos0 = std::cos(angle);
-    //     const f32 sin0 = std::sin(angle);
-    //
-    //     #ifndef BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
-    //     return {{
-    //         cos0, -sin0, 0.0f, 0.0f,
-    //         sin0,  cos0, 0.0f, 0.0f,
-    //         0.0f,  0.0f, 1.0f, 0.0f,
-    //         0.0f,  0.0f, 0.0f, 1.0f
-    //     }};
-    //     #else
-    //     return {{
-    //             cos0, sin0, 0.0f, 0.0f,
-    //         -sin0, cos0, 0.0f, 0.0f,
-    //             0.0f, 0.0f, 1.0f, 0.0f,
-    //             0.0f, 0.0f, 0.0f, 1.0f
-    //     }};
-    //     #endif
-    // }
 }
 
 #endif
