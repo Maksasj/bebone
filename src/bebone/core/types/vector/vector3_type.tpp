@@ -74,6 +74,8 @@ namespace bebone::core {
         inline T dot(const Vec3<T>& other) const;
         inline Vec3<T> project(const Vec3<T>& other) const;
         inline Vec3<T> reject(const Vec3<T>& other) const;
+
+        inline bool is_normalized() const;
     };
 }
 
@@ -103,78 +105,78 @@ namespace bebone::core {
     const Vec3<float> Vec3<T>::forward{ 0.0f, 0.0f, 1.0f };
 
     template<typename T>
-    Vec3<T> Vec3<T>::operator+(const Vec3& vec) const { return Vec3(this->x + vec.x, this->y + vec.y, z + vec.z); }
+    Vec3<T> Vec3<T>::operator+(const Vec3& vec) const { return Vec3(x + vec.x, y + vec.y, z + vec.z); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator-(const Vec3& vec) const { return Vec3(this->x - vec.x, this->y - vec.y, z - vec.z); }
+    Vec3<T> Vec3<T>::operator-(const Vec3& vec) const { return Vec3(x - vec.x, y - vec.y, z - vec.z); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator*(const Vec3& vec) const { return Vec3(this->x * vec.x, this->y * vec.y, z * vec.z); }
+    Vec3<T> Vec3<T>::operator*(const Vec3& vec) const { return Vec3(x * vec.x, y * vec.y, z * vec.z); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator/(const Vec3& vec) const { return Vec3(this->x / vec.x, this->y / vec.y, z / vec.z); }
+    Vec3<T> Vec3<T>::operator/(const Vec3& vec) const { return Vec3(x / vec.x, y / vec.y, z / vec.z); }
 
     template<typename T>
-    Vec3<T> Vec3<T>::operator+(const T& value) const { return Vec3(this->x + value, this->y + value, this->z + value); }
+    Vec3<T> Vec3<T>::operator+(const T& value) const { return Vec3(x + value, y + value, z + value); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator-(const T& value) const { return Vec3(this->x - value, this->y - value, this->z - value); }
+    Vec3<T> Vec3<T>::operator-(const T& value) const { return Vec3(x - value, y - value, z - value); }
 
     template<typename T>
-    Vec3<T> Vec3<T>::operator*(const T& value) const { return Vec3(this->x * value, this->y * value, this->z * value); }
+    Vec3<T> Vec3<T>::operator*(const T& value) const { return Vec3(x * value, y * value, z * value); }
     
     template<typename T>
-    Vec3<T> Vec3<T>::operator/(const T& value) const { return Vec3(this->x / value, this->y / value, this->z / value); }
+    Vec3<T> Vec3<T>::operator/(const T& value) const { return Vec3(x / value, y / value, z / value); }
 
     /* Vector x= Vector */
     template<typename T>
-    Vec3<T>& Vec3<T>::operator+=(const Vec3<T>& other) { this->x += other.x; this->y += other.y; this->z += other.z; return *this; }
+    Vec3<T>& Vec3<T>::operator+=(const Vec3<T>& other) { x += other.x; y += other.y; z += other.z; return *this; }
     
     template<typename T>
-    Vec3<T>& Vec3<T>::operator-=(const Vec3<T>& other) { this->x -= other.x; this->y -= other.y; this->z -= other.z; return *this; }
+    Vec3<T>& Vec3<T>::operator-=(const Vec3<T>& other) { x -= other.x; y -= other.y; z -= other.z; return *this; }
     
     template<typename T>
-    Vec3<T>& Vec3<T>::operator*=(const Vec3<T>& other) { this->x *= other.x; this->y *= other.y; this->z *= other.z; return *this; }
+    Vec3<T>& Vec3<T>::operator*=(const Vec3<T>& other) { x *= other.x; y *= other.y; z *= other.z; return *this; }
     
     template<typename T>
-    Vec3<T>& Vec3<T>::operator/=(const Vec3<T>& other) { this->x /= other.x; this->y /= other.y; this->z /= other.z; return *this; }
+    Vec3<T>& Vec3<T>::operator/=(const Vec3<T>& other) { x /= other.x; y /= other.y; z /= other.z; return *this; }
     
     /* Vector x= arbirary values */
     template<typename T>
-    Vec3<T>& Vec3<T>::operator+=(const T& other) { this->x += other; this->y += other; this->z += other; return *this; }
+    Vec3<T>& Vec3<T>::operator+=(const T& other) { x += other; y += other; z += other; return *this; }
     
     template<typename T>
-    Vec3<T>& Vec3<T>::operator-=(const T& other) { this->x -= other; this->y -= other; this->z -= other; return *this; }
+    Vec3<T>& Vec3<T>::operator-=(const T& other) { x -= other; y -= other; z -= other; return *this; }
     
     template<typename T>
-    Vec3<T>& Vec3<T>::operator*=(const T& other) { this->x *= other; this->y *= other; this->z *= other; return *this; }
+    Vec3<T>& Vec3<T>::operator*=(const T& other) { x *= other; y *= other; z *= other; return *this; }
     
     template<typename T>
-    Vec3<T>& Vec3<T>::operator/=(const T& other) { this->x /= other; this->y /= other; this->z /= other; return *this; }
+    Vec3<T>& Vec3<T>::operator/=(const T& other) { x /= other; y /= other; z /= other; return *this; }
 
     template<typename T>
-    Vec3<T>::operator Vec2<T>() const { return Vec2<T>{this->x, this->y}; }
+    Vec3<T>::operator Vec2<T>() const { return Vec2<T>{x, y}; }
 
     template<typename T>
-    bool Vec3<T>::operator==(const Vec3<T>& other) const { return this->x == other.x && this->y == other.y && this->z == other.z; }
+    bool Vec3<T>::operator==(const Vec3<T>& other) const { return x == other.x && y == other.y && z == other.z; }
     
     template<typename T>
     bool Vec3<T>::operator!=(const Vec3<T>& other) const { return !(*this == other); }
 
     template<typename T>
     Vec3<T>& Vec3<T>::clamp(const T& min_value, const T& max_value) {
-        this->x = bebone::core::clamp(this->x, min_value, max_value);
-        this->y = bebone::core::clamp(this->y, min_value, max_value);
-        this->z = bebone::core::clamp(this->z, min_value, max_value);
+        x = bebone::core::clamp(x, min_value, max_value);
+        y = bebone::core::clamp(y, min_value, max_value);
+        z = bebone::core::clamp(z, min_value, max_value);
 
         return *this;
     }
     
     template<typename T>
     Vec3<T>& Vec3<T>::clamp(const Vec3<T>& min_value, const Vec3<T>& max_value) {
-        this->x = bebone::core::clamp(this->x, min_value.x, max_value.x);
-        this->y = bebone::core::clamp(this->y, min_value.y, max_value.y);
-        this->z = bebone::core::clamp(this->z, min_value.z, max_value.z);
+        x = bebone::core::clamp(x, min_value.x, max_value.x);
+        y = bebone::core::clamp(y, min_value.y, max_value.y);
+        z = bebone::core::clamp(z, min_value.z, max_value.z);
 
         return *this;
     }
@@ -216,7 +218,7 @@ namespace bebone::core {
     template<typename T>
     std::string Vec3<T>::to_string() const {
         std::stringstream ss;
-        ss << this->x << ' ' << this->y << ' ' << z;
+        ss << x << ' ' << y << ' ' << z;
         return ss.str();
     }
 
@@ -227,9 +229,9 @@ namespace bebone::core {
     */
     template<typename T>
     Vec3<T>& Vec3<T>::abs() {
-        if(this->x < 0) this->x = -this->x;
-        if(this->y < 0) this->y = -this->y;
-        if(this->z < 0) this->z = -this->z;
+        if(x < 0) x = -x;
+        if(y < 0) y = -y;
+        if(z < 0) z = -z;
         return *this;
     }
 
@@ -240,7 +242,7 @@ namespace bebone::core {
     */
     template<typename T>
     T Vec3<T>::length() const {
-        return sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
+        return sqrtf(x * x + y * y + z * z);
     }
 
     template<typename T>
@@ -270,6 +272,11 @@ namespace bebone::core {
     template<typename T>
     Vec3<T> Vec3<T>::reject(const Vec3<T>& other) const {
         return *this - project(other);
+    }
+
+    template<typename T>
+    bool Vec3<T>::is_normalized() const {
+        return length() == 1;
     }
 }
 

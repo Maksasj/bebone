@@ -73,6 +73,8 @@ namespace bebone::core {
         inline T dot(const Vec2<T>& other) const;
         inline Vec2<T> project(const Vec2<T>& other) const;
         inline Vec2<T> reject(const Vec2<T>& other) const;
+
+        inline bool is_normalized() const;
     };
 }
 
@@ -121,48 +123,48 @@ namespace bebone::core {
 
     /* Vector x= Vector */
     template<typename T>
-    Vec2<T>& Vec2<T>::operator+=(const Vec2<T>& other) { this->x += other.x; this->y += other.y; return *this; }
+    Vec2<T>& Vec2<T>::operator+=(const Vec2<T>& other) { x += other.x; y += other.y; return *this; }
 
     template<typename T>
-    Vec2<T>& Vec2<T>::operator-=(const Vec2<T>& other) { this->x -= other.x; this->y -= other.y; return *this; }
+    Vec2<T>& Vec2<T>::operator-=(const Vec2<T>& other) { x -= other.x; y -= other.y; return *this; }
     
     template<typename T>
-    Vec2<T>& Vec2<T>::operator*=(const Vec2<T>& other) { this->x *= other.x; this->y *= other.y; return *this; }
+    Vec2<T>& Vec2<T>::operator*=(const Vec2<T>& other) { x *= other.x; y *= other.y; return *this; }
     
     template<typename T>
-    Vec2<T>& Vec2<T>::operator/=(const Vec2<T>& other) { this->x /= other.x; this->y /= other.y; return *this; }
+    Vec2<T>& Vec2<T>::operator/=(const Vec2<T>& other) { x /= other.x; y /= other.y; return *this; }
 
     /* Vector x= arbirary values */
     template<typename T>
-    Vec2<T>& Vec2<T>::operator+=(const T& other) { this->x += other; this->y += other; return *this; }
+    Vec2<T>& Vec2<T>::operator+=(const T& other) { x += other; y += other; return *this; }
     
     template<typename T>
-    Vec2<T>& Vec2<T>::operator-=(const T& other) { this->x -= other; this->y -= other; return *this; }
+    Vec2<T>& Vec2<T>::operator-=(const T& other) { x -= other; y -= other; return *this; }
     
     template<typename T>
-    Vec2<T>& Vec2<T>::operator*=(const T& other) { this->x *= other; this->y *= other; return *this; }
+    Vec2<T>& Vec2<T>::operator*=(const T& other) { x *= other; y *= other; return *this; }
     
     template<typename T>
-    Vec2<T>& Vec2<T>::operator/=(const T& other) { this->x /= other; this->y /= other; return *this; }
+    Vec2<T>& Vec2<T>::operator/=(const T& other) { x /= other; y /= other; return *this; }
 
     template<typename T>
-    bool Vec2<T>::operator==(const Vec2<T>& other) const { return this->x == other.x && this->y == other.y; }
+    bool Vec2<T>::operator==(const Vec2<T>& other) const { return x == other.x && y == other.y; }
     
     template<typename T>
     bool Vec2<T>::operator!=(const Vec2<T>& other) const { return !(*this == other); }
 
     template<typename T>
     Vec2<T>& Vec2<T>::clamp(const T& min_value, const T& max_value) {
-        this->x = bebone::core::clamp(this->x, min_value, max_value);
-        this->y = bebone::core::clamp(this->y, min_value, max_value);
+        x = bebone::core::clamp(x, min_value, max_value);
+        y = bebone::core::clamp(y, min_value, max_value);
 
         return *this;
     }
     
     template<typename T>
     Vec2<T>& Vec2<T>::clamp(const Vec2<T>& min_value, const Vec2<T>& max_value) {
-        this->x = bebone::core::clamp(this->x, min_value.x, max_value.x);
-        this->y = bebone::core::clamp(this->y, min_value.y, max_value.y);
+        x = bebone::core::clamp(x, min_value.x, max_value.x);
+        y = bebone::core::clamp(y, min_value.y, max_value.y);
 
         return *this;
     }
@@ -198,8 +200,8 @@ namespace bebone::core {
     */
     template<typename T>
     Vec2<T>& Vec2<T>::Vec2::abs() {
-        if(this->x < 0) this->x = -this->x;
-        if(this->y < 0) this->y = -this->y;
+        if(x < 0) x = -x;
+        if(y < 0) y = -y;
         return *this;
     }
 
@@ -210,7 +212,7 @@ namespace bebone::core {
     */
     template<typename T>
     T Vec2<T>::length() const {
-        return sqrtf(this->x * this->x + this->y * this->y);
+        return sqrtf(x * x + y * y);
     }
 
     template<typename T>
@@ -231,6 +233,11 @@ namespace bebone::core {
     template<typename T>
     Vec2<T> Vec2<T>::reject(const Vec2<T>& other) const {
         return *this - project(other);
+    }
+
+    template<typename T>
+    bool Vec2<T>::is_normalized() const {
+        return length() == 1;
     }
 }
 
