@@ -7,7 +7,7 @@ namespace bebone::renderer {
         swap_chain = device->create_swap_chain(window);
 
         // Create default render graph
-        render_graph = std::make_shared<PBRRenderGraph>("pbr_render_graph", create_render_graph_impl());
+        render_graph = create_default_render_graph();
         render_graph->assemble();
 
         window->add_listener([&](WindowSizeEvent event) {
@@ -57,8 +57,13 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderer::present() {
+        // Record draw commands
         render_graph->record();
+
+        // Submit draw commands
         render_graph->submit();
+
+        // Reset all rendering queues
         render_graph->reset();
     }
 
