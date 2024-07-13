@@ -24,7 +24,7 @@ namespace bebone::renderer {
         auto gpass_depth = resource_factory->create_depth_resource("gpass_depth", size);
         add_resource(gpass_depth);
 
-        auto gpass = pass_factory->create_deferred_g_pass("gpass", size);
+        gpass = pass_factory->create_deferred_g_pass("gpass", size);
         gpass->plug_output("position", gpass_position_texture);
         gpass->plug_output("normals", gpass_normals_texture);
         gpass->plug_output("albedo", gpass_albedo_texture);
@@ -33,8 +33,17 @@ namespace bebone::renderer {
         gpass->plug_output("depth", gpass_depth);
         add_pass(gpass);
 
-        auto present = pass_factory->create_present_pass("present", size);
+        present = pass_factory->create_present_pass("present", size);
         present->plug_input("texture", gpass_albedo_texture);
         add_pass(present);
+    }
+
+    void PBRRenderGraph::submit_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
+        gpass->submit_task(mesh, transform);
+    }
+
+    void PBRRenderGraph::submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
+        std::ignore = mesh;
+        std::ignore = transform;
     }
 }

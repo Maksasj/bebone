@@ -49,11 +49,8 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderer::render(const MeshHandle& handle, const Transform& transform) {
-        std::ignore = transform;
-
-        auto pass = static_pointer_cast<IRenderQueuePass>(render_graph->get_render_pass("gpass").value());
         auto mesh = mesh_pool[handle.index];
-        pass->submit_task(mesh, transform);
+        render_graph->submit_geometry(mesh, transform);
     }
 
     void VulkanRenderer::present() {

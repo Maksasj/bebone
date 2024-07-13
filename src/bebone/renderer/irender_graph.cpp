@@ -24,6 +24,16 @@ namespace bebone::renderer {
         impl->reset();
     }
 
+    void IRenderGraph::submit_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
+        std::ignore = mesh;
+        std::ignore = transform;
+    }
+
+    void IRenderGraph::submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
+        std::ignore = mesh;
+        std::ignore = transform;
+    }
+
     void IRenderGraph::add_pass(const std::shared_ptr<IPass>& render_pass) {
         impl->add_pass(render_pass);
     }

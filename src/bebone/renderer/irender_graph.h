@@ -24,6 +24,10 @@ namespace bebone::renderer {
             virtual void submit();
             virtual void reset();
 
+            // Helper functions
+            virtual void submit_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform);
+            virtual void submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform);
+
             virtual std::shared_ptr<IPassFactory> create_pass_factory() const;
             virtual std::shared_ptr<IResourceFactory> create_resource_factory() const;
 
