@@ -23,7 +23,7 @@ int main() {
 
     while(!window->closing()) {
         renderer->render(triangle, { .position = {
-            0, std::sin(Time::get_seconds_elapsed()), 0,
+            0, std::sinf(static_cast<f32>(Time::get_seconds_elapsed())), 0,
         }});
 
         renderer->present();
