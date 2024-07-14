@@ -36,7 +36,7 @@ int main() {
 
         for(int i = 0; i < 5; ++i) {
             renderer->render(triangle, { .position = {
-                i, 1, 2,
+                static_cast<f32>(i), 1, 2,
             }});
         }
 
