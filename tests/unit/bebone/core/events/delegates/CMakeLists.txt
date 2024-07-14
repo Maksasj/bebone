@@ -1,6 +1,3 @@
 add_executable(bebone_events_delegates_tests_1 bebone_events_delegates_tests_1.cpp)
 target_link_libraries(bebone_events_delegates_tests_1 bebone_core)
-
-enable_testing()
-
-add_test(NAME Bebone_Core_Events_Delegates_Tests_1 COMMAND $<TARGET_FILE:bebone_events_delegates_tests_1>)
+target_link_libraries(bebone_events_delegates_tests_1 gtest gtest_main)
