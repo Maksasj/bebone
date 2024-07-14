@@ -23,8 +23,22 @@ int main() {
 
     while(!window->closing()) {
         renderer->render(triangle, { .position = {
-            0, std::sinf(static_cast<f32>(Time::get_seconds_elapsed())), 0,
+            0, sinf(static_cast<f32>(Time::get_seconds_elapsed())), 0,
         }});
+
+        renderer->render(triangle, { .position = {
+            0, 0, 0,
+        }});
+
+        renderer->render(triangle, { .position = {
+            0, 0, 2,
+        }});
+
+        for(int i = 0; i < 5; ++i) {
+            renderer->render(triangle, { .position = {
+                i, 1, 2,
+            }});
+        }
 
         renderer->present();
         window->pull_events();

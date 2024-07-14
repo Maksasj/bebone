@@ -8,10 +8,19 @@ namespace bebone::renderer {
 
     class IDebugCamera : public IPerspectiveCamera {
         private:
-            std::shared_ptr<InputExecutor> input;
+            std::shared_ptr<Window> window;
+            f32 speed;
+            bool mouse_locked;
+
+        protected:
+            void update_debug_camera();
+            void update_camera_rotation();
+            void update_camera_position();
+            void handle_mouse_lock(shared_ptr<Window>& window);
 
         public:
-            IDebugCamera(std::shared_ptr<Window>& window);
+            IDebugCamera(const std::shared_ptr<Window>& window);
+
     };
 }
 

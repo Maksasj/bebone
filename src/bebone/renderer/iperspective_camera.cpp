@@ -6,9 +6,11 @@ namespace bebone::renderer {
     }
 
     Mat4f IPerspectiveCamera::calculate_matrix(const f32& aspect_ratio) const {
-        const auto view = Mat4f::view(get_position(), Vec3f::back, Vec3f::down);
-        const auto proj = Mat4f::perspective(1.0472, aspect_ratio, 0.1f, 100.0f);
+        auto proj = Mat4f::perspective(1.0472, aspect_ratio, 0.1f, 100.0f);
 
-        return view * proj;
+        const auto direction = get_direction();
+        const auto position = get_position();
+
+        return Mat4f::look_at(position, position + direction, Vec3f::up) * proj;
     }
 }
