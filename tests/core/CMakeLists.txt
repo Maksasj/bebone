@@ -11,10 +11,10 @@ foreach(SRC_FILE ${SRC_FILES})
     list(APPEND EXECUTABLES ${TEST_NAME})
 endforeach()
 
-add_custom_target(run_all_tests COMMAND ${CMAKE_COMMAND} -E echo "Running all unit tests...")
+add_custom_target(run_core_tests COMMAND ${CMAKE_COMMAND} -E echo "Running all core unit tests...")
 
 foreach(EXECUTABLE ${EXECUTABLES})
-    add_custom_command(TARGET run_all_tests POST_BUILD
+    add_custom_command(TARGET run_core_tests POST_BUILD
             COMMAND ${EXECUTABLE}
             COMMENT "Running test ${EXECUTABLE}"
     )
