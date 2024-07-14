@@ -50,7 +50,7 @@ int main() {
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
     while (!window->closing()) {
-        GLFWContext::poll_events();
+        window->pull_events();
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())

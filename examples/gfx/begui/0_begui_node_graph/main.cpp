@@ -54,7 +54,7 @@ int main() {
         BEBONE_PROFILE_STOP(BEGUI)
 
         GLFWContext::swap_buffers(*window); // Todo make this not a reference
-        GLFWContext::poll_events();
+        window->pull_events();
 
         BEBONE_PROFILE_STOP(LOOP)
     }

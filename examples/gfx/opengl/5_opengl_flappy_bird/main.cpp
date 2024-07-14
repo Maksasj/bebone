@@ -46,7 +46,7 @@ int main() {
         game.update();
 
         glfwSwapBuffers(window->get_backend());
-        GLFWContext::poll_events();
+        window->pull_events();
 
         window->end_frame();
     }

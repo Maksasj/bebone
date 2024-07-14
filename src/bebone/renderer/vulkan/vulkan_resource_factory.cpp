@@ -14,6 +14,7 @@ namespace bebone::renderer {
     std::shared_ptr<IHDRTextureResource> VulkanResourceFactory::create_hdr_texture_resource(const std::string& resource_name, const Vec2i& size) {
         return std::make_shared<VulkanHDRTextureResource>(resource_name, size, device);
     }
+
     std::shared_ptr<IDepthResource> VulkanResourceFactory::create_depth_resource(const std::string& resource_name, const Vec2i& size) {
         return std::make_shared<VulkanDepthResource>(resource_name, size, device);
     }

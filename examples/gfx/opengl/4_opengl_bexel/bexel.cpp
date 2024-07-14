@@ -66,7 +66,7 @@ namespace bexel {
             world->render(shader);
 
             GLFWContext::swap_buffers(*window);
-            GLFWContext::poll_events();
+            window->pull_events();
 
             BEBONE_PROFILE_STOP(BEXEL_UPDATE_LOOP)
         }

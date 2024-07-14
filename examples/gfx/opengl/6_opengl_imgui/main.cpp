@@ -130,7 +130,7 @@ int main() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window->get_backend());
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     transform_ubo.unmap();

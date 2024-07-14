@@ -7,6 +7,9 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     class IDebugCamera : public IPerspectiveCamera {
+        private:
+            std::shared_ptr<InputExecutor> input;
+
         public:
             IDebugCamera(std::shared_ptr<Window>& window);
     };

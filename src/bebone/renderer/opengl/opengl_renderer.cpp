@@ -48,7 +48,6 @@ namespace bebone::renderer {
         shader_program->enable();
         auto mesh = meshes_to_render[0];
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
-        GLFWContext::poll_events();
         glfwSwapBuffers(window->get_backend());
     }
 

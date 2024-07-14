@@ -27,8 +27,7 @@ int main() {
         }});
 
         renderer->present();
-
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     GLFWContext::terminate();// this should be moved somewhere else

@@ -53,7 +53,7 @@ int main() {
         GLContext::draw_arrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window->get_backend());
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     vao.destroy();

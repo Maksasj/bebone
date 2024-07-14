@@ -105,7 +105,7 @@ int main() {
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(quad_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
 
         GLFWContext::swap_buffers(*window);
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     geometry_program.destroy();

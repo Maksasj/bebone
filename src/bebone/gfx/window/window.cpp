@@ -37,6 +37,11 @@ namespace bebone::gfx {
         glfwDestroyWindow(window);
     }
 
+    void Window::pull_events() {
+        GLFWContext::poll_events();
+        fire(WindowPullEventsEvent());
+    }
+
     void Window::glfw_window_pos_callback(GLFWwindow* glfw_window, int x_pos, int y_pos) {
         auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(WindowPosEvent(x_pos, y_pos));

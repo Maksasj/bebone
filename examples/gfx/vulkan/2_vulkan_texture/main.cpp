@@ -60,7 +60,7 @@ int main() {
     std::ignore = pipeline.bind_texture(device, texture, 0);
 
     while (!window->closing()) {
-        GLFWContext::poll_events();
+        window->pull_events();
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())

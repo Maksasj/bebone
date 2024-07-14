@@ -15,7 +15,7 @@ int main() {
         renderer->render(suzanne, { .position = Vec3f::zero });
         renderer->present();
 
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     GLFWContext::terminate();// this should be moved somewhere else

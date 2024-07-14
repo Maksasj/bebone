@@ -9,7 +9,7 @@ int main() {
     auto window = WindowFactory::create_window("0. Vulkan window example", 800, 600, Vulkan);
 
     while (!window->closing()) {
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     GLFWContext::terminate();

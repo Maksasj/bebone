@@ -97,7 +97,7 @@ int main() {
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window->get_backend());
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     GLFWContext::terminate();

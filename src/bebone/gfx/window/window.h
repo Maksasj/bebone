@@ -6,6 +6,7 @@
 
 #include "../gfx_backend.h"
 #include "../gfx_api.h"
+#include "../glfw_context.h"
 
 #include "events/window_event.h"
 #include "events/input_event.h"
@@ -80,6 +81,8 @@ namespace bebone::gfx {
             const Watch& get_watch() const;
 
             void end_frame();
+
+            void pull_events();
 
         private:
             /// GLFW window position change callbacks

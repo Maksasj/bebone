@@ -158,7 +158,7 @@ int main() {
         if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
             continue;
 
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
     instance->destroy();
