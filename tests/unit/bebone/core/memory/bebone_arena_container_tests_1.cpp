@@ -1,63 +1,59 @@
 #include "bebone/core/core.h"
-#include "test_shared.h"
+#include "gtest/gtest.h"
 
-int main() {
-    using namespace bebone::core;
+using namespace bebone::core;
 
-    TEST_CASE {
-        ArenaContainer container(BEBONE_MEMORY_BYTES_1KB);
+TEST(ArenaContainerTestSuite, First) {
+    ArenaContainer container(BEBONE_MEMORY_BYTES_1KB);
 
-        int* e1 = static_cast<int*>(container.alloc(sizeof(int)));
-        int* e2 = static_cast<int*>(container.alloc(sizeof(int)));
-        int* e3 = static_cast<int*>(container.alloc(sizeof(int)));
+    int* e1 = static_cast<int*>(container.alloc(sizeof(int)));
+    int* e2 = static_cast<int*>(container.alloc(sizeof(int)));
+    int* e3 = static_cast<int*>(container.alloc(sizeof(int)));
 
-        *e1 = 16;
-        *e2 = 32;
-        *e3 = 64;
+    *e1 = 16;
+    *e2 = 32;
+    *e3 = 64;
 
-        int* ee1 = static_cast<int*>(container.at(0));
-        int* ee2 = static_cast<int*>(container.at(1));
-        int* ee3 = static_cast<int*>(container.at(2));
+    int* ee1 = static_cast<int*>(container.at(0));
+    int* ee2 = static_cast<int*>(container.at(1));
+    int* ee3 = static_cast<int*>(container.at(2));
 
-        ensure(*ee1 == *e1);
-        ensure(*ee2 == *e2);
-        ensure(*ee3 == *e3);
+    ASSERT_EQ(*ee1, *e1);
+    ASSERT_EQ(*ee2, *e2);
+    ASSERT_EQ(*ee3, *e3);
 
-        ensure(container.size() == 3);
+    ASSERT_EQ(container.size(), 3);
+}
+
+TEST(ArenaContainerTestSuite, Second) {
+    ArenaContainer container(BEBONE_MEMORY_BYTES_1KB * 256);
+
+    for(int i = 0; i < 100; ++i) {
+        int* e = static_cast<int*>(container.alloc(sizeof(int)));
+        *e = i;
+
+        ASSERT_EQ(container.size(), static_cast<size_t>(i + 1));
     }
 
-    TEST_CASE {
-        ArenaContainer container(BEBONE_MEMORY_BYTES_1KB * 256);
-
-        for(int i = 0; i < 100; ++i) {
-            int* e = static_cast<int*>(container.alloc(sizeof(int)));
-            *e = i;
-
-            ensure(container.size() == static_cast<size_t>(i + 1));
-        }
-
-        for(int i = 0; i < 100; ++i) {
-            int* e = static_cast<int*>(container.at(i));
-            ensure(*e == i);
-        }
-
-        ensure(container.size() == 100);
+    for(int i = 0; i < 100; ++i) {
+        int* e = static_cast<int*>(container.at(i));
+        ASSERT_EQ(*e, i);
     }
 
-    TEST_CASE {
-        ArenaContainer container(BEBONE_MEMORY_BYTES_1KB * 256);
+    ASSERT_EQ(container.size(), 100);
+}
 
-        for(int i = 0; i < 100; ++i) {
-            int* e = static_cast<int*>(container.alloc(sizeof(int)));
-            *e = i;
+TEST(ArenaContainerTestSuite, Third) {
+    ArenaContainer container(BEBONE_MEMORY_BYTES_1KB * 256);
 
-            ensure(container.size() == static_cast<size_t>(i + 1));
-        }
+    for(int i = 0; i < 100; ++i) {
+        int* e = static_cast<int*>(container.alloc(sizeof(int)));
+        *e = i;
 
-        container.clear();
-
-        ensure(container.size() == 0);
+        ASSERT_EQ(container.size(), static_cast<size_t>(i + 1));
     }
 
-    return 0;
+    container.clear();
+
+    ASSERT_EQ(container.size(), 0);
 }
