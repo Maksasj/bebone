@@ -1,7 +1,0 @@
-add_executable(bebone_arena_allocator_tests_1 bebone_arena_allocator_tests_1.cpp)
-target_link_libraries(bebone_arena_allocator_tests_1 bebone_core)
-target_link_libraries(bebone_arena_allocator_tests_1 gtest gtest_main)
-
-add_executable(bebone_arena_container_tests_1 bebone_arena_container_tests_1.cpp)
-target_link_libraries(bebone_arena_container_tests_1 bebone_core)
-target_link_libraries(bebone_arena_container_tests_1 gtest gtest_main)

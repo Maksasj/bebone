@@ -37,3 +37,6 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Run Unit Tests
+      run: cmake --build ${{github.workspace}}/build --target run_all_tests

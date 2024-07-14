@@ -1,3 +1,0 @@
-add_executable(bebone_events_listeners_tests_1 bebone_events_listeners_tests_1.cpp)
-target_link_libraries(bebone_events_listeners_tests_1 bebone_core)
-target_link_libraries(bebone_events_listeners_tests_1 gtest gtest_main)
