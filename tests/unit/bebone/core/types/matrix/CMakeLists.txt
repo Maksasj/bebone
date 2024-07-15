@@ -1,6 +1,0 @@
-add_executable(bebone_types_matrix_multiplication_tests_1 bebone_types_matrix_multiplication_tests_1.cpp)
-target_link_libraries(bebone_types_matrix_multiplication_tests_1 bebone_core)
-
-enable_testing()
-
-add_test(NAME Bebone_Core_Types_Matrix_Multiplication_Tests_1 COMMAND $<TARGET_FILE:bebone_types_matrix_multiplication_tests_1>)

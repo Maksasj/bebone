@@ -8,6 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  BUILD_DIR: build
 
 jobs:
   build:
@@ -39,7 +40,10 @@ jobs:
         generator: Ninja
         c-compiler: gcc
         cxx-compiler: g++
-        build-dir: build
+        build-dir: ${{env.BUILD_DIR}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/${{env.BUILD_DIR}} --config ${{env.BUILD_TYPE}}
+
+    - name: Run Core Unit Tests
+      run: cmake --build ${{github.workspace}}/${{env.BUILD_DIR}} --target run_core_tests

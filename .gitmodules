@@ -19,3 +19,7 @@
 [submodule "3dparty/miniaudio"]
 	path = 3dparty/miniaudio
 	url = https://github.com/Maksasj/miniaudio
+[submodule "3dparty/google-test"]
+	path = 3dparty/google-test
+	url = https://github.com/Soskar1/googletest.git
+	branch = v1.14.x
