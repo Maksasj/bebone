@@ -6,6 +6,8 @@
 #include "irender_graph.h"
 #include "ipass.h"
 
+#include "imaterial.h"
+
 #include "imesh.h"
 #include "imesh_builder.h"
 #include "imesh_generator.h"
