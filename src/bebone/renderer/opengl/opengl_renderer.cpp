@@ -17,7 +17,7 @@ namespace bebone::renderer {
         shader_program->destroy();
     }
 
-    void GLRenderer::handle_resize(const Vec2i& new_size) {
+    void GLRenderer::resize_viewport(const Vec2i& new_size) {
         // Todo
     }
 

@@ -10,7 +10,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class OpenGLTriangleMeshBuilder : public IMeshBuilder {
+    class OpenGLTriangleMeshBuilder : public IMeshBuilder<Vertex> {
         protected:
             std::vector<Vertex> vertices;
             std::vector<u32> indices;

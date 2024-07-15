@@ -11,6 +11,10 @@ namespace bebone::renderer {
         Vec3f normal;
         Vec2f texcoord;
     };
+
+    // tangent
+    // bitangent
+
 }
 
 #endif

@@ -10,7 +10,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class VulkanTriangleMeshBuilder : public IMeshBuilder {
+    class VulkanTriangleMeshBuilder : public IMeshBuilder<Vertex> {
         protected:
             VulkanDevice& device;
 

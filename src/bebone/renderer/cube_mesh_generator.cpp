@@ -1,7 +1,7 @@
 #include "cube_mesh_generator.h"
 
 namespace bebone::renderer {
-    CubeMeshGenerator::CubeMeshGenerator(const std::shared_ptr<IMeshBuilder>& builder) : IMeshGenerator(builder) {
+    CubeMeshGenerator::CubeMeshGenerator(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) : IMeshGenerator(builder) {
 
     }
 

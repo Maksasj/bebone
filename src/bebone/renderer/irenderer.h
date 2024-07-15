@@ -13,7 +13,6 @@
 #include "obj_mesh_loader.h"
 
 #include "vertex.h"
-#include "vertex_triangle.h"
 #include "transform.h"
 
 #include "pbr_render_graph.h"
@@ -26,7 +25,7 @@ namespace bebone::renderer {
             const GfxAPI api;
 
         protected:
-            virtual void handle_resize(const Vec2i& new_size) = 0;
+            virtual void resize_viewport(const Vec2i& new_size) = 0;
 
             std::shared_ptr<IRenderGraph> create_default_render_graph();
 

@@ -6,9 +6,9 @@ namespace bebone::renderer {
     }
 
     void OpenGLTriangleMeshBuilder::append_triangle(const VertexTriangle& triangle) {
-        vertices.push_back(triangle.vertices[0]);
-        vertices.push_back(triangle.vertices[1]);
-        vertices.push_back(triangle.vertices[2]);
+        vertices.push_back(triangle[0]);
+        vertices.push_back(triangle[1]);
+        vertices.push_back(triangle[2]);
 
         indices.push_back(index_offset + 0);
         indices.push_back(index_offset + 1);

@@ -87,8 +87,10 @@ namespace bebone::renderer {
             glfwSetCursorPos(window->get_backend(), winCenterWidth, winCenterHeight);
     }
 
-    IDebugCamera::IDebugCamera(const std::shared_ptr<Window>& window) : IPerspectiveCamera(), speed(1.0f), mouse_locked(false), window(window) {
+    IDebugCamera::IDebugCamera(const std::shared_ptr<Window>& window) : IPerspectiveCamera(), window(window), speed(1.0f), mouse_locked(false) {
         window->add_listener([&](WindowPullEventsEvent& event) {
+            std::ignore = event;
+
             update_debug_camera();
         });
     }

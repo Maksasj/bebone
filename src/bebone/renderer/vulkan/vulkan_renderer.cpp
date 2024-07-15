@@ -11,7 +11,7 @@ namespace bebone::renderer {
         render_graph->assemble();
 
         window->add_listener([&](WindowSizeEvent event) {
-            handle_resize({ event.width, event.height });
+            resize_viewport({ event.width, event.height });
         });
 
         camera = std::make_shared<IDebugCamera>(window);
@@ -23,7 +23,7 @@ namespace bebone::renderer {
         instance->destroy();
     }
 
-    void VulkanRenderer::handle_resize(const Vec2i& new_size) {
+    void VulkanRenderer::resize_viewport(const Vec2i& new_size) {
         /*
         device->wait_idle();
         device->destroy_all(swap_chain);

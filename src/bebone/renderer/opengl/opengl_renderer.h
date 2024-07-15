@@ -14,7 +14,7 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<IMesh>> meshes_to_render;
 
         protected:
-            void handle_resize(const Vec2i& new_size) override;
+            void resize_viewport(const Vec2i& new_size) override;
 
         public:
             GLRenderer(std::shared_ptr<Window>& window);

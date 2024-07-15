@@ -1,7 +1,7 @@
 #include "quad_mesh_generator.h"
 
 namespace bebone::renderer {
-    QuadMeshGenerator::QuadMeshGenerator(const std::shared_ptr<IMeshBuilder>& builder) : IMeshGenerator(builder) {
+    QuadMeshGenerator::QuadMeshGenerator(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) : IMeshGenerator(builder) {
 
     }
 

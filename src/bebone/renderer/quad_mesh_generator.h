@@ -5,9 +5,9 @@
 #include "imesh_generator.h"
 
 namespace bebone::renderer {
-    class QuadMeshGenerator : public IMeshGenerator {
+    class QuadMeshGenerator : public IMeshGenerator<Vertex> {
         public:
-            QuadMeshGenerator(const std::shared_ptr<IMeshBuilder>& builder);
+            QuadMeshGenerator(const std::shared_ptr<IMeshBuilder<Vertex>>& builder);
 
             void reset() override;
             std::shared_ptr<IMesh> generate() override;

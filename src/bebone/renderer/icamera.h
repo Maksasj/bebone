@@ -16,6 +16,7 @@ namespace bebone::renderer {
 
         public:
             ICamera();
+            virtual ~ICamera() = default;
 
             virtual Mat4f calculate_matrix(const f32& aspect_ratio) const = 0;
 

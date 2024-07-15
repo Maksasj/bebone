@@ -14,6 +14,7 @@ namespace bebone::renderer {
 
         protected:
             void update_debug_camera();
+
             void update_camera_rotation();
             void update_camera_position();
             void handle_mouse_lock(shared_ptr<Window>& window);
