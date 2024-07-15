@@ -19,7 +19,6 @@ namespace bebone::renderer {
             virtual ~IRenderGraphImpl() = default;
 
             virtual void assemble() = 0;
-
             virtual void record() = 0;
             virtual void submit() = 0;
             virtual void reset() = 0;

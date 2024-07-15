@@ -4,27 +4,27 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     void IDebugCamera::update_camera_rotation() {
-        Vec3f rotation = get_rotation();
+        auto rotation = get_rotation();
 
         // Todo
-        const auto winCenterWidth = static_cast<f32>(window->get_width()) / 2.0f;
-        const auto winCenterHeight = static_cast<f32>(window->get_height()) / 2.0f;
+        const auto window_center_width = static_cast<f32>(window->get_width()) / 2.0f;
+        const auto window_center_height = static_cast<f32>(window->get_height()) / 2.0f;
 
         handle_mouse_lock(window);
 
         if(mouse_locked) {
             glfwSetInputMode(window->get_backend(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-            f64 xPos, yPos;
-            glfwGetCursorPos(window->get_backend(), &xPos, &yPos);
+            f64 x_pos, y_pos;
+            glfwGetCursorPos(window->get_backend(), &x_pos, &y_pos);
 
-            const auto deltaX = floorf(winCenterWidth) - static_cast<f32>(xPos);
-            const auto deltaY = floorf(winCenterHeight) - static_cast<f32>(yPos);
+            const auto delta_x = floorf(window_center_width) - static_cast<f32>(x_pos);
+            const auto delta_y = floorf(window_center_height) - static_cast<f32>(y_pos);
 
-            rotation.x += deltaY * 0.005f;
-            rotation.y -= deltaX * 0.005f; // If this is confusing just think that we rotate Y axis cause of movement mouse a long X axis, actual this make sense
+            rotation.x += delta_y * 0.005f;
+            rotation.y -= delta_x * 0.005f; // If this is confusing just think that we rotate Y axis cause of movement mouse a long X axis, actual this make sense
 
-            glfwSetCursorPos(window->get_backend(), winCenterWidth, winCenterHeight);
+            glfwSetCursorPos(window->get_backend(), window_center_width, window_center_height);
         } else
             glfwSetInputMode(window->get_backend(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -42,30 +42,30 @@ namespace bebone::renderer {
         const auto dt = Time::get_delta_time();
         const auto direction = get_direction();
 
-        auto movCamera = Vec3f::zero;
+        auto mov_camera = Vec3f::zero;
 
         if (glfwGetKey(window->get_backend(), 'W') == GLFW_PRESS)
-            movCamera += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize();
+            mov_camera += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize();
 
         if (glfwGetKey(window->get_backend(), 'S') == GLFW_PRESS)
-            movCamera -= Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize();
+            mov_camera -= Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize();
 
         if (glfwGetKey(window->get_backend(), 'A') == GLFW_PRESS)
-            movCamera += Vec3f(direction.z, 0.0f, -direction.x).normalize();
+            mov_camera += Vec3f(direction.z, 0.0f, -direction.x).normalize();
 
         if (glfwGetKey(window->get_backend(), 'D') == GLFW_PRESS)
-            movCamera -= Vec3f(direction.z, 0.0f, -direction.x).normalize();
+            mov_camera -= Vec3f(direction.z, 0.0f, -direction.x).normalize();
 
         if (glfwGetKey(window->get_backend(), GLFW_KEY_SPACE) == GLFW_PRESS)
-            movCamera.y += 1.0f;
+            mov_camera.y += 1.0f;
 
         if (glfwGetKey(window->get_backend(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-            movCamera.y -= 1.0f;
+            mov_camera.y -= 1.0f;
 
         if (glfwGetKey(window->get_backend(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-            apply_position(movCamera * speed * dt * 3);
+            apply_position(mov_camera * speed * dt * 3);
         else
-            apply_position(movCamera * speed * dt);
+            apply_position(mov_camera * speed * dt);
     }
 
     void IDebugCamera::update_debug_camera() {
@@ -74,20 +74,22 @@ namespace bebone::renderer {
     }
 
     void IDebugCamera::handle_mouse_lock(shared_ptr<Window>& window) {
-        const auto winCenterWidth = static_cast<f32>(window->get_width()) / 2.0f;
-        const auto winCenterHeight = static_cast<f32>(window->get_height()) / 2.0f;
+        const auto window_center_width = static_cast<f32>(window->get_width()) / 2.0f;
+        const auto window_center_height = static_cast<f32>(window->get_height()) / 2.0f;
 
-        bool oldMouseLockState = mouse_locked;
-        static auto buttonPressed = false;
-        const auto isDebugButtonPressed = (glfwGetKey(window->get_backend(), GLFW_KEY_ENTER) == GLFW_RELEASE);
-        mouse_locked = (isDebugButtonPressed && !buttonPressed) ? !mouse_locked : mouse_locked;
-        buttonPressed = isDebugButtonPressed;
+        bool old_mouse_lock_state = mouse_locked;
+        static auto button_pressed = false;
+        const auto is_debug_button_pressed = (glfwGetKey(window->get_backend(), GLFW_KEY_ENTER) == GLFW_RELEASE);
+        mouse_locked = (is_debug_button_pressed && !button_pressed) ? !mouse_locked : mouse_locked;
+        button_pressed = is_debug_button_pressed;
 
-        if(oldMouseLockState != mouse_locked)
-            glfwSetCursorPos(window->get_backend(), winCenterWidth, winCenterHeight);
+        if(old_mouse_lock_state != mouse_locked)
+            glfwSetCursorPos(window->get_backend(), window_center_width, window_center_height);
     }
 
-    IDebugCamera::IDebugCamera(const std::shared_ptr<Window>& window) : IPerspectiveCamera(), window(window), speed(1.0f), mouse_locked(false) {
+    IDebugCamera::IDebugCamera(
+        const std::shared_ptr<Window>& window
+    ) : IPerspectiveCamera(1.0472f, 0.1f, 100.0f), window(window), speed(1.0f), mouse_locked(false) {
         window->add_listener([&](WindowPullEventsEvent& event) {
             std::ignore = event;
 

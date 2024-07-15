@@ -6,10 +6,7 @@
 #include "icommand_encoder.h"
 
 namespace bebone::renderer {
-        // Todo, probably need to inherit from some sort of Bindable,
         class IMesh {
-            private:
-
             public:
                 virtual ~IMesh() = default;
 

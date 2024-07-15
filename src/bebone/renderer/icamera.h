@@ -7,12 +7,10 @@
 
 namespace bebone::renderer {
     class ICamera {
-        private:
+        protected:
             Vec3f cam_position;
             Vec3f cam_rotation;
             Vec3f cam_direction;
-
-        protected:
 
         public:
             ICamera();
