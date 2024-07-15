@@ -41,6 +41,11 @@ namespace bebone::renderer {
             pass->reset();
     }
 
+    void VulkanRenderGraphImpl::resize_viewport(const Vec2i& new_size) {
+        for(auto& pass : get_render_passes())
+            pass->resize_viewport(new_size);
+    }
+
     std::shared_ptr<IPassFactory> VulkanRenderGraphImpl::create_pass_factory() const {
         return std::make_shared<VulkanPassFactory>(device, swap_chain, pipeline_manager);
     }

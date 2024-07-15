@@ -27,14 +27,14 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanSwapChain>& swap_chain);
 
             void assemble() override;
-
             void record() override;
             void submit() override;
             void reset() override;
 
+            void resize_viewport(const Vec2i& new_size) override;
+
             std::shared_ptr<IPassFactory> create_pass_factory() const override;
             std::shared_ptr<IResourceFactory> create_resource_factory() const override;
-
     };
 }
 

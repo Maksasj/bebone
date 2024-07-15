@@ -23,9 +23,10 @@ namespace bebone::renderer {
             VulkanPresentPass(const std::string& pass_name, const Vec2i& viewport);
 
             void assemble(IPassAssembler* assember) override;
-
             void record(ICommandEncoder* encoder) override;
             void reset() override;
+
+            void resize_viewport(const Vec2i& new_size) override;
     };
 }
 

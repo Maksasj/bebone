@@ -23,6 +23,8 @@ namespace bebone::renderer {
             virtual void submit() = 0;
             virtual void reset() = 0;
 
+            virtual void resize_viewport(const Vec2i& new_size) = 0;
+
             virtual std::shared_ptr<IPassFactory> create_pass_factory() const = 0;
             virtual std::shared_ptr<IResourceFactory> create_resource_factory() const = 0;
 

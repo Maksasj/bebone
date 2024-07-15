@@ -184,6 +184,10 @@ namespace bebone::renderer {
         queued_jobs_transform.clear();
     }
 
+    void VulkanDeferredGPass::resize_viewport(const Vec2i& new_size) {
+        // Todo
+    }
+
     void VulkanDeferredGPass::submit_task(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
         queued_jobs_mesh.push_back(mesh);
         queued_jobs_transform.push_back(calculate_transform_matrix(transform));

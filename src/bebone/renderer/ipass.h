@@ -11,6 +11,8 @@
 #include "ipass_assembler.h"
 
 namespace bebone::renderer {
+    using namespace bebone::core;
+
     class IPass {
         private:
             std::string name;
@@ -28,9 +30,10 @@ namespace bebone::renderer {
 
             virtual void assemble(IPassAssembler* assember) = 0;
             virtual void check_requirements() = 0;
-
             virtual void record(ICommandEncoder* encoder) = 0;
             virtual void reset() = 0;
+
+            virtual void resize_viewport(const Vec2i& new_size) = 0;
 
             void plug_input(const std::string& resource_name, const std::shared_ptr<IResource>& resource);
             void plug_output(const std::string& resource_name, const std::shared_ptr<IResource>& resource);

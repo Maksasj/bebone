@@ -24,6 +24,10 @@ namespace bebone::renderer {
         impl->reset();
     }
 
+    void IRenderGraph::resize_viewport(const Vec2i& new_size) {
+        impl->resize_viewport(new_size);
+    }
+
     void IRenderGraph::submit_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
         std::ignore = mesh;
         std::ignore = transform;

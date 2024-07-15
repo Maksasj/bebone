@@ -117,4 +117,8 @@ namespace bebone::renderer {
     void VulkanPresentPass::reset() {
 
     }
+
+    void VulkanPresentPass::resize_viewport(const Vec2i& new_size) {
+        // Todo
+    }
 }

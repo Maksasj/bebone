@@ -19,10 +19,11 @@ namespace bebone::renderer {
             virtual ~IRenderGraph() = default;
 
             virtual void assemble();
-
             virtual void record();
             virtual void submit();
             virtual void reset();
+
+            virtual void resize_viewport(const Vec2i& new_size);
 
             // Helper functions
             virtual void submit_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform);
