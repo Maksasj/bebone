@@ -12,7 +12,7 @@ namespace bebone::renderer {
             std::shared_ptr<IPresentPass> present;
 
         public:
-            PBRRenderGraph(const std::string& name, const std::shared_ptr<IRenderGraphImpl>& impl);
+            PBRRenderGraph(const std::string& name, const Vec2i& viewport, const std::shared_ptr<IRenderGraphImpl>& impl);
 
             void submit_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) override;
             void submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) override;

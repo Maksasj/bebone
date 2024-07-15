@@ -29,7 +29,7 @@ namespace bebone::renderer {
         protected:
             virtual void resize_viewport(const Vec2i& new_size) = 0;
 
-            std::shared_ptr<IRenderGraph> create_default_render_graph();
+            std::shared_ptr<IRenderGraph> create_default_render_graph(const Vec2i& viewport);
 
         public:
             IRenderer(const GfxAPI& api);

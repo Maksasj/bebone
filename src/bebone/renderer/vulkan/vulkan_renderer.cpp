@@ -7,7 +7,7 @@ namespace bebone::renderer {
         swap_chain = device->create_swap_chain(window);
 
         // Create default render graph
-        render_graph = create_default_render_graph();
+        render_graph = create_default_render_graph(window->get_size());
         render_graph->assemble();
 
         window->add_listener([&](WindowSizeEvent event) {
@@ -26,14 +26,16 @@ namespace bebone::renderer {
     void VulkanRenderer::resize_viewport(const Vec2i& new_size) {
         std::ignore = new_size;
 
-        /*
         device->wait_idle();
         device->destroy_all(swap_chain);
         device->collect_garbage();
 
         swap_chain = device->create_swap_chain(window);
-        render_graph = create_default_render_graph();
-         */
+        render_graph = create_default_render_graph(window->get_size());
+        render_graph->assemble();
+
+        auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
+        pass->set_camera(camera);
     }
 
     MeshHandle VulkanRenderer::load_mesh(const std::string& file_path) {

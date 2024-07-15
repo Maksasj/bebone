@@ -5,8 +5,8 @@ namespace bebone::renderer {
 
     }
 
-    std::shared_ptr<IRenderGraph> IRenderer::create_default_render_graph() {
-        return std::make_shared<PBRRenderGraph>("pbr_render_graph", create_render_graph_impl());;
+    std::shared_ptr<IRenderGraph> IRenderer::create_default_render_graph(const Vec2i& viewport) {
+        return std::make_shared<PBRRenderGraph>("pbr_render_graph", viewport, create_render_graph_impl());;
     }
 
     std::shared_ptr<IRenderGraph> IRenderer::create_render_graph(const std::string& name) {
