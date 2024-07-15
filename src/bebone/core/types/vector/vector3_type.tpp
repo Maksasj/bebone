@@ -212,7 +212,9 @@ namespace bebone::core {
     }
 
     template<typename T>
-    Vec3<T> Vec3<T>::splat(const T& value) { { value, value, value; } }
+    Vec3<T> Vec3<T>::splat(const T& value) {
+        return Vec3(value, value, value);
+    }
 
     template<typename T>
     Vec3<T> Vec3<T>::cross(const Vec3<T>& a, const Vec3<T>& b) {
