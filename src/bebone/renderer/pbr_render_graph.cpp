@@ -34,7 +34,7 @@ namespace bebone::renderer {
         add_pass(gpass);
 
         present = pass_factory->create_present_pass("present", size);
-        present->plug_input("texture", gpass_albedo_texture);
+        present->plug_input("texture", gpass_position_texture);
         add_pass(present);
     }
 

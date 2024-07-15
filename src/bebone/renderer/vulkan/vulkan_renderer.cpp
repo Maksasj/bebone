@@ -24,15 +24,16 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderer::resize_viewport(const Vec2i& new_size) {
+        std::ignore = new_size;
+
         /*
         device->wait_idle();
         device->destroy_all(swap_chain);
         device->collect_garbage();
 
         swap_chain = device->create_swap_chain(window);
-
-        render_graph = create_render_graph("my_graph");
-        */
+        render_graph = create_default_render_graph();
+         */
     }
 
     MeshHandle VulkanRenderer::load_mesh(const std::string& file_path) {

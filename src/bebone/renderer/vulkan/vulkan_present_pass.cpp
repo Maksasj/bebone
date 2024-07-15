@@ -74,8 +74,7 @@ namespace bebone::renderer {
             { VulkanConstRange::common(sizeof(u32), 0) },
             { { BindlessSampler, 0} },
             {
-                .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
-                .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE }
+                .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions }
             }
         );
 

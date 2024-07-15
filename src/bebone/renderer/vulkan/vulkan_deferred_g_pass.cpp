@@ -7,10 +7,11 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "layout (location = 0) in vec3 position;\n"
     "layout (location = 1) in vec3 normal;\n"
     "layout (location = 2) in vec2 texcoord;\n"
-    "\n"
-    "layout (location = 0) out vec3 out_normal;\n"
-    "layout (location = 1) out vec2 out_texcoord;\n"
-    "\n"
+
+    "layout (location = 0) out vec3 out_position;\n"
+    "layout (location = 1) out vec3 out_normal;\n"
+    "layout (location = 2) out vec2 out_texcoord;\n"
+
     "layout(binding = 0) uniform ModelUBO {\n"
     "   mat4 transforms[50];\n"
     "} modelUBO[];\n"
@@ -26,27 +27,35 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "} handles;\n"
     "\n"
     "void main() {\n"
-    "    mat4 model = modelUBO[handles.model_handle].transforms[handles.model_instance];"
-    "    mat4 cam = cameraUBO[handles.camera_handle].matrix;"
-    "    gl_Position = cam * model * vec4(position, 1.0);\n"
+    "    mat4 model = modelUBO[handles.model_handle].transforms[handles.model_instance];\n"
+    "    mat4 cam = cameraUBO[handles.camera_handle].matrix;\n"
+    "    vec4 final_pos = cam * model * vec4(position, 1.0);\n"
+
+    "    out_position = (model * vec4(position, 1.0)).xyz;\n"
     "    out_normal = normal;\n"
     "    out_texcoord = texcoord;\n"
+
+    "    gl_Position = final_pos;\n"
     "}";
 
 static const char vulkan_deferred_g_pass_fragment_shader_code[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
-    "\n"
-    "layout (location = 0) in vec3 normal;\n"
-    "layout (location = 1) in vec2 texcoord;\n"
-    "\n"
+
+    "layout (location = 0) in vec3 in_position;\n"
+    "layout (location = 1) in vec3 in_normal;\n"
+    "layout (location = 2) in vec2 in_texcoord;\n"
+
     "layout (location = 0) out vec4 out_position;\n"
     "layout (location = 1) out vec4 out_normals;\n"
     "layout (location = 2) out vec4 out_albedo;\n"
     "layout (location = 3) out vec4 out_specular;\n"
-    "\n"
+
     "void main() {\n"
-    "   out_albedo = vec4(texcoord, 1.0, 1.0);\n"
+    "   out_position = vec4(in_position, 1.0);\n"
+    "   out_normals = vec4(in_normal, 1.0);\n"
+    "   out_albedo = vec4(in_texcoord, 1.0, 1.0);\n"
+    "   out_specular = vec4(0.0);\n"
     "}";
 
 const auto vulkan_present_pass_vertex_descriptions = bebone::gfx::VulkanPipelineVertexInputStateTuple {
@@ -100,7 +109,7 @@ namespace bebone::renderer {
             { { BindlessUniform, 0}, { BindlessUniform, 1 } },
             {
                 .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
-                .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE }
+                .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } // Todo
             }
         );
 
