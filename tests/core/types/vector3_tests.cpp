@@ -201,3 +201,11 @@ TEST(Vector3Functions, Rejection) {
     ASSERT_FLOAT_EQ(Vec3f::reject(c, b).y, -1.9333333f);
     ASSERT_FLOAT_EQ(Vec3f::reject(c, b).z, 0.0333333f);
 }
+
+TEST(Vector3Conversions, ConversionToVec2) {
+    Vec3f a(4.0f, 5.0f, 6.0f);
+    Vec3f b(2.0f, 3.0f, 1.0f);
+
+    ASSERT_EQ(Vec2f(a), Vec2f(4.0f, 5.0f));
+    ASSERT_EQ(Vec2f(b), Vec2f(2.0f, 3.0f));
+}

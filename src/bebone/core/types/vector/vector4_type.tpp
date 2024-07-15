@@ -24,9 +24,9 @@ namespace bebone::core {
         static const Vec4<float> one;
 
         static Vec4<T> splat(const T& value);
-        inline static T dot(const Vec3<T>& a, const Vec3<T>& b);
-        inline static Vec3<T> project(const Vec3<T>& a, const Vec3<T>& b);
-        inline static Vec3<T> reject(const Vec3<T>& a, const Vec3<T>& b);
+        inline static T dot(const Vec4<T>& a, const Vec4<T>& b);
+        inline static Vec4<T> project(const Vec4<T>& a, const Vec4<T>& b);
+        inline static Vec4<T> reject(const Vec4<T>& a, const Vec4<T>& b);
 
         inline Vec4 operator +(const Vec4& v) const;
         inline Vec4 operator -(const Vec4& v) const;
@@ -129,7 +129,7 @@ namespace bebone::core {
     }
 
     template<typename T>
-    Vec4<T> Vec4<T>::operator -() const { return Vec4(x, y, z, w); }
+    Vec4<T> Vec4<T>::operator -() const { return Vec4(-x, -y, -z, -w); }
 
     template<typename T>
     bool Vec4<T>::operator ==(const Vec4<T>& v) const { return x == v.x && y == v.y && z == v.z && w == v.w; }
@@ -147,17 +147,17 @@ namespace bebone::core {
     Vec4<T> Vec4<T>::splat(const T& value) { return Vec4(value, value, value, value); }
 
     template<typename T>
-    T Vec4<T>::dot(const Vec3<T>& a, const Vec3<T>& b) {
+    T Vec4<T>::dot(const Vec4<T>& a, const Vec4<T>& b) {
         return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
     }
 
     template<typename T>
-    Vec3<T> Vec4<T>::project(const Vec3<T>& a, const Vec3<T>& b) {
+    Vec4<T> Vec4<T>::project(const Vec4<T>& a, const Vec4<T>& b) {
         return b * (dot(a, b) / dot(b, b));
     }
 
     template<typename T>
-    Vec3<T> Vec4<T>::reject(const Vec3<T>& a, const Vec3<T>& b) {
+    Vec4<T> Vec4<T>::reject(const Vec4<T>& a, const Vec4<T>& b) {
         return a - project(a, b);
     }
 
