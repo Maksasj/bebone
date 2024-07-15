@@ -7,6 +7,7 @@
 #include "vulkan_triangle_mesh.h"
 #include "vulkan_triangle_mesh_builder.h"
 #include "../pbr_render_graph.h"
+#include "vulkan_texture.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -31,6 +32,9 @@ namespace bebone::renderer {
         public:
             VulkanRenderer(std::shared_ptr<gfx::Window>& window);
             ~VulkanRenderer() override;
+
+            std::shared_ptr<IMaterial> create_material(const std::string& albedo) override;
+            std::shared_ptr<ITexture> load_texture(const std::string& file_path) override;
 
             MeshHandle load_mesh(const std::string& file_path) override;
             MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;

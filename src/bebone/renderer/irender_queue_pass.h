@@ -4,7 +4,7 @@
 #include "igraphics_pass.h"
 #include "ihdr_texture_resource.h"
 #include "idepth_resource.h"
-#include "imesh.h"
+#include "imodel.h"
 #include "transform.h"
 
 namespace bebone::renderer {
@@ -14,7 +14,7 @@ namespace bebone::renderer {
         public:
             IRenderQueuePass(const std::string& pass_name, const Vec2i& viewport);
 
-            virtual void submit_task(const std::shared_ptr<IMesh>& mesh, const Transform& transform) = 0;
+            virtual void submit_task(const std::shared_ptr<IModel>& model, const Transform& transform) = 0;
     };
 }
 

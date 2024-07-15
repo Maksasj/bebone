@@ -41,7 +41,7 @@ namespace bebone::renderer {
 
             // Jobs
             static const u32 max_queued_jobs = 50;
-            std::vector<std::shared_ptr<IMesh>> queued_jobs_mesh;
+            std::vector<std::shared_ptr<IModel>> queued_jobs_model;
             std::vector<Mat4f> queued_jobs_transform;
             std::array<VulkanDeferredGPassHandles, 50> queued_jobs_handles;
 
@@ -54,7 +54,7 @@ namespace bebone::renderer {
 
             void resize_viewport(const Vec2i& new_size) override;
 
-            void submit_task(const std::shared_ptr<IMesh>& mesh, const Transform& transform) override;
+            void submit_task(const std::shared_ptr<IModel>& model, const Transform& transform) override;
     };
 }
 

@@ -38,6 +38,19 @@ namespace bebone::renderer {
         pass->set_camera(camera);
     }
 
+    std::shared_ptr<ITexture> VulkanRenderer::load_texture(const std::string& file_path) {
+        auto texture = std::make_shared<renderer::VulkanTexture>(file_path, device);
+
+        // Todo, probably since we use bindless textures, we can bind all texture to ALL pipelines
+        // Everything should work fine
+
+        return texture;
+    }
+
+    std::shared_ptr<IMaterial> VulkanRenderer::create_material(const std::string& albedo) {
+        return std::make_shared<PBRMaterial>("pbr_material", load_texture(albedo));
+    }
+
     MeshHandle VulkanRenderer::load_mesh(const std::string& file_path) {
         auto loader = std::make_shared<OBJMeshLoader>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
         auto mesh = loader->load_from_file(file_path);

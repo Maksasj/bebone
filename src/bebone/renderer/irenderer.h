@@ -6,6 +6,7 @@
 #include "irender_graph.h"
 #include "ipass.h"
 
+#include "itexture.h"
 #include "imaterial.h"
 
 #include "imesh.h"
@@ -18,6 +19,7 @@
 #include "transform.h"
 
 #include "pbr_render_graph.h"
+#include "pbr_material.h"
 
 namespace bebone::renderer {
     struct MeshHandle { size_t index; };
@@ -34,6 +36,9 @@ namespace bebone::renderer {
         public:
             IRenderer(const GfxAPI& api);
             virtual ~IRenderer() = default;
+
+            virtual std::shared_ptr<IMaterial> create_material(const std::string& albedo) = 0;
+            virtual std::shared_ptr<ITexture> load_texture(const std::string& file_path) = 0;
 
             virtual MeshHandle load_mesh(const std::string& file_path) = 0;
             virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
