@@ -17,3 +17,6 @@ add_subdirectory(stb)
 
 add_subdirectory(imgui)
 add_subdirectory(miniaudio)
+
+add_subdirectory(google-test)
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
