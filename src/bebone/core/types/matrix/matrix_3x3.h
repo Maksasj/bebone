@@ -121,13 +121,23 @@ namespace bebone::core {
         };
     }
 
-    inline Matrix<f32, 3, 3> Matrix<f32, 3, 3>::operator *(const f32& scalar) const {
+    inline Matrix<f32, 3, 3> Matrix<f32, 3, 3>::operator -(const f32& scalar) const {
         const Matrix<f32, 3, 3>& m = *this;
 
         return {
                 m(0, 0) - scalar, m(0, 1) - scalar, m(0, 2) - scalar,
                 m(1, 0) - scalar, m(1, 1) - scalar, m(1, 2) - scalar,
                 m(2, 0) - scalar, m(2, 1) - scalar, m(2, 2) - scalar
+        };
+    }
+
+    inline Matrix<f32, 3, 3> Matrix<f32, 3, 3>::operator *(const f32& scalar) const {
+        const Matrix<f32, 3, 3>& m = *this;
+
+        return {
+                m(0, 0) * scalar, m(0, 1) * scalar, m(0, 2) * scalar,
+                m(1, 0) * scalar, m(1, 1) * scalar, m(1, 2) * scalar,
+                m(2, 0) * scalar, m(2, 1) * scalar, m(2, 2) * scalar
         };
     }
 
@@ -168,7 +178,11 @@ namespace bebone::core {
         Vec3f r2 = Vec3f::cross(a, b);
         f32 inv_det = 1.0f / Vec3f::dot(r2, c);
 
-        return { r0 * inv_det, r1 * inv_det,r2 * inv_det };
+        return {
+            r0.x * inv_det, r0.y * inv_det, r0.z * inv_det,
+            r1.x * inv_det, r1.y * inv_det, r1.z * inv_det,
+            r2.x * inv_det, r2.y * inv_det, r2.z * inv_det
+        };
     }
 }
 
