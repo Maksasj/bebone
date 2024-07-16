@@ -13,13 +13,11 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
-            std::shared_ptr<VulkanPipelineManager> pipeline_manager;
 
         public:
             VulkanPassFactory(
                 const std::shared_ptr<VulkanDevice>& device,
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
+                const std::shared_ptr<VulkanSwapChain>& swap_chain);
         
             std::shared_ptr<IPresentPass> create_present_pass(const std::string& pass_name, const Vec2i& viewport) override;
             std::shared_ptr<IDeferredGPass> create_deferred_g_pass(const std::string& pass_name, const Vec2i& viewport) override;

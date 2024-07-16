@@ -9,7 +9,10 @@ int main() {
     auto window = WindowFactory::create_window("3. Renderer mesh", 800, 600, Vulkan, { .enable_resize = true });
     auto renderer = RendererFactory::create_renderer(window);
 
-    auto suzanne = renderer->load_mesh("suzanne.obj");
+    auto mesh = renderer->load_mesh("suzanne.obj");
+    auto material = renderer->create_material("aaaaaaa");
+
+    auto suzanne = renderer->create_model(mesh, material);
 
     while(!window->closing()) {
         renderer->render(suzanne, { .position = Vec3f::zero });

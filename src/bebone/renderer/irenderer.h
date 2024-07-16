@@ -23,6 +23,7 @@
 
 namespace bebone::renderer {
     struct MeshHandle { size_t index; };
+    struct ModelHandle { size_t index; };
 
     class IRenderer {
         private:
@@ -40,10 +41,12 @@ namespace bebone::renderer {
             virtual std::shared_ptr<IMaterial> create_material(const std::string& albedo) = 0;
             virtual std::shared_ptr<ITexture> load_texture(const std::string& file_path) = 0;
 
-            virtual MeshHandle load_mesh(const std::string& file_path) = 0;
-            virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
+            virtual std::shared_ptr<IMesh> load_mesh(const std::string& file_path) = 0;
+            virtual std::shared_ptr<IMesh> create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
 
-            virtual void render(const MeshHandle& handle, const Transform& transform) = 0;
+            virtual ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) = 0;
+
+            virtual void render(const ModelHandle& handle, const Transform& transform) = 0;
 
             virtual void present() = 0;
 

@@ -19,7 +19,10 @@ int main() {
 
     const auto indices =  std::vector<u32> { 0, 1, 2 };
 
-    auto triangle = renderer->create_mesh(vertices, indices);
+    auto mesh = renderer->create_mesh(vertices, indices);
+    auto material = renderer->create_material("aaaaaaa");
+
+    auto triangle = renderer->create_model(mesh, material);
 
     while(!window->closing()) {
         renderer->render(triangle, { .position = {

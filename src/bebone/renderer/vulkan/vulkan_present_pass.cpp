@@ -62,8 +62,10 @@ namespace bebone::renderer {
         auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
 
         auto device = vulkan_assembler->get_device();
-        auto pipeline_manager = vulkan_assembler->get_pipeline_manager();
         auto swap_chain = vulkan_assembler->get_swap_chain();
+
+        auto program_manager = vulkan_assembler->get_program_manager();
+        auto pipeline_manager = program_manager->get_pipeline_manager();
 
         auto vert_shader_module = device->create_shader_module(vulkan_present_pass_vertex_shader_code, VertexShader);
         auto frag_shader_module = device->create_shader_module(vulkan_present_pass_fragment_shader_code, FragmentShader);
@@ -78,7 +80,8 @@ namespace bebone::renderer {
             }
         );
 
-        set_program(std::make_shared<VulkanProgram>(pipeline));
+        auto program = program_manager->create_program(pipeline);
+        set_program(program);
 
         auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource)->get_textures();
         texture_handles = pipeline.bind_textures(device, texture, 0);

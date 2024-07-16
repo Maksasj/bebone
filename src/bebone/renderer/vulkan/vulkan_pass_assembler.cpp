@@ -4,8 +4,8 @@ namespace bebone::renderer {
     VulkanPassAssembler::VulkanPassAssembler(
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
-        const std::shared_ptr<VulkanPipelineManager>& pipeline_manager
-    ) : device(device), swap_chain(swap_chain), pipeline_manager(pipeline_manager) {
+        const std::shared_ptr<VulkanProgramManager>& program_manager
+    ) : device(device), swap_chain(swap_chain), program_manager(program_manager) {
 
     }
 
@@ -17,7 +17,7 @@ namespace bebone::renderer {
         return swap_chain;
     }
 
-    std::shared_ptr<VulkanPipelineManager> VulkanPassAssembler::get_pipeline_manager() const {
-        return pipeline_manager;
+    std::shared_ptr<VulkanProgramManager> VulkanPassAssembler::get_program_manager() const {
+        return program_manager;
     }
 }

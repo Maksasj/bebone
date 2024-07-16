@@ -5,9 +5,8 @@ namespace bebone::renderer {
 
     VulkanPassFactory::VulkanPassFactory(
         const std::shared_ptr<VulkanDevice>& device,
-        const std::shared_ptr<VulkanSwapChain>& swap_chain,
-        const std::shared_ptr<VulkanPipelineManager>& pipeline_manager
-    ) : device(device), swap_chain(swap_chain), pipeline_manager(pipeline_manager) {
+        const std::shared_ptr<VulkanSwapChain>& swap_chain
+    ) : device(device), swap_chain(swap_chain) {
 
     }
 

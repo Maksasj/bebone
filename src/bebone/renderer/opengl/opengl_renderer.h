@@ -20,10 +20,13 @@ namespace bebone::renderer {
             GLRenderer(std::shared_ptr<Window>& window);
             ~GLRenderer() override;
 
-            MeshHandle load_mesh(const std::string& file_path) override;
-            MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) override;
+            std::shared_ptr<IMaterial> create_material(const std::string& albedo) override;
+            std::shared_ptr<ITexture> load_texture(const std::string& file_path) override;
 
-            void render(const MeshHandle& handle, const Transform& transform = {}) override;
+            std::shared_ptr<IMesh> load_mesh(const std::string& file_path) override;
+            std::shared_ptr<IMesh> create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) override;
+
+            void render(const ModelHandle& handle, const Transform& transform = {}) override;
 
             void present() override;
 

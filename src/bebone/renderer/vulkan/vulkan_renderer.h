@@ -8,6 +8,7 @@
 #include "vulkan_triangle_mesh_builder.h"
 #include "../pbr_render_graph.h"
 #include "vulkan_texture.h"
+#include "vulkan_program_manager.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -20,7 +21,9 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
 
-            std::vector<std::shared_ptr<IMesh>> mesh_pool;
+            std::vector<std::shared_ptr<IModel>> model_pool;
+
+            std::shared_ptr<VulkanProgramManager> program_manager;
 
             std::shared_ptr<IRenderGraph> render_graph;
 
@@ -36,10 +39,12 @@ namespace bebone::renderer {
             std::shared_ptr<IMaterial> create_material(const std::string& albedo) override;
             std::shared_ptr<ITexture> load_texture(const std::string& file_path) override;
 
-            MeshHandle load_mesh(const std::string& file_path) override;
-            MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
+            std::shared_ptr<IMesh> load_mesh(const std::string& file_path) override;
+            std::shared_ptr<IMesh> create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
 
-            void render(const MeshHandle& handle, const Transform& transform = {}) override;
+            ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) override;
+
+            void render(const ModelHandle& handle, const Transform& transform = {}) override;
 
             void present() override;
 

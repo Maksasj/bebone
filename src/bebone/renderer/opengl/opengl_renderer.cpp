@@ -21,20 +21,28 @@ namespace bebone::renderer {
         // Todo
     }
 
-    MeshHandle GLRenderer::load_mesh(const std::string& file_path) {
-        auto loader = std::make_shared<OBJMeshLoader>(std::make_shared<OpenGLTriangleMeshBuilder>());
-        auto mesh = loader->load_from_file(file_path);
-        meshes_to_render.push_back(mesh);
-        return { meshes_to_render.size() - 1 };
+    std::shared_ptr<IMaterial> GLRenderer::create_material(const std::string& albedo) {
+
     }
 
-    MeshHandle GLRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) {
-        auto mesh = std::make_shared<OpenGLTriangleMesh>(vertices, indices);
-        meshes_to_render.push_back(mesh);
-        return { .index = meshes_to_render.size() - 1 };
+    std::shared_ptr<ITexture> GLRenderer::load_texture(const std::string& file_path) {
+
+    }
+
+    std::shared_ptr<IMesh> GLRenderer::load_mesh(const std::string& file_path) {
+        // auto loader = std::make_shared<OBJMeshLoader>(std::make_shared<OpenGLTriangleMeshBuilder>());
+        // auto mesh = loader->load_from_file(file_path);
+        // meshes_to_render.push_back(mesh);
+        // return { meshes_to_render.size() - 1 };
+    }
+
+    std::shared_ptr<IMesh> GLRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) {
+        // auto mesh = std::make_shared<OpenGLTriangleMesh>(vertices, indices);
+        // meshes_to_render.push_back(mesh);
+        // return { .index = meshes_to_render.size() - 1 };
     };
 
-    void GLRenderer::render(const MeshHandle& handle, const Transform& transform) {
+    void GLRenderer::render(const ModelHandle& handle, const Transform& transform) {
         std::ignore = transform;
         auto mesh = meshes_to_render[handle.index];
         auto triangle = static_pointer_cast<OpenGLTriangleMesh>(mesh);

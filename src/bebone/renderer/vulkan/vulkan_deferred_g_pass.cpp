@@ -89,7 +89,8 @@ namespace bebone::renderer {
         auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
 
         auto device = vulkan_assembler->get_device();
-        auto pipeline_manager = vulkan_assembler->get_pipeline_manager();
+        auto program_manager = vulkan_assembler->get_program_manager();
+        auto pipeline_manager = program_manager->get_pipeline_manager();
 
         auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
 
@@ -121,6 +122,8 @@ namespace bebone::renderer {
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
 
+        auto program = program_manager->create_program(pipeline);
+
         // Setup render target
         auto position = static_pointer_cast<VulkanHDRTextureResource>(position_resource)->get_textures();
         auto normals = static_pointer_cast<VulkanHDRTextureResource>(normals_resource)->get_textures();
@@ -143,7 +146,7 @@ namespace bebone::renderer {
         camera_ubo_handles = pipeline.bind_uniform_buffer(device, camera_ubo, 1);
 
         // Bind program
-        set_program(std::make_shared<VulkanProgram>(pipeline));
+        set_program(program);
     }
 
     void VulkanDeferredGPass::record(ICommandEncoder* encoder) {

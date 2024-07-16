@@ -8,7 +8,7 @@ namespace bebone::renderer {
         const auto api = window->get_api();
 
         if(api == OpenGL) {
-            return std::make_shared<GLRenderer>(window);
+            // return std::make_shared<GLRenderer>(window);
         } else if(api == Vulkan) {
             return std::make_shared<VulkanRenderer>(window);
         }

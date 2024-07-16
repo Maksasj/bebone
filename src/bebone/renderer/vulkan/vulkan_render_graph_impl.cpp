@@ -3,14 +3,14 @@
 namespace bebone::renderer {
     VulkanRenderGraphImpl::VulkanRenderGraphImpl(
         const std::shared_ptr<VulkanDevice>& device,
-        const std::shared_ptr<VulkanSwapChain>& swap_chain
-    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain) {
-        pipeline_manager = device->create_pipeline_manager();
+        const std::shared_ptr<VulkanSwapChain>& swap_chain,
+        const std::shared_ptr<VulkanProgramManager>& program_manager
+    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager) {
         command_buffers = device->create_command_buffers(3);
     }
 
     void VulkanRenderGraphImpl::assemble() {
-        VulkanPassAssembler assembler(device, swap_chain, pipeline_manager);
+        VulkanPassAssembler assembler(device, swap_chain, program_manager);
 
         for(auto& pass : get_render_passes())
             pass->assemble(&assembler);
@@ -47,7 +47,7 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IPassFactory> VulkanRenderGraphImpl::create_pass_factory() const {
-        return std::make_shared<VulkanPassFactory>(device, swap_chain, pipeline_manager);
+        return std::make_shared<VulkanPassFactory>(device, swap_chain);
     }
 
     std::shared_ptr<IResourceFactory> VulkanRenderGraphImpl::create_resource_factory() const {

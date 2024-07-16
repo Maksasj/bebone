@@ -3,6 +3,7 @@
 
 #include "../renderer_backend.h"
 #include "ipass_assembler.h"
+#include "vulkan_program_manager.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -11,17 +12,17 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
-            std::shared_ptr<VulkanPipelineManager> pipeline_manager;
+            std::shared_ptr<VulkanProgramManager> program_manager;
 
         public:
             VulkanPassAssembler(
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const std::shared_ptr<VulkanPipelineManager>& pipeline_manager);
+                const std::shared_ptr<VulkanProgramManager>& program_manager);
 
             std::shared_ptr<VulkanDevice> get_device() const;
             std::shared_ptr<VulkanSwapChain> get_swap_chain() const;
-            std::shared_ptr<VulkanPipelineManager> get_pipeline_manager() const;
+            std::shared_ptr<VulkanProgramManager> get_program_manager() const;
     };
 }
 
