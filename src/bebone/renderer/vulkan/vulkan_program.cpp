@@ -16,7 +16,7 @@ namespace bebone::renderer {
         cmd->bind_managed_pipeline(pipeline, frame);
     }
 
-    const VulkanManagedPipelineTuple& VulkanProgram::get_pipeline() const {
+    VulkanManagedPipelineTuple& VulkanProgram::get_pipeline() {
         return pipeline;
     }
 }

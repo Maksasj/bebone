@@ -458,34 +458,34 @@ namespace bebone::gfx {
         return shader;
     }
 
-    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
+    std::shared_ptr<VulkanTextureTuple> VulkanDevice::create_texture(
         const std::string& file_path
     ) {
         auto raw = assets::Image<ColorRGBA>::load_from_file(file_path);
-        auto texture = std::make_shared<VulkanTexture>(*this, raw);
+        auto texture = std::make_shared<VulkanTextureTuple>(*this, raw);
 
         child_objects.push_back(texture);
 
         return texture;
     }
 
-    std::shared_ptr<VulkanTexture> VulkanDevice::create_texture(
+    std::shared_ptr<VulkanTextureTuple> VulkanDevice::create_texture(
         VkExtent3D extent,
         VkFormat image_format
     ) {
-        auto texture = std::make_shared<VulkanTexture>(*this, extent, image_format);
+        auto texture = std::make_shared<VulkanTextureTuple>(*this, extent, image_format);
 
         child_objects.push_back(texture);
 
         return texture;
     }
 
-    std::vector<std::shared_ptr<VulkanTexture>> VulkanDevice::create_textures(
+    std::vector<std::shared_ptr<VulkanTextureTuple>> VulkanDevice::create_textures(
         VkExtent3D extent,
         VkFormat image_format,
         const size_t& count
     ) {
-        auto textures = std::vector<std::shared_ptr<VulkanTexture>> {};
+        auto textures = std::vector<std::shared_ptr<VulkanTextureTuple>> {};
         textures.reserve(3);
 
         for(size_t i = 0; i < count; ++i)

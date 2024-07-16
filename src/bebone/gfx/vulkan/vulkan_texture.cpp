@@ -7,7 +7,7 @@ namespace bebone::gfx {
     using namespace bebone::core;
     using namespace bebone::assets;
 
-    VulkanTexture::VulkanTexture(
+    VulkanTextureTuple::VulkanTextureTuple(
         VulkanDevice& device,
         const std::shared_ptr<Image<ColorRGBA>>& raw
     ) {
@@ -36,7 +36,7 @@ namespace bebone::gfx {
         view = device.create_image_view(*image, ColorRGBA::get_vulkan_format());
     }
 
-    VulkanTexture::VulkanTexture(VulkanDevice& device,
+    VulkanTextureTuple::VulkanTextureTuple(VulkanDevice& device,
         VkExtent3D extent,
         VkFormat image_format
     ) {
@@ -50,28 +50,28 @@ namespace bebone::gfx {
         view = device.create_image_view(*image, image_format);
     }
 
-    std::optional<std::shared_ptr<VulkanImage>> VulkanTexture::get_image() {
+    std::optional<std::shared_ptr<VulkanImage>> VulkanTextureTuple::get_image() {
         return image;
     }
 
-    std::optional<std::shared_ptr<VulkanImageView>> VulkanTexture::get_view() {
+    std::optional<std::shared_ptr<VulkanImageView>> VulkanTextureTuple::get_view() {
         return view;
     }
 
-    std::optional<std::shared_ptr<VulkanDeviceMemory>> VulkanTexture::get_memory() {
+    std::optional<std::shared_ptr<VulkanDeviceMemory>> VulkanTextureTuple::get_memory() {
         return memory;
     }
 
-    std::optional<std::shared_ptr<VulkanSampler>> VulkanTexture::get_sampler() {
+    std::optional<std::shared_ptr<VulkanSampler>> VulkanTextureTuple::get_sampler() {
         return sampler;
     }
 
 
-    VulkanAttachmentType VulkanTexture::get_type() const {
+    VulkanAttachmentType VulkanTextureTuple::get_type() const {
         return Color; // Todo, this may not be always true
     }
 
-    void VulkanTexture::destroy(VulkanDevice& device) {
+    void VulkanTextureTuple::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
 

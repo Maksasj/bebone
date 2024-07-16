@@ -9,7 +9,7 @@ namespace bebone::renderer {
 
     // VK_FORMAT_R8G8B8A8_UNORM
 
-    std::vector<std::shared_ptr<VulkanTexture>>& VulkanHDRTextureResource::get_textures() {
+    std::vector<std::shared_ptr<VulkanTextureTuple>>& VulkanHDRTextureResource::get_textures() {
         return textures;
     }
 }

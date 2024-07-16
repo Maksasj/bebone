@@ -16,7 +16,7 @@ namespace bebone::renderer {
 
             void bind(ICommandEncoder* encoder) override;
 
-            const VulkanManagedPipelineTuple& get_pipeline() const;
+            VulkanManagedPipelineTuple& get_pipeline();
     };
 }
 

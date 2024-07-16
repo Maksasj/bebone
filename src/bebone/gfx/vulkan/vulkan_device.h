@@ -208,14 +208,14 @@ namespace bebone::gfx {
                 const std::string& source_code,
                 const ShaderType& type);
 
-            std::shared_ptr<VulkanTexture> create_texture(
+            std::shared_ptr<VulkanTextureTuple> create_texture(
                 const std::string& file_path);
 
-            std::shared_ptr<VulkanTexture> create_texture(
+            std::shared_ptr<VulkanTextureTuple> create_texture(
                 VkExtent3D extent,
                 VkFormat image_format);
 
-            std::vector<std::shared_ptr<VulkanTexture>> create_textures(
+            std::vector<std::shared_ptr<VulkanTextureTuple>> create_textures(
                 VkExtent3D extent,
                 VkFormat image_format,
                 const size_t& count);

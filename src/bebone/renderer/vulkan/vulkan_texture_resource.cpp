@@ -7,7 +7,7 @@ namespace bebone::renderer {
         textures = device->create_textures(extent, VK_FORMAT_R8G8B8A8_UNORM, 3);
     }
 
-    std::vector<std::shared_ptr<VulkanTexture>>& VulkanTextureResource::get_textures() {
+    std::vector<std::shared_ptr<VulkanTextureTuple>>& VulkanTextureResource::get_textures() {
         return textures;
     }
 }

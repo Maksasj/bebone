@@ -4,15 +4,18 @@
 #include "../itexture.h"
 
 namespace bebone::renderer {
+    using namespace bebone::gfx;
+
     class VulkanTexture : public ITexture {
         private:
-            std::shared_ptr<gfx::VulkanTexture> texture;
-            size_t gpu_handle; // Todo, Handle should be same for ALL pipelines
+            std::shared_ptr<VulkanTextureTuple> texture;
 
         public:
+            size_t gpu_handle;
+
             VulkanTexture(const std::string& file_path, std::shared_ptr<gfx::VulkanDevice>& device);
 
-            std::shared_ptr<gfx::VulkanTexture>& get_texture();
+            std::shared_ptr<VulkanTextureTuple>& get_texture();
     };
 }
 

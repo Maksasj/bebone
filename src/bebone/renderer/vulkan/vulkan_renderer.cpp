@@ -40,12 +40,11 @@ namespace bebone::renderer {
         pass->set_camera(camera);
     }
 
+    // Todo, probably since we use bindless textures, we can bind all texture to ALL pipelines
+    // Everything should work fine
     std::shared_ptr<ITexture> VulkanRenderer::load_texture(const std::string& file_path) {
         auto texture = std::make_shared<renderer::VulkanTexture>(file_path, device);
-
-        // Todo, probably since we use bindless textures, we can bind all texture to ALL pipelines
-        // Everything should work fine
-
+        program_manager->bind_bindless_texture(texture);
         return texture;
     }
 

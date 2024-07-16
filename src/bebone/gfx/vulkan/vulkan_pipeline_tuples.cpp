@@ -17,7 +17,7 @@ namespace bebone::gfx {
 
     VulkanBindlessHandle VulkanManagedPipelineTuple::bind_texture(
         std::shared_ptr<VulkanDevice>& device,
-        std::shared_ptr<VulkanTexture>& texture,
+        std::shared_ptr<VulkanTextureTuple>& texture,
         const size_t& binding
     ) {
         auto dst_array_elements = std::vector<VulkanBindlessHandle> {};
@@ -39,7 +39,7 @@ namespace bebone::gfx {
 
     std::vector<VulkanBindlessHandle> VulkanManagedPipelineTuple::bind_textures(
         std::shared_ptr<VulkanDevice>& device,
-        std::vector<std::shared_ptr<VulkanTexture>>& textures,
+        std::vector<std::shared_ptr<VulkanTextureTuple>>& textures,
         const size_t& binding
     ) {
         auto dst_array_elements = std::vector<VulkanBindlessHandle> {};

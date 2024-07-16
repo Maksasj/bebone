@@ -9,7 +9,7 @@
 namespace bebone::gfx {
     class VulkanConstRange;
 
-    struct VulkanTexture;
+    struct VulkanTextureTuple;
     class IVulkanAttachment;
     struct VulkanBufferMemoryTuple;
 
@@ -33,12 +33,12 @@ namespace bebone::gfx {
 
             VulkanBindlessHandle bind_texture(
                 std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanTexture>& texture,
+                std::shared_ptr<VulkanTextureTuple>& texture,
                 const size_t& binding);
 
             std::vector<VulkanBindlessHandle> bind_textures(
                 std::shared_ptr<VulkanDevice>& device,
-                std::vector<std::shared_ptr<VulkanTexture>>& texture,
+                std::vector<std::shared_ptr<VulkanTextureTuple>>& texture,
                 const size_t& binding);
 
             VulkanBindlessHandle bind_attachment(
