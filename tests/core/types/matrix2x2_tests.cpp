@@ -32,16 +32,12 @@ TEST(Matrix2x2Math, MatrixAddition) {
                  5, 4);
 
     Matrix2x2f result = a + b;
-    ASSERT_EQ(result(0, 0), 4);
-    ASSERT_EQ(result(0, 1), 6);
-    ASSERT_EQ(result(1, 0), 8);
-    ASSERT_EQ(result(1, 1), 10);
+    ASSERT_TRUE(result == Matrix2x2f(4, 6,
+                                     8, 10));
 
     result = b + c;
-    ASSERT_EQ(result(0, 0), 6);
-    ASSERT_EQ(result(0, 1), 5);
-    ASSERT_EQ(result(1, 0), 10);
-    ASSERT_EQ(result(1, 1), 10);
+    ASSERT_TRUE(result == Matrix2x2f(6, 5,
+                                     10, 10));
 }
 
 TEST(Matrix2x2Math, MatrixSubtraction) {
@@ -55,16 +51,11 @@ TEST(Matrix2x2Math, MatrixSubtraction) {
                  3, 5);
 
     Matrix2x2f result = a - b;
-    ASSERT_EQ(result(0, 0), 15);
-    ASSERT_EQ(result(0, 1), 6);
-    ASSERT_EQ(result(1, 0), -1);
-    ASSERT_EQ(result(1, 1), 5);
-
+    ASSERT_TRUE(result == Matrix2x2f(15, 6,
+                                     -1, 5));
     result = a - c;
-    ASSERT_EQ(result(0, 0), 9);
-    ASSERT_EQ(result(0, 1), 3);
-    ASSERT_EQ(result(1, 0), 0);
-    ASSERT_EQ(result(1, 1), 3);
+    ASSERT_TRUE(result == Matrix2x2f(9, 3,
+                                     0, 3));
 }
 
 TEST(Matrix2x2Math, MatrixMultiplication) {
@@ -78,28 +69,17 @@ TEST(Matrix2x2Math, MatrixMultiplication) {
                  3, 5);
 
     Matrix2x2f result = a * b;
-    ASSERT_EQ(result(0, 0), 28);
-    ASSERT_EQ(result(0, 1), 36);
-    ASSERT_EQ(result(1, 0), 32);
-    ASSERT_EQ(result(1, 1), 27);
-
+    ASSERT_TRUE(result == Matrix2x2f(28, 36,
+                                     32, 27));
     result = b * a;
-    ASSERT_EQ(result(0, 0), 3);
-    ASSERT_EQ(result(0, 1), 8);
-    ASSERT_EQ(result(1, 0), 69);
-    ASSERT_EQ(result(1, 1), 52);
-
+    ASSERT_TRUE(result == Matrix2x2f(3, 8,
+                                     69, 52));
     result = b * c;
-    ASSERT_EQ(result(0, 0), 3);
-    ASSERT_EQ(result(0, 1), 5);
-    ASSERT_EQ(result(1, 0), 33);
-    ASSERT_EQ(result(1, 1), 31);
-
+    ASSERT_TRUE(result == Matrix2x2f(3, 5,
+                                     33, 31));
     result = c * b;
-    ASSERT_EQ(result(0, 0), 16);
-    ASSERT_EQ(result(0, 1), 18);
-    ASSERT_EQ(result(1, 0), 20);
-    ASSERT_EQ(result(1, 1), 18);
+    ASSERT_TRUE(result == Matrix2x2f(16, 18,
+                                     20, 18));
 }
 
 TEST(Matrix2x2Math, ScalarAddition) {
@@ -110,17 +90,11 @@ TEST(Matrix2x2Math, ScalarAddition) {
                  4, 0);
 
     Matrix2x2f result = a + 4;
-
-    ASSERT_EQ(result(0, 0), 9);
-    ASSERT_EQ(result(0, 1), 7);
-    ASSERT_EQ(result(1, 0), 6);
-    ASSERT_EQ(result(1, 1), 9);
-
+    ASSERT_TRUE(result == Matrix2x2f(9, 7,
+                                     6, 9));
     result = b + 7;
-    ASSERT_EQ(result(0, 0), 13);
-    ASSERT_EQ(result(0, 1), 9);
-    ASSERT_EQ(result(1, 0), 11);
-    ASSERT_EQ(result(1, 1), 7);
+    ASSERT_TRUE(result == Matrix2x2f(13, 9,
+                                     11, 7));
 }
 
 TEST(Matrix2x2Math, ScalarSubtraction) {
@@ -131,17 +105,11 @@ TEST(Matrix2x2Math, ScalarSubtraction) {
                  4, 0);
 
     Matrix2x2f result = a - 4;
-
-    ASSERT_EQ(result(0, 0), 1);
-    ASSERT_EQ(result(0, 1), -1);
-    ASSERT_EQ(result(1, 0), -2);
-    ASSERT_EQ(result(1, 1), 1);
-
+    ASSERT_TRUE(result == Matrix2x2f(1, -1,
+                                     -2, 1));
     result = b - 7;
-    ASSERT_EQ(result(0, 0), -1);
-    ASSERT_EQ(result(0, 1), -5);
-    ASSERT_EQ(result(1, 0), -3);
-    ASSERT_EQ(result(1, 1), -7);
+    ASSERT_TRUE(result == Matrix2x2f(-1, -5,
+                                     -3, -7));
 }
 
 TEST(Matrix2x2Math, ScalarMultiplication) {
@@ -152,17 +120,11 @@ TEST(Matrix2x2Math, ScalarMultiplication) {
                  4, 0);
 
     Matrix2x2f result = a * 4;
-
-    ASSERT_EQ(result(0, 0), 20);
-    ASSERT_EQ(result(0, 1), 12);
-    ASSERT_EQ(result(1, 0), 8);
-    ASSERT_EQ(result(1, 1), 20);
-
+    ASSERT_TRUE(result == Matrix2x2f(20, 12,
+                                     8, 20));
     result = b * 7;
-    ASSERT_EQ(result(0, 0), 42);
-    ASSERT_EQ(result(0, 1), 14);
-    ASSERT_EQ(result(1, 0), 28);
-    ASSERT_EQ(result(1, 1), 0);
+    ASSERT_TRUE(result == Matrix2x2f(42, 14,
+                                     28, 0));
 }
 
 TEST(Matrix2x2Math, ScalarDivision) {
@@ -173,17 +135,11 @@ TEST(Matrix2x2Math, ScalarDivision) {
                  4, 0);
 
     Matrix2x2f result = a / 5;
-
-    ASSERT_EQ(result(0, 0), 1);
-    ASSERT_EQ(result(0, 1), 5);
-    ASSERT_EQ(result(1, 0), 2);
-    ASSERT_EQ(result(1, 1), 1);
-
+    ASSERT_TRUE(result == Matrix2x2f(1, 5,
+                                     2, 1));
     result = b / 2;
-    ASSERT_EQ(result(0, 0), 3);
-    ASSERT_EQ(result(0, 1), 1);
-    ASSERT_EQ(result(1, 0), 2);
-    ASSERT_EQ(result(1, 1), 0);
+    ASSERT_TRUE(result == Matrix2x2f(3, 1,
+                                     2, 0));
 }
 
 TEST(Matrix2x2Functions, Transpose) {
@@ -194,16 +150,11 @@ TEST(Matrix2x2Functions, Transpose) {
                  8, 0);
 
     Matrix2x2f result = a.transpose();
-    ASSERT_EQ(result(0, 0), 1);
-    ASSERT_EQ(result(0, 1), 3);
-    ASSERT_EQ(result(1, 0), 2);
-    ASSERT_EQ(result(1, 1), 4);
-
+    ASSERT_TRUE(result == Matrix2x2f(1, 3,
+                                     2, 4));
     result = b.transpose();
-    ASSERT_EQ(result(0, 0), 47);
-    ASSERT_EQ(result(0, 1), 8);
-    ASSERT_EQ(result(1, 0), 4);
-    ASSERT_EQ(result(1, 1), 0);
+    ASSERT_TRUE(result == Matrix2x2f(47, 8,
+                                     4, 0));
 }
 
 TEST(Matrix2x2Functions, Inverse) {

@@ -47,26 +47,13 @@ TEST(Matrix3x3Math, MatrixAddition) {
                  6, 0, 0);
 
     Matrix3x3f result = a + b;
-    ASSERT_EQ(result(0, 0), 4);
-    ASSERT_EQ(result(0, 1), 6);
-    ASSERT_EQ(result(0, 2), 4);
-    ASSERT_EQ(result(1, 0), 9);
-    ASSERT_EQ(result(1, 1), 11);
-    ASSERT_EQ(result(1, 2), 6);
-    ASSERT_EQ(result(2, 0), 11);
-    ASSERT_EQ(result(2, 1), 10);
-    ASSERT_EQ(result(2, 2), 10);
-
+    ASSERT_TRUE(result == Matrix3x3f(4, 6, 4,
+                                     9, 11, 6,
+                                     11, 10, 10));
     result = b + c;
-    ASSERT_EQ(result(0, 0), 6);
-    ASSERT_EQ(result(0, 1), 5);
-    ASSERT_EQ(result(0, 2), 5);
-    ASSERT_EQ(result(1, 0), 10);
-    ASSERT_EQ(result(1, 1), 10);
-    ASSERT_EQ(result(1, 2), 3);
-    ASSERT_EQ(result(2, 0), 10);
-    ASSERT_EQ(result(2, 1), 2);
-    ASSERT_EQ(result(2, 2), 1);
+    ASSERT_TRUE(result == Matrix3x3f(6, 5, 5,
+                                     10, 10, 3,
+                                     10, 2, 1));
 }
 
 TEST(Matrix3x3Math, MatrixSubtraction) {
@@ -83,26 +70,13 @@ TEST(Matrix3x3Math, MatrixSubtraction) {
                  6, 0, 0);
 
     Matrix3x3f result = a - b;
-    ASSERT_EQ(result(0, 0), -2);
-    ASSERT_EQ(result(0, 1), -2);
-    ASSERT_EQ(result(0, 2), 2);
-    ASSERT_EQ(result(1, 0), -1);
-    ASSERT_EQ(result(1, 1), -1);
-    ASSERT_EQ(result(1, 2), 6);
-    ASSERT_EQ(result(2, 0), 3);
-    ASSERT_EQ(result(2, 1), 6);
-    ASSERT_EQ(result(2, 2), 8);
-
+    ASSERT_TRUE(result == Matrix3x3f(-2, -2, 2,
+                                     -1, -1, 6,
+                                     3, 6, 8));
     result = a - c;
-    ASSERT_EQ(result(0, 0), -2);
-    ASSERT_EQ(result(0, 1), 1);
-    ASSERT_EQ(result(0, 2), -1);
-    ASSERT_EQ(result(1, 0), -1);
-    ASSERT_EQ(result(1, 1), 1);
-    ASSERT_EQ(result(1, 2), 3);
-    ASSERT_EQ(result(2, 0), 1);
-    ASSERT_EQ(result(2, 1), 8);
-    ASSERT_EQ(result(2, 2), 9);
+    ASSERT_TRUE(result == Matrix3x3f(-2, 1, -1,
+                                     -1, 1, 3,
+                                     1, 8, 9));
 }
 
 TEST(Matrix3x3Math, MatrixMultiplication) {
@@ -119,48 +93,21 @@ TEST(Matrix3x3Math, MatrixMultiplication) {
                  6, 0, 0);
 
     Matrix3x3f result = a * b;
-    ASSERT_EQ(result(0, 0), 25);
-    ASSERT_EQ(result(0, 1), 22);
-    ASSERT_EQ(result(0, 2), 4);
-    ASSERT_EQ(result(1, 0), 61);
-    ASSERT_EQ(result(1, 1), 58);
-    ASSERT_EQ(result(1, 2), 10);
-    ASSERT_EQ(result(2, 0), 97);
-    ASSERT_EQ(result(2, 1), 94);
-    ASSERT_EQ(result(2, 2), 16);
-
+    ASSERT_TRUE(result == Matrix3x3f(25, 22, 4,
+                                     61, 58, 10,
+                                     97, 94, 16));
     result = b * a;
-    ASSERT_EQ(result(0, 0), 26);
-    ASSERT_EQ(result(0, 1), 34);
-    ASSERT_EQ(result(0, 2), 42);
-    ASSERT_EQ(result(1, 0), 29);
-    ASSERT_EQ(result(1, 1), 40);
-    ASSERT_EQ(result(1, 2), 51);
-    ASSERT_EQ(result(2, 0), 19);
-    ASSERT_EQ(result(2, 1), 26);
-    ASSERT_EQ(result(2, 2), 33);
-
+    ASSERT_TRUE(result == Matrix3x3f(26, 34, 42,
+                                     29, 40, 51,
+                                     19, 26, 33));
     result = b * c;
-    ASSERT_EQ(result(0, 0), 35);
-    ASSERT_EQ(result(0, 1), 19);
-    ASSERT_EQ(result(0, 2), 24);
-    ASSERT_EQ(result(1, 0), 45);
-    ASSERT_EQ(result(1, 1), 29);
-    ASSERT_EQ(result(1, 2), 38);
-    ASSERT_EQ(result(2, 0), 28);
-    ASSERT_EQ(result(2, 1), 12);
-    ASSERT_EQ(result(2, 2), 22);
-
+    ASSERT_TRUE(result == Matrix3x3f(35, 19, 24,
+                                     45, 29, 38,
+                                     28, 12, 22));
     result = c * b;
-    ASSERT_EQ(result(0, 0), 30);
-    ASSERT_EQ(result(0, 1), 26);
-    ASSERT_EQ(result(0, 2), 7);
-    ASSERT_EQ(result(1, 0), 47);
-    ASSERT_EQ(result(1, 1), 50);
-    ASSERT_EQ(result(1, 2), 8);
-    ASSERT_EQ(result(2, 0), 18);
-    ASSERT_EQ(result(2, 1), 24);
-    ASSERT_EQ(result(2, 2), 6);
+    ASSERT_TRUE(result == Matrix3x3f(30, 26, 7,
+                                     47, 50, 8,
+                                     18, 24, 6));
 }
 
 TEST(Matrix3x3Math, ScalarAddition) {
@@ -173,27 +120,13 @@ TEST(Matrix3x3Math, ScalarAddition) {
                  4, 2, 1);
 
     Matrix3x3f result = a + 4;
-
-    ASSERT_EQ(result(0, 0), 5);
-    ASSERT_EQ(result(0, 1), 6);
-    ASSERT_EQ(result(0, 2), 7);
-    ASSERT_EQ(result(1, 0), 8);
-    ASSERT_EQ(result(1, 1), 9);
-    ASSERT_EQ(result(1, 2), 10);
-    ASSERT_EQ(result(2, 0), 11);
-    ASSERT_EQ(result(2, 1), 12);
-    ASSERT_EQ(result(2, 2), 13);
-
+    ASSERT_TRUE(result == Matrix3x3f(5, 6, 7,
+                                     8, 9, 10,
+                                     11, 12, 13));
     result = b + 7;
-    ASSERT_EQ(result(0, 0), 10);
-    ASSERT_EQ(result(0, 1), 11);
-    ASSERT_EQ(result(0, 2), 8);
-    ASSERT_EQ(result(1, 0), 12);
-    ASSERT_EQ(result(1, 1), 13);
-    ASSERT_EQ(result(1, 2), 7);
-    ASSERT_EQ(result(2, 0), 11);
-    ASSERT_EQ(result(2, 1), 9);
-    ASSERT_EQ(result(2, 2), 8);
+    ASSERT_TRUE(result == Matrix3x3f(10, 11, 8,
+                                     12, 13, 7,
+                                     11, 9, 8));
 }
 
 TEST(Matrix3x3Math, ScalarSubtraction) {
@@ -206,27 +139,13 @@ TEST(Matrix3x3Math, ScalarSubtraction) {
                  4, 2, 1);
 
     Matrix3x3f result = a - 4;
-
-    ASSERT_EQ(result(0, 0), -3);
-    ASSERT_EQ(result(0, 1), -2);
-    ASSERT_EQ(result(0, 2), -1);
-    ASSERT_EQ(result(1, 0), 0);
-    ASSERT_EQ(result(1, 1), 1);
-    ASSERT_EQ(result(1, 2), 2);
-    ASSERT_EQ(result(2, 0), 3);
-    ASSERT_EQ(result(2, 1), 4);
-    ASSERT_EQ(result(2, 2), 5);
-
+    ASSERT_TRUE(result == Matrix3x3f(-3, -2, -1,
+                                     0, 1, 2,
+                                     3, 4, 5));
     result = b - 7;
-    ASSERT_EQ(result(0, 0), -4);
-    ASSERT_EQ(result(0, 1), -3);
-    ASSERT_EQ(result(0, 2), -6);
-    ASSERT_EQ(result(1, 0), -2);
-    ASSERT_EQ(result(1, 1), -1);
-    ASSERT_EQ(result(1, 2), -7);
-    ASSERT_EQ(result(2, 0), -3);
-    ASSERT_EQ(result(2, 1), -5);
-    ASSERT_EQ(result(2, 2), -6);
+    ASSERT_TRUE(result == Matrix3x3f(-4, -3, -6,
+                                     -2, -1, -7,
+                                     -3, -5, -6));
 }
 
 TEST(Matrix3x3Math, ScalarMultiplication) {
@@ -239,27 +158,13 @@ TEST(Matrix3x3Math, ScalarMultiplication) {
                  4, 2, 1);
 
     Matrix3x3f result = a * 4;
-
-    ASSERT_EQ(result(0, 0), 4);
-    ASSERT_EQ(result(0, 1), 8);
-    ASSERT_EQ(result(0, 2), 12);
-    ASSERT_EQ(result(1, 0), 16);
-    ASSERT_EQ(result(1, 1), 20);
-    ASSERT_EQ(result(1, 2), 24);
-    ASSERT_EQ(result(2, 0), 28);
-    ASSERT_EQ(result(2, 1), 32);
-    ASSERT_EQ(result(2, 2), 36);
-
+    ASSERT_TRUE(result == Matrix3x3f(4, 8, 12,
+                                     16, 20, 24,
+                                     28, 32, 36));
     result = b * 7;
-    ASSERT_EQ(result(0, 0), 21);
-    ASSERT_EQ(result(0, 1), 28);
-    ASSERT_EQ(result(0, 2), 7);
-    ASSERT_EQ(result(1, 0), 35);
-    ASSERT_EQ(result(1, 1), 42);
-    ASSERT_EQ(result(1, 2), 0);
-    ASSERT_EQ(result(2, 0), 28);
-    ASSERT_EQ(result(2, 1), 14);
-    ASSERT_EQ(result(2, 2), 7);
+    ASSERT_TRUE(result == Matrix3x3f(21, 28, 7,
+                                     35, 42, 0,
+                                     28, 14, 7));
 }
 
 TEST(Matrix3x3Math, ScalarDivision) {
@@ -272,27 +177,13 @@ TEST(Matrix3x3Math, ScalarDivision) {
                  20, 10, 8);
 
     Matrix3x3f result = a / 5;
-
-    ASSERT_EQ(result(0, 0), 5);
-    ASSERT_EQ(result(0, 1), 0);
-    ASSERT_EQ(result(0, 2), 2);
-    ASSERT_EQ(result(1, 0), 3);
-    ASSERT_EQ(result(1, 1), 1);
-    ASSERT_EQ(result(1, 2), 6);
-    ASSERT_EQ(result(2, 0), 7);
-    ASSERT_EQ(result(2, 1), 20);
-    ASSERT_EQ(result(2, 2), 9);
-
+    ASSERT_TRUE(result == Matrix3x3f(5, 0, 2,
+                                     3, 1, 6,
+                                     7, 20, 9));
     result = b / 2;
-    ASSERT_EQ(result(0, 0), 3);
-    ASSERT_EQ(result(0, 1), 2);
-    ASSERT_EQ(result(0, 2), 1);
-    ASSERT_EQ(result(1, 0), 0);
-    ASSERT_EQ(result(1, 1), 4);
-    ASSERT_EQ(result(1, 2), 8);
-    ASSERT_EQ(result(2, 0), 10);
-    ASSERT_EQ(result(2, 1), 5);
-    ASSERT_EQ(result(2, 2), 4);
+    ASSERT_TRUE(result == Matrix3x3f(3, 2, 1,
+                                     0, 4, 8,
+                                     10, 5, 4));
 }
 
 TEST(Matrix3x3Functions, Transpose) {
@@ -305,26 +196,13 @@ TEST(Matrix3x3Functions, Transpose) {
                  4, 2, 1);
 
     Matrix3x3f result = a.transpose();
-    ASSERT_EQ(result(0, 0), 1);
-    ASSERT_EQ(result(0, 1), 4);
-    ASSERT_EQ(result(0, 2), 7);
-    ASSERT_EQ(result(1, 0), 2);
-    ASSERT_EQ(result(1, 1), 5);
-    ASSERT_EQ(result(1, 2), 8);
-    ASSERT_EQ(result(2, 0), 3);
-    ASSERT_EQ(result(2, 1), 6);
-    ASSERT_EQ(result(2, 2), 9);
-
+    ASSERT_TRUE(result == Matrix3x3f(1, 4, 7,
+                                     2, 5, 8,
+                                     3, 6, 9));
     result = b.transpose();
-    ASSERT_EQ(result(0, 0), 3);
-    ASSERT_EQ(result(0, 1), 5);
-    ASSERT_EQ(result(0, 2), 4);
-    ASSERT_EQ(result(1, 0), 4);
-    ASSERT_EQ(result(1, 1), 6);
-    ASSERT_EQ(result(1, 2), 2);
-    ASSERT_EQ(result(2, 0), 1);
-    ASSERT_EQ(result(2, 1), 0);
-    ASSERT_EQ(result(2, 2), 1);
+    ASSERT_TRUE(result == Matrix3x3f(3, 5, 4,
+                                     4, 6, 2,
+                                     1, 0, 1));
 }
 
 TEST(Matrix3x3Functions, Inverse) {
