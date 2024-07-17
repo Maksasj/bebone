@@ -67,6 +67,9 @@ namespace bebone::renderer {
         auto program_manager = vulkan_assembler->get_program_manager();
         auto pipeline_manager = program_manager->get_pipeline_manager();
 
+        // Todo
+        pipeline_layout = program_manager->get_pipeline_layout();
+
         auto vert_shader_module = device->create_shader_module(vulkan_present_pass_vertex_shader_code, VertexShader);
         auto frag_shader_module = device->create_shader_module(vulkan_present_pass_fragment_shader_code, FragmentShader);
 
@@ -79,10 +82,8 @@ namespace bebone::renderer {
         auto program = program_manager->create_program(pipeline);
         set_program(program);
 
-        /* Todo,
-        auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource)->get_textures();
-        texture_handles = pipeline.bind_textures(device, texture, 0);
-        */
+        auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource);
+        texture_handles = texture->get_handles();
 
         // Todo, move this outside, to assembler
         auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
@@ -106,9 +107,9 @@ namespace bebone::renderer {
 
             auto handles = u32(texture_handles[frame]);
 
-            auto& pipeline = static_pointer_cast<VulkanProgram>(get_program())->get_pipeline();
-            // cmd->push_constant(pipeline.layout, sizeof(u32), 0, &handles);
             // Todo
+            // auto& pipeline = static_pointer_cast<VulkanProgram>(get_program())->get_pipeline();
+            cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
 
             quad_mesh->bind(encoder);
             cmd->draw_indexed(quad_mesh->triangle_count());

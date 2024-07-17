@@ -4,8 +4,9 @@ namespace bebone::renderer {
     VulkanRenderGraphImpl::VulkanRenderGraphImpl(
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
-        const std::shared_ptr<VulkanProgramManager>& program_manager
-    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager) {
+        const std::shared_ptr<VulkanProgramManager>& program_manager,
+        const std::shared_ptr<VulkanTextureManager>& texture_manager
+    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager) {
         command_buffers = device->create_command_buffers(3);
     }
 
@@ -24,6 +25,8 @@ namespace bebone::renderer {
         VulkanCommandEncoder encoder(device, swap_chain, cmd, frame);
 
         cmd->begin_record();
+
+        cmd->bind_descriptor_set(program_manager->get_pipeline_layout(), program_manager->get_descriptor_set());
 
         for(auto& pass : get_render_passes())
             pass->record(&encoder);
@@ -51,6 +54,6 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IResourceFactory> VulkanRenderGraphImpl::create_resource_factory() const {
-        return std::make_shared<VulkanResourceFactory>(device);
+        return std::make_shared<VulkanResourceFactory>(device, texture_manager);
     }
 }

@@ -1,15 +1,17 @@
 #include "vulkan_hdr_texture_resource.h"
 
 namespace bebone::renderer {
-    VulkanHDRTextureResource::VulkanHDRTextureResource(const std::string& name, const Vec2i& size, std::shared_ptr<VulkanDevice>& device) : IHDRTextureResource(name) {
-        auto extent = VkExtent3D {static_cast<uint32_t>(size.x), static_cast<uint32_t>(size.y), 1};
+    VulkanHDRTextureResource::VulkanHDRTextureResource(
+        const std::string& name,
+        const std::vector<std::shared_ptr<VulkanTexture>>& textures
+    ) : IHDRTextureResource(name), textures(textures) {
+        handles.reserve(textures.size());
 
-        textures = device->create_textures(extent, VK_FORMAT_R32G32B32A32_SFLOAT, 3);
+        for(auto& texture : textures)
+            handles.push_back(texture->get_handle());
     }
 
-    // VK_FORMAT_R8G8B8A8_UNORM
-
-    std::vector<std::shared_ptr<VulkanTextureTuple>>& VulkanHDRTextureResource::get_textures() {
+    std::vector<std::shared_ptr<VulkanTexture>>& VulkanHDRTextureResource::get_textures() {
         return textures;
     }
 }

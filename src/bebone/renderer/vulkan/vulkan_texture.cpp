@@ -1,6 +1,10 @@
 #include "vulkan_texture.h"
 
 namespace bebone::renderer {
+    VulkanTexture::VulkanTexture(std::shared_ptr<VulkanTextureTuple> texture) : texture(texture) {
+
+    }
+
     VulkanTexture::VulkanTexture(const std::string& file_path, std::shared_ptr<VulkanDevice>& device) {
         texture = device->create_texture(file_path);
     }

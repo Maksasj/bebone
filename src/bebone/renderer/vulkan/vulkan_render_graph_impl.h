@@ -18,6 +18,7 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<VulkanCommandBuffer>> command_buffers;
 
             std::shared_ptr<VulkanProgramManager> program_manager;
+            std::shared_ptr<VulkanTextureManager> texture_manager;
 
             uint32_t frame;
 
@@ -25,7 +26,8 @@ namespace bebone::renderer {
             VulkanRenderGraphImpl(
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const std::shared_ptr<VulkanProgramManager>& program_manager);
+                const std::shared_ptr<VulkanProgramManager>& program_manager,
+                const std::shared_ptr<VulkanTextureManager>& texture_manager);
 
             void assemble() override;
             void record() override;

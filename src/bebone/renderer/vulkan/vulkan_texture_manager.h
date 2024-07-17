@@ -17,7 +17,9 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanProgramManager>& program_manager);
 
-            std::shared_ptr<ITexture> create_texture() override;
+            std::shared_ptr<ITexture> create_texture(const Vec2i& extent) override;
+            std::shared_ptr<ITexture> create_texture(const Vec2i& extent, VkFormat format);
+
             std::shared_ptr<ITexture> load_texture_from_file(const std::string& file_path) override;
     };
 }

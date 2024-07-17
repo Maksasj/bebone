@@ -11,6 +11,8 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
             std::shared_ptr<VulkanCommandBuffer> command_buffer;
+            std::shared_ptr<VulkanPipelineManager> pipeline_manager;
+
             size_t frame;
 
         public:

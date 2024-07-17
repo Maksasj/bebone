@@ -22,6 +22,10 @@ namespace bebone::renderer {
             void bind_texture(std::shared_ptr<VulkanTexture>& texture);
 
             std::shared_ptr<VulkanPipelineManager> get_pipeline_manager() const;
+
+            const std::shared_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
+            const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
+            const std::shared_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
     };
 }
 

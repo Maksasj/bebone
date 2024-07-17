@@ -1,11 +1,17 @@
 #include "vulkan_depth_resource.h"
 
 namespace bebone::renderer {
-    VulkanDepthResource::VulkanDepthResource(const std::string& name, const Vec2i& size, std::shared_ptr<VulkanDevice>& device) : IDepthResource(name) {
-        depth_textures = device->create_depth_image_tuples({ static_cast<uint32_t>(size.x), static_cast<uint32_t>(size.y), 1 }, 3);
+    VulkanDepthResource::VulkanDepthResource(
+        const std::string& name,
+        const std::vector<std::shared_ptr<VulkanTexture>>& textures
+    ) : IDepthResource(name), textures(textures) {
+        handles.reserve(textures.size());
+
+        for(auto& texture : textures)
+            handles.push_back(texture->get_handle());
     }
 
-    std::vector<std::shared_ptr<VulkanDepthImageTuple>>& VulkanDepthResource::get_textures() {
-        return depth_textures;
+    std::vector<std::shared_ptr<VulkanTexture>>& VulkanDepthResource::get_textures() {
+        return textures;
     }
 }

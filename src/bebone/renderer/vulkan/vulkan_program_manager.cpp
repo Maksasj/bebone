@@ -18,4 +18,16 @@ namespace bebone::renderer {
     std::shared_ptr<VulkanPipelineManager> VulkanProgramManager::get_pipeline_manager() const {
         return pipeline_manager;
     }
+
+    const std::shared_ptr<VulkanDescriptorSet>& VulkanProgramManager::get_descriptor_set() const {
+        return pipeline_manager->get_descriptor_set();
+    }
+
+    const std::shared_ptr<VulkanDescriptorSetLayout>& VulkanProgramManager::get_descriptor_set_layout() const {
+        return pipeline_manager->get_descriptor_set_layout();
+    }
+
+    const std::shared_ptr<VulkanPipelineLayout>& VulkanProgramManager::get_pipeline_layout() const {
+        return pipeline_manager->get_pipeline_layout();
+    }
 }

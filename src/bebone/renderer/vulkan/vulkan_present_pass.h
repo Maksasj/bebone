@@ -16,6 +16,8 @@ namespace bebone::renderer {
 
     class VulkanPresentPass : public IPresentPass {
         private:
+            std::shared_ptr<VulkanPipelineLayout> pipeline_layout;
+
             std::shared_ptr<IMesh> quad_mesh;
             std::vector<VulkanBindlessTextureHandle> texture_handles;
 

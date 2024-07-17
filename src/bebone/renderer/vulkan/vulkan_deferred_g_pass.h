@@ -30,6 +30,8 @@ namespace bebone::renderer {
 
     class VulkanDeferredGPass : public IDeferredGPass {
         private:
+            std::shared_ptr<VulkanPipelineLayout> pipeline_layout;
+
             std::shared_ptr<VulkanRenderPass> render_pass;
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
 

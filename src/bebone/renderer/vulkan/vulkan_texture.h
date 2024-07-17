@@ -13,6 +13,7 @@ namespace bebone::renderer {
         public:
             VulkanBindlessTextureHandle handle;
 
+            VulkanTexture(std::shared_ptr<VulkanTextureTuple> texture);
             VulkanTexture(const std::string& file_path, std::shared_ptr<gfx::VulkanDevice>& device);
 
             std::shared_ptr<VulkanTextureTuple>& get_texture();

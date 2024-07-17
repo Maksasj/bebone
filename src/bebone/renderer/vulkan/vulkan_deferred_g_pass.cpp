@@ -87,6 +87,8 @@ namespace bebone::renderer {
         auto device = vulkan_assembler->get_device();
         auto program_manager = vulkan_assembler->get_program_manager();
 
+        pipeline_layout = program_manager->get_pipeline_layout();
+
         auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
 
         // Create render pass
@@ -106,10 +108,8 @@ namespace bebone::renderer {
         auto pipeline_manager = program_manager->get_pipeline_manager();
         auto pipeline = pipeline_manager->create_pipeline(
             device, render_pass, vert_shader_module, frag_shader_module,
-            {
-                .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
-                .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } // Todo
-            }
+            { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
+              .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } } // Todo
         );
 
         // Delete shader modules and clear memory
@@ -127,20 +127,17 @@ namespace bebone::renderer {
         auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_textures();
 
         framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-            device->create_framebuffer({ position[0]->view, normals[0]->view, albedo[0]->view, specular[0]->view, depth[0]->view }, render_pass, viewport),
-            device->create_framebuffer({ position[1]->view, normals[1]->view, albedo[1]->view, specular[1]->view, depth[1]->view }, render_pass, viewport),
-            device->create_framebuffer({ position[2]->view, normals[2]->view, albedo[2]->view, specular[2]->view, depth[2]->view }, render_pass, viewport)
+            device->create_framebuffer({ position[0]->get_texture()->view, normals[0]->get_texture()->view, albedo[0]->get_texture()->view, specular[0]->get_texture()->view, depth[0]->get_texture()->view }, render_pass, viewport),
+            device->create_framebuffer({ position[1]->get_texture()->view, normals[1]->get_texture()->view, albedo[1]->get_texture()->view, specular[1]->get_texture()->view, depth[1]->get_texture()->view }, render_pass, viewport),
+            device->create_framebuffer({ position[2]->get_texture()->view, normals[2]->get_texture()->view, albedo[2]->get_texture()->view, specular[2]->get_texture()->view, depth[2]->get_texture()->view }, render_pass, viewport)
         };
 
-        /*
         // Create and bind model and camera uniform buffer objects
         model_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassModelData) * max_queued_jobs, 3);
-        model_ubo_handles = pipeline.bind_uniform_buffer(device, model_ubo, 0);
+        model_ubo_handles = pipeline_manager->bind_uniform_buffers(device, model_ubo);
 
         camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
-        camera_ubo_handles = pipeline.bind_uniform_buffer(device, camera_ubo, 1);
-
-        */
+        camera_ubo_handles  = pipeline_manager->bind_uniform_buffers(device, camera_ubo);
 
         // Bind program
         set_program(program);
@@ -180,12 +177,10 @@ namespace bebone::renderer {
 
                 auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
 
-                /*
                 cmd->push_constant(
-                    vulkan_program->get_pipeline().layout,
+                    pipeline_layout,
                     sizeof(VulkanDeferredGPassHandles),
                     0, &queued_jobs_handles[i]);
-                */
 
                 auto mesh = model->get_mesh();
 
