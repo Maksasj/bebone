@@ -13,7 +13,14 @@ namespace bebone::gfx {
     class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {
         private:
             std::shared_ptr<VulkanDescriptorPool> descriptor_pool;
-            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> descriptor_layouts;
+
+            std::shared_ptr<VulkanDescriptorSetLayout> bindless_descriptor_set_layout;
+            std::shared_ptr<VulkanDescriptorSet> bindless_descriptor_set;
+
+        private:
+            u32 bindless_uniforms_index;
+            u32 bindless_storage_index;
+            u32 bindless_samplers_index;
 
         public:
             VulkanPipelineManager(VulkanDevice& device);
@@ -24,7 +31,6 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanShaderModule> vertex_shader_module,
                 std::shared_ptr<VulkanShaderModule> fragment_shader_module,
                 const std::vector<VulkanConstRange>& constant_ranges,
-                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings,
                 VulkanPipelineConfig config_info
             );
 
@@ -34,7 +40,6 @@ namespace bebone::gfx {
                 const std::string& vertex_shader_file_path,
                 const std::string& fragment_shader_file_path,
                 const std::vector<VulkanConstRange>& constant_ranges,
-                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings,
                 VulkanPipelineConfig config_info
             );
 

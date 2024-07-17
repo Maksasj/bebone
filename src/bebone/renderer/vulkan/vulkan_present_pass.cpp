@@ -74,7 +74,6 @@ namespace bebone::renderer {
         auto pipeline = pipeline_manager->create_pipeline(
             device, swap_chain->render_pass, vert_shader_module, frag_shader_module,
             { VulkanConstRange::common(sizeof(u32), 0) },
-            { { BindlessSampler, 0} },
             {
                 .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions }
             }
@@ -83,8 +82,10 @@ namespace bebone::renderer {
         auto program = program_manager->create_program(pipeline);
         set_program(program);
 
+        /* Todo,
         auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource)->get_textures();
         texture_handles = pipeline.bind_textures(device, texture, 0);
+        */
 
         // Todo, move this outside, to assembler
         auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));

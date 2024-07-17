@@ -46,8 +46,7 @@ int main() {
 
     auto pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_pass, "vert.glsl", "frag.glsl",
-        { }, { {BindlessSampler, 0} },
-        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
+        { }, { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
     auto vb = device->create_buffer_memory_from(vertices);
@@ -57,7 +56,7 @@ int main() {
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
     auto texture = device->create_texture("image.png");
-    std::ignore = pipeline.bind_texture(device, texture, 0);
+    // std::ignore = pipeline.bind_texture(device, texture, 0);
 
     while (!window->closing()) {
         window->pull_events();

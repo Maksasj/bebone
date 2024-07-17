@@ -9,7 +9,8 @@ namespace bebone::gfx {
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         auto pool_sizes = std::vector<VkDescriptorPoolSize> {
             { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 65536 },
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 65536 } // Todo combined image sampler
+            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 65536 },
+            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 65536 }
         };
 
         VkDescriptorPoolCreateInfo pool_info{};
@@ -25,7 +26,7 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(
-        std::shared_ptr<VulkanDevice>& device,
+        VulkanDevice& device,
         const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
     ) {
         return std::make_shared<VulkanDescriptorSet>(device, *this, descriptor_set_layout);
@@ -40,7 +41,7 @@ namespace bebone::gfx {
         descriptors.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
-            descriptors.push_back(std::make_shared<VulkanDescriptorSet>(device, *this, descriptor_set_layout));
+            descriptors.push_back(std::make_shared<VulkanDescriptorSet>(*device, *this, descriptor_set_layout));
 
         return descriptors;
     }

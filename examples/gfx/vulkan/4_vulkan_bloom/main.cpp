@@ -45,7 +45,6 @@ int main() {
     auto geometry_pipeline = pipeline_manager->create_pipeline(
         device, geometry_render_pass, "geometry.vert.glsl", "geometry.frag.glsl",
         { VulkanConstRange::common(sizeof(GeometryHandles), 0) },
-        { { BindlessUniform, 0}, { BindlessUniform, 1 } },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } }
     );
 
@@ -59,23 +58,21 @@ int main() {
     auto blur_pipeline = pipeline_manager->create_pipeline(
         device, blur_render_pass, "blur.vert.glsl", "blur.frag.glsl",
         { VulkanConstRange::common(sizeof(u32), 0) },
-        { { BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
-    auto blur_texture_handles = blur_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(0), 0);
+    // auto blur_texture_handles = blur_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(0), 0);
 
     // Post pipeline
     auto post_pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_pass, "post.vert.glsl", "post.frag.glsl",
         { VulkanConstRange::common(sizeof(PostHandles), 0) },
-        { { BindlessSampler, 0} },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
-    auto post_geometry_texture_handles = post_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(0), 0);
-    auto post_geometry_grayscale_texture_handles = post_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(1), 0);
-    auto post_blur_texture_handles = post_pipeline.bind_attachments(device, blur_render_target->get_color_attachment(0), 0);
+    // auto post_geometry_texture_handles = post_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(0), 0);
+    // auto post_geometry_grayscale_texture_handles = post_pipeline.bind_attachments(device, geometry_render_target->get_color_attachment(1), 0);
+    // auto post_blur_texture_handles = post_pipeline.bind_attachments(device, blur_render_target->get_color_attachment(0), 0);
 
     auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
     auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
@@ -89,10 +86,10 @@ int main() {
     auto c_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
     for(auto& ubo : c_ubo)
         ubo->upload_data(device, &camera, sizeof(Mat4f));
-    auto c_handles = geometry_pipeline.bind_uniform_buffer(device, c_ubo, 1);
+    // auto c_handles = geometry_pipeline.bind_uniform_buffer(device, c_ubo, 1);
 
     auto t_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
-    auto t_handles = geometry_pipeline.bind_uniform_buffer(device, t_ubo, 0);
+    // auto t_handles = geometry_pipeline.bind_uniform_buffer(device, t_ubo, 0);
 
     while (!window->closing()) {
         transform.rotation.x += 0.02f;
@@ -115,12 +112,14 @@ int main() {
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(geometry_pipeline, frame);
 
+            /*
             auto handles = GeometryHandles {
                 static_cast<u32>(c_handles[frame]),
                 static_cast<u32>(t_handles[frame])
             };
 
             cmd->push_constant(geometry_pipeline.layout, sizeof(GeometryHandles), 0, &handles);
+            */
 
             cube_mesh->bind(&encoder);
             cmd->draw_indexed(cube_mesh->triangle_count());
@@ -131,8 +130,8 @@ int main() {
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(blur_pipeline, frame);
 
-            u32 blur_handles = blur_texture_handles[frame];
-            cmd->push_constant(blur_pipeline.layout, sizeof(u32), 0, &blur_handles);
+            // u32 blur_handles = blur_texture_handles[frame];
+            // cmd->push_constant(blur_pipeline.layout, sizeof(u32), 0, &blur_handles);
 
             quad_mesh->bind(&encoder);
             cmd->draw_indexed(quad_mesh->triangle_count());
@@ -143,12 +142,13 @@ int main() {
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
             cmd->bind_managed_pipeline(post_pipeline, frame);
 
+            /*
             auto post_handle = PostHandles {
                 static_cast<u32>(post_geometry_grayscale_texture_handles[frame]),
                 static_cast<u32>(post_blur_texture_handles[frame])
             };
-
             cmd->push_constant(post_pipeline.layout, sizeof(PostHandles), 0, &post_handle);
+            */
 
             quad_mesh->bind(&encoder);
             cmd->draw_indexed(quad_mesh->triangle_count());

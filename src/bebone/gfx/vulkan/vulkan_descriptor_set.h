@@ -15,7 +15,7 @@ namespace bebone::gfx {
     class VulkanDescriptorSet : public VulkanWrapper<VkDescriptorSet>, private core::NonCopyable {
         public:
             VulkanDescriptorSet(
-                const std::shared_ptr<VulkanDevice>& device,
+                VulkanDevice& device,
                 VulkanDescriptorPool& descriptor_pool,
                 const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
 

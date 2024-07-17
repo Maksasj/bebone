@@ -9,12 +9,12 @@
 namespace bebone::gfx {
     VulkanManagedPipelineTuple::VulkanManagedPipelineTuple(
         const shared_ptr<VulkanPipeline>& pipeline,
-        const shared_ptr<VulkanPipelineLayout>& layout,
-        const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptors
-    ) : pipeline(pipeline), layout(layout), descriptors(descriptors), bindless_samplers_index(0), bindless_uniforms_index(0) {
+        const shared_ptr<VulkanPipelineLayout>& layout
+    ) : pipeline(pipeline), layout(layout) {
 
     }
 
+    /*
     VulkanBindlessHandle VulkanManagedPipelineTuple::bind_texture(
         std::shared_ptr<VulkanDevice>& device,
         std::shared_ptr<VulkanTextureTuple>& texture,
@@ -117,11 +117,10 @@ namespace bebone::gfx {
 
         return dst_array_elements;
     }
+    */
 
     void VulkanManagedPipelineTuple::destroy(VulkanDevice& device) {
         device.destroy_all(pipeline, layout);
-        device.destroy_all(descriptors);
-
         mark_destroyed();
     }
 }

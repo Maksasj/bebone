@@ -8,8 +8,9 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     enum VulkanDescriptorSetLayoutBindingType {
-        BindlessUniform,
-        BindlessSampler
+        Uniform,
+        Storage,
+        Sampler
     };
 
     class VulkanDescriptorSetLayoutBinding : public VulkanWrapper<VkDescriptorSetLayoutBinding> {

@@ -55,7 +55,6 @@ int main() {
     auto pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_pass, "vert.glsl", "frag.glsl",
         { VulkanConstRange::common(sizeof(Handles), 0) },
-        { { BindlessUniform, 0}, { BindlessUniform, 1 } },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
@@ -65,8 +64,8 @@ int main() {
     auto t_ubo = device->create_buffer_memorys(sizeof(Transform), 3);
     auto c_ubo = device->create_buffer_memorys(sizeof(CameraTransform), 3);
 
-    auto t_handles = pipeline.bind_uniform_buffer(device, t_ubo, 0);
-    auto c_handles = pipeline.bind_uniform_buffer(device, c_ubo, 1);
+    // auto t_handles = pipeline.bind_uniform_buffer(device, t_ubo, 0);
+    // auto c_handles = pipeline.bind_uniform_buffer(device, c_ubo, 1);
 
     auto command_buffer_pool = device->create_command_buffer_pool();
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
@@ -95,10 +94,12 @@ int main() {
         transform.rotation = trait_bryan_angle_yxz(Vec3f(Time::get_seconds_elapsed(), Time::get_seconds_elapsed(), 0.0f));
         t_ubo[frame]->upload_data(device, &transform, sizeof(Transform));
 
+        /*
         auto handles = Handles {
             static_cast<u32>(c_handles[frame]),
             static_cast<u32>(t_handles[frame])
         };
+        */
 
         auto& cmd = *command_buffers[frame];
 
@@ -107,7 +108,7 @@ int main() {
         cmd.begin_render_pass(swap_chain);
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
             cmd.bind_managed_pipeline(pipeline, frame);
-            cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
+            // cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
             cmd.bind_vertex_buffer(vb);
             cmd.bind_index_buffer(eb);
             cmd.draw_indexed(indices.size());

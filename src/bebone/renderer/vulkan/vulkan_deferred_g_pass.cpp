@@ -115,7 +115,6 @@ namespace bebone::renderer {
         auto pipeline = pipeline_manager->create_pipeline(
             device, render_pass, vert_shader_module, frag_shader_module,
             { VulkanConstRange::common(sizeof(VulkanDeferredGPassHandles), 0) },
-            { { BindlessUniform, 0}, { BindlessUniform, 1 } },
             {
                 .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
                 .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } // Todo
@@ -142,6 +141,7 @@ namespace bebone::renderer {
             device->create_framebuffer({ position[2]->view, normals[2]->view, albedo[2]->view, specular[2]->view, depth[2]->view }, render_pass, viewport)
         };
 
+        /*
         // Create and bind model and camera uniform buffer objects
         model_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassModelData) * max_queued_jobs, 3);
         model_ubo_handles = pipeline.bind_uniform_buffer(device, model_ubo, 0);
@@ -151,6 +151,7 @@ namespace bebone::renderer {
 
         material_ubo = device->create_buffer_memorys(sizeof(u32) * max_queued_jobs, 3);
         material_ubo_handles = pipeline.bind_uniform_buffer(device, material_ubo, 0);
+        */
 
         // Bind program
         set_program(program);
