@@ -73,10 +73,7 @@ namespace bebone::renderer {
         // Post pipeline
         auto pipeline = pipeline_manager->create_pipeline(
             device, swap_chain->render_pass, vert_shader_module, frag_shader_module,
-            { VulkanConstRange::common(sizeof(u32), 0) },
-            {
-                .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions }
-            }
+            { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions } }
         );
 
         auto program = program_manager->create_program(pipeline);
@@ -110,7 +107,8 @@ namespace bebone::renderer {
             auto handles = u32(texture_handles[frame]);
 
             auto& pipeline = static_pointer_cast<VulkanProgram>(get_program())->get_pipeline();
-            cmd->push_constant(pipeline.layout, sizeof(u32), 0, &handles);
+            // cmd->push_constant(pipeline.layout, sizeof(u32), 0, &handles);
+            // Todo
 
             quad_mesh->bind(encoder);
             cmd->draw_indexed(quad_mesh->triangle_count());

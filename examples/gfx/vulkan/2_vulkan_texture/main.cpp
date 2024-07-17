@@ -46,7 +46,7 @@ int main() {
 
     auto pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_pass, "vert.glsl", "frag.glsl",
-        { }, { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
     auto vb = device->create_buffer_memory_from(vertices);

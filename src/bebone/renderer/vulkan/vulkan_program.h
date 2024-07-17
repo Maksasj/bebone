@@ -9,14 +9,14 @@ namespace bebone::renderer {
 
     class VulkanProgram : public IProgram {
         private:
-            VulkanManagedPipelineTuple pipeline;
+            std::shared_ptr<VulkanPipeline> pipeline;
 
         public:
-            VulkanProgram(const VulkanManagedPipelineTuple& pipeline);
+            VulkanProgram(const std::shared_ptr<VulkanPipeline>& pipeline);
 
             void bind(ICommandEncoder* encoder) override;
 
-            VulkanManagedPipelineTuple& get_pipeline();
+            std::shared_ptr<VulkanPipeline>& get_pipeline();
     };
 }
 

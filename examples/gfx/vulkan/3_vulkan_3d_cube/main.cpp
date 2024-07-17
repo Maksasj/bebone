@@ -54,7 +54,6 @@ int main() {
 
     auto pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_pass, "vert.glsl", "frag.glsl",
-        { VulkanConstRange::common(sizeof(Handles), 0) },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 

@@ -114,7 +114,6 @@ namespace bebone::renderer {
         // Create pipeline
         auto pipeline = pipeline_manager->create_pipeline(
             device, render_pass, vert_shader_module, frag_shader_module,
-            { VulkanConstRange::common(sizeof(VulkanDeferredGPassHandles), 0) },
             {
                 .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
                 .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } // Todo
@@ -191,10 +190,12 @@ namespace bebone::renderer {
 
                 auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
 
+                /*
                 cmd->push_constant(
                     vulkan_program->get_pipeline().layout,
                     sizeof(VulkanDeferredGPassHandles),
                     0, &queued_jobs_handles[i]);
+                */
 
                 auto mesh = model->get_mesh();
 

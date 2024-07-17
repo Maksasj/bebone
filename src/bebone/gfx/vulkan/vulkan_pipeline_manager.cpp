@@ -3,9 +3,11 @@
 #include <utility>
 
 #include "vulkan_device.h"
+#include "vulkan_pipeline_layout.h"
 #include "vulkan_descriptor_pool.h"
 #include "vulkan_descriptor_set_layout.h"
 #include "vulkan_descriptor_set_layout_binding.h"
+#include "vulkan_const_range.h"
 
 namespace bebone::gfx {
     // Todo, move this
@@ -34,35 +36,36 @@ namespace bebone::gfx {
         // Creating bindless descriptor set layout
         bindless_descriptor_set_layout = device.create_descriptor_set_layout(bindless_bindings);
         bindless_descriptor_set = descriptor_pool->create_descriptor(device, bindless_descriptor_set_layout);
+
+        // Creating bindless pipeline layout
+        static constexpr size_t const_ranges_size = 128;
+        const auto constant_ranges = { VulkanConstRange(const_ranges_size, 0) };
+
+        bindless_pipeline_layout = device.create_pipeline_layout({ bindless_descriptor_set_layout }, constant_ranges);
     }
 
-    VulkanManagedPipelineTuple VulkanPipelineManager::create_pipeline(
+    std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
         std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanRenderPass>& render_pass,
         std::shared_ptr<VulkanShaderModule> vertex_shader_module,
         std::shared_ptr<VulkanShaderModule> fragment_shader_module,
-        const std::vector<VulkanConstRange>& constant_ranges,
         VulkanPipelineConfig config_info
     ) {
-        auto pipeline_layout = device->create_pipeline_layout({ bindless_descriptor_set_layout }, constant_ranges);
-        auto pipeline = device->create_pipeline(render_pass, pipeline_layout, { vertex_shader_module, fragment_shader_module }, std::move(config_info));
-
-        return { pipeline, pipeline_layout };
+        return device->create_pipeline(render_pass, bindless_pipeline_layout, { vertex_shader_module, fragment_shader_module }, std::move(config_info));;
     }
 
     // Todo, actually swap chain is not needed there
-    VulkanManagedPipelineTuple VulkanPipelineManager::create_pipeline(
+    std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
         std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanRenderPass>& render_pass,
         const std::string& vertex_shader_file_path,
         const std::string& fragment_shader_file_path,
-        const std::vector<VulkanConstRange>& constant_ranges,
         VulkanPipelineConfig config_info
     ) {
         auto vert_shader_module = device->create_shader_module(vulkan_device_read_file(vertex_shader_file_path), VertexShader);
         auto frag_shader_module = device->create_shader_module(vulkan_device_read_file(fragment_shader_file_path), FragmentShader);
 
-        auto pipeline = create_pipeline(device, render_pass, vert_shader_module, frag_shader_module, constant_ranges, config_info);
+        auto pipeline = create_pipeline(device, render_pass, vert_shader_module, frag_shader_module, config_info);
 
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
@@ -82,6 +85,7 @@ namespace bebone::gfx {
         if(is_destroyed())
             return;
 
+        bindless_pipeline_layout->destroy(device);
         bindless_descriptor_set_layout->destroy(device);
         bindless_descriptor_set->destroy(device);
         descriptor_pool->destroy(device);

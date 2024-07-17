@@ -44,7 +44,6 @@ int main() {
 
     auto geometry_pipeline = pipeline_manager->create_pipeline(
         device, geometry_render_pass, "geometry.vert.glsl", "geometry.frag.glsl",
-        { VulkanConstRange::common(sizeof(GeometryHandles), 0) },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } }
     );
 
@@ -57,7 +56,6 @@ int main() {
 
     auto blur_pipeline = pipeline_manager->create_pipeline(
         device, blur_render_pass, "blur.vert.glsl", "blur.frag.glsl",
-        { VulkanConstRange::common(sizeof(u32), 0) },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 
@@ -66,7 +64,6 @@ int main() {
     // Post pipeline
     auto post_pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_pass, "post.vert.glsl", "post.frag.glsl",
-        { VulkanConstRange::common(sizeof(PostHandles), 0) },
         { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
     );
 

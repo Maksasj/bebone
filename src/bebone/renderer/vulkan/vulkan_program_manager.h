@@ -18,7 +18,7 @@ namespace bebone::renderer {
                 pipeline_manager = device->create_pipeline_manager();
             }
 
-            std::shared_ptr<VulkanProgram> create_program(VulkanManagedPipelineTuple& pipeline) {
+            std::shared_ptr<VulkanProgram> create_program(std::shared_ptr<VulkanPipeline>& pipeline) {
                 auto program = std::make_shared<VulkanProgram>(pipeline);
                 programs.push_back(program);
                 return program;
