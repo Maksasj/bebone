@@ -6,7 +6,7 @@ using namespace bebone::core;
 using namespace bebone::gfx;
 
 struct Vertex { Vec3f pos, color; };
-struct Handles { u32 camera_handle, transform_handle; };
+struct Handles { VulkanBindlessBufferHandle camera_handle, transform_handle; };
 struct CameraTransform { Mat4f view, proj; };
 struct Transform { Mat4f transform, scale, rotation; };
 
@@ -63,8 +63,8 @@ int main() {
     auto t_ubo = device->create_buffer_memorys(sizeof(Transform), 3);
     auto c_ubo = device->create_buffer_memorys(sizeof(CameraTransform), 3);
 
-    // auto t_handles = pipeline.bind_uniform_buffer(device, t_ubo, 0);
-    // auto c_handles = pipeline.bind_uniform_buffer(device, c_ubo, 1);
+    auto t_handles = pipeline_manager->bind_uniform_buffers(device, t_ubo);
+    auto c_handles = pipeline_manager->bind_uniform_buffers(device, c_ubo);
 
     auto command_buffer_pool = device->create_command_buffer_pool();
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
@@ -93,21 +93,19 @@ int main() {
         transform.rotation = trait_bryan_angle_yxz(Vec3f(Time::get_seconds_elapsed(), Time::get_seconds_elapsed(), 0.0f));
         t_ubo[frame]->upload_data(device, &transform, sizeof(Transform));
 
-        /*
-        auto handles = Handles {
-            static_cast<u32>(c_handles[frame]),
-            static_cast<u32>(t_handles[frame])
-        };
-        */
 
         auto& cmd = *command_buffers[frame];
 
         cmd.begin_record();
+        cmd.bind_descriptor_set(pipeline_manager->get_pipeline_layout(), pipeline_manager->get_descriptor_set());
 
         cmd.begin_render_pass(swap_chain);
             cmd.set_viewport(0, 0, window->get_width(), window->get_height());
             cmd.bind_pipeline(pipeline);
-            // cmd.push_constant(pipeline.layout, sizeof(Handles), 0, &handles);
+
+            auto handles = Handles { c_handles[frame], t_handles[frame] };
+            cmd.push_constant(pipeline_manager->get_pipeline_layout(), sizeof(Handles), 0, &handles);
+
             cmd.bind_vertex_buffer(vb);
             cmd.bind_index_buffer(eb);
             cmd.draw_indexed(indices.size());
