@@ -8,11 +8,11 @@ layout (location = 2) in vec2 texcoord;
 layout (location = 0) out vec3 out_normal;
 layout (location = 1) out vec2 out_texcoord;
 
-layout(binding = 0) uniform TransformUBO {
+layout(set = 0, binding = 0) uniform TransformUBO {
     mat4 transform;
 } transform[];
 
-layout(binding = 1) uniform CameraUBO {
+layout(set = 0, binding = 0) uniform CameraUBO {
     mat4 cam;
 } camera[];
 

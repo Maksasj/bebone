@@ -23,13 +23,9 @@ namespace bebone::gfx {
     VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) : bindless_uniforms_index(0), bindless_storage_index(0), bindless_samplers_index(0) {
         descriptor_pool = device.create_descriptor_pool();
 
-        static constexpr u32 uniform_binding = 0;
-        static constexpr u32 storage_binding = 1;
-        static constexpr u32 texture_binding = 2;
-
         const std::vector<VulkanDescriptorSetLayoutBinding> bindless_bindings = {
             { Uniform, uniform_binding },
-            { Storage, storage_binding },
+            // { Storage, storage_binding }, Todo
             { Sampler, texture_binding }
         };
 
@@ -38,7 +34,6 @@ namespace bebone::gfx {
         bindless_descriptor_set = descriptor_pool->create_descriptor(device, bindless_descriptor_set_layout);
 
         // Creating bindless pipeline layout
-        static constexpr size_t const_ranges_size = 128;
         const auto constant_ranges = { VulkanConstRange(const_ranges_size, 0) };
 
         bindless_pipeline_layout = device.create_pipeline_layout({ bindless_descriptor_set_layout }, constant_ranges);
@@ -73,12 +68,103 @@ namespace bebone::gfx {
         return pipeline;
     }
 
+    VulkanBindlessTextureHandle VulkanPipelineManager::bind_texture(
+        std::shared_ptr<VulkanDevice>& device,
+        std::shared_ptr<VulkanTextureTuple>& texture
+    ) {
+        const auto handle = bindless_samplers_index;
+
+        device->update_descriptor_set(texture->sampler, texture->view, bindless_descriptor_set, texture_binding, bindless_samplers_index);
+        ++bindless_samplers_index;
+
+        return static_cast<VulkanBindlessTextureHandle>(handle);
+    }
+
+    std::vector<VulkanBindlessTextureHandle> VulkanPipelineManager::bind_textures(
+        std::shared_ptr<VulkanDevice>& device,
+        std::vector<std::shared_ptr<VulkanTextureTuple>>& textures
+    ) {
+        auto handles = std::vector<VulkanBindlessTextureHandle> {};
+        handles.reserve(textures.size());
+
+        for(auto& texture : textures)
+            handles.push_back(bind_texture(device, texture));
+
+        return handles;
+    }
+
+    VulkanBindlessTextureHandle VulkanPipelineManager::bind_attachment(
+        std::shared_ptr<VulkanDevice>& device,
+        std::shared_ptr<IVulkanAttachment>& attachment
+    ) {
+        // Todo
+        if(!attachment->get_sampler().has_value())
+            std::cout << "Sampler does not have any value";
+
+        // Todo
+        if(!attachment->get_view().has_value())
+            std::cout << "View does not have any value";
+
+        // Todo
+        auto sampler = attachment->get_sampler().value();
+        auto view = attachment->get_view().value();
+
+        const auto handle = bindless_samplers_index;
+
+        device->update_descriptor_set(sampler, view, bindless_descriptor_set, texture_binding, bindless_samplers_index);
+        ++bindless_samplers_index;
+
+        return static_cast<VulkanBindlessTextureHandle>(handle);
+    }
+
+    std::vector<VulkanBindlessTextureHandle> VulkanPipelineManager::bind_attachments(
+        std::shared_ptr<VulkanDevice>& device,
+        std::vector<std::shared_ptr<IVulkanAttachment>>& attachments
+    ) {
+        auto handles = std::vector<VulkanBindlessTextureHandle> {};
+        handles.reserve(attachments.size());
+
+        for(auto& attachment : attachments)
+            handles.push_back(bind_attachment(device, attachment));
+
+        return handles;
+    }
+
+    VulkanBindlessBufferHandle VulkanPipelineManager::bind_uniform_buffer(
+        std::shared_ptr<VulkanDevice>& device,
+        const std::shared_ptr<VulkanBufferMemoryTuple>& buffer
+    ) {
+        const auto handle = bindless_uniforms_index;
+
+        device->update_descriptor_set(buffer->buffer, bindless_descriptor_set, uniform_binding, bindless_uniforms_index);
+        ++bindless_uniforms_index;
+
+        return static_cast<VulkanBindlessBufferHandle>(handle);
+    }
+
+    std::vector<VulkanBindlessBufferHandle> VulkanPipelineManager::bind_uniform_buffers(
+        std::shared_ptr<VulkanDevice>& device,
+        const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& buffers
+    ) {
+        auto handles = std::vector<VulkanBindlessBufferHandle> {};
+        handles.reserve(buffers.size());
+
+        for(auto& buffer : buffers)
+            handles.push_back(bind_uniform_buffer(device, buffer));
+
+        return handles;
+    }
+
     const std::shared_ptr<VulkanDescriptorSet>& VulkanPipelineManager::get_descriptor_set() const {
         return bindless_descriptor_set;
     }
 
     const std::shared_ptr<VulkanDescriptorSetLayout>& VulkanPipelineManager::get_descriptor_set_layout() const {
         return bindless_descriptor_set_layout;
+    }
+
+    const std::shared_ptr<VulkanPipelineLayout>& VulkanPipelineManager::get_pipeline_layout() const {
+        return bindless_pipeline_layout;
     }
 
     void VulkanPipelineManager::destroy(VulkanDevice& device) {

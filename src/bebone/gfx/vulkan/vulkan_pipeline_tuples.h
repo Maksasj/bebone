@@ -13,7 +13,8 @@ namespace bebone::gfx {
     class IVulkanAttachment;
     struct VulkanBufferMemoryTuple;
 
-    using VulkanBindlessHandle = size_t; // Todo
+    enum class VulkanBindlessBufferHandle : uint32_t { Invalid = 0 };
+    enum class VulkanBindlessTextureHandle : uint32_t { Invalid = 0 };
 
     struct VulkanManagedPipelineTuple : public VulkanApi {
         public:

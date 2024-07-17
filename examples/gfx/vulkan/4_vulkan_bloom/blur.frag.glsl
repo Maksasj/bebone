@@ -5,7 +5,7 @@ layout (location = 1) in vec2 texcoord;
 
 layout (location = 0) out vec4 out_color;
 
-layout(binding = 0) uniform sampler2D textures[];
+layout(set = 0, binding = 2) uniform sampler2D textures[];
 
 void main() {
    vec4 result = vec4(0.0f);

@@ -11,7 +11,7 @@ layout( push_constant ) uniform Handles {
    int blur_texture;
 } handles;
 
-layout(binding = 0) uniform sampler2D textures[];
+layout(set = 0, binding = 2) uniform sampler2D textures[];
 
 void main() {
    vec4 fragment = texture(textures[handles.geometry_texture], texcoord);

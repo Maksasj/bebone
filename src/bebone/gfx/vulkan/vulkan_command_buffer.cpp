@@ -229,7 +229,7 @@ namespace bebone::gfx {
         const u32& size,
         const void* ptr
     ) {
-        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
+        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_ALL, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }
@@ -241,7 +241,7 @@ namespace bebone::gfx {
         const size_t& offset,
         const void* ptr
     ) {
-        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
+        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_ALL, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }

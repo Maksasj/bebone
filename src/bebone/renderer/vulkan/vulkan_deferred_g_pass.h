@@ -23,9 +23,9 @@ namespace bebone::renderer {
     };
 
     struct VulkanDeferredGPassHandles {
-        u32 model_handle;
+        VulkanBindlessBufferHandle model_handle;
         u32 model_instance;
-        u32 camera_handle;
+        VulkanBindlessBufferHandle camera_handle;
     };
 
     class VulkanDeferredGPass : public IDeferredGPass {
@@ -34,13 +34,13 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
 
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> model_ubo;
-            std::vector<VulkanBindlessHandle> model_ubo_handles;
+            std::vector<VulkanBindlessBufferHandle> model_ubo_handles;
 
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
-            std::vector<VulkanBindlessHandle> camera_ubo_handles;
+            std::vector<VulkanBindlessBufferHandle> camera_ubo_handles;
 
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> material_ubo;
-            std::vector<VulkanBindlessHandle> material_ubo_handles;
+            std::vector<VulkanBindlessBufferHandle> material_ubo_handles;
 
             // Jobs
             static const u32 max_queued_jobs = 50;
