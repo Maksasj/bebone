@@ -13,7 +13,7 @@ namespace bebone::renderer {
         textures.reserve(3); // Todo, this is a FIF moment
 
         for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_texture(size, VK_FORMAT_R8G8B8A8_UNORM)));
+            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_texture(size))); // Todo VK_FORMAT_R8G8B8A8_UNORM
 
         return std::make_shared<VulkanTextureResource>(resource_name, textures);
     }
@@ -23,7 +23,7 @@ namespace bebone::renderer {
         textures.reserve(3); // Todo, this is a FIF moment
 
         for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_texture(size, VK_FORMAT_R32G32B32A32_SFLOAT)));
+            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_texture(size)));
 
         return std::make_shared<VulkanHDRTextureResource>(resource_name, textures);
     }
@@ -33,7 +33,7 @@ namespace bebone::renderer {
         textures.reserve(3); // Todo, this is a FIF moment
 
         for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_texture(size, device->find_depth_format())));
+            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_depth_texture(size)));
 
         return std::make_shared<VulkanDepthResource>(resource_name, textures);
     }

@@ -21,14 +21,14 @@ static const char vulkan_present_pass_vertex_shader_code[] =
 static const char vulkan_present_pass_fragment_shader_code[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
-    "\n"
+
     "layout (location = 0) in vec3 normal;\n"
     "layout (location = 1) in vec2 texcoord;\n"
-    "\n"
+
     "layout (location = 0) out vec4 out_color;\n"
-    "\n"
-    "layout(binding = 0) uniform sampler2D textures[];\n"
-    "\n"
+
+    "layout(set = 0, binding = 2) uniform sampler2D textures[];\n"
+
     "layout( push_constant ) uniform Handles {\n"
     "    int texture;\n"
     "} handles;\n"

@@ -22,13 +22,23 @@ namespace bebone::renderer {
         return texture;
     }
 
-    std::shared_ptr<ITexture> VulkanTextureManager::create_texture(const Vec2i& extent, VkFormat format) {
+    std::shared_ptr<ITexture> VulkanTextureManager::create_depth_texture(const Vec2i& extent) {
         auto vulkan_extent = VkExtent3D {
             static_cast<uint32_t>(extent.x),
             static_cast<uint32_t>(extent.y),
             1};
 
-        auto vulkan_texture = device->create_texture(vulkan_extent, format);
+        auto format = device->find_depth_format();
+        auto [ image, memory ] = device->create_image_memory(format, vulkan_extent,
+            { .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT } // Todo VK_IMAGE_USAGE_SAMPLED_BIT
+        );
+
+        auto sampler = device->create_sampler();
+        auto view = device->create_image_view(*image, format, {
+            .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
+        });
+
+        auto vulkan_texture = std::make_shared<VulkanTextureTuple>(image, memory, view, sampler);
         auto texture = std::make_shared<VulkanTexture>(vulkan_texture);
 
         program_manager->bind_texture(texture);

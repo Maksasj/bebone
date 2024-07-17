@@ -1,5 +1,5 @@
-#ifndef _BEBONE_GFX_VULKAN_TEXTURE_H_
-#define _BEBONE_GFX_VULKAN_TEXTURE_H_
+#ifndef _BEBONE_GFX_VULKAN_TEXTURE_TUPLE_H_
+#define _BEBONE_GFX_VULKAN_TEXTURE_TUPLE_H_
 
 #include <vector>
 
@@ -27,6 +27,12 @@ namespace bebone::gfx {
             VulkanTextureTuple( // Constructors that require VulkanDevice& need to protected
                 VulkanDevice& device,
                 const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
+
+            VulkanTextureTuple(
+                const std::shared_ptr<VulkanImage>& image,
+                const std::shared_ptr<VulkanDeviceMemory>& memory,
+                const std::shared_ptr<VulkanImageView>& view,
+                const std::shared_ptr<VulkanSampler>& sampler);
 
             VulkanTextureTuple(
                 VulkanDevice& device,

@@ -38,7 +38,7 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create image!");
     }
 
-    // Todo clear out this
+    // Todo, clear out this
     void VulkanImage::transition_layout(
         VulkanDevice& device,
         VkImageLayout old_layout,

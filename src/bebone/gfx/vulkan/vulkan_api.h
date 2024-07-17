@@ -47,6 +47,6 @@
 #include "vulkan_buffer_tuples.h"
 #include "vulkan_image_tuples.h"
 
-#include "vulkan_texture.h"
+#include "vulkan_texture_tuple.h"
 
 #endif

@@ -1,4 +1,4 @@
-#include "vulkan_texture.h"
+#include "vulkan_texture_tuple.h"
 
 #include "vulkan_device.h"
 #include "vulkan_command_buffer_pool.h"
@@ -36,7 +36,17 @@ namespace bebone::gfx {
         view = device.create_image_view(*image, ColorRGBA::get_vulkan_format());
     }
 
-    VulkanTextureTuple::VulkanTextureTuple(VulkanDevice& device,
+    VulkanTextureTuple::VulkanTextureTuple(
+        const std::shared_ptr<VulkanImage>& image,
+        const std::shared_ptr<VulkanDeviceMemory>& memory,
+        const std::shared_ptr<VulkanImageView>& view,
+        const std::shared_ptr<VulkanSampler>& sampler
+    ) : image(image), memory(memory), view(view), sampler(sampler) {
+
+    }
+
+    VulkanTextureTuple::VulkanTextureTuple(
+        VulkanDevice& device,
         VkExtent3D extent,
         VkFormat image_format
     ) {
