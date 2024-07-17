@@ -5,11 +5,13 @@
 
 #include "vulkan_device.h"
 #include "vulkan_descriptor_pool.h"
-#include "vulkan_pipeline_tuples.h"
 
 namespace bebone::gfx {
     class VulkanConstRange;
     class VulkanPipelineLayout;
+
+    enum class VulkanBindlessBufferHandle : uint32_t { Invalid = 0 };
+    enum class VulkanBindlessTextureHandle : uint32_t { Invalid = 0 };
 
     class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {
         private:

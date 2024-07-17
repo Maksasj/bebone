@@ -4,7 +4,6 @@
 #include "vulkan_pipeline_layout.h"
 #include "vulkan_command_buffer_pool.h"
 #include "vulkan_descriptor_set.h"
-#include "vulkan_pipeline_tuples.h"
 
 namespace bebone::gfx {
     VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& command_buffer_pool) {
@@ -143,11 +142,6 @@ namespace bebone::gfx {
         vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->backend);
 
         return *this;
-    }
-
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const VulkanManagedPipelineTuple& tuple) {
-        auto& [ pipeline, pipeline_layout ] = tuple;
-        return bind_pipeline(pipeline);
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {

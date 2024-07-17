@@ -44,7 +44,6 @@
 // Utils class
 #include "vulkan_pipeline_manager.h"
 
-#include "vulkan_pipeline_tuples.h"
 #include "vulkan_buffer_tuples.h"
 #include "vulkan_image_tuples.h"
 
