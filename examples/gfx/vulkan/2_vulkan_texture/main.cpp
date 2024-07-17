@@ -56,7 +56,7 @@ int main() {
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
     auto texture = device->create_texture("image.png");
-    // std::ignore = pipeline.bind_texture(device, texture, 0);
+    std::ignore = pipeline_manager->bind_texture(device, texture);
 
     while (!window->closing()) {
         window->pull_events();
@@ -68,6 +68,7 @@ int main() {
         auto& cmd = command_buffers[frame];
 
         cmd->begin_record();
+        cmd->bind_descriptor_set(pipeline_manager->get_pipeline_layout(), pipeline_manager->get_descriptor_set());
 
         cmd->begin_render_pass(swap_chain);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
