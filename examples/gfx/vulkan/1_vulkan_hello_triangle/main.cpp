@@ -27,6 +27,15 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
 
 const std::vector<int> indices = { 0, 1, 2 };
 
+std::string vulkan_device_read_file(const std::string& path) {
+    std::ifstream file(path);
+    std::stringstream ss;
+
+    ss << file.rdbuf();
+
+    return ss.str();
+}
+
 int main() {
     GLFWContext::init();
 
@@ -36,12 +45,15 @@ int main() {
     auto device = instance->create_device(window);
     auto swap_chain = device->create_swap_chain(window);
 
-    auto vert_shader_module = device->create_shader_module("vert.glsl", VertexShader);
-    auto frag_shader_module = device->create_shader_module("frag.glsl", FragmentShader);
+    auto vert_shader_module = device->create_shader_module(vulkan_device_read_file("vert.glsl"), VertexShader);
+    auto frag_shader_module = device->create_shader_module(vulkan_device_read_file("frag.glsl"), FragmentShader);
+
     auto pipeline_layout = device->create_pipeline_layout({}, {});
-    auto pipeline = device->create_pipeline(swap_chain->render_pass, pipeline_layout, { vert_shader_module, frag_shader_module }, {
-        .vertex_input_state = { .vertex_descriptions = vertex_descriptions }
-    });
+
+    auto pipeline = device->create_pipeline(swap_chain->render_pass,
+        pipeline_layout, { vert_shader_module, frag_shader_module },
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
+    );
 
     auto vb = device->create_buffer_memory_from(vertices);
     auto eb = device->create_buffer_memory_from(indices);
