@@ -43,6 +43,9 @@ namespace bebone::gfx {
                 VulkanPipelineConfig config_info
             );
 
+            const std::shared_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
+            const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
+
             void destroy(VulkanDevice& device) override;
     };
 }

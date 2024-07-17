@@ -110,7 +110,7 @@ int main() {
         // Render geometry
         cmd->begin_render_pass(geometry_render_target, geometry_render_pass, frame);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd->bind_managed_pipeline(geometry_pipeline, frame);
+            cmd->bind_pipeline(geometry_pipeline);
 
             /*
             auto handles = GeometryHandles {
@@ -128,7 +128,7 @@ int main() {
         // Blur pass
         cmd->begin_render_pass(blur_render_target, blur_render_pass, frame);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd->bind_managed_pipeline(blur_pipeline, frame);
+            cmd->bind_pipeline(blur_pipeline);
 
             // u32 blur_handles = blur_texture_handles[frame];
             // cmd->push_constant(blur_pipeline.layout, sizeof(u32), 0, &blur_handles);
@@ -140,7 +140,7 @@ int main() {
         // Final pass
         cmd->begin_render_pass(swap_chain);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd->bind_managed_pipeline(post_pipeline, frame);
+            cmd->bind_pipeline(post_pipeline);
 
             /*
             auto post_handle = PostHandles {

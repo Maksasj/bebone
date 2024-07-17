@@ -71,7 +71,7 @@ int main() {
 
         cmd->begin_render_pass(swap_chain);
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
-            cmd->bind_managed_pipeline(pipeline, frame);
+            cmd->bind_pipeline(pipeline);
             cmd->bind_vertex_buffer(vb);
             cmd->bind_index_buffer(eb);
             cmd->draw_indexed(indices.size());

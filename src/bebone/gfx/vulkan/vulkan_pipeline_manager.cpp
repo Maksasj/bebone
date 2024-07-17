@@ -18,7 +18,7 @@ namespace bebone::gfx {
         return ss.str();
     }
 
-    VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) : bindless_uniforms_index(), bindless_storage_index(0), bindless_samplers_index(0) {
+    VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) : bindless_uniforms_index(0), bindless_storage_index(0), bindless_samplers_index(0) {
         descriptor_pool = device.create_descriptor_pool();
 
         static constexpr u32 uniform_binding = 0;
@@ -68,6 +68,14 @@ namespace bebone::gfx {
         device->collect_garbage();
 
         return pipeline;
+    }
+
+    const std::shared_ptr<VulkanDescriptorSet>& VulkanPipelineManager::get_descriptor_set() const {
+        return bindless_descriptor_set;
+    }
+
+    const std::shared_ptr<VulkanDescriptorSetLayout>& VulkanPipelineManager::get_descriptor_set_layout() const {
+        return bindless_descriptor_set_layout;
     }
 
     void VulkanPipelineManager::destroy(VulkanDevice& device) {

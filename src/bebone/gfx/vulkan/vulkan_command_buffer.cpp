@@ -145,9 +145,8 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_managed_pipeline(const VulkanManagedPipelineTuple& tuple, const size_t& frame) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const VulkanManagedPipelineTuple& tuple) {
         auto& [ pipeline, pipeline_layout ] = tuple;
-        // Todo
         return bind_pipeline(pipeline);
     }
 

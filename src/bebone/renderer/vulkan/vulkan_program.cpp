@@ -11,9 +11,8 @@ namespace bebone::renderer {
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 
         auto cmd = vulkan_encoder->get_command_buffer();
-        auto frame = vulkan_encoder->get_frame();
 
-        cmd->bind_managed_pipeline(pipeline, frame);
+        cmd->bind_pipeline(pipeline);
     }
 
     VulkanManagedPipelineTuple& VulkanProgram::get_pipeline() {
