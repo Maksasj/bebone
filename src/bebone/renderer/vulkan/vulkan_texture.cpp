@@ -8,4 +8,8 @@ namespace bebone::renderer {
     std::shared_ptr<VulkanTextureTuple>& VulkanTexture::get_texture() {
         return texture;
     }
+
+    const VulkanBindlessTextureHandle& VulkanTexture::get_handle() const {
+        return handle;
+    }
 }

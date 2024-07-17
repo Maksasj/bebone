@@ -7,6 +7,7 @@ namespace bebone::renderer {
         swap_chain = device->create_swap_chain(window);
 
         program_manager = std::make_shared<VulkanProgramManager>(device);
+        texture_manager = std::make_shared<VulkanTextureManager>(device, program_manager);
 
         // Create default render graph
         render_graph = create_default_render_graph(window->get_size());
@@ -43,9 +44,7 @@ namespace bebone::renderer {
     // Todo, probably since we use bindless textures, we can bind all texture to ALL pipelines
     // Everything should work fine
     std::shared_ptr<ITexture> VulkanRenderer::load_texture(const std::string& file_path) {
-        auto texture = std::make_shared<renderer::VulkanTexture>(file_path, device);
-        program_manager->bind_bindless_texture(texture);
-        return texture;
+        return texture_manager->load_texture_from_file(file_path);
     }
 
     std::shared_ptr<IMaterial> VulkanRenderer::create_material(const std::string& albedo) {

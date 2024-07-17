@@ -9,6 +9,7 @@
 #include "../pbr_render_graph.h"
 #include "vulkan_texture.h"
 #include "vulkan_program_manager.h"
+#include "vulkan_texture_manager.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -21,11 +22,16 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
 
-            std::vector<std::shared_ptr<IModel>> model_pool;
-
             std::shared_ptr<VulkanProgramManager> program_manager;
+            std::shared_ptr<VulkanTextureManager> texture_manager;
+            // std::shared_ptr<IMeshManager> mesh_manager;
+
+            // std::shared_ptr<ISpriteManager> sprite_manager;
+            // std::shared_ptr<IModelManager> model_manager;
 
             std::shared_ptr<IRenderGraph> render_graph;
+
+            std::vector<std::shared_ptr<IModel>> model_pool;
 
             std::shared_ptr<ICamera> camera;
 

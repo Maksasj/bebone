@@ -16,17 +16,9 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "   mat4 transforms[50];\n"
     "} modelUBO[];\n"
 
-    "layout(set = 0, binding = 0) uniform SomeUBO {\n"
-    "   mat4 transforms[50];\n"
-    "} someUBO[];\n"
-
-    "layout(binding = 1) uniform CameraUBO {\n"
+    "layout(set = 0, binding = 0) uniform CameraUBO {\n"
     "   mat4 matrix;\n"
     "} cameraUBO [];\n"
-
-    "layout(binding = 0) uniform MaterialUBO {\n"
-    "   int albedo_handle[100];\n"
-    "} materialUBO[];\n"
 
     "layout( push_constant ) uniform Handles {\n"
     "    int model_handle;\n"
@@ -94,7 +86,6 @@ namespace bebone::renderer {
 
         auto device = vulkan_assembler->get_device();
         auto program_manager = vulkan_assembler->get_program_manager();
-        auto pipeline_manager = program_manager->get_pipeline_manager();
 
         auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
 
@@ -112,6 +103,7 @@ namespace bebone::renderer {
         auto frag_shader_module = device->create_shader_module(vulkan_deferred_g_pass_fragment_shader_code, FragmentShader);
 
         // Create pipeline
+        auto pipeline_manager = program_manager->get_pipeline_manager();
         auto pipeline = pipeline_manager->create_pipeline(
             device, render_pass, vert_shader_module, frag_shader_module,
             {
@@ -148,8 +140,6 @@ namespace bebone::renderer {
         camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
         camera_ubo_handles = pipeline.bind_uniform_buffer(device, camera_ubo, 1);
 
-        material_ubo = device->create_buffer_memorys(sizeof(u32) * max_queued_jobs, 3);
-        material_ubo_handles = pipeline.bind_uniform_buffer(device, material_ubo, 0);
         */
 
         // Bind program
