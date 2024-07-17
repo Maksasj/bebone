@@ -39,6 +39,9 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
             std::vector<VulkanBindlessHandle> camera_ubo_handles;
 
+            std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> material_ubo;
+            std::vector<VulkanBindlessHandle> material_ubo_handles;
+
             // Jobs
             static const u32 max_queued_jobs = 50;
             std::vector<std::shared_ptr<IModel>> queued_jobs_model;

@@ -3,7 +3,7 @@
 static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
-    "\n"
+
     "layout (location = 0) in vec3 position;\n"
     "layout (location = 1) in vec3 normal;\n"
     "layout (location = 2) in vec2 texcoord;\n"
@@ -12,10 +12,14 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "layout (location = 1) out vec3 out_normal;\n"
     "layout (location = 2) out vec2 out_texcoord;\n"
 
-    "layout(binding = 0) uniform ModelUBO {\n"
+    "layout(set = 0, binding = 0) uniform ModelUBO {\n"
     "   mat4 transforms[50];\n"
     "} modelUBO[];\n"
-    "\n"
+
+    "layout(set = 0, binding = 0) uniform SomeUBO {\n"
+    "   mat4 transforms[50];\n"
+    "} someUBO[];\n"
+
     "layout(binding = 1) uniform CameraUBO {\n"
     "   mat4 matrix;\n"
     "} cameraUBO [];\n"
@@ -29,7 +33,7 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "    int model_instance;\n"
     "    int camera_handle;\n"
     "} handles;\n"
-    "\n"
+
     "void main() {\n"
     "    mat4 model = modelUBO[handles.model_handle].transforms[handles.model_instance];\n"
     "    mat4 cam = cameraUBO[handles.camera_handle].matrix;\n"
@@ -145,6 +149,9 @@ namespace bebone::renderer {
         camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
         camera_ubo_handles = pipeline.bind_uniform_buffer(device, camera_ubo, 1);
 
+        material_ubo = device->create_buffer_memorys(sizeof(u32) * max_queued_jobs, 3);
+        material_ubo_handles = pipeline.bind_uniform_buffer(device, material_ubo, 0);
+
         // Bind program
         set_program(program);
     }
@@ -186,8 +193,7 @@ namespace bebone::renderer {
                 cmd->push_constant(
                     vulkan_program->get_pipeline().layout,
                     sizeof(VulkanDeferredGPassHandles),
-                    0,
-                    &queued_jobs_handles[i]);
+                    0, &queued_jobs_handles[i]);
 
                 auto mesh = model->get_mesh();
 
