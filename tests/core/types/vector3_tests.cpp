@@ -202,6 +202,18 @@ TEST(Vector3Functions, Rejection) {
     ASSERT_FLOAT_EQ(Vec3f::reject(c, b).z, 0.0333333f);
 }
 
+TEST(Vector3Functions, IsNormalized) {
+    Vec3f a = Vec3f::up;
+    Vec3f b(5, 10, 6);
+
+    ASSERT_TRUE(a.is_normalized());
+    ASSERT_FALSE(b.is_normalized());
+
+    Vec3f b_normalized = b.normalize();
+
+    ASSERT_TRUE(b_normalized.is_normalized());
+}
+
 TEST(Vector3Conversions, ConversionToVec2) {
     Vec3f a(4.0f, 5.0f, 6.0f);
     Vec3f b(2.0f, 3.0f, 1.0f);

@@ -241,7 +241,7 @@ namespace bebone::core {
 
     template<typename T>
     bool Vec2<T>::is_normalized() const {
-        return length() == 1;
+        return std::abs(1.0f - length()) < std::numeric_limits<float>::epsilon();
     }
 }
 

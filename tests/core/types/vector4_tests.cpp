@@ -182,6 +182,14 @@ TEST(Vector4Functions, Rejection) {
     ASSERT_FLOAT_EQ(Vec4f::reject(c, b).w, 4.1f);
 }
 
+TEST(Vector4Functions, IsNormalized) {
+    Vec4f b(5, 10, 4, 2);
+    ASSERT_FALSE(b.is_normalized());
+
+    Vec4f b_normalized = b.normalize();
+    ASSERT_TRUE(b_normalized.is_normalized());
+}
+
 TEST(Vector4Conversions, ConversionToVec2) {
     Vec4f a(4.0f, 5.0f, 6.0f, 4.0f);
     Vec4f b(2.0f, 3.0f, 1.0f, 4.0f);

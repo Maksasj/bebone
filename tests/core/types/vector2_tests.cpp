@@ -163,3 +163,15 @@ TEST(Vector2Functions, Rejection) {
     ASSERT_FLOAT_EQ(Vec2f::reject(c, b).x, -1.95f);
     ASSERT_FLOAT_EQ(Vec2f::reject(c, b).y, -1.95f);
 }
+
+TEST(Vector2Functions, IsNormalized) {
+    Vec2f a = Vec2f::up;
+    Vec2f b(5, 10);
+
+    ASSERT_TRUE(a.is_normalized());
+    ASSERT_FALSE(b.is_normalized());
+
+    Vec2f b_normalized = b.normalize();
+
+    ASSERT_TRUE(b_normalized.is_normalized());
+}
