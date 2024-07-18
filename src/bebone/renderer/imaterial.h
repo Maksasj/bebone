@@ -7,22 +7,28 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class IMaterial {
+    enum class MaterialHandle : u32 { Invalid = 0 };
+
+    class IMaterialPropertyLayout {
         private:
-            std::string name;
-
-        protected:
-            std::shared_ptr<ITexture> albedo_map;
-            std::shared_ptr<ITexture> ao_map;
-            std::shared_ptr<ITexture> height_map;
-            std::shared_ptr<ITexture> metallic_map;
-            std::shared_ptr<ITexture> roughness_map;
-
+            ColorRGBA albedo;
+            f32 metalness;
         public:
-            IMaterial(const std::string& name);
+    };
+
+    class PBRMaterialPropertyLayout : public IMaterialPropertyLayout {
+
+    };
+
+    class MaterialProperties {
+
+    };
+
+    class IMaterial {
+        public:
             virtual ~IMaterial() = default;
 
-
+            virtual const MaterialHandle& get_handle() const = 0;
     };
 }
 

@@ -10,7 +10,8 @@ int main() {
     auto renderer = RendererFactory::create_renderer(window);
 
     auto mesh = renderer->load_mesh("suzanne.obj");
-    auto material = renderer->create_material("used-stainless-steel2_albedo.png");
+    auto material = std::shared_ptr<IMaterial> {};
+
     auto suzanne = renderer->create_model(mesh, material);
 
     while(!window->closing()) {

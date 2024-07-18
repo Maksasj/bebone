@@ -25,7 +25,8 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice>& get_device();
             std::shared_ptr<VulkanSwapChain>& get_swap_chain();
             std::shared_ptr<VulkanCommandBuffer>& get_command_buffer();
-            const size_t& get_frame() const;
+
+            [[nodiscard]] const size_t& get_frame() const;
     };
 }
 #endif

@@ -20,8 +20,7 @@ int main() {
     const auto indices =  std::vector<u32> { 0, 1, 2 };
 
     auto mesh = renderer->create_mesh(vertices, indices);
-    auto material = renderer->create_material("aaaaaaa");
-
+    auto material = std::shared_ptr<IMaterial> {};
     auto triangle = renderer->create_model(mesh, material);
 
     while(!window->closing()) {

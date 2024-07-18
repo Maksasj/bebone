@@ -8,8 +8,10 @@
 #include "vulkan_triangle_mesh_builder.h"
 #include "../pbr_render_graph.h"
 #include "vulkan_texture.h"
+
 #include "vulkan_program_manager.h"
 #include "vulkan_texture_manager.h"
+#include "vulkan_material_manager.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -27,7 +29,7 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanProgramManager> program_manager;
             std::shared_ptr<VulkanTextureManager> texture_manager;
             // std::shared_ptr<VulkanMeshManager> mesh_manager;
-            // std::shared_ptr<VulkanMaterialManager> material_manager;
+            std::shared_ptr<VulkanMaterialManager> material_manager;
 
             std::shared_ptr<IRenderGraph> render_graph;
 
@@ -39,16 +41,15 @@ namespace bebone::renderer {
             void resize_viewport(const Vec2i& new_size) override;
 
         public:
-            VulkanRenderer(const std::shared_ptr<gfx::Window>& window);
+            explicit VulkanRenderer(const std::shared_ptr<gfx::Window>& window);
             ~VulkanRenderer() override;
 
-            std::shared_ptr<IProgramManager> get_program_manager() const override;
-            std::shared_ptr<ITextureManager> get_texture_manager() const override;
-            std::shared_ptr<IMeshManager> get_mesh_manager() const override;
-            std::shared_ptr<IMaterialManager> get_material_manager() const override;
+            [[nodiscard]] std::shared_ptr<IProgramManager> get_program_manager() const override;
+            [[nodiscard]] std::shared_ptr<ITextureManager> get_texture_manager() const override;
+            [[nodiscard]] std::shared_ptr<IMeshManager> get_mesh_manager() const override;
+            [[nodiscard]] std::shared_ptr<IMaterialManager> get_material_manager() const override;
 
-            std::shared_ptr<IMaterial> create_material(const std::string& albedo) override;
-            std::shared_ptr<ITexture> load_texture(const std::string& file_path) override;
+            TextureHandle load_texture(const std::string& file_path) override;
 
             std::shared_ptr<IMesh> load_mesh(const std::string& file_path) override;
             std::shared_ptr<IMesh> create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;

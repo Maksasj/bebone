@@ -14,18 +14,14 @@ namespace bebone::renderer {
     using namespace bebone::core;
     using namespace bebone::gfx;
 
-    struct VulkanDeferredGPassModelData {
-        Mat4f transform;
-    };
-
     struct VulkanDeferredGPassCameraData {
         Mat4f matrix;
     };
 
     struct VulkanDeferredGPassHandles {
-        VulkanBindlessBufferHandle model_handle;
-        u32 model_instance;
+        Mat4f transform;
         VulkanBindlessBufferHandle camera_handle;
+        VulkanBindlessBufferHandle material_handle;
     };
 
     class VulkanDeferredGPass : public IDeferredGPass {
@@ -34,9 +30,6 @@ namespace bebone::renderer {
 
             std::shared_ptr<VulkanRenderPass> render_pass;
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
-
-            std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> model_ubo;
-            std::vector<VulkanBindlessBufferHandle> model_ubo_handles;
 
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
             std::vector<VulkanBindlessBufferHandle> camera_ubo_handles;

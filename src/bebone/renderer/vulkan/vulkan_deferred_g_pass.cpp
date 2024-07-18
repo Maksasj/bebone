@@ -12,22 +12,17 @@ static const char vulkan_deferred_g_pass_vertex_shader_code[] =
     "layout (location = 1) out vec3 out_normal;\n"
     "layout (location = 2) out vec2 out_texcoord;\n"
 
-    "layout(set = 0, binding = 0) uniform ModelUBO {\n"
-    "   mat4 transforms[50];\n"
-    "} modelUBO[];\n"
-
     "layout(set = 0, binding = 0) uniform CameraUBO {\n"
     "   mat4 matrix;\n"
     "} cameraUBO [];\n"
 
     "layout( push_constant ) uniform Handles {\n"
-    "    int model_handle;\n"
-    "    int model_instance;\n"
+    "    mat4 transform;\n"
     "    int camera_handle;\n"
     "} handles;\n"
 
     "void main() {\n"
-    "    mat4 model = modelUBO[handles.model_handle].transforms[handles.model_instance];\n"
+    "    mat4 model = handles.transform;\n"
     "    mat4 cam = cameraUBO[handles.camera_handle].matrix;\n"
     "    vec4 final_pos = cam * model * vec4(position, 1.0);\n"
 
@@ -50,6 +45,19 @@ static const char vulkan_deferred_g_pass_fragment_shader_code[] =
     "layout (location = 1) out vec4 out_normals;\n"
     "layout (location = 2) out vec4 out_albedo;\n"
     "layout (location = 3) out vec4 out_specular;\n"
+
+    "layout(set = 0, binding = 0) uniform MaterialUBO {\n"
+    "   int albedo_handle;\n"
+    "   int height_handle;\n"
+    "   int metallic_handle;\n"
+    "   int roughness_handle;\n"
+    "} materialUBO [];\n"
+
+    "layout( push_constant ) uniform Handles {\n"
+    "    mat4 transform;\n"
+    "    int camera_handle;\n"
+    "    int material_handle;\n"
+    "} handles;\n"
 
     "void main() {\n"
     "   out_position = vec4(in_position, 1.0);\n"
@@ -136,10 +144,6 @@ namespace bebone::renderer {
             }, render_pass, viewport));
         }
 
-        // Create and bind model and camera uniform buffer objects
-        model_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassModelData) * max_queued_jobs, 3);
-        model_ubo_handles = pipeline_manager->bind_uniform_buffers(device, model_ubo);
-
         camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
         camera_ubo_handles  = pipeline_manager->bind_uniform_buffers(device, camera_ubo);
 
@@ -153,12 +157,7 @@ namespace bebone::renderer {
         auto cmd = vulkan_encoder->get_command_buffer();
         const auto& frame = vulkan_encoder->get_frame();
 
-        // Upload frame specific data to GPU
-        model_ubo[frame]->upload_data(
-            vulkan_encoder->get_device(),
-            queued_jobs_transform.data(),
-            queued_jobs_transform.size() * sizeof(VulkanDeferredGPassModelData));
-
+        // Update camera data
         auto aspect_ratio = static_cast<f32>(viewport.x) / static_cast<f32>(viewport.y);
         auto camera_data = VulkanDeferredGPassCameraData { .matrix = camera->calculate_matrix(aspect_ratio) };
 
@@ -175,19 +174,14 @@ namespace bebone::renderer {
             for(size_t i = 0; i < queued_jobs_model.size(); ++i) {
                 const auto& model = queued_jobs_model[i];
 
-                queued_jobs_handles[i].model_handle = model_ubo_handles[frame];
-                queued_jobs_handles[i].model_instance = i;
+                queued_jobs_handles[i].transform = queued_jobs_transform[i];
                 queued_jobs_handles[i].camera_handle = camera_ubo_handles[frame];
+                queued_jobs_handles[i].material_handle = static_cast<VulkanBindlessBufferHandle>(0);
 
                 auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
-
-                cmd->push_constant(
-                    pipeline_layout,
-                    sizeof(VulkanDeferredGPassHandles),
-                    0, &queued_jobs_handles[i]);
+                cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &queued_jobs_handles[i]);
 
                 auto mesh = model->get_mesh();
-
                 mesh->bind(encoder);
                 cmd->draw_indexed(mesh->triangle_count());
             }

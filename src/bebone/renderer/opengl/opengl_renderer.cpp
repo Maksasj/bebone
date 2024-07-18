@@ -13,19 +13,11 @@ namespace bebone::renderer {
         fragment_shader.destroy();
     }
 
-    GLRenderer::~GLRenderer() {
-        shader_program->destroy();
-    }
-
     void GLRenderer::resize_viewport(const Vec2i& new_size) {
         // Todo
     }
 
-    std::shared_ptr<IMaterial> GLRenderer::create_material(const std::string& albedo) {
-
-    }
-
-    std::shared_ptr<ITexture> GLRenderer::load_texture(const std::string& file_path) {
+    TextureHandle GLRenderer::load_texture(const std::string& file_path) {
 
     }
 

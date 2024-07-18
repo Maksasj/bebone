@@ -10,6 +10,7 @@ namespace bebone::renderer {
     class GLRenderer : public IRenderer {
         private:
             std::shared_ptr<Window> window;
+
             std::unique_ptr<GLShaderProgram> shader_program;
             std::vector<std::shared_ptr<IMesh>> meshes_to_render;
 
@@ -18,10 +19,8 @@ namespace bebone::renderer {
 
         public:
             GLRenderer(std::shared_ptr<Window>& window);
-            ~GLRenderer() override;
 
-            std::shared_ptr<IMaterial> create_material(const std::string& albedo) override;
-            std::shared_ptr<ITexture> load_texture(const std::string& file_path) override;
+            TextureHandle load_texture(const std::string& file_path) override;
 
             std::shared_ptr<IMesh> load_mesh(const std::string& file_path) override;
             std::shared_ptr<IMesh> create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices) override;

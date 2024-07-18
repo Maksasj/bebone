@@ -24,7 +24,7 @@ namespace bebone::renderer {
 
             TextureHandle load_texture_from_file(const std::string& file_path) override;
 
-            std::optional<std::shared_ptr<ITexture>> get_texture(const TextureHandle& handle) const override;
+            [[nodiscard]] std::optional<std::shared_ptr<ITexture>> get_texture(const TextureHandle& handle) const override;
     };
 }
 

@@ -19,7 +19,6 @@
 #include "transform.h"
 
 #include "pbr_render_graph.h"
-#include "pbr_material.h"
 
 #include "iprogram_manager.h"
 #include "itexture_manager.h"
@@ -48,8 +47,7 @@ namespace bebone::renderer {
             virtual std::shared_ptr<IMeshManager> get_mesh_manager() const = 0;
             virtual std::shared_ptr<IMaterialManager> get_material_manager() const = 0;
 
-            virtual std::shared_ptr<IMaterial> create_material(const std::string& albedo) = 0;
-            virtual std::shared_ptr<ITexture> load_texture(const std::string& file_path) = 0;
+            virtual TextureHandle load_texture(const std::string& file_path) = 0;
 
             virtual std::shared_ptr<IMesh> load_mesh(const std::string& file_path) = 0;
             virtual std::shared_ptr<IMesh> create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
