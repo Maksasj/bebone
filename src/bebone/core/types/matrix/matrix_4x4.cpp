@@ -83,6 +83,38 @@ namespace bebone::core {
         };
     }
 
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_reflection_matrix(const Vec3f& v) {
+        float x = v.x * -2.0f;
+        float y = v.y * -2.0f;
+        float z = v.z * -2.0f;
+        float vxvy = x * v.y;
+        float vxvz = x * v.z;
+        float vyvz = y * v.z;
+
+        return {
+            x * v.x + 1.0f,     vxvy,           vxvz,      0.0f,
+                vxvy,      y * v.y + 1.0f,      vyvz,      0.0f,
+                vxvz,           vyvz,      z * v.z + 1.0f, 0.0f,
+                0.0f,           0.0f,           0.0f,      1.0f
+        };
+    }
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_involution_matrix(const Vec3f& v) {
+        float x = v.x * -2.0f;
+        float y = v.y * -2.0f;
+        float z = v.z * -2.0f;
+        float vxvy = x * v.y;
+        float vxvz = x * v.z;
+        float vyvz = y * v.z;
+
+        return {
+            x * v.x - 1.0f,     vxvy,           vxvz,      0.0f,
+                vxvy,      y * v.y - 1.0f,      vyvz,      0.0f,
+                vxvz,           vyvz,      z * v.z - 1.0f, 0.0f,
+                0.0f,           0.0f,           0.0f,      1.0f
+        };
+    }
+
     std::string Matrix<f32, 4, 4>::to_string() const {
         std::stringstream ss;
 
