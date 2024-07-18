@@ -1,10 +1,12 @@
 #include "vulkan_renderer.h"
 
 namespace bebone::renderer {
-    VulkanRenderer::VulkanRenderer(std::shared_ptr<gfx::Window>& window) : IRenderer(Vulkan), window(window) {
+    VulkanRenderer::VulkanRenderer(
+        const std::shared_ptr<gfx::Window>& window
+    ) : IRenderer(Vulkan), window(window) {
         instance = VulkanInstance::create_instance();
-        device = instance->create_device(window);
-        swap_chain = device->create_swap_chain(window);
+        device = instance->create_device(this->window);
+        swap_chain = device->create_swap_chain(this->window);
 
         program_manager = std::make_shared<VulkanProgramManager>(device);
         texture_manager = std::make_shared<VulkanTextureManager>(device, program_manager);
@@ -39,6 +41,22 @@ namespace bebone::renderer {
 
         auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
         pass->set_camera(camera);
+    }
+
+    std::shared_ptr<IProgramManager> VulkanRenderer::get_program_manager() const {
+        return program_manager;
+    }
+
+    std::shared_ptr<ITextureManager> VulkanRenderer::get_texture_manager() const {
+        return texture_manager;
+    }
+
+    std::shared_ptr<IMeshManager> VulkanRenderer::get_mesh_manager() const {
+
+    }
+
+    std::shared_ptr<IMaterialManager> VulkanRenderer::get_material_manager() const {
+
     }
 
     // Todo, probably since we use bindless textures, we can bind all texture to ALL pipelines

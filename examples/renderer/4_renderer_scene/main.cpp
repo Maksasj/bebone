@@ -14,7 +14,13 @@ int main() {
     auto suzanne = renderer->create_model(mesh, material);
 
     while(!window->closing()) {
-        renderer->render(suzanne, { .position = Vec3f::zero });
+
+        for(f32 i = 0; i < 5; i += 1.0f) {
+            for(f32 j = 0; j < 5; j += 1.0f) {
+                renderer->render(suzanne, { .position = Vec3f((i - 2.5f)  * 3, 0, (j - 2.5f) * 3) });
+            }
+        }
+
         renderer->present();
 
         window->pull_events();

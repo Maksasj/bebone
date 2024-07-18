@@ -21,6 +21,11 @@
 #include "pbr_render_graph.h"
 #include "pbr_material.h"
 
+#include "iprogram_manager.h"
+#include "itexture_manager.h"
+#include "imesh_manager.h"
+#include "imaterial_manager.h"
+
 namespace bebone::renderer {
     struct MeshHandle { size_t index; };
     struct ModelHandle { size_t index; };
@@ -37,6 +42,11 @@ namespace bebone::renderer {
         public:
             IRenderer(const GfxAPI& api);
             virtual ~IRenderer() = default;
+
+            virtual std::shared_ptr<IProgramManager> get_program_manager() const = 0;
+            virtual std::shared_ptr<ITextureManager> get_texture_manager() const = 0;
+            virtual std::shared_ptr<IMeshManager> get_mesh_manager() const = 0;
+            virtual std::shared_ptr<IMaterialManager> get_material_manager() const = 0;
 
             virtual std::shared_ptr<IMaterial> create_material(const std::string& albedo) = 0;
             virtual std::shared_ptr<ITexture> load_texture(const std::string& file_path) = 0;

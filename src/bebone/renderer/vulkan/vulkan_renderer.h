@@ -18,16 +18,16 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<Window> window;
 
+            // Vulkan specific stuff
             std::shared_ptr<VulkanInstance> instance;
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
 
+            // Main managers
             std::shared_ptr<VulkanProgramManager> program_manager;
             std::shared_ptr<VulkanTextureManager> texture_manager;
-            // std::shared_ptr<IMeshManager> mesh_manager;
-
-            // std::shared_ptr<ISpriteManager> sprite_manager;
-            // std::shared_ptr<IModelManager> model_manager;
+            // std::shared_ptr<VulkanMeshManager> mesh_manager;
+            // std::shared_ptr<VulkanMaterialManager> material_manager;
 
             std::shared_ptr<IRenderGraph> render_graph;
 
@@ -39,8 +39,13 @@ namespace bebone::renderer {
             void resize_viewport(const Vec2i& new_size) override;
 
         public:
-            VulkanRenderer(std::shared_ptr<gfx::Window>& window);
+            VulkanRenderer(const std::shared_ptr<gfx::Window>& window);
             ~VulkanRenderer() override;
+
+            std::shared_ptr<IProgramManager> get_program_manager() const override;
+            std::shared_ptr<ITextureManager> get_texture_manager() const override;
+            std::shared_ptr<IMeshManager> get_mesh_manager() const override;
+            std::shared_ptr<IMaterialManager> get_material_manager() const override;
 
             std::shared_ptr<IMaterial> create_material(const std::string& albedo) override;
             std::shared_ptr<ITexture> load_texture(const std::string& file_path) override;
