@@ -222,10 +222,10 @@ namespace bebone::core {
         f32 normalization = far / (far - near);
 
         return {
-            aspect * fov,   0.0f,       0.0f,              0.0f,
-                0.0f,       fov,        0.0f,              0.0f,
-                0.0f,       0.0f,   normalization,  -normalization * near,
-                0.0f,       0.0f,       1.0f,              0.0f
+            1.0f / aspect * fov,   0.0f,       0.0f,              0.0f,
+                  0.0f,            fov,        0.0f,              0.0f,
+                  0.0f,            0.0f,   normalization,  -normalization * near,
+                  0.0f,            0.0f,       1.0f,              0.0f
         };
     }
 
