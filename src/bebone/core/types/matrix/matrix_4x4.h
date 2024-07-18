@@ -41,8 +41,8 @@ namespace bebone::core {
 
         static Matrix<f32, 4, 4> orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far);
         static Matrix<f32, 4, 4> perspective(f32 fov, const f32& aspect, const f32& near, const f32& far);
-        static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up);
-        static Matrix<f32, 4, 4> look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up);
+        static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& target, const Vec3f& up);
+        //static Matrix<f32, 4, 4> look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up);
 
         inline Matrix<f32, 4, 4> transpose() const;
         inline Matrix<f32, 4, 4> inverse() const;
@@ -135,7 +135,7 @@ namespace bebone::core {
             r3.x, r3.y, r3.z, Vec3f::dot(c, s)
         };
     }
-    
+
     // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up) {
     //     const auto w = dir.normalize();
     //     const auto u = w.cross(up).normalize();
