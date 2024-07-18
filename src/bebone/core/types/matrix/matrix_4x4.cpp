@@ -115,6 +115,52 @@ namespace bebone::core {
         };
     }
 
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::scale(const f32& s) {
+        return {
+             s,   0.0f, 0.0f, 0.0f,
+            0.0f,  s,   0.0f, 0.0f,
+            0.0f, 0.0f,  s,   0.0f,
+            0.0f, 0.0f, 0.0f,  s
+        };
+    }
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::scale(const f32& sx, const f32& sy, const f32& sz) {
+        return {
+             sx,  0.0f, 0.0f, 0.0f,
+            0.0f,  sy,  0.0f, 0.0f,
+            0.0f, 0.0f,  sz,  0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::scale(const Vec3f& s) {
+        return {
+            s.x,  0.0f, 0.0f, 0.0f,
+            0.0f, s.y,  0.0f, 0.0f,
+            0.0f, 0.0f, s.z,  0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::scale(f32 s, Vec3f v) {
+        v = v.normalize();
+        s -= 1.0f;
+
+        float x = v.x * s;
+        float y = v.y * s;
+        float z = v.z * s;
+        float vxvy = x * v.y;
+        float vxvz = x * v.z;
+        float vyvz = y * v.z;
+
+        return {
+            x * v.x + 1.0f,      vxvy,           vxvz,      0.0f,
+                 vxvy,      y * v.y + 1.0f,      vyvz,      0.0f,
+                 vxvz,           vyvz,      z * v.z + 1.0f, 0.0f,
+                 0.0f,           0.0f,           0.0f,      1.0f
+        };
+    }
+
     std::string Matrix<f32, 4, 4>::to_string() const {
         std::stringstream ss;
 

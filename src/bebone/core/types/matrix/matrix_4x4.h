@@ -22,8 +22,7 @@ namespace bebone::core {
         inline static Matrix<f32, 4, 4> splat(const f32& value);
         inline static Matrix<f32, 4, 4> identity();
         inline static Matrix<f32, 4, 4> translation(const Vec3<f32>& vector);
-        inline static Matrix<f32, 4, 4> scale(const f32& rate);
-        
+
         // inline static Matrix<f32, 4, 4> orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far);
         // inline static Matrix<f32, 4, 4> perspective(const f32& fovy, const f32& aspect, const f32& near, const f32& far);
         // inline static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up);
@@ -35,6 +34,11 @@ namespace bebone::core {
         static Matrix<f32, 4, 4> get_rotation_matrix(const f32& angle, Vec3f axis);
         static Matrix<f32, 4, 4> get_reflection_matrix(const Vec3f& v);
         static Matrix<f32, 4, 4> get_involution_matrix(const Vec3f& v);
+
+        static Matrix<f32, 4, 4> scale(const f32& s);
+        static Matrix<f32, 4, 4> scale(const f32& sx, const f32& sy, const f32& sz);
+        static Matrix<f32, 4, 4> scale(const Vec3f& s);
+        static Matrix<f32, 4, 4> scale(f32 s, Vec3f v);
 
         inline Matrix<f32, 4, 4> transpose() const;
         inline Matrix<f32, 4, 4> inverse() const;
@@ -144,15 +148,6 @@ namespace bebone::core {
     //         vector.x, vector.y, vector.z, 1.0f
     //     }};
     //     #endif
-    // }
-
-    // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::scale(const f32& rate) {
-    //     return {{
-    //         rate, 0.0f, 0.0f, 0.0f,
-    //         0.0f, rate, 0.0f, 0.0f,
-    //         0.0f, 0.0f, rate, 0.0f,
-    //         0.0f, 0.0f, 0.0f, 1.0f
-    //     }};
     // }
 
     // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far) {
