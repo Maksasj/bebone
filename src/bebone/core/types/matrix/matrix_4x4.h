@@ -135,36 +135,7 @@ namespace bebone::core {
             r3.x, r3.y, r3.z, Vec3f::dot(c, s)
         };
     }
-
-    // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::perspective(const f32& fovy, const f32& aspect, const f32& near, const f32& far) {
-    //     const f32 tanHalfFovy = std::tan(fovy / 2.f);
-//
-    //     #ifndef BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
-    //     return {{
-    //         1.f / (aspect * tanHalfFovy), 0.0f, 0.0f, 0.0f,
-    //         0.0f, 1.f / (tanHalfFovy), 0.0f, 0.0f,
-    //         0.0f, 0.0f, far / (far - near), -(far * near) / (far - near),
-    //         0.0f, 0.0f, 1.0f, 0.0f
-    //     }};
-    //     #else
-    //         #ifndef BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
-    //             return {{
-    //                 1.f / (aspect * tanHalfFovy), 0.0f, 0.0f, 0.0f,
-    //                 0.0f, 1.f / (tanHalfFovy), 0.0f, 0.0f,
-    //                 0.0f, 0.0f, far / (far - near), 1.0f,
-    //                 0.0f, 0.0f, -(far * near) / (far - near), 0.0f
-    //             }};
-    //         #else
-    //             return {{
-    //                 1.f / (aspect * tanHalfFovy), 0.0f, 0.0f, 0.0f,
-    //                 0.0f, -1.f / (tanHalfFovy), 0.0f, 0.0f,
-    //                 0.0f, 0.0f, far / (far - near), 1.0f,
-    //                 0.0f, 0.0f, -(far * near) / (far - near), 0.0f
-    //             }};
-    //         #endif
-    //     #endif
-    // }
-
+    
     // inline Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& dir, const Vec3f& up) {
     //     const auto w = dir.normalize();
     //     const auto u = w.cross(up).normalize();
