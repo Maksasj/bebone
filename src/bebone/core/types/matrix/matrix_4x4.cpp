@@ -59,9 +59,7 @@ namespace bebone::core {
     }
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_rotation_matrix(const f32& angle, Vec3f axis) {
-        if (!axis.is_normalized()) {
-            axis = axis.normalize();
-        }
+        axis = axis.normalize();
 
         f32 c = std::cos(angle);
         f32 s = std::sin(angle);
