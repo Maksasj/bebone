@@ -172,4 +172,22 @@ namespace bebone::core {
 
         return ss.str();
     }
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::translation(const f32& tx, const f32& ty, const f32& tz) {
+        return {
+            1.0f, 0.0f, 0.0f, tx,
+            0.0f, 1.0f, 0.0f, ty,
+            0.0f, 0.0f, 1.0f, tz,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::translation(const Vec3f& t) {
+        return {
+            1.0f, 0.0f, 0.0f, t.x,
+            0.0f, 1.0f, 0.0f, t.y,
+            0.0f, 0.0f, 1.0f, t.z,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
 }
