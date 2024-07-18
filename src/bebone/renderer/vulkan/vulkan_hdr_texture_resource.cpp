@@ -3,15 +3,12 @@
 namespace bebone::renderer {
     VulkanHDRTextureResource::VulkanHDRTextureResource(
         const std::string& name,
-        const std::vector<std::shared_ptr<VulkanTexture>>& textures
-    ) : IHDRTextureResource(name), textures(textures) {
-        handles.reserve(textures.size());
+        const std::vector<TextureHandle>& handles
+    ) : IHDRTextureResource(name), handles(handles) {
 
-        for(auto& texture : textures)
-            handles.push_back(texture->get_handle());
     }
 
-    std::vector<std::shared_ptr<VulkanTexture>>& VulkanHDRTextureResource::get_textures() {
-        return textures;
+    const std::vector<TextureHandle>& VulkanHDRTextureResource::get_handles() const {
+        return handles;
     }
 }

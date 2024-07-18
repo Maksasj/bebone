@@ -11,7 +11,7 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderGraphImpl::assemble() {
-        VulkanPassAssembler assembler(device, swap_chain, program_manager);
+        VulkanPassAssembler assembler(device, swap_chain, program_manager, texture_manager);
 
         for(auto& pass : get_render_passes())
             pass->assemble(&assembler);

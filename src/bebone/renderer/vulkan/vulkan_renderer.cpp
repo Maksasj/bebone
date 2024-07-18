@@ -44,7 +44,7 @@ namespace bebone::renderer {
     // Todo, probably since we use bindless textures, we can bind all texture to ALL pipelines
     // Everything should work fine
     std::shared_ptr<ITexture> VulkanRenderer::load_texture(const std::string& file_path) {
-        return texture_manager->load_texture_from_file(file_path);
+        return texture_manager->get_texture(texture_manager->load_texture_from_file(file_path)).value();
     }
 
     std::shared_ptr<IMaterial> VulkanRenderer::create_material(const std::string& albedo) {

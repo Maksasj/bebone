@@ -4,6 +4,10 @@
 #include "renderer_backend.h"
 
 namespace bebone::renderer {
+    using namespace bebone::core;
+
+    enum class TextureHandle : u32 { Invalid = 0 };
+
     class ITexture {
         public:
             virtual ~ITexture() = default;

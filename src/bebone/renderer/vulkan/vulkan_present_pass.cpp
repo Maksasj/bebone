@@ -82,9 +82,6 @@ namespace bebone::renderer {
         auto program = program_manager->create_program(pipeline);
         set_program(program);
 
-        auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource);
-        texture_handles = texture->get_handles();
-
         // Todo, move this outside, to assembler
         auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
         quad_mesh = quad_generator->generate();
@@ -105,7 +102,8 @@ namespace bebone::renderer {
             cmd->set_viewport(0, 0, viewport.x, viewport.y);
             program->bind(encoder);
 
-            auto handles = u32(texture_handles[frame]);
+            const auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource);
+            auto handles = u32(texture->get_handles()[frame]);
 
             // Todo
             // auto& pipeline = static_pointer_cast<VulkanProgram>(get_program())->get_pipeline();

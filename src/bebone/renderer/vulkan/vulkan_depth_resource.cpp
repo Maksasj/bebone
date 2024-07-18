@@ -3,15 +3,12 @@
 namespace bebone::renderer {
     VulkanDepthResource::VulkanDepthResource(
         const std::string& name,
-        const std::vector<std::shared_ptr<VulkanTexture>>& textures
-    ) : IDepthResource(name), textures(textures) {
-        handles.reserve(textures.size());
+        const std::vector<TextureHandle>& handles
+    ) : IDepthResource(name), handles(handles) {
 
-        for(auto& texture : textures)
-            handles.push_back(texture->get_handle());
     }
 
-    std::vector<std::shared_ptr<VulkanTexture>>& VulkanDepthResource::get_textures() {
-        return textures;
+    const std::vector<TextureHandle>& VulkanDepthResource::get_handles() const {
+        return handles;
     }
 }

@@ -9,32 +9,32 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<ITextureResource> VulkanResourceFactory::create_texture_resource(const std::string& resource_name, const Vec2i& size) {
-        auto textures = std::vector<std::shared_ptr<VulkanTexture>> {};
-        textures.reserve(3); // Todo, this is a FIF moment
+        auto handles = std::vector<TextureHandle> {};
+        handles.reserve(3); // Todo, this is a FIF moment
 
         for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_texture(size))); // Todo VK_FORMAT_R8G8B8A8_UNORM
+            handles.push_back(texture_manager->create_texture(size)); // Todo VK_FORMAT_R8G8B8A8_UNORM
 
-        return std::make_shared<VulkanTextureResource>(resource_name, textures);
+        return std::make_shared<VulkanTextureResource>(resource_name, handles);
     }
 
     std::shared_ptr<IHDRTextureResource> VulkanResourceFactory::create_hdr_texture_resource(const std::string& resource_name, const Vec2i& size) {
-        auto textures = std::vector<std::shared_ptr<VulkanTexture>> {};
-        textures.reserve(3); // Todo, this is a FIF moment
+        auto handles = std::vector<TextureHandle> {};
+        handles.reserve(3); // Todo, this is a FIF moment
 
         for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_texture(size)));
+            handles.push_back(texture_manager->create_texture(size));
 
-        return std::make_shared<VulkanHDRTextureResource>(resource_name, textures);
+        return std::make_shared<VulkanHDRTextureResource>(resource_name, handles);
     }
 
     std::shared_ptr<IDepthResource> VulkanResourceFactory::create_depth_resource(const std::string& resource_name, const Vec2i& size) {
-        auto textures = std::vector<std::shared_ptr<VulkanTexture>> {};
-        textures.reserve(3); // Todo, this is a FIF moment
+        auto handles = std::vector<TextureHandle> {};
+        handles.reserve(3); // Todo, this is a FIF moment
 
         for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            textures.push_back(static_pointer_cast<VulkanTexture>(texture_manager->create_depth_texture(size)));
+            handles.push_back(texture_manager->create_depth_texture(size));
 
-        return std::make_shared<VulkanDepthResource>(resource_name, textures);
+        return std::make_shared<VulkanDepthResource>(resource_name, handles);
     }
 }

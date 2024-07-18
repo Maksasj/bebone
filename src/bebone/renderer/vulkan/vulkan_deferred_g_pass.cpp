@@ -86,6 +86,7 @@ namespace bebone::renderer {
 
         auto device = vulkan_assembler->get_device();
         auto program_manager = vulkan_assembler->get_program_manager();
+        auto texture_manager = vulkan_assembler->get_texture_manager();
 
         pipeline_layout = program_manager->get_pipeline_layout();
 
@@ -119,18 +120,21 @@ namespace bebone::renderer {
         auto program = program_manager->create_program(pipeline);
 
         // Setup render target
-        auto position = static_pointer_cast<VulkanHDRTextureResource>(position_resource)->get_textures();
-        auto normals = static_pointer_cast<VulkanHDRTextureResource>(normals_resource)->get_textures();
-        auto albedo = static_pointer_cast<VulkanHDRTextureResource>(albedo_resource)->get_textures();
-        auto specular = static_pointer_cast<VulkanHDRTextureResource>(specular_resource)->get_textures();
+        auto position = static_pointer_cast<VulkanHDRTextureResource>(position_resource)->get_handles();
+        auto normals = static_pointer_cast<VulkanHDRTextureResource>(normals_resource)->get_handles();
+        auto albedo = static_pointer_cast<VulkanHDRTextureResource>(albedo_resource)->get_handles();
+        auto specular = static_pointer_cast<VulkanHDRTextureResource>(specular_resource)->get_handles();
+        auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_handles();
 
-        auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_textures();
-
-        framebuffers = std::vector<std::shared_ptr<VulkanFramebuffer>> {
-            device->create_framebuffer({ position[0]->get_texture()->view, normals[0]->get_texture()->view, albedo[0]->get_texture()->view, specular[0]->get_texture()->view, depth[0]->get_texture()->view }, render_pass, viewport),
-            device->create_framebuffer({ position[1]->get_texture()->view, normals[1]->get_texture()->view, albedo[1]->get_texture()->view, specular[1]->get_texture()->view, depth[1]->get_texture()->view }, render_pass, viewport),
-            device->create_framebuffer({ position[2]->get_texture()->view, normals[2]->get_texture()->view, albedo[2]->get_texture()->view, specular[2]->get_texture()->view, depth[2]->get_texture()->view }, render_pass, viewport)
-        };
+        for(size_t i = 0; i < 3; ++i) {
+            framebuffers.push_back(device->create_framebuffer({
+                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(position[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(normals[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(albedo[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(specular[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(depth[i]).value())->get_texture()->view
+            }, render_pass, viewport));
+        }
 
         // Create and bind model and camera uniform buffer objects
         model_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassModelData) * max_queued_jobs, 3);
@@ -187,6 +191,7 @@ namespace bebone::renderer {
                 mesh->bind(encoder);
                 cmd->draw_indexed(mesh->triangle_count());
             }
+
         cmd->end_render_pass();
     }
 

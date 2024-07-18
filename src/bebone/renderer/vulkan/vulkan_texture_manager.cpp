@@ -8,27 +8,22 @@ namespace bebone::renderer {
 
     }
 
-    std::shared_ptr<ITexture> VulkanTextureManager::create_texture(const Vec2i& extent) {
-        auto vulkan_extent = VkExtent3D {
-            static_cast<uint32_t>(extent.x),
-            static_cast<uint32_t>(extent.y),
-            1};
+    TextureHandle VulkanTextureManager::create_texture(const Vec2i& extent) {
+        auto vulkan_extent = VkExtent3D { static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y), 1};
 
         auto vulkan_texture = device->create_texture(vulkan_extent, VK_FORMAT_R32G32B32A32_SFLOAT);
         auto texture = std::make_shared<VulkanTexture>(vulkan_texture);
 
         program_manager->bind_texture(texture);
+        textures.push_back(texture);
 
-        return texture;
+        return static_cast<TextureHandle>(texture->get_handle());;
     }
 
-    std::shared_ptr<ITexture> VulkanTextureManager::create_depth_texture(const Vec2i& extent) {
-        auto vulkan_extent = VkExtent3D {
-            static_cast<uint32_t>(extent.x),
-            static_cast<uint32_t>(extent.y),
-            1};
-
+    TextureHandle VulkanTextureManager::create_depth_texture(const Vec2i& extent) {
+        auto vulkan_extent = VkExtent3D { static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y), 1};
         auto format = device->find_depth_format();
+
         auto [ image, memory ] = device->create_image_memory(format, vulkan_extent,
             { .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT } // Todo VK_IMAGE_USAGE_SAMPLED_BIT
         );
@@ -42,15 +37,25 @@ namespace bebone::renderer {
         auto texture = std::make_shared<VulkanTexture>(vulkan_texture);
 
         program_manager->bind_texture(texture);
+        textures.push_back(texture);
 
-        return texture;
+        return static_cast<TextureHandle>(texture->get_handle());
     }
 
-    std::shared_ptr<ITexture> VulkanTextureManager::load_texture_from_file(const std::string& file_path) {
+    TextureHandle VulkanTextureManager::load_texture_from_file(const std::string& file_path) {
         auto texture = std::make_shared<VulkanTexture>(file_path, device);
 
         program_manager->bind_texture(texture);
+        textures.push_back(texture);
 
-        return texture;
+        return static_cast<TextureHandle>(texture->get_handle());
+    }
+
+    std::optional<std::shared_ptr<ITexture>> VulkanTextureManager::get_texture(const TextureHandle& handle) const {
+        for(auto& texture : textures)
+            if(static_cast<TextureHandle>(texture->get_handle()) == handle)
+                return texture;
+
+        return std::nullopt;
     }
 }

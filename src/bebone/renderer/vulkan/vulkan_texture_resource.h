@@ -9,17 +9,12 @@ namespace bebone::renderer {
 
     class VulkanTextureResource : public ITextureResource {
         private:
-            std::vector<std::shared_ptr<VulkanTexture>> textures;
-            std::vector<VulkanBindlessTextureHandle> handles;
+            std::vector<TextureHandle> handles;
 
         public:
-            VulkanTextureResource(const std::string& name, const std::vector<std::shared_ptr<VulkanTexture>>& textures);
+            VulkanTextureResource(const std::string& name, const std::vector<TextureHandle>& handles);
 
-            std::vector<std::shared_ptr<VulkanTexture>>& get_textures();
-
-            const std::vector<VulkanBindlessTextureHandle>& get_handles() const {
-                return handles;
-            }
+            const std::vector<TextureHandle>& get_handles() const;
     };
 }
 
