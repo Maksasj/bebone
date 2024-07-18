@@ -142,6 +142,22 @@ namespace bebone::core {
         };
     }
 
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::skew(f32 t, Vec3f a, Vec3f b) {
+        t = std::tan(t);
+        a = a.normalize();
+        b = b.normalize();
+
+        f32 x = a.x * t;
+        f32 y = a.y * t;
+        f32 z = a.z * t;
+
+        return {
+            x * b.x + 1.0f,     x * b.y,       x * b.z,
+               y * b.x,     y * b.y + 1.0f,    y * b.z,
+               z * b.x,         z * b.y,    z * b.z + 1.0f
+        };
+    }
+
     std::string Matrix<f32, 3, 3>::to_string() const {
         std::stringstream ss;
 

@@ -113,6 +113,23 @@ namespace bebone::core {
         };
     }
 
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::skew(f32 t, Vec3f a, Vec3f b) {
+        t = std::tan(t);
+        a = a.normalize();
+        b = b.normalize();
+
+        f32 x = a.x * t;
+        f32 y = a.y * t;
+        f32 z = a.z * t;
+
+        return {
+            x * b.x + 1.0f,     x * b.y,       x * b.z,     0.0f,
+               y * b.x,     y * b.y + 1.0f,    y * b.z,     0.0f,
+               z * b.x,         z * b.y,    z * b.z + 1.0f, 0.0f,
+                 0.0f,           0.0f,           0.0f,      1.0f
+        };
+    }
+
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::scale(const f32& s) {
         return {
              s,   0.0f, 0.0f, 0.0f,

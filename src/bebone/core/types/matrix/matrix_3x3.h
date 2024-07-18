@@ -27,6 +27,8 @@ namespace bebone::core {
         static Matrix<f32, 3, 3> get_reflection_matrix(const Vec3f& v);
         static Matrix<f32, 3, 3> get_involution_matrix(const Vec3f& v);
 
+        static Matrix<f32, 3, 3> skew(f32 t, Vec3f a, Vec3f b);
+
         static Matrix<f32, 3, 3> scale(const f32& s);
         static Matrix<f32, 3, 3> scale(const f32& sx, const f32& sy, const f32& sz);
         static Matrix<f32, 3, 3> scale(const Vec3f& s);
