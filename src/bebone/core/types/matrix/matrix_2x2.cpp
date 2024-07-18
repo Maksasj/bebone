@@ -11,6 +11,16 @@ namespace bebone::core {
         e[1][0] = b.x; e[1][1] = b.y;
     }
 
+    Matrix<f32, 2, 2> Matrix<f32, 2, 2>::get_rotation_matrix(const f32& angle) {
+        f32 c = std::cos(angle);
+        f32 s = std::sin(angle);
+
+        return {
+            c, -s,
+            s,  c
+        };
+    }
+
     std::string Matrix<f32, 2, 2>::to_string() const {
         std::stringstream ss;
 

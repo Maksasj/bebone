@@ -19,6 +19,8 @@ namespace bebone::core {
         inline Matrix<f32, 2, 2> transpose() const;
         inline Matrix<f32, 2, 2> inverse() const;
 
+        static Matrix<f32, 2, 2> get_rotation_matrix(const f32 &angle);
+
         inline f32& operator()(const size_t& row, const size_t& col);
         inline const f32& operator()(const size_t& row, const size_t& col) const;
 
@@ -39,9 +41,6 @@ namespace bebone::core {
         inline bool operator ==(const Matrix<f32, 2, 2>& other) const;
 
         std::string to_string() const;
-
-        inline static Matrix<f32, 2, 2> get_rotation_matrix(const f32 &rotationAngle);
-        inline static Matrix<f32, 2, 2> get_zero_rotation_matrix();
     };
 
     inline f32& Matrix<f32, 2, 2>::operator()(const size_t& row, const size_t& col) {
@@ -163,14 +162,6 @@ namespace bebone::core {
             -c * inv_det, a * inv_det
         };
     }
-
-    // inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::get_rotation_matrix(const f32 &rotationAngle) {
-    //     return { {(f32)cos(rotationAngle), -(f32)sin(rotationAngle), (f32)sin(rotationAngle), (f32)cos(rotationAngle)}};
-    // }
-//
-    // inline Matrix<f32, 2, 2> Matrix<f32, 2, 2>::get_zero_rotation_matrix() {
-    //     return {{ 1, 0, 0, 1 }};
-    // }
 }
 
 #endif
