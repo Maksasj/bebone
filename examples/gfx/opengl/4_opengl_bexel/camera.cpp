@@ -14,30 +14,6 @@ namespace bexel {
         proj_matrix = Mat4f::identity();
     }
 
-    Mat4f Camera::calculate_view_matrix() const {
-        const static auto up_vector = Vec3f::down;
-
-        const auto w = direction.normalize();
-        const auto u = w.cross(up_vector).normalize();
-        const auto v = w.cross(u);
-
-        Mat4f view_matrix = Mat4f::identity();
-        view_matrix[0 * 4 + 0] = u.x;
-        view_matrix[1 * 4 + 0] = u.y;
-        view_matrix[2 * 4 + 0] = u.z;
-        view_matrix[0 * 4 + 1] = v.x;
-        view_matrix[1 * 4 + 1] = v.y;
-        view_matrix[2 * 4 + 1] = v.z;
-        view_matrix[0 * 4 + 2] = w.x;
-        view_matrix[1 * 4 + 2] = w.y;
-        view_matrix[2 * 4 + 2] = w.z;
-        view_matrix[3 * 4 + 0] = -1.0f * (u).dot(position);
-        view_matrix[3 * 4 + 1] = -1.0f * (v).dot(position);
-        view_matrix[3 * 4 + 2] = -1.0f * (w).dot(position);
-
-        return view_matrix;
-    }
-
     void Camera::update(shared_ptr<Window>& window) {
         BEBONE_PROFILE_RECORD(BEXEL_CAMERA_UPDATE)
 
@@ -93,7 +69,7 @@ namespace bexel {
         direction.y = sin(rotation.x);
         direction.z = sin(rotation.y) * cos(rotation.x);
 
-        view_matrix = calculate_view_matrix();
+        view_matrix = Mat4f::view(position, direction, Vec3f::down);
         proj_matrix = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 2000.0f);
 
         BEBONE_PROFILE_STOP(BEXEL_CAMERA_UPDATE)

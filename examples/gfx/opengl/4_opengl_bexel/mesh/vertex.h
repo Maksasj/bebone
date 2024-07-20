@@ -21,10 +21,10 @@ namespace bexel {
         }
 
         void rotate(const Mat4f& matrix) {
-            f32 result_x = pos.x * matrix.e[0 * 4 + 0] + pos.y * matrix.e[1 * 4 + 0] + pos.z * matrix.e[2 * 4 + 0] + 1.0f * matrix.e[3 * 4 + 0];
-            f32 result_y = pos.x * matrix.e[0 * 4 + 1] + pos.y * matrix.e[1 * 4 + 1] + pos.z * matrix.e[2 * 4 + 1] + 1.0f * matrix.e[3 * 4 + 1];
-            f32 result_z = pos.x * matrix.e[0 * 4 + 2] + pos.y * matrix.e[1 * 4 + 2] + pos.z * matrix.e[2 * 4 + 2] + 1.0f * matrix.e[3 * 4 + 2];
-            const f32 result_w = pos.x * matrix.e[0 * 4 + 3] + pos.y * matrix.e[1 * 4 + 3] + pos.z * matrix.e[2 * 4 + 3] + 1.0f * matrix.e[3 * 4 + 3];
+            f32 result_x = Vec3f::dot(pos, (Vec3f)matrix[0]) + matrix(3, 0);
+            f32 result_y = Vec3f::dot(pos, (Vec3f)matrix[1]) + matrix(3, 1);
+            f32 result_z = Vec3f::dot(pos, (Vec3f)matrix[2]) + matrix(3, 2);
+            const f32 result_w = Vec3f::dot(pos, (Vec3f)matrix[3]) + matrix(3, 3);
 
             if (result_w != 0.0f) {
                 result_x /= result_w;
