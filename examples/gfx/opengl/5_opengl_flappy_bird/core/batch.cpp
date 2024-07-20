@@ -69,9 +69,8 @@ namespace game::core {
             shader_program->enable();
 
             Mat4f model = Mat4f::identity();
-            model = model * model.scale(1.0f);
-            model = model * bebone::core::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
-            model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
+            //model = model * bebone::core::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
+            //model = model * Mat4f::translation(Vec3f(0.0f, 0.0f, 0.0f));
 
             for (auto texture : textures_to_draw) {
                 texture->bind_texture_unit(cached_texture_units[texture]);

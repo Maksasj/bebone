@@ -210,10 +210,10 @@ namespace bebone::core {
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far) {
         return {
-            2.0f / (right - left),         0.0f,                  0.0f,         -(right + left) / (right - left),
-                    0.0f,          2.0f / (top - bottom),         0.0f,         -(top + bottom) / (top - bottom),
-                    0.0f,                  0.0f,          -2.0f / (far - near),   -(far + near) / (far - near),
-                    0.0f,                  0.0f,                  0.0f,                        1.0f
+                2.0f / (right - left),        0.0f,                  0.0f,         -(right + left) / (right - left),
+                       0.0f,           2.0f / (bottom - top),        0.0f,         -(bottom + top) / (top - bottom),
+                       0.0f,                  0.0f,           2.0f / (far - near),   -(far + near) / (far - near),
+                       0.0f,                  0.0f,                  0.0f,                        1.0f
         };
     }
 
