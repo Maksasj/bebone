@@ -1,6 +1,5 @@
 #include <math.h>
 
-#define BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
 #include "bebone/bebone.h"
 
 static inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
