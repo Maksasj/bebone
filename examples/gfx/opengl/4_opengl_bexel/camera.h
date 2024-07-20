@@ -19,8 +19,6 @@ namespace bexel {
             Mat4f view_matrix;
             Mat4f proj_matrix;
 
-            Mat4f calculate_view_matrix() const;
-
     public:
             Camera(const Vec3f& position, const i32& render_distance);
 
