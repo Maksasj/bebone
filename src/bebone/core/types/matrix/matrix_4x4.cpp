@@ -229,16 +229,16 @@ namespace bebone::core {
         };
     }
 
-    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& target, const Vec3f& up) {
-        Vec3f zaxis = (origin - target).normalize();
-        Vec3f xaxis = Vec3f::cross(up, zaxis).normalize();
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& direction, const Vec3f& up) {
+        Vec3f zaxis = direction.normalize();
+        Vec3f xaxis = Vec3f::cross(zaxis, up).normalize();
         Vec3f yaxis = Vec3f::cross(zaxis, xaxis);
 
         return {
-                    xaxis.x,                      yaxis.x,                   zaxis.x,           0.0f,
-                    xaxis.y,                      yaxis.y,                   zaxis.y,           0.0f,
-                    xaxis.z,                      yaxis.z,                   zaxis.z,           0.0f,
-            -Vec3f::dot(xaxis, origin), -Vec3f::dot(yaxis, origin), -Vec3f::dot(zaxis, origin), 1.0f
+            xaxis.x, yaxis.x, zaxis.x, -Vec3f::dot(xaxis, origin),
+            xaxis.y, yaxis.y, zaxis.y, -Vec3f::dot(yaxis, origin),
+            xaxis.z, yaxis.z, zaxis.z, -Vec3f::dot(zaxis, origin),
+             0.0f,     0.0f,    0.0f,             1.0f
         };
     }
 
