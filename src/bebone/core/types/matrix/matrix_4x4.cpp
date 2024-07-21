@@ -82,12 +82,12 @@ namespace bebone::core {
     }
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_reflection_matrix(const Vec3f& v) {
-        float x = v.x * -2.0f;
-        float y = v.y * -2.0f;
-        float z = v.z * -2.0f;
-        float vxvy = x * v.y;
-        float vxvz = x * v.z;
-        float vyvz = y * v.z;
+        f32 x = v.x * -2.0f;
+        f32 y = v.y * -2.0f;
+        f32 z = v.z * -2.0f;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
 
         return {
             x * v.x + 1.0f,     vxvy,           vxvz,      0.0f,
@@ -98,12 +98,12 @@ namespace bebone::core {
     }
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_involution_matrix(const Vec3f& v) {
-        float x = v.x * -2.0f;
-        float y = v.y * -2.0f;
-        float z = v.z * -2.0f;
-        float vxvy = x * v.y;
-        float vxvz = x * v.z;
-        float vyvz = y * v.z;
+        f32 x = v.x * -2.0f;
+        f32 y = v.y * -2.0f;
+        f32 z = v.z * -2.0f;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
 
         return {
             x * v.x - 1.0f,     vxvy,           vxvz,      0.0f,
@@ -161,12 +161,12 @@ namespace bebone::core {
         v = v.normalize();
         s -= 1.0f;
 
-        float x = v.x * s;
-        float y = v.y * s;
-        float z = v.z * s;
-        float vxvy = x * v.y;
-        float vxvz = x * v.z;
-        float vyvz = y * v.z;
+        f32 x = v.x * s;
+        f32 y = v.y * s;
+        f32 z = v.z * s;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
 
         return {
             x * v.x + 1.0f,      vxvy,           vxvz,      0.0f,
@@ -222,10 +222,10 @@ namespace bebone::core {
         f32 normalization = far / (far - near);
 
         return {
-            1.0f / aspect * fov,   0.0f,       0.0f,              0.0f,
-                  0.0f,            -fov,        0.0f,              0.0f,
+            1.0f / aspect * fov,   0.0f,       0.0f,               0.0f,
+                  0.0f,            -fov,       0.0f,               0.0f,
                   0.0f,            0.0f,   normalization,  -normalization * near,
-                  0.0f,            0.0f,       1.0f,              0.0f
+                  0.0f,            0.0f,       1.0f,               0.0f
         };
     }
 
