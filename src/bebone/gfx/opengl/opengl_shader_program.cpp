@@ -97,7 +97,7 @@ namespace bebone::gfx {
     void GLShaderProgram::set_uniform(const char* uniform_name, const Mat4f& value) const {
         if(properties & EnableUniforms) {
             const auto uniform = get_uniform_location(uniform_name);
-            glUniformMatrix4fv(uniform, 1, GL_FALSE, value.e);
+            glUniformMatrix4fv(uniform, 1, GL_FALSE, value.get_raw());
         }
     }
 

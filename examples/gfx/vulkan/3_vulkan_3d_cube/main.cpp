@@ -88,7 +88,7 @@ int main() {
     f32 t = 0.0f;
     while (!window->closing()) {
         GLFWContext::poll_events();
-        t += Time::get_delta_time();
+        t += Time::get_delta_time() * 0.05f;
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())

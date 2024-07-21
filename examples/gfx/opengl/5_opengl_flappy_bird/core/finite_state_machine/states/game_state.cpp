@@ -97,12 +97,12 @@ namespace game::core::fsm {
         auto player_collider = flappy_bird->get_component<Collider>();
         auto player_transform = flappy_bird->get_transform();
 
-        Vec2f player_top_left = player_collider->get_top_left() + player_transform->get_position();
-        Vec2f player_bottom_right = player_collider->get_bottom_right() + player_transform->get_position();
+        Vec2f player_top_left = player_collider->get_top_left() + (Vec2f)player_transform->get_position();
+        Vec2f player_bottom_right = player_collider->get_bottom_right() + (Vec2f)player_transform->get_position();
         
         for (const auto& collider : obj_colliders) {
-            Vec2f obj_top_left = collider->get_top_left() + obj_transform->get_position();
-            Vec2f obj_bottom_right = collider->get_bottom_right() + obj_transform->get_position();
+            Vec2f obj_top_left = collider->get_top_left() + (Vec2f)obj_transform->get_position();
+            Vec2f obj_bottom_right = collider->get_bottom_right() + (Vec2f)obj_transform->get_position();
 
             bool collision = obj_top_left.x <= player_bottom_right.x &&
                 obj_bottom_right.x >= player_top_left.x &&
