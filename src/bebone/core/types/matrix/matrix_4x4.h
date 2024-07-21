@@ -107,10 +107,10 @@ namespace bebone::core {
         const Vec3f& c = reinterpret_cast<const Vec3f&>(m[2]);
         const Vec3f& d = reinterpret_cast<const Vec3f&>(m[3]);
 
-        const float& x = m(3, 0);
-        const float& y = m(3, 1);
-        const float& z = m(3, 2);
-        const float& w = m(3, 3);
+        const f32& x = m(3, 0);
+        const f32& y = m(3, 1);
+        const f32& z = m(3, 2);
+        const f32& w = m(3, 3);
 
         Vec3f s = Vec3f::cross(a, b);
         Vec3f t = Vec3f::cross(c, d);
