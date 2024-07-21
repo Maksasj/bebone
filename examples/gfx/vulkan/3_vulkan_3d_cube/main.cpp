@@ -81,6 +81,7 @@ int main() {
         Mat4f::identity()
     };
 
+    f32 t = 0.0f;
     while (!window->closing()) {
         window->pull_events();
         t += Time::get_delta_time() * 0.05f;
@@ -91,7 +92,6 @@ int main() {
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(Time::get_seconds_elapsed(), Time::get_seconds_elapsed(), 0.0f));
         t_ubo[frame]->upload_data(device, &transform, sizeof(Transform));
-
 
         auto& cmd = *command_buffers[frame];
 
