@@ -242,7 +242,7 @@ namespace bebone::core {
         };
     }
 
-    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f origin, const Vec3f center, const Vec3f& up) {
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
         return view(origin, center - origin, up);
     }
 }
