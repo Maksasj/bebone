@@ -1,7 +1,4 @@
 #include <vector>
-
-#define BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
-#define BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
 using namespace bebone;
@@ -19,8 +16,8 @@ int main() {
     GLContext::set_viewport(0, 0, 800, 600);
     GLContext::enable(GL_DEPTH_TEST);
 
-    auto transform = renderer::Transform {};
-    auto camera = Mat4f::translation(Vec3f(0, 0, 5)) * Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
+    auto transform = renderer::Transform { };
+    auto camera = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) * Mat4f::translation({0.0f, 0.0f, 5.0f});
 
     auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<OpenGLTriangleMeshBuilder>());
     auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<OpenGLTriangleMeshBuilder>());

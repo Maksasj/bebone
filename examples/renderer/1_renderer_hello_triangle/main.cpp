@@ -1,5 +1,3 @@
-#define BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
-#define BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
 using namespace bebone::renderer;

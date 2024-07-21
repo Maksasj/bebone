@@ -84,7 +84,7 @@ int main() {
     shader_program.bind_buffer("Camera", 1, camera_ubo);
     auto camera_ptr = static_cast<Camera*>(camera_ubo.map());
         camera_ptr->proj = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
-        camera_ptr->view = Mat4f::translation(Vec3f(0, 0, 5));
+        camera_ptr->view = Mat4f::view(Vec3f(0, 0, -10), Vec3f::forward, Vec3f::up);
     camera_ubo.unmap();
     camera_ubo.unbind();
 

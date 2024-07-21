@@ -15,7 +15,7 @@ namespace bebone::renderer {
         const auto direction = get_direction();
         const auto position = get_position();
 
-        return Mat4f::look_at(position, position + direction, Vec3f::up) * proj;
+        return proj * Mat4f::look_at(position, position + direction, Vec3f::up);
     }
 
     const f32& IPerspectiveCamera::get_fov() const {
