@@ -1,9 +1,9 @@
 #include "matrix_3x3.h"
 
 namespace bebone::core {
-    Matrix<f32, 3, 3>::Matrix(f32 n00, f32 n01, f32 n02,
-                              f32 n10, f32 n11, f32 n12,
-                              f32 n20, f32 n21, f32 n22) {
+    Matrix<f32, 3, 3>::Matrix(const f32& n00, const f32& n01, const f32& n02,
+                              const f32& n10, const f32& n11, const f32& n12,
+                              const f32& n20, const f32& n21, const f32& n22) {
         e[0][0] = n00; e[0][1] = n10; e[0][2] = n20;
         e[1][0] = n01; e[1][1] = n11; e[1][2] = n21;
         e[2][0] = n02; e[2][1] = n12; e[2][2] = n22;

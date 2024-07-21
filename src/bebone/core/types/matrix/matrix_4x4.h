@@ -12,10 +12,10 @@ namespace bebone::core {
     public:
         Matrix() = default;
 
-        Matrix(f32 n00, f32 n01, f32 n02, f32 n03,
-               f32 n10, f32 n11, f32 n12, f32 n13,
-               f32 n20, f32 n21, f32 n22, f32 n23,
-               f32 n30, f32 n31, f32 n32, f32 n33);
+        Matrix(const f32& n00, const f32& n01, const f32& n02, const f32& n03,
+               const f32& n10, const f32& n11, const f32& n12, const f32& n13,
+               const f32& n20, const f32& n21, const f32& n22, const f32& n23,
+               const f32& n30, const f32& n31, const f32& n32, const f32& n33);
 
         Matrix(const Vec4f& a, const Vec4f& b, const Vec4f& c, const Vec4f& d);
 

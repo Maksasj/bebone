@@ -11,8 +11,8 @@ namespace bebone::core {
     public:
         Matrix() = default;
 
-        Matrix(f32 n00, f32 n01,
-               f32 n10, f32 n11);
+        Matrix(const f32& n00, const f32& n01,
+               const f32& n10, const f32& n11);
 
         Matrix(const Vec2f& a, const Vec2f& b);
 
