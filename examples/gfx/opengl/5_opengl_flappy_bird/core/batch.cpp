@@ -68,17 +68,11 @@ namespace game::core {
 
             shader_program->enable();
 
-            Mat4f model = Mat4f::identity();
-            model = model * model.scale(1.0f);
-            model = model * bebone::core::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
-            model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
-
-            for (auto texture : textures_to_draw) {
+            for (const auto& texture : textures_to_draw) {
                 texture->bind_texture_unit(cached_texture_units[texture]);
             }
 
             vao->bind();
-                shader_program->set_uniform("u_Model", model);
                 shader_program->set_uniform("u_Projection", camera->get_projection_matrix());
                 shader_program->set_uniform("u_Textures", texture_unit_capacity, samplers);
                 GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices_size), GL_UNSIGNED_INT, nullptr);

@@ -85,6 +85,7 @@ int main() {
 
     while (!window->closing()) {
         window->pull_events();
+        t += Time::get_delta_time() * 0.05f;
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
