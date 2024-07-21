@@ -73,7 +73,6 @@ namespace game::core {
             }
 
             vao->bind();
-                shader_program->set_uniform("u_Model", Mat4f::identity());
                 shader_program->set_uniform("u_Projection", camera->get_projection_matrix());
                 shader_program->set_uniform("u_Textures", texture_unit_capacity, samplers);
                 GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices_size), GL_UNSIGNED_INT, nullptr);

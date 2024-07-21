@@ -1,10 +1,10 @@
 #include "matrix_4x4.h"
 
 namespace bebone::core {
-    Matrix<f32, 4, 4>::Matrix(f32 n00, f32 n01, f32 n02, f32 n03,
-                              f32 n10, f32 n11, f32 n12, f32 n13,
-                              f32 n20, f32 n21, f32 n22, f32 n23,
-                              f32 n30, f32 n31, f32 n32, f32 n33) {
+    Matrix<f32, 4, 4>::Matrix(const f32& n00, const f32& n01, const f32& n02, const f32& n03,
+                              const f32& n10, const f32& n11, const f32& n12, const f32& n13,
+                              const f32& n20, const f32& n21, const f32& n22, const f32& n23,
+                              const f32& n30, const f32& n31, const f32& n32, const f32& n33) {
         e[0][0] = n00; e[0][1] = n10; e[0][2] = n20; e[0][3] = n30;
         e[1][0] = n01; e[1][1] = n11; e[1][2] = n21; e[1][3] = n31;
         e[2][0] = n02; e[2][1] = n12; e[2][2] = n22; e[2][3] = n32;
@@ -82,12 +82,12 @@ namespace bebone::core {
     }
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_reflection_matrix(const Vec3f& v) {
-        float x = v.x * -2.0f;
-        float y = v.y * -2.0f;
-        float z = v.z * -2.0f;
-        float vxvy = x * v.y;
-        float vxvz = x * v.z;
-        float vyvz = y * v.z;
+        f32 x = v.x * -2.0f;
+        f32 y = v.y * -2.0f;
+        f32 z = v.z * -2.0f;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
 
         return {
             x * v.x + 1.0f,     vxvy,           vxvz,      0.0f,
@@ -98,12 +98,12 @@ namespace bebone::core {
     }
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::get_involution_matrix(const Vec3f& v) {
-        float x = v.x * -2.0f;
-        float y = v.y * -2.0f;
-        float z = v.z * -2.0f;
-        float vxvy = x * v.y;
-        float vxvz = x * v.z;
-        float vyvz = y * v.z;
+        f32 x = v.x * -2.0f;
+        f32 y = v.y * -2.0f;
+        f32 z = v.z * -2.0f;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
 
         return {
             x * v.x - 1.0f,     vxvy,           vxvz,      0.0f,
@@ -161,12 +161,12 @@ namespace bebone::core {
         v = v.normalize();
         s -= 1.0f;
 
-        float x = v.x * s;
-        float y = v.y * s;
-        float z = v.z * s;
-        float vxvy = x * v.y;
-        float vxvz = x * v.z;
-        float vyvz = y * v.z;
+        f32 x = v.x * s;
+        f32 y = v.y * s;
+        f32 z = v.z * s;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
 
         return {
             x * v.x + 1.0f,      vxvy,           vxvz,      0.0f,
@@ -222,10 +222,10 @@ namespace bebone::core {
         f32 normalization = far / (far - near);
 
         return {
-            1.0f / aspect * fov,   0.0f,       0.0f,              0.0f,
-                  0.0f,            -fov,        0.0f,              0.0f,
+            1.0f / aspect * fov,   0.0f,       0.0f,               0.0f,
+                  0.0f,            -fov,       0.0f,               0.0f,
                   0.0f,            0.0f,   normalization,  -normalization * near,
-                  0.0f,            0.0f,       1.0f,              0.0f
+                  0.0f,            0.0f,       1.0f,               0.0f
         };
     }
 
@@ -242,7 +242,7 @@ namespace bebone::core {
         };
     }
 
-    //Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
-//
-    //}
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
+        return view(origin, center - origin, up);
+    }
 }

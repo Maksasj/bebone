@@ -12,10 +12,10 @@ namespace bebone::core {
     public:
         Matrix() = default;
 
-        Matrix(f32 n00, f32 n01, f32 n02, f32 n03,
-               f32 n10, f32 n11, f32 n12, f32 n13,
-               f32 n20, f32 n21, f32 n22, f32 n23,
-               f32 n30, f32 n31, f32 n32, f32 n33);
+        Matrix(const f32& n00, const f32& n01, const f32& n02, const f32& n03,
+               const f32& n10, const f32& n11, const f32& n12, const f32& n13,
+               const f32& n20, const f32& n21, const f32& n22, const f32& n23,
+               const f32& n30, const f32& n31, const f32& n32, const f32& n33);
 
         Matrix(const Vec4f& a, const Vec4f& b, const Vec4f& c, const Vec4f& d);
 
@@ -41,7 +41,8 @@ namespace bebone::core {
 
         static Matrix<f32, 4, 4> orthographic(const f32& right, const f32& left, const f32& bottom, const f32& top, const f32& near, const f32& far);
         static Matrix<f32, 4, 4> perspective(f32 fov, const f32& aspect, const f32& near, const f32& far);
-        static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& direction, const Vec3f& up);
+        static Matrix<f32, 4, 4> view(const Vec3f& origin, const Vec3f& direction, const Vec3f& up = Vec3f::up);
+        static Matrix<f32, 4, 4> look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up = Vec3f::up);
 
         inline Matrix<f32, 4, 4> transpose() const;
         inline Matrix<f32, 4, 4> inverse() const;
@@ -106,10 +107,10 @@ namespace bebone::core {
         const Vec3f& c = reinterpret_cast<const Vec3f&>(m[2]);
         const Vec3f& d = reinterpret_cast<const Vec3f&>(m[3]);
 
-        const float& x = m(3, 0);
-        const float& y = m(3, 1);
-        const float& z = m(3, 2);
-        const float& w = m(3, 3);
+        const f32& x = m(3, 0);
+        const f32& y = m(3, 1);
+        const f32& z = m(3, 2);
+        const f32& w = m(3, 3);
 
         Vec3f s = Vec3f::cross(a, b);
         Vec3f t = Vec3f::cross(c, d);

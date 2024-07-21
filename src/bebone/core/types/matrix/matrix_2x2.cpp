@@ -1,7 +1,8 @@
 #include "matrix_2x2.h"
 
 namespace bebone::core {
-    Matrix<f32, 2, 2>::Matrix(f32 n00, f32 n01, f32 n10, f32 n11) {
+    Matrix<f32, 2, 2>::Matrix(const f32& n00, const f32& n01,
+                              const f32& n10, const f32& n11) {
         e[0][0] = n00; e[0][1] = n10;
         e[1][0] = n01; e[1][1] = n11;
     }
