@@ -42,7 +42,7 @@ int main() {
 
     auto geometry_pipeline = pipeline_manager->create_pipeline(
         device, geometry_render_pass, "geometry.vert.glsl", "geometry.frag.glsl",
-        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } }
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
     // Blur render pass
@@ -54,7 +54,7 @@ int main() {
 
     auto blur_pipeline = pipeline_manager->create_pipeline(
         device, blur_render_pass, "blur.vert.glsl", "blur.frag.glsl",
-        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
     auto blur_texture_handles = pipeline_manager->bind_attachments(device, geometry_render_target->get_color_attachment(0));
@@ -62,7 +62,7 @@ int main() {
     // Post pipeline
     auto post_pipeline = pipeline_manager->create_pipeline(
         device, swap_chain->render_pass, "post.vert.glsl", "post.frag.glsl",
-        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions }, .rasterization_state = { .front_face = VK_FRONT_FACE_COUNTER_CLOCKWISE } }
+        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
     auto post_geometry_texture_handles = pipeline_manager->bind_attachments(device, geometry_render_target->get_color_attachment(0));
@@ -76,7 +76,7 @@ int main() {
     auto quad_mesh = quad_generator->generate();
 
     auto transform = Transform {};
-    auto camera = Mat4f::translation(Vec3f(0, 0, 5)) * Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
+    auto camera = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) * Mat4f::translation(Vec3f(0, 0, 5));
 
     auto c_ubo = device->create_buffer_memorys(sizeof(Mat4f), 3);
     for(auto& ubo : c_ubo)

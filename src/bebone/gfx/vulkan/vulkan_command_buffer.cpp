@@ -110,9 +110,9 @@ namespace bebone::gfx {
         VkViewport viewport;
 
         viewport.x = static_cast<float>(x);
-        viewport.y = static_cast<float>(y);
+        viewport.y = static_cast<float>(height) - static_cast<float>(y);
         viewport.width = static_cast<float>(width);
-        viewport.height = static_cast<float>(height);
+        viewport.height = -static_cast<float>(height);
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;   // Todo for now this set as default
 

@@ -42,9 +42,6 @@ namespace bexel {
         BEBONE_PROFILE_RECORD(BEXEL_RUN)
 
         GLContext::enable(GL_DEPTH_TEST);
-        GLContext::enable(GL_CULL_FACE);
-        GLContext::cull_face(GL_BACK);
-        GLContext::front_face(GL_CW);
 
         shader->set_uniform("inTexture", 0);
 

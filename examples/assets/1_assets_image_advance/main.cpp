@@ -64,10 +64,6 @@ int main() {
 
     auto texture = make_shared<GLTexture2D>(image);
 
-    GLContext::enable(GL_CULL_FACE);
-    GLContext::cull_face(GL_BACK);
-    GLContext::front_face(GL_CW);
-
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT);

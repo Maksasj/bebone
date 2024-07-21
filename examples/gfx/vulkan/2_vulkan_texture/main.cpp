@@ -6,19 +6,18 @@ using namespace bebone::gfx;
 
 struct Vertex {
     Vec3f pos;
-    Vec3f color;
     Vec2f texCord;
 };
 
 const std::vector<Vertex> vertices {
-    {{0.5f,  0.5f, 0.0f},    {1.0f, 0.0f, 0.0f},   {1.0f, 1.0f}},
-    {{0.5f, -0.5f, 0.0f},    {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
-    {{-0.5f, -0.5f, 0.0f},   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f}},
-    {{-0.5f,  0.5f, 0.0f},   {1.0f, 1.0f, 0.0f},   {0.0f, 1.0f}}
+    {{ -0.5f, -0.5f, 0.0f}, {1.0f, 1.0f}},
+    {{ -0.5f,  0.5f, 0.0f}, {1.0f, 0.0f}},
+    {{ 0.5f,  0.5f, 0.0f},  {0.0f, 0.0f}},
+    {{ 0.5f, -0.5f, 0.0f},  {0.0f, 1.0f}}
 };
 
 const std::vector<u32> indices {
-    0, 1, 3, 1, 2, 3
+    0, 2, 1, 0, 3, 2
 };
 
 // Todo make this nicer
@@ -28,8 +27,7 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     },
     .attribute_descriptions = {
         { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
-        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
-        { 2, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCord) }
+        { 1, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCord) }
     }
 };
 
