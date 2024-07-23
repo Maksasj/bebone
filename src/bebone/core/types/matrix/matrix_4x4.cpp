@@ -231,13 +231,13 @@ namespace bebone::core {
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& direction, const Vec3f& up) {
         Vec3f zaxis = direction.normalize();
-        Vec3f xaxis = Vec3f::cross(zaxis, up).normalize();
+        Vec3f xaxis = Vec3f::cross(up, zaxis).normalize();
         Vec3f yaxis = Vec3f::cross(zaxis, xaxis);
 
         return {
-            xaxis.x, yaxis.x, zaxis.x, -Vec3f::dot(xaxis, origin),
-            xaxis.y, yaxis.y, zaxis.y, -Vec3f::dot(yaxis, origin),
-            xaxis.z, yaxis.z, zaxis.z, -Vec3f::dot(zaxis, origin),
+            xaxis.x, xaxis.y, xaxis.z, -Vec3f::dot(xaxis, origin),
+            yaxis.x, yaxis.y, yaxis.z, -Vec3f::dot(yaxis, origin),
+            zaxis.x, zaxis.y, zaxis.z, -Vec3f::dot(zaxis, origin),
              0.0f,     0.0f,    0.0f,             1.0f
         };
     }

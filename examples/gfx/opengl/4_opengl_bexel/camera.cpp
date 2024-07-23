@@ -69,7 +69,7 @@ namespace bexel {
         direction.y = sin(rotation.x);
         direction.z = sin(rotation.y) * cos(rotation.x);
 
-        view_matrix = Mat4f::view(position, direction, Vec3f::down);
+        view_matrix = Mat4f::view(position, direction);
         proj_matrix = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 2000.0f);
 
         BEBONE_PROFILE_STOP(BEXEL_CAMERA_UPDATE)
