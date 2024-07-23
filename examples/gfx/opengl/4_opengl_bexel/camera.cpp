@@ -20,16 +20,16 @@ namespace bexel {
         const f32 speed = 0.5f;
 
         if (glfwGetKey(window->get_backend(), 'W') == GLFW_PRESS)
-            position -= Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
-
-        if (glfwGetKey(window->get_backend(), 'S') == GLFW_PRESS)
             position += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
 
+        if (glfwGetKey(window->get_backend(), 'S') == GLFW_PRESS)
+            position -= Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
+
         if (glfwGetKey(window->get_backend(), 'A') == GLFW_PRESS)
-            position += Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
+            position -= Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
 
         if (glfwGetKey(window->get_backend(), 'D') == GLFW_PRESS)
-            position -= Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
+            position += Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
 
         if (glfwGetKey(window->get_backend(), GLFW_KEY_SPACE) == GLFW_PRESS)
             position.y += speed;

@@ -235,9 +235,9 @@ namespace bebone::core {
         Vec3f yaxis = Vec3f::cross(zaxis, xaxis);
 
         return {
-            xaxis.x, xaxis.y, xaxis.z, Vec3f::dot(xaxis, origin),
-            yaxis.x, yaxis.y, yaxis.z, Vec3f::dot(yaxis, origin),
-            zaxis.x, zaxis.y, zaxis.z, Vec3f::dot(zaxis, origin),
+            xaxis.x, xaxis.y, xaxis.z, -Vec3f::dot(xaxis, origin),
+            yaxis.x, yaxis.y, yaxis.z, -Vec3f::dot(yaxis, origin),
+            zaxis.x, zaxis.y, zaxis.z, -Vec3f::dot(zaxis, origin),
              0.0f,     0.0f,    0.0f,             1.0f
         };
     }
