@@ -20,16 +20,16 @@ namespace bexel {
         const f32 speed = 0.5f;
 
         if (glfwGetKey(window->get_backend(), 'W') == GLFW_PRESS)
-            position += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
-
-        if (glfwGetKey(window->get_backend(), 'S') == GLFW_PRESS)
             position -= Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
 
+        if (glfwGetKey(window->get_backend(), 'S') == GLFW_PRESS)
+            position += Vec3f(1.0f, 0.0f, 1.0f) * direction.normalize() * speed;
+
         if (glfwGetKey(window->get_backend(), 'A') == GLFW_PRESS)
-            position -= Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
+            position += Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
 
         if (glfwGetKey(window->get_backend(), 'D') == GLFW_PRESS)
-            position += Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
+            position -= Vec3f(direction.z, 0.0f, -direction.x).normalize() * speed;
 
         if (glfwGetKey(window->get_backend(), GLFW_KEY_SPACE) == GLFW_PRESS)
             position.y += speed;
@@ -69,7 +69,7 @@ namespace bexel {
         direction.y = sin(rotation.x);
         direction.z = sin(rotation.y) * cos(rotation.x);
 
-        view_matrix = Mat4f::view(position, direction, Vec3f::down);
+        view_matrix = Mat4f::view(position, direction);
         proj_matrix = Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 2000.0f);
 
         BEBONE_PROFILE_STOP(BEXEL_CAMERA_UPDATE)
