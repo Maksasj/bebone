@@ -55,8 +55,8 @@ int main() {
 
     // Final pass
     GLShaderProgram post_program(
-            GLShaderFactory::create_shader("post.vert.glsl", VertexShader, EnableUniforms),
-            GLShaderFactory::create_shader("post.frag.glsl", FragmentShader, EnableUniforms));
+        GLShaderFactory::create_shader("post.vert.glsl", VertexShader, EnableUniforms),
+        GLShaderFactory::create_shader("post.frag.glsl", FragmentShader, EnableUniforms));
 
     while (!window->closing()) {
         transform.rotation.x += 0.02f;
