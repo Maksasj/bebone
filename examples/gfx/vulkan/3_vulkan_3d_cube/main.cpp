@@ -68,7 +68,7 @@ int main() {
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
     auto c_transform = CameraTransform {
-        Mat4f::view(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
+        Mat4f::view(Vec3f(0.0f, 0.0f, -10.0f), Vec3f::forward, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
