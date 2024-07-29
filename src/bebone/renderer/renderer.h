@@ -19,4 +19,8 @@
 
 #include "vulkan_renderer.h"
 
+// Utils
+#include "opengl_triangle_mesh.h"
+#include "opengl_triangle_mesh_builder.h"
+
 #endif
