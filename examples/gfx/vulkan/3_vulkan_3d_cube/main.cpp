@@ -8,24 +8,19 @@ struct Handles { VulkanBindlessBufferHandle camera_handle, transform_handle; };
 struct CameraTransform { Mat4f view, proj; };
 struct Transform { Mat4f transform, scale, rotation; };
 
-const std::vector<Vertex> vertices {
-        {{-1.0, -1.0,  1.0},   ColorRGBA::WHITE  },
-        {{ 1.0, -1.0,  1.0},   ColorRGBA::YELLOW },
-        {{ 1.0,  1.0,  1.0},   ColorRGBA::MAGENTA},
-        {{-1.0,  1.0,  1.0},   ColorRGBA::RED    },
-        {{-1.0, -1.0, -1.0},   ColorRGBA::CYAN   },
-        {{ 1.0, -1.0, -1.0},   ColorRGBA::GREEN  },
-        {{ 1.0,  1.0, -1.0},   ColorRGBA::BLUE   },
-        {{-1.0,  1.0, -1.0},   ColorRGBA::BLACK  }
+const vector<Vertex> vertices {
+    {{ -1.0, -1.0, 1.0 }, ColorRGBA::WHITE  },
+    {{ 1.0, -1.0, 1.0 }, ColorRGBA::YELLOW },
+    {{ 1.0, 1.0, 1.0 }, ColorRGBA::MAGENTA},
+    {{ -1.0, 1.0, 1.0 }, ColorRGBA::RED    },
+    {{ -1.0, -1.0, -1.0 }, ColorRGBA::CYAN   },
+    {{ 1.0, -1.0, -1.0 }, ColorRGBA::GREEN  },
+    {{ 1.0, 1.0, -1.0 }, ColorRGBA::BLUE   },
+    {{ -1.0, 1.0, -1.0 }, ColorRGBA::BLACK  }
 };
 
-const std::vector<u32> indices {
-        0, 1, 2, 2, 3, 0,
-        1, 5, 6, 6, 2, 1,
-        7, 6, 5, 5, 4, 7,
-        4, 0, 3, 3, 7, 4,
-        4, 5, 1, 1, 0, 4,
-        3, 2, 6, 6, 7, 3
+const vector<u32> indices {
+    0, 1, 2, 2, 3, 0, 1, 5, 6, 6, 2, 1, 7, 6, 5, 5, 4, 7, 4, 0, 3, 3, 7, 4, 4, 5, 1, 1, 0, 4, 3, 2, 6, 6, 7, 3
 };
 
 // Todo make this nicer
@@ -99,7 +94,10 @@ int main() {
         cmd->bind_descriptor_set(pipeline_manager->get_pipeline_layout(), pipeline_manager->get_descriptor_set());
 
         cmd->begin_render_pass(swap_chain);
-            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            // Flipped viewport
+            cmd->set_viewport(0, window->get_height(), window->get_width(), -window->get_height());
+            // cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+
             cmd->bind_pipeline(pipeline);
 
             auto handles = Handles { c_handles[frame], t_handles[frame] };

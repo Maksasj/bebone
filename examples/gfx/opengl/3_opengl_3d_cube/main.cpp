@@ -12,18 +12,18 @@ struct Vertex {
 };
 
 const vector<Vertex> vertices {
-    {{ -1.0f, -1.0f,  1.0}, ColorRGBA::WHITE  },
-    {{  1.0f, -1.0f,  1.0}, ColorRGBA::YELLOW },
-    {{ -1.0f,  1.0f,  1.0}, ColorRGBA::MAGENTA},
-    {{  1.0f,  1.0f,  1.0}, ColorRGBA::RED    },
-    {{ -1.0f, -1.0f, -1.0}, ColorRGBA::CYAN   },
-    {{  1.0f, -1.0f, -1.0}, ColorRGBA::GREEN  },
-    {{ -1.0f,  1.0f, -1.0}, ColorRGBA::BLUE   },
-    {{  1.0f,  1.0f, -1.0}, ColorRGBA::BLACK  }
+    {{ -1.0, -1.0, 1.0 }, ColorRGBA::WHITE  },
+    {{ 1.0, -1.0, 1.0 }, ColorRGBA::YELLOW },
+    {{ 1.0, 1.0, 1.0 }, ColorRGBA::MAGENTA},
+    {{ -1.0, 1.0, 1.0 }, ColorRGBA::RED    },
+    {{ -1.0, -1.0, -1.0 }, ColorRGBA::CYAN   },
+    {{ 1.0, -1.0, -1.0 }, ColorRGBA::GREEN  },
+    {{ 1.0, 1.0, -1.0 }, ColorRGBA::BLUE   },
+    {{ -1.0, 1.0, -1.0 }, ColorRGBA::BLACK  }
 };
 
 const vector<u32> indices {
-    2, 6, 7, 2, 3, 7, 0, 4, 5, 0, 1, 5, 0, 2, 6, 0, 4, 6, 1, 3, 7, 1, 5, 7, 0, 2, 3, 0, 1, 3, 4, 6, 7, 4, 5, 7
+    0, 1, 2, 2, 3, 0, 1, 5, 6, 6, 2, 1, 7, 6, 5, 5, 4, 7, 4, 0, 3, 3, 7, 4, 4, 5, 1, 1, 0, 4, 3, 2, 6, 6, 7, 3
 };
 
 struct Transform {
@@ -77,10 +77,6 @@ int main() {
         *camera_ptr = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) *  Mat4f::view(Vec3f(0, 0, -10), Vec3f::forward, Vec3f::up);
     camera_ubo.unmap();
     camera_ubo.unbind();
-
-    GLContext::enable(GL_CULL_FACE | GL_DEPTH_TEST);
-    GLContext::front_face(GL_CCW);
-    GLContext::cull_face(GL_BACK);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);

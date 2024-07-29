@@ -19,7 +19,7 @@ const std::vector<Vertex> vertices {
     {{-0.5f,  0.5f, 0.0f},   {0.0f, 1.0f}}
 };
 
-const std::vector<u32> indices { 0, 1, 3, 1, 2, 3 };
+const std::vector<u32> indices { 0, 3, 1, 3, 2, 1 };
 
 int main() {
     GLFWContext::init();
@@ -52,9 +52,7 @@ int main() {
     GLTexture2D texture("image.png");
     shader_program.set_uniform("ourTexture", 0);
 
-    GLContext::enable(GL_CULL_FACE | GL_DEPTH_TEST);
-    GLContext::front_face(GL_CCW);
-    GLContext::cull_face(GL_BACK);
+    GLContext::disable(GL_DEPTH_TEST);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);

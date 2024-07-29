@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_RESOURCE_FACTORY_H_
 #define _BEBONE_RENDERER_VULKAN_RESOURCE_FACTORY_H_
 
-#include "../iresource_factory.h"
+#include "iresource_factory.h"
 
 #include "vulkan_hdr_texture_resource.h"
 #include "vulkan_depth_resource.h"

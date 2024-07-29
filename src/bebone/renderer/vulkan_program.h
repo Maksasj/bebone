@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_PROGRAM_H_
 #define _BEBONE_RENDERER_VULKAN_PROGRAM_H_
 
-#include "../iprogram.h"
+#include "iprogram.h"
 #include "vulkan_command_encoder.h"
 
 namespace bebone::renderer {

@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_MATERIAL_MANAGER_H_
 #define _BEBONE_RENDERER_VULKAN_MATERIAL_MANAGER_H_
 
-#include "../imaterial_manager.h"
+#include "imaterial_manager.h"
 #include "vulkan_program_manager.h"
 #include "vulkan_material.h"
 

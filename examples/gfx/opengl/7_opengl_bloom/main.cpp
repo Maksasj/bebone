@@ -57,13 +57,9 @@ int main() {
         GLShaderFactory::create_shader("post.vert.glsl", VertexShader, EnableUniforms),
         GLShaderFactory::create_shader("post.frag.glsl", FragmentShader, EnableUniforms));
 
-    GLContext::enable(GL_CULL_FACE | GL_DEPTH_TEST);
-    GLContext::front_face(GL_CCW);
-    GLContext::cull_face(GL_BACK);
-
     while (!window->closing()) {
-        transform.rotation.x += 0.02f;
-        transform.rotation.z -= 0.02f;
+        transform.rotation.x += Time::get_seconds_elapsed();
+        transform.rotation.z -= Time::get_seconds_elapsed();
 
         // Geometry pass
         geometry_fbo.bind();

@@ -16,8 +16,7 @@ const std::vector<Vertex> vertices {
     {{-0.5f,  0.5f, 0.0f},   {0.0f, 1.0f}}
 };
 
-const std::vector<u32> indices { 0, 1, 3, 1, 2, 3 };
-
+const std::vector<u32> indices { 0, 3, 1, 3, 2, 1 };
 
 // Todo make this nicer
 const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
@@ -69,8 +68,8 @@ int main() {
 
         cmd->begin_render_pass(swap_chain);
             // Flipped viewport
-            // cmd->set_viewport(0, window->get_height(), window->get_width(), -window->get_height());
-            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            cmd->set_viewport(0, window->get_height(), window->get_width(), -window->get_height());
+            // cmd->set_viewport(0, 0, window->get_width(), window->get_height());
 
             cmd->bind_pipeline(pipeline);
             cmd->bind_vertex_buffer(vb);

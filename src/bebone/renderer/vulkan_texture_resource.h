@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_TEXTURE_RESOURCE_H_
 #define _BEBONE_RENDERER_VULKAN_TEXTURE_RESOURCE_H_
 
-#include "../itexture_resource.h"
+#include "itexture_resource.h"
 #include "vulkan_texture.h"
 
 namespace bebone::renderer {

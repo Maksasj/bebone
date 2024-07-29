@@ -1,8 +1,8 @@
 #ifndef _BEBONE_RENDERER_VULKAN_RENDER_GRAPH_IMPL_H_
 #define _BEBONE_RENDERER_VULKAN_RENDER_GRAPH_IMPL_H_
 
-#include "../irenderer.h"
-#include "../irender_graph_impl.h"
+#include "irenderer.h"
+#include "irender_graph_impl.h"
 #include "vulkan_command_encoder.h"
 #include "vulkan_pass_factory.h"
 #include "vulkan_resource_factory.h"

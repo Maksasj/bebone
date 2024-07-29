@@ -17,7 +17,6 @@
 
 #include "obj_mesh_loader.h"
 
-#include "opengl/opengl_renderer.h"
-#include "vulkan/vulkan_renderer.h"
+#include "vulkan_renderer.h"
 
 #endif

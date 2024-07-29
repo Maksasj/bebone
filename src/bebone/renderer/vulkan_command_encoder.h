@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_COMMAND_ENCODER_H_
 #define _BEBONE_RENDERER_VULKAN_COMMAND_ENCODER_H_
 
-#include "../icommand_encoder.h"
+#include "icommand_encoder.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;

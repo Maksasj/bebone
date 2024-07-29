@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_PASS_FACTORY_H_
 #define _BEBONE_RENDERER_VULKAN_PASS_FACTORY_H_
 
-#include "../irenderer.h"
+#include "irenderer.h"
 
 #include "vulkan_present_pass.h"
 #include "vulkan_deferred_g_pass.h"

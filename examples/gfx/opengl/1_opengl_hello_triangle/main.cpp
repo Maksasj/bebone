@@ -37,9 +37,7 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    GLContext::enable(GL_CULL_FACE | GL_DEPTH_TEST);
-    GLContext::front_face(GL_CCW);
-    GLContext::cull_face(GL_BACK);
+    GLContext::disable(GL_DEPTH_TEST);
 
     while(!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);

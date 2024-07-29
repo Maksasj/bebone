@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_TEXTURE_H_
 #define _BEBONE_RENDERER_VULKAN_TEXTURE_H_
 
-#include "../itexture.h"
+#include "itexture.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;

@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_MATERIAL_H_
 #define _BEBONE_RENDERER_VULKAN_MATERIAL_H_
 
-#include "../imaterial.h"
+#include "imaterial.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;

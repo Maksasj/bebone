@@ -11,6 +11,12 @@ namespace bebone::gfx {
         static void inline load_opengl() {
             // TODO we need to check if load successful
             gladLoadGL();
+
+            // Setting default opengl settings
+            enable(GL_CULL_FACE);
+            enable(GL_DEPTH_TEST);
+            front_face(GL_CCW);
+            cull_face(GL_BACK);
         }
 
         static void inline enable(const GLenum& cap) {

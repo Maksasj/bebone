@@ -41,8 +41,6 @@ namespace bexel {
     void Bexel::run() {
         BEBONE_PROFILE_RECORD(BEXEL_RUN)
 
-        GLContext::enable(GL_DEPTH_TEST);
-
         shader->set_uniform("inTexture", 0);
 
         while (!window->closing()) {

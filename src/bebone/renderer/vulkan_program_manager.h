@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_VULKAN_PROGRAM_MANAGER_H_
 
 #include "renderer_backend.h"
-#include "../iprogram_manager.h"
+#include "iprogram_manager.h"
 #include "vulkan_program.h"
 #include "vulkan_texture.h"
 

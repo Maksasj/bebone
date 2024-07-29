@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_PASS_ASSEMBLER_H_
 #define _BEBONE_RENDERER_VULKAN_PASS_ASSEMBLER_H_
 
-#include "../renderer_backend.h"
+#include "renderer_backend.h"
 #include "ipass_assembler.h"
 
 #include "vulkan_program_manager.h"

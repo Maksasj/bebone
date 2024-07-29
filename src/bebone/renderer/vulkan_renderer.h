@@ -1,12 +1,12 @@
 #ifndef _BEBONE_RENDERER_VULKAN_RENDERER_H_
 #define _BEBONE_RENDERER_VULKAN_RENDERER_H_
 
-#include "../irenderer.h"
-#include "../irender_graph.h"
+#include "irenderer.h"
+#include "irender_graph.h"
 #include "vulkan_render_graph_impl.h"
 #include "vulkan_triangle_mesh.h"
 #include "vulkan_triangle_mesh_builder.h"
-#include "../pbr_render_graph.h"
+#include "pbr_render_graph.h"
 #include "vulkan_texture.h"
 
 #include "vulkan_program_manager.h"
