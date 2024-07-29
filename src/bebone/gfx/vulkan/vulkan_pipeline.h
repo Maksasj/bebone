@@ -27,6 +27,8 @@ namespace bebone::gfx {
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig& config_info);
 
+            ~VulkanPipeline();
+
             // void recreate(
             //     VulkanDevice& device,
             //     std::shared_ptr<VulkanShaderModule>& vertShaderModule,
@@ -35,7 +37,7 @@ namespace bebone::gfx {
 
             void bind(VkCommandBuffer command_buffer);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

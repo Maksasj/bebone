@@ -23,7 +23,9 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanRenderPass>& render_pass,
                 VkExtent2D extent);
 
-            void destroy(VulkanDevice& device) override;
+            ~VulkanFramebuffer();
+
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

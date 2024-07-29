@@ -3,7 +3,10 @@
 #include "vulkan_device.h"
 
 namespace bebone::gfx {
-    VulkanShaderModule::VulkanShaderModule(VulkanDevice& device, const ShaderCode& code) : type(code.get_shader_type()) {
+    VulkanShaderModule::VulkanShaderModule(
+        VulkanDevice& device, 
+        const ShaderCode& code
+    ) : VulkanWrapper<VkShaderModule>(device), type(code.get_shader_type()) {
         VkShaderModuleCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -14,6 +17,11 @@ namespace bebone::gfx {
             throw std::runtime_error("Failed to create shader module");
     }
 
+    VulkanShaderModule::~VulkanShaderModule() {
+        vkDestroyShaderModule(device.device, backend, nullptr);
+    }
+
+    /*
     void VulkanShaderModule::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -22,4 +30,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

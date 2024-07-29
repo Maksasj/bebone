@@ -24,6 +24,7 @@ namespace bebone::gfx {
 
         public:
             VulkanRenderPass(VulkanDevice& device, VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
+            ~VulkanRenderPass();
 
             std::optional<VulkanAttachmentDesc> get_depth_attachment() const;
 
@@ -31,7 +32,7 @@ namespace bebone::gfx {
             const vector<VulkanAttachmentDesc>& get_attachments() const;
             const VkExtent2D& get_extent() const;
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

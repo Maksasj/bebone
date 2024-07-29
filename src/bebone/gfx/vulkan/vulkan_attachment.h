@@ -57,7 +57,7 @@ namespace bebone::gfx {
     class VulkanDeviceMemory;
     class VulkanSampler;
 
-    class IVulkanAttachment : public VulkanApi {
+    class IVulkanAttachment {
         private:
 
         public:

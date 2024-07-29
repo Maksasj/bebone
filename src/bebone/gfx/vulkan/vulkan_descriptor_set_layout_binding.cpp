@@ -3,7 +3,10 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanDescriptorSetLayoutBinding::VulkanDescriptorSetLayoutBinding(const VulkanDescriptorSetLayoutBindingType& type, const u32& binding) {
+    VulkanDescriptorSetLayoutBinding::VulkanDescriptorSetLayoutBinding(
+        const VulkanDescriptorSetLayoutBindingType& type, 
+        const u32& binding
+    ) {
         if(type == Uniform) {
             backend = {
                 .binding = binding,
@@ -29,9 +32,5 @@ namespace bebone::gfx {
                     .pImmutableSamplers = nullptr
             };
         }
-    }
-
-    void VulkanDescriptorSetLayoutBinding::destroy(VulkanDevice&) {
-        mark_destroyed();
     }
 }

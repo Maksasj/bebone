@@ -19,8 +19,9 @@ namespace bebone::gfx {
             ShaderType type;
 
             VulkanShaderModule(VulkanDevice& device, const ShaderCode& code);
+            ~VulkanShaderModule();
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

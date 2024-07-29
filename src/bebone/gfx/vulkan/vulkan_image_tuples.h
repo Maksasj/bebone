@@ -25,7 +25,7 @@ namespace bebone::gfx {
 
             VulkanAttachmentType get_type() const override;
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
         };
 
         struct VulkanDepthImageTuple : public IVulkanAttachment {
@@ -45,10 +45,10 @@ namespace bebone::gfx {
 
             VulkanAttachmentType get_type() const override;
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
         };
 
-        struct VulkanImageMemoryTuple : public VulkanApi {
+        struct VulkanImageMemoryTuple {
             std::shared_ptr<VulkanImage> image;
             std::shared_ptr<VulkanDeviceMemory> memory;
 
@@ -56,7 +56,7 @@ namespace bebone::gfx {
                 const shared_ptr<VulkanImage>& image,
                 const shared_ptr<VulkanDeviceMemory>& memory);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
         };
 }
 

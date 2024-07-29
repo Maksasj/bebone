@@ -1,7 +1,7 @@
 #include "vulkan_texture_tuple.h"
 
 #include "vulkan_device.h"
-#include "vulkan_command_buffer_pool.h"
+#include "vulkan_command_pool.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -81,6 +81,7 @@ namespace bebone::gfx {
         return Color; // Todo, this may not be always true
     }
 
+    /*
     void VulkanTextureTuple::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -92,4 +93,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

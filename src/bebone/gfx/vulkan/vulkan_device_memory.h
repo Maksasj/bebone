@@ -22,6 +22,8 @@ namespace bebone::gfx {
                 VkMemoryRequirements requirements,
                 VkMemoryPropertyFlags properties);
 
+            ~VulkanDeviceMemory();
+
             void bind_buffer_memory(
                 VulkanDevice& device,
                 VulkanBuffer& buffer);
@@ -51,7 +53,7 @@ namespace bebone::gfx {
                 const void* src,
                 const size_t& size);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

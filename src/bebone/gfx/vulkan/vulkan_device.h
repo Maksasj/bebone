@@ -32,7 +32,7 @@ namespace bebone::gfx {
     class VulkanSwapChain;
     class VulkanPipeline;
     class VulkanDescriptorPool;
-    class VulkanCommandBufferPool;
+    class VulkanCommandPool;
     class VulkanCommandBuffer;
     class VulkanShaderModule;
     class VulkanPipelineLayout;
@@ -53,7 +53,7 @@ namespace bebone::gfx {
 
             // Todo, maybe this can be optimized
             std::vector<shared_ptr<VulkanApi>> child_objects;
-            std::shared_ptr<VulkanCommandBufferPool> command_buffer_pool;
+            std::shared_ptr<VulkanCommandPool> command_buffer_pool;
 
         public:
             VkDevice device;
@@ -193,7 +193,7 @@ namespace bebone::gfx {
                     const size_t& count);
 
             // Create new instance of command buffer pool
-            std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
+            std::shared_ptr<VulkanCommandPool> create_command_buffer_pool();
 
             // Create command buffer from personal command buffer pool
             std::shared_ptr<VulkanCommandBuffer> create_command_buffer();
@@ -243,19 +243,19 @@ namespace bebone::gfx {
 
             template <typename... Args>
             void destroy_all(Args... args) {
-                (args.destroy(*this), ...);
+                // (args.destroy(*this), ...);
             }
 
             template <typename... Args>
             void destroy_all(std::shared_ptr<Args>... args) {
-                (args->destroy(*this), ...);
+                // (args->destroy(*this), ...);
             }
 
             template <typename... Args>
             void destroy_all(std::vector<std::shared_ptr<Args>>... args) {
-                for(auto& arg : (args, ...)) {
-                    arg->destroy(*this);
-                }
+                // for(auto& arg : (args, ...)) {
+                    // arg->destroy(*this);
+                // }
             }
 
             void collect_garbage();

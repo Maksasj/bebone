@@ -10,8 +10,4 @@ namespace bebone::gfx {
             .size = static_cast<uint32_t>(size)
         };
     }
-
-    void VulkanConstRange::destroy(VulkanDevice& device) {
-        std::ignore = device;
-    }
 }

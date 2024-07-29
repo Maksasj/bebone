@@ -10,7 +10,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         const size_t& size,
         VulkanBufferInfo buffer_info
-    )  : size(size) {
+    )  : VulkanWrapper<VkBuffer>(device), size(size) {
         VkBufferCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -24,6 +24,10 @@ namespace bebone::gfx {
 
         if(vkCreateBuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create vulkan buffer!");
+    }
+
+    VulkanBuffer::~VulkanBuffer() {
+        
     }
 
     VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
@@ -57,14 +61,5 @@ namespace bebone::gfx {
 
     const size_t& VulkanBuffer::get_size() const {
         return size;
-    }
-
-    void VulkanBuffer::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-            
-        vkDestroyBuffer(device.device, backend, nullptr);
-
-        mark_destroyed();
     }
 }

@@ -16,7 +16,9 @@ namespace bebone::gfx {
                 const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
                 const std::vector<VulkanConstRange>& constant_ranges);
 
-            void destroy(VulkanDevice& device) override;
+            ~VulkanPipelineLayout();
+
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

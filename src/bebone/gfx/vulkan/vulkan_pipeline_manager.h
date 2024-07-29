@@ -13,7 +13,7 @@ namespace bebone::gfx {
     enum class VulkanBindlessBufferHandle : uint32_t { Invalid = 0 };
     enum class VulkanBindlessTextureHandle : uint32_t { Invalid = 0 };
 
-    class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {
+    class VulkanPipelineManager : private core::NonCopyable {
         private:
             std::shared_ptr<VulkanDescriptorPool> descriptor_pool;
 
@@ -78,7 +78,7 @@ namespace bebone::gfx {
             const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
             const std::shared_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
 
-            void destroy(VulkanDevice& device) override;
+           //  void destroy(VulkanDevice& device) override;
     };
 }
 

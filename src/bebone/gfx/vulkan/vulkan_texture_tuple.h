@@ -46,7 +46,7 @@ namespace bebone::gfx {
 
             VulkanAttachmentType get_type() const override;
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

@@ -9,7 +9,7 @@
 #include "vulkan_framebuffer.h"
 
 #include "vulkan_command_buffer.h"
-#include "vulkan_command_buffer_pool.h"
+#include "vulkan_command_pool.h"
 
 #include "vulkan_debug_messenger.h"
 

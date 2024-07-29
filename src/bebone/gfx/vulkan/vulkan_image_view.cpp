@@ -6,7 +6,12 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) {
+    VulkanImageView::VulkanImageView(
+        VulkanDevice& device, 
+        VulkanImage& image, 
+        const VkFormat& image_format, 
+        VulkanImageViewInfo image_view_info
+    ) : VulkanWrapper<VkImageView>(device) {
         VkImageViewCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -29,6 +34,12 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create texture image view!");
     }
 
+    VulkanImageView::~VulkanImageView() {
+        // Todo Destroy image view only if this is not a swap chain image ? 
+        // vkDestroyImageView(device.device, backend, nullptr);
+    }
+
+    /*
     void VulkanImageView::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -37,4 +48,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

@@ -8,11 +8,12 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    class VulkanConstRange : public VulkanWrapper<VkPushConstantRange> {
+    class VulkanConstRange {
+        public:
+            VkPushConstantRange backend;
+
         public:
             VulkanConstRange(const size_t& size, const u32& offset);
-
-            void destroy(VulkanDevice& device) override;
     };
 }
 
