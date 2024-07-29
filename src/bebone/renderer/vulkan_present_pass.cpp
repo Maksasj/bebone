@@ -99,7 +99,7 @@ namespace bebone::renderer {
         cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
             auto& viewport = get_viewport();
 
-            cmd->set_viewport(0, 0, viewport.x, viewport.y);
+            cmd->set_viewport(0, viewport.y, viewport.x, -viewport.y);
             program->bind(encoder);
 
             const auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource);

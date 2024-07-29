@@ -10,9 +10,9 @@ int main() {
     auto renderer = RendererFactory::create_renderer(window);
 
     const auto vertices = std::vector<Vertex> {
-        {{0.5f, 0.5f, 0.0f},  Vec3f::right, { 1.0, 0.0 }},
-        {{0.0f, -0.5f, 0.0f}, Vec3f::up,    { 0.0, 1.0 }},
-        {{-0.5f, 0.5f, 0.0f}, Vec3f::forward,{ 1.0, 1.0 }},
+        {{-0.5f, -0.5f, 0.0f},  Vec3f::right, { 1.0, 0.0 }},
+        {{0.5f, -0.5f, 0.0f}, Vec3f::up,    { 0.0, 1.0 }},
+        {{0.0f,  0.5f, 0.0f} , Vec3f::forward,{ 1.0, 1.0 }},
     };
 
     const auto indices =  std::vector<u32> { 0, 1, 2 };
