@@ -10,7 +10,7 @@
 #include "opengl_texture_2d.h"
 #include "opengl_renderbuffer.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     class GLFramebuffer : private core::NonCopyable {

@@ -1,6 +1,6 @@
 #include "opengl_renderbuffer.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLRenderbuffer::GLRenderbuffer() {
         glGenRenderbuffers(1, &id);
     }

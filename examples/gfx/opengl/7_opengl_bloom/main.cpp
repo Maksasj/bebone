@@ -4,7 +4,6 @@
 using namespace bebone;
 using namespace bebone::gfx;
 using namespace bebone::renderer;
-using namespace bebone::gfx::opengl;
 
 int main() {
     glfwInit();

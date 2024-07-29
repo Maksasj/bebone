@@ -1,6 +1,6 @@
 #include "opengl_framebuffer.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     GLFramebuffer::GLFramebuffer() {

@@ -21,7 +21,6 @@ namespace bebone::renderer {
             {{  1.0f,  1.0f, -1.0},   {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}
         };
 
-
         const vector<u32> indices {
             2, 6, 7,
             2, 3, 7,
