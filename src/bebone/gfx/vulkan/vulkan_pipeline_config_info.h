@@ -128,7 +128,7 @@ namespace bebone::gfx {
         VkPipelineDynamicStateCreateFlags flags = 0;
 
         std::vector<VkDynamicState> ptr_dynamic_states = {
-            VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR
+            VK_DYNAMIC_STATE_VIEWPORT
         };
     };
 

@@ -7,15 +7,8 @@ const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
 
-const std::vector<Vec3f> vertices = {
-    {-0.5f, -0.5f, 0.0f},
-    {0.5f, -0.5f, 0.0f},
-    {0.0f,  0.5f, 0.0f}
-};
-
-const std::vector<u32> indices = {
-	0, 1, 2,
-};
+const std::vector<Vec3f> vertices = { {-0.5f, -0.5f, 0.0f}, {0.5f, -0.5f, 0.0f}, {0.0f,  0.5f, 0.0f} };
+const std::vector<u32> indices = { 0, 1, 2, };
 
 int main() {
     GLFWContext::init();
@@ -43,6 +36,10 @@ int main() {
     vao.unbind();
 	vbo.unbind();
 	ebo.unbind();
+
+    GLContext::enable(GL_CULL_FACE | GL_DEPTH_TEST);
+    GLContext::front_face(GL_CCW);
+    GLContext::cull_face(GL_BACK);
 
     while(!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);

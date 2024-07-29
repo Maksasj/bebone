@@ -22,18 +22,7 @@ namespace bebone::renderer {
         };
 
         const vector<u32> indices {
-            2, 6, 7,
-            2, 3, 7,
-            0, 4, 5,
-            0, 1, 5,
-            0, 2, 6,
-            0, 4, 6,
-            1, 3, 7,
-            1, 5, 7,
-            0, 2, 3,
-            0, 1, 3,
-            4, 6, 7,
-            4, 5, 7
+            2, 6, 7, 2, 3, 7, 0, 4, 5, 0, 1, 5, 0, 2, 6, 0, 4, 6, 1, 3, 7, 1, 5, 7, 0, 2, 3, 0, 1, 3, 4, 6, 7, 4, 5, 7
         };
 
         builder->append_raw(vertices.data(), vertices.size(), indices.data(), indices.size());

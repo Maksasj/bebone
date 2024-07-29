@@ -3,29 +3,18 @@
 using namespace bebone::core;
 using namespace bebone::gfx;
 
-struct Vertex {
-    Vec3f pos;
-    Vec3f color;
-};
-
-const std::vector<Vertex> vertices = {
-    {{0.5f, 0.5f, 0.0f},  {1.0f, 0.0f, 0.0f}},
-    {{0.0f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
-    {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-};
+const std::vector<Vec3f> vertices = { {-0.5f, -0.5f, 0.0f}, {0.5f, -0.5f, 0.0f}, {0.0f,  0.5f, 0.0f} };
+const std::vector<u32> indices = { 0, 1, 2, };
 
 // Todo make this nicer
 const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     .binding_descriptions = {
-        { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
+        { 0, sizeof(Vec3f), VK_VERTEX_INPUT_RATE_VERTEX }
     },
     .attribute_descriptions = {
-        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
-        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
+        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0 }
     }
 };
-
-const std::vector<int> indices = { 0, 1, 2 };
 
 std::string vulkan_device_read_file(const std::string& path) {
     std::ifstream file(path);
@@ -39,7 +28,7 @@ std::string vulkan_device_read_file(const std::string& path) {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, Vulkan);
+    auto window = WindowFactory::create_window("1. Vulkan hello triangle example", 800, 600, Vulkan);
 
     auto instance = VulkanInstance::create_instance();
     auto device = instance->create_device(window);
@@ -73,7 +62,9 @@ int main() {
         cmd->begin_record();
 
         cmd->begin_render_pass(swap_chain);
-            cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+            // Flipped viewport
+            cmd->set_viewport(0, window->get_height(), window->get_width(), -window->get_height());
+
             cmd->bind_pipeline(pipeline);
             cmd->bind_vertex_buffer(vb);
             cmd->bind_index_buffer(eb);

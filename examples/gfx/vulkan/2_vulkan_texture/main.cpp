@@ -6,17 +6,18 @@ using namespace bebone::gfx;
 
 struct Vertex {
     Vec3f pos;
-    Vec2f texCord;
+    Vec2f tex_coords;
 };
 
 const std::vector<Vertex> vertices {
-    {{ -0.5f, -0.5f, 0.0f}, {1.0f, 1.0f}},
-    {{ -0.5f,  0.5f, 0.0f}, {1.0f, 0.0f}},
-    {{ 0.5f,  0.5f, 0.0f},  {0.0f, 0.0f}},
-    {{ 0.5f, -0.5f, 0.0f},  {0.0f, 1.0f}}
+    {{0.5f,  0.5f, 0.0f},    {1.0f, 1.0f}},
+    {{0.5f, -0.5f, 0.0f},    {1.0f, 0.0f}},
+    {{-0.5f, -0.5f, 0.0f},   {0.0f, 0.0f}},
+    {{-0.5f,  0.5f, 0.0f},   {0.0f, 1.0f}}
 };
 
-const std::vector<u32> indices { 0, 2, 1, 0, 3, 2 };
+const std::vector<u32> indices { 0, 1, 3, 1, 2, 3 };
+
 
 // Todo make this nicer
 const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
@@ -25,7 +26,7 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     },
     .attribute_descriptions = {
         { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
-        { 1, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCord) }
+        { 1, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, tex_coords) }
     }
 };
 
@@ -67,7 +68,10 @@ int main() {
         cmd->bind_descriptor_set(pipeline_manager->get_pipeline_layout(), pipeline_manager->get_descriptor_set());
 
         cmd->begin_render_pass(swap_chain);
+            // Flipped viewport
+            // cmd->set_viewport(0, window->get_height(), window->get_width(), -window->get_height());
             cmd->set_viewport(0, 0, window->get_width(), window->get_height());
+
             cmd->bind_pipeline(pipeline);
             cmd->bind_vertex_buffer(vb);
             cmd->bind_index_buffer(eb);

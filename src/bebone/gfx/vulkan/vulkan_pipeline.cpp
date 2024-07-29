@@ -71,6 +71,12 @@ namespace bebone::gfx {
             .primitiveRestartEnable = config_info.input_assembly_state.primitive_restart_enable
         };
 
+        // Static scissors
+        const auto scissors = VkRect2D {
+            { 0, 0 },
+            { render_pass->get_extent().width, render_pass->get_extent().height }
+        };
+
         // VulkanPipelineViewportStateConfig
         const VkPipelineViewportStateCreateInfo viewport_state = {
             .sType = config_info.viewport_state.type,
@@ -78,8 +84,8 @@ namespace bebone::gfx {
             .flags = config_info.viewport_state.flags,
             .viewportCount = config_info.viewport_state.viewport_count,
             .pViewports = config_info.viewport_state.ptr_viewports,
-            .scissorCount = config_info.viewport_state.scissor_count,
-            .pScissors = config_info.viewport_state.ptr_scissors
+            .scissorCount = 1,
+            .pScissors = &scissors
         };
 
         // VulkanPipelineRasterizationStateConfig

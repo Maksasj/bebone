@@ -102,23 +102,36 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(
+        const f32& x,
+        const f32& y,
+        const f32& width,
+        const f32& height,
+        const f32& min_depth,
+        const f32& max_depth
+    ) {
+        VkViewport viewport;
+
+        viewport.x = x;
+        viewport.y = y;
+        viewport.width = width;
+        viewport.height = height;
+        viewport.minDepth = min_depth;
+        viewport.maxDepth = max_depth;
+
+        vkCmdSetViewport(backend, 0, 1, &viewport);
+
+        return *this;
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::set_scissors(
         const i32& x,
         const i32& y,
         const u32& width,
         const u32& height
     ) {
-        VkViewport viewport;
 
-        viewport.x = static_cast<float>(x);
-        viewport.y = static_cast<float>(y);
-        viewport.width = static_cast<float>(width);
-        viewport.height = static_cast<float>(height);
-        viewport.minDepth = 0.0f;
-        viewport.maxDepth = 1.0f;   // Todo for now this set as default
+        VkRect2D scissor = { { x, y }, { width, height } };
 
-        VkRect2D scissor = {{x, y}, { width, height }};
-
-        vkCmdSetViewport(backend, 0, 1, &viewport);
         vkCmdSetScissor(backend, 0, 1, &scissor);
 
         return *this;
