@@ -31,13 +31,11 @@ namespace bebone::gfx {
             return Color;
         }
 
-        /*
         void VulkanSwapChainImageTuple::destroy(VulkanDevice &device)  {
             view->destroy(device);
 
             mark_destroyed();
         }
-        */
 
         VulkanDepthImageTuple::VulkanDepthImageTuple(
             const shared_ptr<VulkanImage>& image,
@@ -67,7 +65,6 @@ namespace bebone::gfx {
             return Depth;
         }
 
-        /*
         void VulkanDepthImageTuple::destroy(VulkanDevice &device) {
             image->destroy(device);
             view->destroy(device);
@@ -75,7 +72,6 @@ namespace bebone::gfx {
 
             mark_destroyed();
         }
-        */
 
         VulkanImageMemoryTuple::VulkanImageMemoryTuple(
             const shared_ptr<VulkanImage>& image,
@@ -84,12 +80,10 @@ namespace bebone::gfx {
 
         }
 
-        /*
         void VulkanImageMemoryTuple::destroy(VulkanDevice &device) {
             image->destroy(device);
             memory->destroy(device);
 
             mark_destroyed();
         }
-        */
 }

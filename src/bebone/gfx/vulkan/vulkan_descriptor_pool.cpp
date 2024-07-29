@@ -5,7 +5,7 @@
 #include "vulkan_descriptor_set.h"
 
 namespace bebone::gfx {
-    VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) : VulkanWrapper<VkDescriptorPool>(device) {
+    VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) {
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         auto pool_sizes = std::vector<VkDescriptorPoolSize> {
             { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 65536 },
@@ -46,11 +46,6 @@ namespace bebone::gfx {
         return descriptors;
     }
 
-    VulkanDescriptorPool::~VulkanDescriptorPool() {
-        vkDestroyDescriptorPool(device.device, backend, nullptr);
-    }
-
-    /*
     void VulkanDescriptorPool::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -59,5 +54,4 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
-    */
 }

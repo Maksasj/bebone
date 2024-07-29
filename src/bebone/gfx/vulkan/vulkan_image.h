@@ -12,7 +12,7 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanDevice;
-    class VulkanCommandPool;
+    class VulkanCommandBufferPool;
 
     class VulkanImage;
     class VulkanImageView;
@@ -41,7 +41,7 @@ namespace bebone::gfx {
             VkExtent3D extent;
 
         public:
-            VulkanImage(VulkanDevice& device, const VkImage& image);
+            VulkanImage(const VkImage& image);
 
             // Todo save extent somewhere
             VulkanImage(
@@ -49,8 +49,6 @@ namespace bebone::gfx {
                 VkFormat format,
                 VkExtent3D extent,
                 VulkanImageInfo image_info = {});
-
-            ~VulkanImage();
 
             void transition_layout(
                 VulkanDevice& device,
@@ -61,7 +59,7 @@ namespace bebone::gfx {
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
-            // void destroy(VulkanDevice& device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

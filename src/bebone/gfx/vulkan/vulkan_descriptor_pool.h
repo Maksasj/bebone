@@ -14,7 +14,6 @@ namespace bebone::gfx {
     class VulkanDescriptorPool : public VulkanWrapper<VkDescriptorPool>, private core::NonCopyable {
         public:
             VulkanDescriptorPool(VulkanDevice& device); // Todo, hide this constructor
-            ~VulkanDescriptorPool();
 
             std::shared_ptr<VulkanDescriptorSet> create_descriptor(
                 VulkanDevice& device,
@@ -25,7 +24,7 @@ namespace bebone::gfx {
                 const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout,
                 const size_t& count);
 
-            // void destroy(VulkanDevice& device) override;
+            void destroy(VulkanDevice& device) override;
     };  
 }
 

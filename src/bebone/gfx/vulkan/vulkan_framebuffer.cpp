@@ -12,7 +12,7 @@ namespace bebone::gfx {
         const std::vector<std::shared_ptr<VulkanImageView>>& attachment_views,
         std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
-    ) : VulkanWrapper<VkFramebuffer>(device) {
+    ) {
         auto attachments = std::vector<VkImageView> {};
         attachments.reserve(attachment_views.size());
         
@@ -32,11 +32,6 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to create framebuffer!");
     }
 
-    VulkanFramebuffer::~VulkanFramebuffer() {
-        vkDestroyFramebuffer(device.device, backend, nullptr);
-    }
-
-    /*
     void VulkanFramebuffer::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -45,5 +40,4 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
-    */
 }

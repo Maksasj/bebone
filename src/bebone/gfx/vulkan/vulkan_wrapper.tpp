@@ -5,22 +5,23 @@ namespace bebone::gfx {
     class VulkanDevice;
 
     class VulkanApi {
+        private:
+            bool destroyed = false;
+
         protected:
-            VulkanDevice& device;
+            void mark_destroyed();
 
         public:
-            explicit VulkanApi(VulkanDevice& device);
             virtual ~VulkanApi() = default;
+
+            const bool& is_destroyed() const;
+            virtual void destroy(VulkanDevice& device) = 0;
     };
 
     template<class T>
     class VulkanWrapper : public VulkanApi {
         public:
             T backend;
-
-            explicit VulkanWrapper(VulkanDevice& device) : VulkanApi(device) {
-
-            }
     };
 }
 

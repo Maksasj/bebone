@@ -13,12 +13,11 @@ namespace bebone::gfx {
         Sampler
     };
 
-    class VulkanDescriptorSetLayoutBinding {
-        public:
-            VkDescriptorSetLayoutBinding backend;
-
+    class VulkanDescriptorSetLayoutBinding : public VulkanWrapper<VkDescriptorSetLayoutBinding> {
         public:
             VulkanDescriptorSetLayoutBinding(const VulkanDescriptorSetLayoutBindingType& type, const u32& binding);
+
+            void destroy(VulkanDevice&) override;
     };
 }
 

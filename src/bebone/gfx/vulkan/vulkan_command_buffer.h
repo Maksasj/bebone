@@ -17,21 +17,19 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanDevice;
-    class VulkanCommandPool;
+    class VulkanCommandBufferPool;
     class VulkanDescriptorSet;
 
     class VulkanCommandBuffer : public VulkanWrapper<VkCommandBuffer>, private core::NonCopyable {
         public:
-            // Todo, probably only one of these constructors is actually needed
+                // Todo, probably only one of these constructors is actually needed
             VulkanCommandBuffer(
                 std::shared_ptr<VulkanDevice>& device,
-                VulkanCommandPool& command_buffer_pool);
+                VulkanCommandBufferPool& command_buffer_pool);
 
             VulkanCommandBuffer(
                 VulkanDevice& device,
-                VulkanCommandPool& command_buffer_pool);
-
-            ~VulkanCommandBuffer();
+                VulkanCommandBufferPool& command_buffer_pool);
 
             VulkanCommandBuffer& begin_record();
             VulkanCommandBuffer& end_record();
@@ -89,6 +87,8 @@ namespace bebone::gfx {
 
             VulkanCommandBuffer& draw(const size_t& vertex_count);
             VulkanCommandBuffer& draw_indexed(const size_t& vertex_count);
+
+            void destroy(VulkanDevice& device) override;
     };
 }
 

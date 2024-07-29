@@ -51,13 +51,14 @@ namespace bebone::gfx {
 
         public:
             VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
-            ~VulkanBuffer();
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 
             void copy_to_image(VulkanDevice& device, std::shared_ptr<VulkanImage>& image);
 
             const size_t& get_size() const;
+
+            void destroy(VulkanDevice& device) override;
     };
 }
 

@@ -1,8 +1,7 @@
-#include "vulkan_command_pool.h"
-#include "vulkan_wrapper.tpp"
+#include "vulkan_command_buffer_pool.h"
 
 namespace bebone::gfx {
-    VulkanCommandPool::VulkanCommandPool(VulkanDevice& device) : VulkanWrapper<VkCommandPool>(device) {
+    VulkanCommandBufferPool::VulkanCommandBufferPool(VulkanDevice& device) {
         VulkanQueueFamilyIndices queue_family_indices = device.find_physical_queue_families();
 
         VkCommandPoolCreateInfo pool_info = {};
@@ -15,11 +14,7 @@ namespace bebone::gfx {
         }
     }
 
-    VulkanCommandPool::~VulkanCommandPool() {
-        // Todo
-    }
-
-    std::shared_ptr<VulkanCommandBuffer> VulkanCommandPool::create_command_buffer(VulkanDevice& device) {
+    std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer(VulkanDevice& device) {
         auto command_buffer = std::make_shared<VulkanCommandBuffer>(device, *this);
 
         // Todo, ?
@@ -27,11 +22,11 @@ namespace bebone::gfx {
         return command_buffer;
     }
 
-    std::shared_ptr<VulkanCommandBuffer> VulkanCommandPool::create_command_buffer(std::shared_ptr<VulkanDevice>& device) {
+    std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer(std::shared_ptr<VulkanDevice>& device) {
         return create_command_buffer(*device);
     }
 
-    std::vector<std::shared_ptr<VulkanCommandBuffer>> VulkanCommandPool::create_command_buffers(
+    std::vector<std::shared_ptr<VulkanCommandBuffer>> VulkanCommandBufferPool::create_command_buffers(
         std::shared_ptr<VulkanDevice>& device,
         const size_t& count
     ) {
@@ -45,7 +40,7 @@ namespace bebone::gfx {
     }
 
     // Todo, rethink single time commands
-    VkCommandBuffer VulkanCommandPool::begin_single_time_commands(VulkanDevice& device) {
+    VkCommandBuffer VulkanCommandBufferPool::begin_single_time_commands(VulkanDevice& device) {
         VkCommandBufferAllocateInfo alloc_info{};
 
         alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -66,7 +61,7 @@ namespace bebone::gfx {
     }
 
     // Todo, rethink single time commands
-    void VulkanCommandPool::end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer) {
+    void VulkanCommandBufferPool::end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer) {
         vkEndCommandBuffer(command_buffer);
 
         VkSubmitInfo submit_info{};
@@ -79,4 +74,26 @@ namespace bebone::gfx {
 
         vkFreeCommandBuffers(device.device, backend, 1, &command_buffer);
     }
+
+    void VulkanCommandBufferPool::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
+        vkDestroyCommandPool(device.device, backend, nullptr);
+
+        mark_destroyed();
+    }
+
+
+    // void copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    //     VkCommandBuffer command_buffer = begin_single_time_commands();
+//
+    //     VkBufferCopy copyRegion{};
+    //     copyRegion.srcOffset = 0;  // Optional
+    //     copyRegion.dstOffset = 0;  // Optional
+    //     copyRegion.size = size;
+    //     vkCmdCopyBuffer(command_buffer, srcBuffer, dstBuffer, 1, &copyRegion);
+//
+    //     end_single_time_commands(command_buffer);
+    // }
 }

@@ -167,7 +167,6 @@ namespace bebone::gfx {
         return bindless_pipeline_layout;
     }
 
-    /*
     void VulkanPipelineManager::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -179,5 +178,4 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
-    */
 }

@@ -1,12 +1,12 @@
 #include "vulkan_image.h"
 
 #include "vulkan_device.h"
-#include "vulkan_command_pool.h"
+#include "vulkan_command_buffer_pool.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImage::VulkanImage(VulkanDevice& device, const VkImage& image) : VulkanWrapper<VkImage>(device) {
+    VulkanImage::VulkanImage(const VkImage& image) {
         backend = image;
     }
 
@@ -15,7 +15,7 @@ namespace bebone::gfx {
         VkFormat format,
         VkExtent3D extent,
         VulkanImageInfo image_info
-    ) : VulkanWrapper<VkImage>(device), extent(extent) {
+    ) : extent(extent) {
         VkImageCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -36,11 +36,6 @@ namespace bebone::gfx {
 
         if(vkCreateImage(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to create image!");
-    }
-
-    VulkanImage::~VulkanImage() {
-        // Todo destroy only if this is a swap chain image
-        // vkDestroyImage(device.device, backend, nullptr);
     }
 
     // Todo, clear out this
@@ -100,7 +95,6 @@ namespace bebone::gfx {
         return requirements;
     }
 
-    /*
     void VulkanImage::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -109,5 +103,4 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
-    */
 }

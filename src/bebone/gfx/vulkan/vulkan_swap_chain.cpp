@@ -6,7 +6,7 @@
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
-    VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent) : VulkanWrapper<VkSwapchainKHR>(device) {
+    VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent) {
         auto swap_chain_support = device.get_swap_chain_support();
         extent = choose_swap_extent(swap_chain_support.capabilities, window_extent);
 
@@ -24,16 +24,6 @@ namespace bebone::gfx {
         render_target = device.create_render_target(render_pass, images);
 
         create_sync_objects(device);
-    }
-
-    VulkanSwapChain::~VulkanSwapChain() {
-        for (size_t i = 0; i < image_count; i++) {
-            vkDestroySemaphore(device.device, render_finished_semaphores[i], nullptr);
-            vkDestroySemaphore(device.device, image_available_semaphores[i], nullptr);
-            vkDestroyFence(device.device, in_flight_fences[i], nullptr);
-        }
-
-        vkDestroySwapchainKHR(device.device, backend, nullptr);
     }
 
     const size_t& VulkanSwapChain::get_current_frame() const {
@@ -240,5 +230,23 @@ namespace bebone::gfx {
 
             return actual_extent;
         }
+    }
+
+    void VulkanSwapChain::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
+        render_target->destroy(device);
+
+        // Todo move this somewhere else
+        for (size_t i = 0; i < image_count; i++) {
+            vkDestroySemaphore(device.device, render_finished_semaphores[i], nullptr);
+            vkDestroySemaphore(device.device, image_available_semaphores[i], nullptr);
+            vkDestroyFence(device.device, in_flight_fences[i], nullptr);
+        }
+
+        vkDestroySwapchainKHR(device.device, backend, nullptr);
+
+        mark_destroyed();
     }
 }

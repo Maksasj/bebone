@@ -1,7 +1,11 @@
 #include "vulkan_wrapper.tpp"
 
 namespace bebone::gfx {
-    VulkanApi::VulkanApi(VulkanDevice& device) : device(device) {
+    void VulkanApi::mark_destroyed() {
+        destroyed = true;
+    }
 
+    const bool& VulkanApi::is_destroyed() const {
+        return destroyed;
     }
 }

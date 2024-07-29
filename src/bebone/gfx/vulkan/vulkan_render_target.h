@@ -13,7 +13,7 @@
 namespace bebone::gfx {
     class VulkanImage;
 
-    class VulkanRenderTarget {
+    class VulkanRenderTarget : public VulkanApi {
         public:
             // Vector of all FIFO attachments
             vector<vector<shared_ptr<IVulkanAttachment>>> color_attachments;
@@ -33,7 +33,7 @@ namespace bebone::gfx {
             vector<shared_ptr<IVulkanAttachment>>& get_color_attachment(const size_t& index);
             vector<shared_ptr<IVulkanAttachment>>& depth_attachment();
 
-            // void destroy(VulkanDevice& device);
+            void destroy(VulkanDevice& device);
     };
 }
 

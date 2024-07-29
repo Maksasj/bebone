@@ -46,7 +46,6 @@ namespace bebone::gfx {
 
     public:
             VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);
-            ~VulkanSwapChain();
 
             const size_t& get_current_frame() const;
             const VkExtent2D& get_extent() const;
@@ -63,7 +62,7 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanCommandBuffer>& command_buffer,
                 uint32_t *image_index);
 
-            // void destroy(VulkanDevice& device) override;
+            void destroy(VulkanDevice& device) override;
     };
 }
 

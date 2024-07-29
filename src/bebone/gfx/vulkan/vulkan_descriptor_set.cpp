@@ -9,7 +9,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         VulkanDescriptorPool& descriptor_pool,
         const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
-    ) : VulkanWrapper<VkDescriptorSet>(device) {
+    ) {
         VkDescriptorSetAllocateInfo alloc_info{};
         alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         alloc_info.descriptorPool = descriptor_pool.backend;
@@ -31,15 +31,9 @@ namespace bebone::gfx {
             throw std::runtime_error("failed to allocate descriptor sets!");
     }
 
-    VulkanDescriptorSet::~VulkanDescriptorSet() {
-        // Todo
-    }
-
-    /*
     void VulkanDescriptorSet::destroy(VulkanDevice&) {
         // Todo
 
         mark_destroyed();
     }
-    */
 }

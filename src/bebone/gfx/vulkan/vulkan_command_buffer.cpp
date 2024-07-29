@@ -2,14 +2,11 @@
 
 #include "vulkan_device.h"
 #include "vulkan_pipeline_layout.h"
-#include "vulkan_command_pool.h"
+#include "vulkan_command_buffer_pool.h"
 #include "vulkan_descriptor_set.h"
 
 namespace bebone::gfx {
-    VulkanCommandBuffer::VulkanCommandBuffer(
-        std::shared_ptr<VulkanDevice>& device,
-        VulkanCommandPool& command_buffer_pool
-    ) : VulkanWrapper<VkCommandBuffer>(*device) {
+    VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& command_buffer_pool) {
         VkCommandBufferAllocateInfo alloc_info{};
 
         alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -21,10 +18,7 @@ namespace bebone::gfx {
             throw std::runtime_error("Failed to allocate command buffers !");
     }
 
-    VulkanCommandBuffer::VulkanCommandBuffer(
-        VulkanDevice& device,
-        VulkanCommandPool& command_buffer_pool
-    ) : VulkanWrapper<VkCommandBuffer>(device) {
+    VulkanCommandBuffer::VulkanCommandBuffer(VulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool) {
         VkCommandBufferAllocateInfo alloc_info{};
 
         alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -34,10 +28,6 @@ namespace bebone::gfx {
 
         if(vkAllocateCommandBuffers(device.device, &alloc_info, &backend) != VK_SUCCESS)
             throw std::runtime_error("Failed to allocate command buffers !");
-    }
-
-    VulkanCommandBuffer::~VulkanCommandBuffer() {
-        // Todo
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::begin_record() {
@@ -261,5 +251,11 @@ namespace bebone::gfx {
         vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_ALL, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
+    }
+
+    void VulkanCommandBuffer::destroy(VulkanDevice&) {
+        // Todo
+        
+        mark_destroyed();
     }
 }

@@ -10,7 +10,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         VkMemoryRequirements requirements,
         VkMemoryPropertyFlags properties
-    ) : VulkanWrapper<VkDeviceMemory>(device) {
+    ) {
         VkMemoryAllocateInfo alloc_info{};
 
         alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -19,10 +19,6 @@ namespace bebone::gfx {
 
         if (vkAllocateMemory(device.device, &alloc_info, nullptr, &backend) != VK_SUCCESS)
             throw std::runtime_error("failed to allocate vulkan buffer memory!");
-    }
-
-    VulkanDeviceMemory::~VulkanDeviceMemory() {
-        vkFreeMemory(device.device, backend, nullptr);
     }
 
     void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer) {
@@ -49,7 +45,6 @@ namespace bebone::gfx {
         vkUnmapMemory(device.device, backend);
     }
 
-    /*
     void VulkanDeviceMemory::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -58,7 +53,6 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
-    */
 
     void VulkanDeviceMemory::upload_data(VulkanDevice& device, const void* src, const size_t& size) {
         void* data;
