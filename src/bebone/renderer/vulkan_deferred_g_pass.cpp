@@ -117,8 +117,7 @@ namespace bebone::renderer {
         auto pipeline_manager = program_manager->get_pipeline_manager();
         auto pipeline = pipeline_manager->create_pipeline(
             device, render_pass, vert_shader_module, frag_shader_module,
-            { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions },
-              .rasterization_state = { .front_face = VK_FRONT_FACE_CLOCKWISE } } // Todo
+            { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions } }
         );
 
         // Delete shader modules and clear memory
