@@ -66,6 +66,8 @@ namespace bebone::core {
         inline bool operator==(const Matrix<f32, 4, 4>& other) const;
         inline bool operator!=(const Matrix<f32, 4, 4>& other) const;
 
+        inline void inverse_y_axis();
+
         std::string to_string() const;
         const f32* get_raw() const;
     };
@@ -249,6 +251,11 @@ namespace bebone::core {
                 m(2, 0) - scalar, m(2, 1) - scalar, m(2, 2) - scalar, m(2, 3) - scalar,
                 m(3, 0) - scalar, m(3, 1) - scalar, m(3, 2) - scalar, m(3, 3) - scalar
         };
+    }
+
+    inline void Matrix<f32, 4, 4>::inverse_y_axis() {
+        auto& m = *this;
+        m(1, 1) *= -1.0f;
     }
 
     inline bool Matrix<f32, 4, 4>::operator==(const Matrix<f32, 4, 4>& other) const {
