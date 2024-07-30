@@ -47,7 +47,7 @@ namespace bebone::gfx {
         region.imageSubresource.baseArrayLayer = 0;
         region.imageSubresource.layerCount = 1; // Todo
 
-        region.imageOffset = {0, 0, 0};
+        region.imageOffset = { 0, 0, 0 };
         region.imageExtent = image->get_extent();
 
         vkCmdCopyBufferToImage(command_buffer->backend, backend, image->backend, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);

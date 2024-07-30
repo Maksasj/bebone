@@ -14,11 +14,8 @@ namespace bebone::gfx {
         public:
             VulkanCommandBufferPool(VulkanDevice& device);
 
-            std::shared_ptr<VulkanCommandBuffer> create_command_buffer(
-                VulkanDevice& device);
-
-            std::shared_ptr<VulkanCommandBuffer> create_command_buffer(
-                std::shared_ptr<VulkanDevice>& device);
+            std::shared_ptr<VulkanCommandBuffer> create_command_buffer(VulkanDevice& device);
+            std::shared_ptr<VulkanCommandBuffer> create_command_buffer(std::shared_ptr<VulkanDevice>& device);
 
             std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(
                 std::shared_ptr<VulkanDevice>& device,

@@ -22,7 +22,7 @@ namespace bebone::gfx {
 
     class VulkanCommandBuffer : public VulkanWrapper<VkCommandBuffer>, private core::NonCopyable {
         public:
-                // Todo, probably only one of these constructors is actually needed
+            // Todo, probably only one of these constructors is actually needed
             VulkanCommandBuffer(
                 std::shared_ptr<VulkanDevice>& device,
                 VulkanCommandBufferPool& command_buffer_pool);

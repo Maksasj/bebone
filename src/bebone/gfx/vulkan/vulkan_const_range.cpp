@@ -3,9 +3,9 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanConstRange::VulkanConstRange(const size_t& size, const u32& offset) {
+    VulkanConstRange::VulkanConstRange(const size_t& size, const u32& offset, const VkShaderStageFlags& stage_flags) {
         backend = VkPushConstantRange{
-            .stageFlags = VK_SHADER_STAGE_ALL, // Todo
+            .stageFlags = stage_flags,
             .offset = offset,
             .size = static_cast<uint32_t>(size)
         };

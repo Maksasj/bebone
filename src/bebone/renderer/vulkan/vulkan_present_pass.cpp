@@ -3,17 +3,17 @@
 static const char vulkan_present_pass_vertex_shader_code[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
-    "\n"
+
     "layout (location = 0) in vec3 position;\n"
     "layout (location = 1) in vec3 normal;\n"
     "layout (location = 2) in vec2 texcoord;\n"
-    "\n"
+
     "layout (location = 0) out vec3 out_normal;\n"
     "layout (location = 1) out vec2 out_texcoord;\n"
-    "\n"
+
     "void main() {\n"
     "    gl_Position = vec4(position, 1.0);\n"
-    "\n"
+
     "    out_normal = normal;\n"
     "    out_texcoord = texcoord;\n"
     "}";
@@ -32,6 +32,7 @@ static const char vulkan_present_pass_fragment_shader_code[] =
     "layout( push_constant ) uniform Handles {\n"
     "    int texture;\n"
     "} handles;\n"
+
     "void main() {\n"
     "   out_color = texture(textures[handles.texture], texcoord);\n"
     "}";
@@ -82,7 +83,7 @@ namespace bebone::renderer {
         auto program = program_manager->create_program(pipeline);
         set_program(program);
 
-        // Todo, move this outside, to assembler
+        // Todo, move this to mesh manager
         auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
         quad_mesh = quad_generator->generate();
 
