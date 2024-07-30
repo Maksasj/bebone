@@ -9,24 +9,18 @@ namespace bebone::renderer {
 
     enum class MaterialHandle : u32 { Invalid = 0 };
 
-    class IMaterialPropertyLayout {
-        private:
-            ColorRGBA albedo;
-            f32 metalness;
-        public:
-    };
-
-    class PBRMaterialPropertyLayout : public IMaterialPropertyLayout {
-
-    };
-
-    class MaterialProperties {
-
+    struct alignas(16) PBRMaterialProperties {
+        TextureHandle albedo_handle;
+        TextureHandle height_handle;
+        TextureHandle metallic_handle;
+        TextureHandle roughness_handle;
     };
 
     class IMaterial {
         public:
             virtual ~IMaterial() = default;
+
+            virtual void set_properties(const void* properties) = 0;
 
             virtual const MaterialHandle& get_handle() const = 0;
     };

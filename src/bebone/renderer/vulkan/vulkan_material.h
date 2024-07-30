@@ -2,19 +2,29 @@
 #define _BEBONE_RENDERER_VULKAN_MATERIAL_H_
 
 #include "imaterial.h"
+#include "vulkan_program_manager.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
     class VulkanMaterial : public IMaterial {
         private:
+            std::shared_ptr<VulkanDevice> device;
+
+        private:
             std::shared_ptr<VulkanBufferMemoryTuple> material_uniform_buffer;
 
-        // camera_ubo = device->create_buffer_memory(sizeof(VulkanDeferredGPassCameraData));
-        // camera_ubo_handles  = pipeline_manager->bind_uniform_buffers(device, camera_ubo);
+            const size_t size;
+            MaterialHandle handle;
 
         public:
-            VulkanMaterial();
+            VulkanMaterial(
+                std::shared_ptr<VulkanDevice>& device,
+                std::shared_ptr<VulkanProgramManager>& program_manager,
+                void* properties,
+                const size_t& size);
+
+            void set_properties(const void* properties) override;
 
             const MaterialHandle& get_handle() const override;
     };

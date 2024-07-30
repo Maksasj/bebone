@@ -12,6 +12,8 @@ namespace bebone::renderer {
         public:
             virtual ~IMaterialManager() = default;
 
+            virtual MaterialHandle default_material() = 0;
+
             virtual std::optional<std::shared_ptr<IMaterial>> get_material(const MaterialHandle& handle) const = 0;
     };
 }

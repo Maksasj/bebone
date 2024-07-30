@@ -9,11 +9,12 @@ int main() {
     auto window = WindowFactory::create_window("4. Renderer scene", 800, 600, Vulkan, { .enable_resize = true });
     auto renderer = RendererFactory::create_renderer(window);
 
-    auto mesh = renderer->load_mesh("suzanne.obj");
-    auto material = MaterialHandle(0);
+    auto suzanne = renderer->load_mesh("suzanne.obj");
+    auto material = renderer->default_material();
 
     while(!window->closing()) {
-        renderer->render(mesh, material, {});
+        renderer->render(suzanne, material, {});
+
         renderer->present();
         window->pull_events();
     }

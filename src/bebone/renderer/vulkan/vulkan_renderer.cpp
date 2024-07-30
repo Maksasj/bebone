@@ -77,6 +77,10 @@ namespace bebone::renderer {
         return mesh_manager->create_mesh(vertices,indicies);
     }
 
+    MaterialHandle VulkanRenderer::default_material() {
+        return material_manager->default_material();
+    }
+
     void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) {
         render_graph->submit_geometry(mesh_handle, material_handle, transform);
     }
