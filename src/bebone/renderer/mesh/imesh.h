@@ -6,6 +6,8 @@
 #include "icommand_encoder.h"
 
 namespace bebone::renderer {
+        enum class MeshHandle : u32 { Invalid = 0 };
+
         class IMesh {
             public:
                 virtual ~IMesh() = default;

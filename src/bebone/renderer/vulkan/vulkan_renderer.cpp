@@ -10,7 +10,7 @@ namespace bebone::renderer {
 
         program_manager = std::make_shared<VulkanProgramManager>(device);
         texture_manager = std::make_shared<VulkanTextureManager>(device, program_manager);
-        // mesh_manager = ...
+        mesh_manager = std::make_shared<VulkanMeshManager>(device);
         material_manager = std::make_shared<VulkanMaterialManager>(device, program_manager);
 
         // Create default render graph
@@ -65,31 +65,35 @@ namespace bebone::renderer {
         return texture_manager->load_texture_from_file(file_path);
     }
 
-    std::shared_ptr<IMesh> VulkanRenderer::load_mesh(const std::string& file_path) {
-        auto loader = std::make_shared<OBJMeshLoader>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
-        auto mesh = loader->load_from_file(file_path);
-        return mesh;
+    MeshHandle VulkanRenderer::load_mesh(const std::string& file_path) {
+        return mesh_manager->load_mesh(file_path);
     }
 
-    std::shared_ptr<IMesh> VulkanRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) {
-        auto mesh = std::make_shared<VulkanTriangleMesh>(*device, vertices, indicies);
-        return mesh;
+    MeshHandle VulkanRenderer::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) {
+        return mesh_manager->create_mesh(vertices,indicies);
     }
 
+    /*
     ModelHandle VulkanRenderer::create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) {
         auto model = std::make_shared<IModel>(mesh, material);
         model_pool.push_back(model);
         return { model_pool.size() - 1 };
     }
+    */
 
-    void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) {
+    void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) {
+        auto mesh = mesh_manager->get_mesh(mesh_handle).value();
+        auto material = material_manager->get_material(material_handle).value();
 
-    };
-
-    void VulkanRenderer::render(const ModelHandle& handle, const Transform& transform) {
-        auto mesh = model_pool[handle.index];
-        render_graph->submit_geometry(mesh, transform);
+        render_graph->submit_geometry(mesh, material, transform);
     }
+
+    /*
+    void VulkanRenderer::render(const ModelHandle& handle, const Transform& transform) {
+        auto model = model_pool[handle.index];
+        render_graph->submit_geometry(model->get_mesh(), model->get_material(), transform);
+    }
+    */
 
     void VulkanRenderer::present() {
         // Record draw commands

@@ -11,6 +11,7 @@
 
 #include "vulkan_program_manager.h"
 #include "vulkan_texture_manager.h"
+#include "vulkan_mesh_manager.h"
 #include "vulkan_material_manager.h"
 
 namespace bebone::renderer {
@@ -28,7 +29,7 @@ namespace bebone::renderer {
             // Main managers
             std::shared_ptr<VulkanProgramManager> program_manager;
             std::shared_ptr<VulkanTextureManager> texture_manager;
-            // std::shared_ptr<VulkanMeshManager> mesh_manager;
+            std::shared_ptr<VulkanMeshManager> mesh_manager;
             std::shared_ptr<VulkanMaterialManager> material_manager;
 
             std::shared_ptr<IRenderGraph> render_graph;
@@ -51,13 +52,15 @@ namespace bebone::renderer {
 
             TextureHandle load_texture(const std::string& file_path) override;
 
-            std::shared_ptr<IMesh> load_mesh(const std::string& file_path) override;
-            std::shared_ptr<IMesh> create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
+            MeshHandle load_mesh(const std::string& file_path) override;
+            MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
 
-            ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) override;
+            // ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) override;
 
             void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) override;
-            void render(const ModelHandle& handle, const Transform& transform = {}) override;
+
+            // Todo
+            // void render(const ModelHandle& handle, const Transform& transform = {}) override;
 
             void present() override;
 
