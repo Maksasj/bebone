@@ -4,10 +4,12 @@ namespace bebone::renderer {
     VulkanRenderer::VulkanRenderer(
         const std::shared_ptr<gfx::Window>& window
     ) : IRenderer(Vulkan), window(window) {
+        // Setup vulkan
         instance = VulkanInstance::create_instance();
         device = instance->create_device(this->window);
         swap_chain = device->create_swap_chain(this->window);
 
+        // Create all needed managers
         program_manager = std::make_shared<VulkanProgramManager>(device);
         texture_manager = std::make_shared<VulkanTextureManager>(device, program_manager);
         mesh_manager = std::make_shared<VulkanMeshManager>(device);
@@ -17,10 +19,12 @@ namespace bebone::renderer {
         render_graph = create_default_render_graph(window->get_size());
         render_graph->assemble();
 
+        // Add event listener for window resize event
         window->add_listener([&](WindowSizeEvent event) {
             resize_viewport({ event.width, event.height });
         });
 
+        // Setup default camera
         camera = std::make_shared<IDebugCamera>(window);
         auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
         pass->set_camera(camera);

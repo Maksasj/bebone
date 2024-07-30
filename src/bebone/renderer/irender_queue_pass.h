@@ -4,8 +4,10 @@
 #include "igraphics_pass.h"
 #include "ihdr_texture_resource.h"
 #include "idepth_resource.h"
-#include "imodel.h"
 #include "transform.h"
+
+#include "mesh/imesh.h"
+#include "imaterial.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;

@@ -34,8 +34,6 @@ namespace bebone::renderer {
 
             std::shared_ptr<IRenderGraph> render_graph;
 
-            std::vector<std::shared_ptr<IModel>> model_pool;
-
             std::shared_ptr<ICamera> camera;
 
         protected:
@@ -55,13 +53,7 @@ namespace bebone::renderer {
             MeshHandle load_mesh(const std::string& file_path) override;
             MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
 
-            // ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) override;
-
             void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) override;
-
-            // Todo
-            // void render(const ModelHandle& handle, const Transform& transform = {}) override;
-
             void present() override;
 
             std::shared_ptr<IRenderGraphImpl> create_render_graph_impl() override;

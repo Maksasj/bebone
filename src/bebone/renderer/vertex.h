@@ -14,7 +14,6 @@ namespace bebone::renderer {
 
     // tangent
     // bitangent
-
 }
 
 #endif

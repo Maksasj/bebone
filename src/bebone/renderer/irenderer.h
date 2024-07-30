@@ -51,13 +51,7 @@ namespace bebone::renderer {
             virtual MeshHandle load_mesh(const std::string& file_path) = 0;
             virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
 
-            // virtual ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) = 0;
-
             virtual void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) = 0;
-
-            // Todo
-            // virtual void render(const ModelHandle& handle, const Transform& transform) = 0;
-
             virtual void present() = 0;
 
             virtual std::shared_ptr<IRenderGraphImpl> create_render_graph_impl() = 0;

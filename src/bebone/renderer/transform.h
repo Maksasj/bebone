@@ -9,7 +9,7 @@ namespace bebone::renderer {
     struct Transform {
         Vec3f position = Vec3f::zero;
         Vec3f rotation = Vec3f::zero;
-        Vec3f scale = Vec3f::zero; // Todo, rotation is a Vec3f
+        Vec3f scale = Vec3f::zero; // Todo, rotation should not be a Vec3f
     };
 
     Mat4f calculate_transform_matrix(const Transform& transform);
