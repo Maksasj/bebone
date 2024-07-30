@@ -10,7 +10,15 @@ int main() {
     auto renderer = RendererFactory::create_renderer(window);
 
     auto suzanne = renderer->load_mesh("suzanne.obj");
-    auto material = renderer->default_material();
+
+    PBRMaterialProperties properties {
+        .albedo = renderer->load_texture("used-stainless-steel2_albedo.png"),
+        .height = renderer->load_texture("used-stainless-steel2_height.png"),
+        .metallic = renderer->load_texture("used-stainless-steel2_metallic.png"),
+        .roughness = renderer->load_texture("used-stainless-steel2_roughness.png")
+    };
+
+    auto material = renderer->create_material(&properties, sizeof(properties));
 
     while(!window->closing()) {
         renderer->render(suzanne, material, {});

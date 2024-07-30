@@ -9,11 +9,11 @@ namespace bebone::renderer {
 
     enum class MaterialHandle : u32 { Invalid = 0 };
 
-    struct alignas(16) PBRMaterialProperties {
-        TextureHandle albedo_handle;
-        TextureHandle height_handle;
-        TextureHandle metallic_handle;
-        TextureHandle roughness_handle;
+    struct PBRMaterialProperties {
+        TextureHandle albedo;
+        TextureHandle height;
+        TextureHandle metallic;
+        TextureHandle roughness;
     };
 
     class IMaterialImpl {

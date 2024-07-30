@@ -22,6 +22,7 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanProgramManager>& program_manager);
 
             MaterialHandle default_material() override;
+            MaterialHandle create_material(void* properties, const size_t& size) override;
 
             [[nodiscard]] std::optional<std::shared_ptr<IMaterialImpl>> get_material(const MaterialHandle& handle) const override;
     };

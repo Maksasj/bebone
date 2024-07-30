@@ -10,7 +10,7 @@ namespace bebone::renderer {
         const size_t& size
     ) : device(device), size(size) {
         auto pipeline_manager = program_manager->get_pipeline_manager();
-
+        std::cout << "Creating material size: " << size << "\n";
         material_uniform_buffer = device->create_buffer_memory(size);
         handle = static_cast<MaterialHandle>(pipeline_manager->bind_uniform_buffer(device, material_uniform_buffer));
 

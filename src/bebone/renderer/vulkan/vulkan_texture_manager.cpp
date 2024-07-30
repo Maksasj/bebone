@@ -48,6 +48,8 @@ namespace bebone::renderer {
         program_manager->bind_texture(texture);
         textures.push_back(texture);
 
+        std::cout << static_cast<u32>(texture->get_handle()) << "\n";
+
         return static_cast<TextureHandle>(texture->get_handle());
     }
 

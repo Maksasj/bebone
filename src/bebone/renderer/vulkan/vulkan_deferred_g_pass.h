@@ -18,7 +18,7 @@ namespace bebone::renderer {
         Mat4f matrix;
     };
 
-    struct VulkanDeferredGPassHandles {
+    struct alignas(16) VulkanDeferredGPassHandles {
         Mat4f transform;
         VulkanBindlessBufferHandle camera_handle;
         VulkanBindlessBufferHandle material_handle;
@@ -34,11 +34,14 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
             std::vector<VulkanBindlessBufferHandle> camera_ubo_handles;
 
+            std::shared_ptr<VulkanBufferMemoryTuple> mat_ubo;
+            VulkanBindlessBufferHandle mat_ubo_handles;
+
             std::shared_ptr<VulkanMeshManager> mesh_manager;
 
             // Jobs
             static const u32 max_queued_jobs = 50;
-            std::vector<MeshHandle> queued_jobs_meshes;
+            std::vector<RenderQueueTask> queued_jobs;
             std::vector<Mat4f> queued_jobs_transform;
             std::array<VulkanDeferredGPassHandles, 50> queued_jobs_handles;
 
@@ -51,7 +54,7 @@ namespace bebone::renderer {
 
             void resize_viewport(const Vec2i& new_size) override;
 
-            void submit_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) override;
+            void submit_task(const RenderQueueTask& task, const Transform& transform) override;
     };
 }
 

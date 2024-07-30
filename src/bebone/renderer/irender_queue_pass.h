@@ -12,11 +12,16 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
+    struct RenderQueueTask {
+        MeshHandle mesh;
+        MaterialHandle material;
+    };
+
     class IRenderQueuePass : public IGraphicsPass {
         public:
             IRenderQueuePass(const std::string& pass_name, const Vec2i& viewport);
 
-            virtual void submit_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) = 0;
+            virtual void submit_task(const RenderQueueTask& task, const Transform& transform) = 0;
     };
 }
 

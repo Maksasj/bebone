@@ -53,6 +53,7 @@ namespace bebone::renderer {
             MeshHandle load_mesh(const std::string& file_path) override;
             MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
 
+            MaterialHandle create_material(void* properties, const size_t& size) override;
             MaterialHandle default_material() override;
 
             void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) override;

@@ -7,22 +7,37 @@ namespace bebone::renderer {
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanProgramManager>& program_manager
     ) : device(device), program_manager(program_manager) {
-        auto properties = PBRMaterialProperties {
-           .albedo_handle = TextureHandle::Invalid,
-           .height_handle = TextureHandle::Invalid,
-           .metallic_handle = TextureHandle::Invalid,
-           .roughness_handle = TextureHandle::Invalid,
-        };
 
-        default_material_ptr = std::make_shared<VulkanMaterialImpl>(
-            this->device,
-            this->program_manager,
-            &properties,
-            sizeof(PBRMaterialProperties));
+        // auto properties = PBRMaterialProperties {
+        //    .albedo = TextureHandle::Invalid,
+        //    .height = TextureHandle::Invalid,
+        //    .metallic = TextureHandle::Invalid,
+        //    .roughness = TextureHandle::Invalid,
+        // };
+
+        // default_material_ptr = std::make_shared<VulkanMaterialImpl>(
+        //     this->device,
+        //     this->program_manager,
+        //     &properties,
+        //     sizeof(PBRMaterialProperties));
     }
 
     MaterialHandle VulkanMaterialManager::default_material() {
         return default_material_ptr->get_handle();
+    }
+
+    MaterialHandle VulkanMaterialManager::create_material(void* properties, const size_t& size) {
+        auto material = std::make_shared<VulkanMaterialImpl>(
+            this->device,
+            this->program_manager,
+            &properties,
+            sizeof(PBRMaterialProperties));
+
+        materials.push_back(material);
+
+        std::cout << "Material" << static_cast<u32>(material->get_handle()) << "\n";
+
+        return material->get_handle();
     }
 
     std::optional<std::shared_ptr<IMaterialImpl>> VulkanMaterialManager::get_material(const MaterialHandle& handle) const {

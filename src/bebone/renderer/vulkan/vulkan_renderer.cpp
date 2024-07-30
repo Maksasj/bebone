@@ -77,6 +77,10 @@ namespace bebone::renderer {
         return mesh_manager->create_mesh(vertices,indicies);
     }
 
+    MaterialHandle VulkanRenderer::create_material(void* properties, const size_t& size) {
+        return material_manager->create_material(properties, size);
+    }
+
     MaterialHandle VulkanRenderer::default_material() {
         return material_manager->default_material();
     }
