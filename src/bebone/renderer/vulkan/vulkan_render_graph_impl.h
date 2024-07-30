@@ -16,13 +16,14 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
-            std::vector<std::shared_ptr<VulkanCommandBuffer>> command_buffers;
 
             std::shared_ptr<VulkanProgramManager> program_manager;
             std::shared_ptr<VulkanTextureManager> texture_manager;
             std::shared_ptr<VulkanMeshManager> mesh_manager;
 
             uint32_t frame;
+
+            std::vector<VulkanCommandEncoder> encoders;
 
         public:
             VulkanRenderGraphImpl(

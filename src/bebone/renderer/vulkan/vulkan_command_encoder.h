@@ -8,12 +8,13 @@ namespace bebone::renderer {
 
     class VulkanCommandEncoder : public ICommandEncoder {
         private:
+            std::shared_ptr<VulkanCommandBuffer> command_buffer;
+            size_t frame;
+
+        private:
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
-            std::shared_ptr<VulkanCommandBuffer> command_buffer;
             std::shared_ptr<VulkanPipelineManager> pipeline_manager;
-
-            size_t frame;
 
         public:
             VulkanCommandEncoder(
@@ -24,8 +25,8 @@ namespace bebone::renderer {
 
             std::shared_ptr<VulkanDevice>& get_device();
             std::shared_ptr<VulkanSwapChain>& get_swap_chain();
-            std::shared_ptr<VulkanCommandBuffer>& get_command_buffer();
 
+            std::shared_ptr<VulkanCommandBuffer>& get_command_buffer();
             [[nodiscard]] const size_t& get_frame() const;
     };
 }

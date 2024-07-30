@@ -8,7 +8,10 @@ namespace bebone::renderer {
         const std::shared_ptr<VulkanTextureManager>& texture_manager,
         const std::shared_ptr<VulkanMeshManager>& mesh_manager
     ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager), mesh_manager(mesh_manager) {
-        command_buffers = device->create_command_buffers(3);
+        encoders.reserve(3);
+
+        for(size_t i = 0; i < 3; ++i)
+            encoders.emplace_back(device, swap_chain, device->create_command_buffer(), i);
     }
 
     void VulkanRenderGraphImpl::assemble() {
@@ -27,8 +30,8 @@ namespace bebone::renderer {
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             return;
 
-        auto& cmd = command_buffers[frame];
-        VulkanCommandEncoder encoder(device, swap_chain, cmd, frame); // Todo rewrite vulkan command encoder
+        auto& encoder = encoders[frame];
+        auto& cmd = encoder.get_command_buffer();
 
         cmd->begin_record();
 
@@ -41,7 +44,10 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderGraphImpl::submit() {
-        if(!swap_chain->submit_present_command_buffers(device, command_buffers[frame], &frame).is_ok()) // Todo check if window is resized
+        auto& encoder = encoders[frame];
+        auto& cmd = encoder.get_command_buffer();
+
+        if(!swap_chain->submit_present_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
             return;
     }
 
