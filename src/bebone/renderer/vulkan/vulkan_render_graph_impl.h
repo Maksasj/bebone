@@ -7,6 +7,7 @@
 #include "vulkan_pass_factory.h"
 #include "vulkan_resource_factory.h"
 #include "vulkan_pass_assembler.h"
+#include "vulkan_mesh_manager.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -19,6 +20,7 @@ namespace bebone::renderer {
 
             std::shared_ptr<VulkanProgramManager> program_manager;
             std::shared_ptr<VulkanTextureManager> texture_manager;
+            std::shared_ptr<VulkanMeshManager> mesh_manager;
 
             uint32_t frame;
 
@@ -27,7 +29,8 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,
                 const std::shared_ptr<VulkanProgramManager>& program_manager,
-                const std::shared_ptr<VulkanTextureManager>& texture_manager);
+                const std::shared_ptr<VulkanTextureManager>& texture_manager,
+                const std::shared_ptr<VulkanMeshManager>& mesh_manager);
 
             void assemble() override;
             void record() override;

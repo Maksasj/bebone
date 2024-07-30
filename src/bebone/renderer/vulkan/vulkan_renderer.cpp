@@ -54,7 +54,7 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IMeshManager> VulkanRenderer::get_mesh_manager() const {
-
+        return mesh_manager;
     }
 
     std::shared_ptr<IMaterialManager> VulkanRenderer::get_material_manager() const {
@@ -73,27 +73,9 @@ namespace bebone::renderer {
         return mesh_manager->create_mesh(vertices,indicies);
     }
 
-    /*
-    ModelHandle VulkanRenderer::create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) {
-        auto model = std::make_shared<IModel>(mesh, material);
-        model_pool.push_back(model);
-        return { model_pool.size() - 1 };
-    }
-    */
-
     void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) {
-        auto mesh = mesh_manager->get_mesh(mesh_handle).value();
-        auto material = material_manager->get_material(material_handle).value();
-
-        render_graph->submit_geometry(mesh, material, transform);
+        render_graph->submit_geometry(mesh_handle, material_handle, transform);
     }
-
-    /*
-    void VulkanRenderer::render(const ModelHandle& handle, const Transform& transform) {
-        auto model = model_pool[handle.index];
-        render_graph->submit_geometry(model->get_mesh(), model->get_material(), transform);
-    }
-    */
 
     void VulkanRenderer::present() {
         // Record draw commands
@@ -107,6 +89,6 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IRenderGraphImpl> VulkanRenderer::create_render_graph_impl() {
-        return std::make_shared<VulkanRenderGraphImpl>(device, swap_chain, program_manager, texture_manager);
+        return std::make_shared<VulkanRenderGraphImpl>(device, swap_chain, program_manager, texture_manager, mesh_manager);
     }
 }

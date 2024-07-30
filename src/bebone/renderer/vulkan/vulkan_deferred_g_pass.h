@@ -34,9 +34,11 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
             std::vector<VulkanBindlessBufferHandle> camera_ubo_handles;
 
+            std::shared_ptr<VulkanMeshManager> mesh_manager;
+
             // Jobs
             static const u32 max_queued_jobs = 50;
-            std::vector<std::shared_ptr<IMesh>> queued_jobs_meshes;
+            std::vector<MeshHandle> queued_jobs_meshes;
             std::vector<Mat4f> queued_jobs_transform;
             std::array<VulkanDeferredGPassHandles, 50> queued_jobs_handles;
 
@@ -49,7 +51,7 @@ namespace bebone::renderer {
 
             void resize_viewport(const Vec2i& new_size) override;
 
-            void submit_task(const std::shared_ptr<IMesh>& mesh, const std::shared_ptr<IMaterial>& material, const Transform& transform) override;
+            void submit_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) override;
     };
 }
 

@@ -5,8 +5,9 @@ namespace bebone::renderer {
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
         const std::shared_ptr<VulkanProgramManager>& program_manager,
-        const std::shared_ptr<VulkanTextureManager>& texture_manager
-    ) : device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager) {
+        const std::shared_ptr<VulkanTextureManager>& texture_manager,
+        const std::shared_ptr<VulkanMeshManager>& mesh_manager
+    ) : device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager), mesh_manager(mesh_manager) {
 
 
     }
@@ -25,5 +26,9 @@ namespace bebone::renderer {
 
     std::shared_ptr<VulkanTextureManager> VulkanPassAssembler::get_texture_manager() const {
         return texture_manager;
+    }
+
+    std::shared_ptr<VulkanMeshManager> VulkanPassAssembler::get_mesh_manager() const {
+        return mesh_manager;
     }
 }

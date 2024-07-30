@@ -95,6 +95,7 @@ namespace bebone::renderer {
         auto device = vulkan_assembler->get_device();
         auto program_manager = vulkan_assembler->get_program_manager();
         auto texture_manager = vulkan_assembler->get_texture_manager();
+        mesh_manager = vulkan_assembler->get_mesh_manager();
 
         pipeline_layout = program_manager->get_pipeline_layout();
 
@@ -171,8 +172,6 @@ namespace bebone::renderer {
             program->bind(encoder);
 
             for(size_t i = 0; i < queued_jobs_meshes.size(); ++i) {
-                const auto& mesh = queued_jobs_meshes[i];
-
                 queued_jobs_handles[i].transform = queued_jobs_transform[i];
                 queued_jobs_handles[i].camera_handle = camera_ubo_handles[frame];
                 queued_jobs_handles[i].material_handle = static_cast<VulkanBindlessBufferHandle>(0);
@@ -180,8 +179,8 @@ namespace bebone::renderer {
                 auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
                 cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &queued_jobs_handles[i]);
 
-                mesh->bind(encoder);
-                cmd->draw_indexed(mesh->triangle_count());
+                const auto& mesh = queued_jobs_meshes[i];
+                mesh_manager->draw_indexed(encoder, mesh);
             }
 
         cmd->end_render_pass();
@@ -196,7 +195,7 @@ namespace bebone::renderer {
         // Todo
     }
 
-    void VulkanDeferredGPass::submit_task(const std::shared_ptr<IMesh>& mesh, const std::shared_ptr<IMaterial>& material, const Transform& transform) {
+    void VulkanDeferredGPass::submit_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {
         queued_jobs_meshes.push_back(mesh);
         queued_jobs_transform.push_back(calculate_transform_matrix(transform));
     }

@@ -5,13 +5,19 @@ namespace bebone::renderer {
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
         const std::shared_ptr<VulkanProgramManager>& program_manager,
-        const std::shared_ptr<VulkanTextureManager>& texture_manager
-    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager) {
+        const std::shared_ptr<VulkanTextureManager>& texture_manager,
+        const std::shared_ptr<VulkanMeshManager>& mesh_manager
+    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager), mesh_manager(mesh_manager) {
         command_buffers = device->create_command_buffers(3);
     }
 
     void VulkanRenderGraphImpl::assemble() {
-        VulkanPassAssembler assembler(device, swap_chain, program_manager, texture_manager);
+        VulkanPassAssembler assembler(
+            device,
+            swap_chain,
+            program_manager,
+            texture_manager,
+            mesh_manager);
 
         for(auto& pass : get_render_passes())
             pass->assemble(&assembler);
@@ -22,7 +28,7 @@ namespace bebone::renderer {
             return;
 
         auto& cmd = command_buffers[frame];
-        VulkanCommandEncoder encoder(device, swap_chain, cmd, frame);
+        VulkanCommandEncoder encoder(device, swap_chain, cmd, frame); // Todo rewrite vulkan command encoder
 
         cmd->begin_record();
 
