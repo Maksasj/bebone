@@ -7,7 +7,7 @@
 #include "transform.h"
 
 #include "mesh/imesh.h"
-#include "imaterial.h"
+#include "imaterial_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;

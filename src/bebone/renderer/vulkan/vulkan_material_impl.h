@@ -1,13 +1,13 @@
-#ifndef _BEBONE_RENDERER_VULKAN_MATERIAL_H_
-#define _BEBONE_RENDERER_VULKAN_MATERIAL_H_
+#ifndef _BEBONE_RENDERER_VULKAN_MATERIAL_IMPL_H_
+#define _BEBONE_RENDERER_VULKAN_MATERIAL_IMPL_H_
 
-#include "imaterial.h"
+#include "imaterial_impl.h"
 #include "vulkan_program_manager.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    class VulkanMaterial : public IMaterial {
+    class VulkanMaterialImpl : public IMaterialImpl {
         private:
             std::shared_ptr<VulkanDevice> device;
 
@@ -18,7 +18,7 @@ namespace bebone::renderer {
             MaterialHandle handle;
 
         public:
-            VulkanMaterial(
+            VulkanMaterialImpl(
                 std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanProgramManager>& program_manager,
                 void* properties,

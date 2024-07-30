@@ -3,7 +3,7 @@
 
 #include "imesh_manager.h"
 #include "vulkan_program_manager.h"
-#include "vulkan_material.h"
+#include "vulkan_material_impl.h"
 #include "mesh/imesh.h"
 
 #include "vulkan_triangle_mesh.h"

@@ -3,7 +3,7 @@
 
 #include "renderer_backend.h"
 #include "itexture.h"
-#include "imaterial.h"
+#include "imaterial_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;
@@ -14,7 +14,7 @@ namespace bebone::renderer {
 
             virtual MaterialHandle default_material() = 0;
 
-            virtual std::optional<std::shared_ptr<IMaterial>> get_material(const MaterialHandle& handle) const = 0;
+            virtual std::optional<std::shared_ptr<IMaterialImpl>> get_material(const MaterialHandle& handle) const = 0;
     };
 }
 

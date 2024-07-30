@@ -7,7 +7,9 @@
 #include "ipass.h"
 
 #include "itexture.h"
+
 #include "imaterial.h"
+#include "imaterial_impl.h"
 
 #include "mesh/imesh.h"
 #include "mesh/imesh_builder.h"

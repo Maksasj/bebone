@@ -3,7 +3,7 @@
 
 #include "imaterial_manager.h"
 #include "vulkan_program_manager.h"
-#include "vulkan_material.h"
+#include "vulkan_material_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -13,8 +13,8 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanProgramManager> program_manager;
 
-            std::shared_ptr<VulkanMaterial> default_material_ptr;
-            std::vector<std::shared_ptr<VulkanMaterial>> materials;
+            std::shared_ptr<VulkanMaterialImpl> default_material_ptr;
+            std::vector<std::shared_ptr<VulkanMaterialImpl>> materials;
 
         public:
             VulkanMaterialManager(
@@ -23,7 +23,7 @@ namespace bebone::renderer {
 
             MaterialHandle default_material() override;
 
-            [[nodiscard]] std::optional<std::shared_ptr<IMaterial>> get_material(const MaterialHandle& handle) const override;
+            [[nodiscard]] std::optional<std::shared_ptr<IMaterialImpl>> get_material(const MaterialHandle& handle) const override;
     };
 }
 

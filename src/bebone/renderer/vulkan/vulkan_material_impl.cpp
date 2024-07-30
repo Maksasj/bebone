@@ -1,9 +1,9 @@
-#include "vulkan_material.h"
+#include "vulkan_material_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    VulkanMaterial::VulkanMaterial(
+    VulkanMaterialImpl::VulkanMaterialImpl(
         std::shared_ptr<VulkanDevice>& device,
         std::shared_ptr<VulkanProgramManager>& program_manager,
         void* properties,
@@ -17,11 +17,11 @@ namespace bebone::renderer {
         material_uniform_buffer->upload_data(device, properties, size);
     }
 
-    const MaterialHandle& VulkanMaterial::get_handle() const {
+    const MaterialHandle& VulkanMaterialImpl::get_handle() const {
         return handle;
     }
 
-    void VulkanMaterial::set_properties(const void* properties) {
+    void VulkanMaterialImpl::set_properties(const void* properties) {
         material_uniform_buffer->upload_data(device, properties, size);
     }
 }
