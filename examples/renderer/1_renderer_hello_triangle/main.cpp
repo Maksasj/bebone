@@ -18,24 +18,23 @@ int main() {
     const auto indices =  std::vector<u32> { 0, 1, 2 };
 
     auto mesh = renderer->create_mesh(vertices, indices);
-    auto material = std::shared_ptr<IMaterial> {};
-    auto triangle = renderer->create_model(mesh, material);
+    auto material = MaterialHandle(0);
 
     while(!window->closing()) {
-        renderer->render(triangle, { .position = {
+        renderer->render(mesh, material, { .position = {
             0, sinf(static_cast<f32>(Time::get_seconds_elapsed())), 0,
         }});
 
-        renderer->render(triangle, { .position = {
+        renderer->render(mesh, material, { .position = {
             0, 0, 0,
         }});
 
-        renderer->render(triangle, { .position = {
+        renderer->render(mesh, material, { .position = {
             0, 0, 2,
         }});
 
         for(int i = 0; i < 5; ++i) {
-            renderer->render(triangle, { .position = {
+            renderer->render(mesh, material, { .position = {
                 static_cast<f32>(i), 1, 2,
             }});
         }

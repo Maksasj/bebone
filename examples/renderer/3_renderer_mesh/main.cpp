@@ -10,12 +10,10 @@ int main() {
     auto renderer = RendererFactory::create_renderer(window);
 
     auto mesh = renderer->load_mesh("suzanne.obj");
-    auto material = std::shared_ptr<IMaterial> {};
-
-    auto suzanne = renderer->create_model(mesh, material);
+    auto material = MaterialHandle(0);
 
     while(!window->closing()) {
-        renderer->render(suzanne, { .position = Vec3f::zero });
+        renderer->render(mesh, material, { .position = Vec3f::zero });
         renderer->present();
 
         window->pull_events();
