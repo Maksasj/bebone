@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_IMODEL_H_
 
 #include "imaterial.h"
-#include "imesh.h"
+#include "mesh/imesh.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;

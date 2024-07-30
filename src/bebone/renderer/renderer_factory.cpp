@@ -1,6 +1,6 @@
 #include "renderer_factory.h"
 
-#include "vulkan_renderer.h"
+#include "vulkan/vulkan_renderer.h"
 
 namespace bebone::renderer {
     std::shared_ptr<IRenderer> RendererFactory::create_renderer(std::shared_ptr<gfx::Window>& window) {

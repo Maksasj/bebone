@@ -14,7 +14,7 @@ namespace bebone::renderer {
         public:
             IRenderQueuePass(const std::string& pass_name, const Vec2i& viewport);
 
-            virtual void submit_task(const std::shared_ptr<IModel>& model, const Transform& transform) = 0;
+            virtual void submit_task(const std::shared_ptr<IMesh>& mesh, const std::shared_ptr<IMaterial>& material, const Transform& transform) = 0;
     };
 }
 

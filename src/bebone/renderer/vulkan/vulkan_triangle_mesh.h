@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_VULKAN_TRIANGLE_MESH_H_
 
 #include "renderer_backend.h"
-#include "imesh.h"
+#include "mesh/imesh.h"
 #include "vertex.h"
 
 #include "vulkan_command_encoder.h"

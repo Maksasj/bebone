@@ -26,7 +26,7 @@ namespace bebone::renderer {
             virtual void resize_viewport(const Vec2i& new_size);
 
             // Helper functions
-            virtual void submit_geometry(const std::shared_ptr<IModel>& mesh, const Transform& transform);
+            virtual void submit_geometry(const std::shared_ptr<IMesh>& mesh, const std::shared_ptr<IMaterial>& material, const Transform& transform);
             virtual void submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform);
 
             virtual std::shared_ptr<IPassFactory> create_pass_factory() const;

@@ -56,6 +56,7 @@ namespace bebone::renderer {
 
             ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) override;
 
+            void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) override;
             void render(const ModelHandle& handle, const Transform& transform = {}) override;
 
             void present() override;

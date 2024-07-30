@@ -7,20 +7,20 @@
 #include "irender_graph_impl.h"
 #include "ipass.h"
 
-#include "imesh.h"
-#include "imesh_builder.h"
-#include "imesh_generator.h"
-#include "imesh_loader.h"
+#include "mesh/imesh.h"
+#include "mesh/imesh_builder.h"
+#include "mesh/imesh_generator.h"
+#include "mesh/imesh_loader.h"
 
-#include "cube_mesh_generator.h"
+#include "mesh/cube_mesh_generator.h"
 #include "quad_mesh_generator.h"
 
-#include "obj_mesh_loader.h"
+#include "mesh/obj_mesh_loader.h"
 
-#include "vulkan_renderer.h"
+#include "bebone/renderer/vulkan/vulkan_renderer.h"
 
 // Utils
-#include "opengl_triangle_mesh.h"
-#include "opengl_triangle_mesh_builder.h"
+#include "mesh/opengl_triangle_mesh.h"
+#include "mesh/opengl_triangle_mesh_builder.h"
 
 #endif

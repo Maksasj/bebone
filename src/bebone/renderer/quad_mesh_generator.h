@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_QUAD_MESH_GENERATOR_H_
 
 #include "renderer_backend.h"
-#include "imesh_generator.h"
+#include "mesh/imesh_generator.h"
 
 namespace bebone::renderer {
     class QuadMeshGenerator : public IMeshGenerator<Vertex> {

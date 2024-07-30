@@ -85,7 +85,7 @@ namespace bebone::renderer {
         const std::string& pass_name,
         const Vec2i& viewport
     ) : IDeferredGPass(pass_name, viewport) {
-        queued_jobs_model.reserve(max_queued_jobs);
+        queued_jobs_meshes.reserve(max_queued_jobs);
         queued_jobs_transform.reserve(max_queued_jobs);
     }
 
@@ -170,8 +170,8 @@ namespace bebone::renderer {
             cmd->set_viewport(0, 0, viewport.x, viewport.y);
             program->bind(encoder);
 
-            for(size_t i = 0; i < queued_jobs_model.size(); ++i) {
-                const auto& model = queued_jobs_model[i];
+            for(size_t i = 0; i < queued_jobs_meshes.size(); ++i) {
+                const auto& mesh = queued_jobs_meshes[i];
 
                 queued_jobs_handles[i].transform = queued_jobs_transform[i];
                 queued_jobs_handles[i].camera_handle = camera_ubo_handles[frame];
@@ -180,7 +180,6 @@ namespace bebone::renderer {
                 auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
                 cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &queued_jobs_handles[i]);
 
-                auto mesh = model->get_mesh();
                 mesh->bind(encoder);
                 cmd->draw_indexed(mesh->triangle_count());
             }
@@ -189,7 +188,7 @@ namespace bebone::renderer {
     }
 
     void VulkanDeferredGPass::reset() {
-        queued_jobs_model.clear();
+        queued_jobs_meshes.clear();
         queued_jobs_transform.clear();
     }
 
@@ -197,8 +196,8 @@ namespace bebone::renderer {
         // Todo
     }
 
-    void VulkanDeferredGPass::submit_task(const std::shared_ptr<IModel>& mesh, const Transform& transform) {
-        queued_jobs_model.push_back(mesh);
+    void VulkanDeferredGPass::submit_task(const std::shared_ptr<IMesh>& mesh, const std::shared_ptr<IMaterial>& material, const Transform& transform) {
+        queued_jobs_meshes.push_back(mesh);
         queued_jobs_transform.push_back(calculate_transform_matrix(transform));
     }
 }

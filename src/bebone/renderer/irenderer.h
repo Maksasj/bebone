@@ -9,11 +9,11 @@
 #include "itexture.h"
 #include "imaterial.h"
 
-#include "imesh.h"
-#include "imesh_builder.h"
-#include "imesh_generator.h"
-#include "imesh_loader.h"
-#include "obj_mesh_loader.h"
+#include "mesh/imesh.h"
+#include "mesh/imesh_builder.h"
+#include "mesh/imesh_generator.h"
+#include "mesh/imesh_loader.h"
+#include "mesh/obj_mesh_loader.h"
 
 #include "vertex.h"
 #include "transform.h"
@@ -54,6 +54,9 @@ namespace bebone::renderer {
 
             virtual ModelHandle create_model(std::shared_ptr<IMesh>& mesh, std::shared_ptr<IMaterial>& material) = 0;
 
+            virtual void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) = 0;
+
+            // Tood
             virtual void render(const ModelHandle& handle, const Transform& transform) = 0;
 
             virtual void present() = 0;

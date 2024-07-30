@@ -82,6 +82,10 @@ namespace bebone::renderer {
         return { model_pool.size() - 1 };
     }
 
+    void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) {
+
+    };
+
     void VulkanRenderer::render(const ModelHandle& handle, const Transform& transform) {
         auto mesh = model_pool[handle.index];
         render_graph->submit_geometry(mesh, transform);
