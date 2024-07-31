@@ -153,7 +153,7 @@ namespace bebone::renderer {
         set_program(program);
     }
 
-    void VulkanDeferredGPass::record(ICommandEncoder* encoder) {s
+    void VulkanDeferredGPass::record(ICommandEncoder* encoder) {
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 
         auto cmd = vulkan_encoder->get_command_buffer();
