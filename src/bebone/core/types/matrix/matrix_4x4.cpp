@@ -217,6 +217,7 @@ namespace bebone::core {
         };
     }
 
+    /*
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::perspective(f32 fov, const f32& aspect, const f32& near, const f32& far) {
         fov = 1.0f / std::tan(fov / 2.0f);
         f32 normalization = far / (far - near);
@@ -227,6 +228,27 @@ namespace bebone::core {
                   0.0f,            0.0f,   normalization,  -normalization * near,
                   0.0f,            0.0f,       1.0f,               0.0f
         };
+    }
+    */
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::perspective
+    (
+            f32 fovy,
+            const f32 & aspect,
+            const f32 & zNear,
+            const f32 & zFar
+    )
+    {
+        f32 const rad = fovy;
+        f32 const tanHalfFovy = tan(rad / static_cast<f32>(2));
+
+        auto Result = Matrix<f32, 4, 4>::splat(0);
+        Result.e[0][0] = static_cast<f32>(1) / (aspect * tanHalfFovy);
+        Result.e[1][1] = static_cast<f32>(1) / (tanHalfFovy);
+        Result.e[2][2] = - (zFar + zNear) / (zFar - zNear);
+        Result.e[2][3] = - static_cast<f32>(1);
+        Result.e[3][2] = - (static_cast<f32>(2) * zFar * zNear) / (zFar - zNear);
+        return Result;
     }
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& direction, const Vec3f& up) {
