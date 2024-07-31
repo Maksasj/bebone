@@ -9,13 +9,6 @@ namespace bebone::renderer {
 
     enum class MaterialHandle : u32 { Invalid = 0 };
 
-    struct PBRMaterialProperties {
-        TextureHandle albedo;
-        TextureHandle height;
-        TextureHandle metallic;
-        TextureHandle roughness;
-    };
-
     class IMaterialImpl : public NonCopyable {
         public:
             virtual ~IMaterialImpl() = default;

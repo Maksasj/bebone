@@ -7,19 +7,7 @@ namespace bebone::renderer {
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanProgramManager>& program_manager
     ) : device(device), program_manager(program_manager) {
-
-        // auto properties = PBRMaterialProperties {
-        //    .albedo = TextureHandle::Invalid,
-        //    .height = TextureHandle::Invalid,
-        //    .metallic = TextureHandle::Invalid,
-        //    .roughness = TextureHandle::Invalid,
-        // };
-
-        // default_material_ptr = std::make_shared<VulkanMaterialImpl>(
-        //     this->device,
-        //     this->program_manager,
-        //     &properties,
-        //     sizeof(PBRMaterialProperties));
+        // Todo creation of default material
     }
 
     MaterialHandle VulkanMaterialManager::default_material() {

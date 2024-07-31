@@ -6,10 +6,21 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
+    struct PBRMaterialProperties {
+        TextureHandle albedo;
+        TextureHandle height;
+        TextureHandle metallic;
+        TextureHandle roughness;
+    };
+
     class IMaterial : public NonCopyable {
         private:
+            std::shared_ptr<IMaterialImpl> impl;
 
         public:
+            IMaterial(const std::shared_ptr<IMaterialImpl>& impl);
+
+            const MaterialHandle& get_handle() const;
     };
 }
 
