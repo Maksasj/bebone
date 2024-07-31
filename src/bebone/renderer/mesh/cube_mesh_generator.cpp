@@ -35,14 +35,14 @@ namespace bebone::renderer {
 
     std::shared_ptr<IMesh> CubeMeshGenerator::generate(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) {
         const auto vertices = vector<Vertex> {
-            { { -cube_width, -cube_height, cube_length }, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} },
-            { { cube_width, -cube_height, cube_length },  {1.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
-            { { cube_width, cube_height, cube_length },   {1.0f, 0.0f, 1.0f}, {0.0f, 0.0f} },
-            { { -cube_width, cube_height, cube_length },  {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} },
-            { { -cube_width, -cube_height, -cube_length },  {0.0f, 1.0f, 1.0f}, {0.0f, 0.0f} },
-            { { cube_width, -cube_height, -cube_length }, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
-            { { cube_width, cube_height, -cube_length },  {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f} },
-            { { -cube_width, cube_height, -cube_length }, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f} }
+            { { -cube_width, -cube_height, cube_length },  {1.0f, 1.0f, 1.0f},   {0.0f, 0.0f} },
+            { { cube_width, -cube_height, cube_length },   {1.0f, 1.0f, 0.0f},   {0.0f, 0.0f} },
+            { { cube_width, cube_height, cube_length },    {1.0f, 0.0f, 1.0f},   {0.0f, 0.0f} },
+            { { -cube_width, cube_height, cube_length },   {1.0f, 0.0f, 0.0f},   {0.0f, 0.0f} },
+            { { -cube_width, -cube_height, -cube_length }, {0.0f, 1.0f, 1.0f},   {0.0f, 0.0f} },
+            { { cube_width, -cube_height, -cube_length },  {0.0f, 1.0f, 0.0f},   {0.0f, 0.0f} },
+            { { cube_width, cube_height, -cube_length },   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f} },
+            { { -cube_width, cube_height, -cube_length },  {0.0f, 0.0f, 0.0f},   {0.0f, 0.0f} }
         };
 
         const auto indices = vector<u32> {

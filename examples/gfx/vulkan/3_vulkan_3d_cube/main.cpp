@@ -63,7 +63,7 @@ int main() {
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
     auto c_transform = CameraTransform {
-        Mat4f::view(Vec3f(0.0f, 0.0f, -10.0f), Vec3f::forward, Vec3f::down),
+        Mat4f::view(Vec3f(0.0f, 0.0f, 0.0f), Vec3f::forward, Vec3f::up),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
@@ -76,14 +76,15 @@ int main() {
         Mat4f::identity()
     };
 
-    f32 t = 0.0f;
     while (!window->closing()) {
         window->pull_events();
-        t += Time::get_delta_time() * 0.05f;
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
             continue;
+
+        std::cout << Vec3f(0.0f, 2.0f, (sin(Time::get_seconds_elapsed()) + 1.0f) * 5.0f) << "\n";
+        transform.transform = Mat4f::translation(Vec3f(0.0f, 2.0f, (sin(Time::get_seconds_elapsed()) + 1.0f) * 5.0f));
 
         transform.rotation = trait_bryan_angle_yxz(Vec3f(Time::get_seconds_elapsed(), Time::get_seconds_elapsed(), 0.0f));
         t_ubo[frame]->upload_data(device, &transform, sizeof(Transform));

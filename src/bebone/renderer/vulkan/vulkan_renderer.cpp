@@ -25,7 +25,9 @@ namespace bebone::renderer {
         });
 
         // Setup default camera
-        camera = std::make_shared<IDebugCamera>(window);
+        camera = std::make_shared<IPerspectiveCamera>(1.0472f, 0.1f, 100.0f);
+        camera->set_position({0.0f, 0.0f, -10.0f});
+
         auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
         pass->set_camera(camera);
     }

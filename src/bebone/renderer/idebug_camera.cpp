@@ -4,8 +4,6 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     void IDebugCamera::update_camera_rotation() {
-        auto rotation = get_rotation();
-
         // Todo
         const auto window_center_width = static_cast<f32>(window->get_width()) / 2.0f;
         const auto window_center_height = static_cast<f32>(window->get_height()) / 2.0f;
@@ -21,20 +19,19 @@ namespace bebone::renderer {
             const auto delta_x = floorf(window_center_width) - static_cast<f32>(x_pos);
             const auto delta_y = floorf(window_center_height) - static_cast<f32>(y_pos);
 
-            rotation.x += delta_y * 0.005f;
-            rotation.y -= delta_x * 0.005f; // If this is confusing just think that we rotate Y axis cause of movement mouse a long X axis, actual this make sense
+            cam_rotation.x += delta_y * 0.005f;
+            cam_rotation.y -= delta_x * 0.005f; // If this is confusing just think that we rotate Y axis cause of movement mouse a long X axis, actual this make sense
 
             glfwSetCursorPos(window->get_backend(), window_center_width, window_center_height);
         } else
             glfwSetInputMode(window->get_backend(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         const Vec3f direction = {
-            cos(rotation.y) * cos(rotation.x),
-            sin(rotation.x),
-            sin(rotation.y) * cos(rotation.x)
+            cos(cam_rotation.y) * cos(cam_rotation.x),
+            sin(cam_rotation.x),
+            sin(cam_rotation.y) * cos(cam_rotation.x)
         };
 
-        set_rotation(rotation);
         set_direction(direction);
     }
 
@@ -89,7 +86,7 @@ namespace bebone::renderer {
 
     IDebugCamera::IDebugCamera(
         const std::shared_ptr<Window>& window
-    ) : IPerspectiveCamera(1.0472f, 0.1f, 100.0f), window(window), speed(1.0f), mouse_locked(false) {
+    ) : IPerspectiveCamera(1.0472f, 0.1f, 100.0f), window(window), speed(1.0f), mouse_locked(false), cam_rotation(Vec3f::zero) {
         window->add_listener([&](WindowPullEventsEvent& event) {
             std::ignore = event;
 

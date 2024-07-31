@@ -12,6 +12,8 @@ namespace bebone::renderer {
             f32 speed;
             bool mouse_locked;
 
+            Vec3f cam_rotation;
+
         protected:
             void update_debug_camera();
 

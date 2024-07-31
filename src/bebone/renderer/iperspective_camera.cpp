@@ -11,7 +11,7 @@ namespace bebone::renderer {
 
     Mat4f IPerspectiveCamera::calculate_matrix(const f32& aspect_ratio) const {
         auto proj = Mat4f::perspective(fov, aspect_ratio, near_plane, far_plane);
-        proj(1, 1) *= -1.0f;
+        // proj(1, 1) *= -1.0f;
 
         const auto direction = get_direction();
         const auto position = get_position();
