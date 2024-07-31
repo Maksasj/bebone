@@ -20,8 +20,11 @@ int main() {
 
     auto material = renderer->create_material(&properties, sizeof(properties));
 
+    auto plate = renderer->generate_mesh(std::make_shared<CubeMeshGenerator>(7.0f, 1.0f, 7.0f));
+
     while(!window->closing()) {
         renderer->render(suzanne, material, {});
+        renderer->render(plate, material, { .position = Vec3f(0.0f, -3.0f, 0.0f) });
 
         renderer->present();
         window->pull_events();

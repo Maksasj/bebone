@@ -15,20 +15,21 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     class VulkanMeshManager : public IMeshManager {
-    private:
-        std::shared_ptr<VulkanDevice> device;
+        private:
+            std::shared_ptr<VulkanDevice> device;
 
-        std::vector<std::shared_ptr<VulkanTriangleMesh>> meshes;
+            std::vector<std::shared_ptr<VulkanTriangleMesh>> meshes;
 
-    public:
-        VulkanMeshManager(const std::shared_ptr<VulkanDevice>& device);
+        public:
+            VulkanMeshManager(const std::shared_ptr<VulkanDevice>& device);
 
-        MeshHandle load_mesh(const std::string& file_path) override;
-        MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
+            MeshHandle load_mesh(const std::string& file_path) override;
+            MeshHandle generate_mesh(const std::shared_ptr<IMeshGenerator<Vertex>>& mesh_generator) override;
+            MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
 
-        void draw_indexed(ICommandEncoder* encoder, const MeshHandle& handle) override;
+            void draw_indexed(ICommandEncoder* encoder, const MeshHandle& handle) override;
 
-        [[nodiscard]] std::optional<std::shared_ptr<IMesh>> get_mesh(const MeshHandle& handle) const override;
+            [[nodiscard]] std::optional<std::shared_ptr<IMesh>> get_mesh(const MeshHandle& handle) const override;
     };
 }
 

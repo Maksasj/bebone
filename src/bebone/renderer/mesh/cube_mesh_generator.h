@@ -6,11 +6,23 @@
 
 namespace bebone::renderer {
     class CubeMeshGenerator : public IMeshGenerator<Vertex> {
-        public:
-            CubeMeshGenerator(const std::shared_ptr<IMeshBuilder<Vertex>>& builder);
+        private:
+            f32 cube_width;
+            f32 cube_height;
+            f32 cube_length;
 
-            void reset() override;
-            std::shared_ptr<IMesh> generate() override;
+        public:
+            CubeMeshGenerator(const f32& width, const f32& height, const f32& length);
+
+            void set_width(const f32& width);
+            void set_height(const f32& height);
+            void set_length(const f32& length);
+
+            f32 get_width() const;
+            f32 get_height() const;
+            f32 get_length() const;
+
+            std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) override;
     };
 }
 

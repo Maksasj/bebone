@@ -1,7 +1,7 @@
 #ifndef _BEBONE_RENDERER_VULKAN_PRESENT_PASS_H_
 #define _BEBONE_RENDERER_VULKAN_PRESENT_PASS_H_
 
-#include "quad_mesh_generator.h"
+#include "mesh/quad_mesh_generator.h"
 #include "vulkan_triangle_mesh_builder.h"
 #include "irenderer.h"
 #include "ipass.h"

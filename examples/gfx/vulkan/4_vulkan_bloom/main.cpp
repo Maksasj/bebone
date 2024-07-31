@@ -69,11 +69,11 @@ int main() {
     auto post_geometry_grayscale_texture_handles = pipeline_manager->bind_attachments(device, geometry_render_target->get_color_attachment(1));
     auto post_blur_texture_handles = pipeline_manager->bind_attachments(device, blur_render_target->get_color_attachment(0));
 
-    auto cube_generator = std::make_shared<CubeMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
-    auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+    auto cube_generator = std::make_shared<CubeMeshGenerator>(1.0f, 1.0f, 1.0f);
+    auto quad_generator = std::make_shared<QuadMeshGenerator>(1.0f, 1.0f);
 
-    auto cube_mesh = cube_generator->generate();
-    auto quad_mesh = quad_generator->generate();
+    auto cube_mesh = cube_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+    auto quad_mesh = quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device));
 
     auto transform = Transform {};
     auto camera = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) * Mat4f::translation(Vec3f(0, 0, 5));

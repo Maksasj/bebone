@@ -84,8 +84,8 @@ namespace bebone::renderer {
         set_program(program);
 
         // Todo, move this to mesh manager
-        auto quad_generator = std::make_shared<QuadMeshGenerator>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
-        quad_mesh = quad_generator->generate();
+        auto quad_generator = std::make_shared<QuadMeshGenerator>(1.0f, 1.0f);
+        quad_mesh = quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device));
 
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
