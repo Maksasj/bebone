@@ -13,7 +13,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class IPass {
+    class IPass : public NonCopyable {
         private:
             std::string name;
 

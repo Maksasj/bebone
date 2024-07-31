@@ -7,7 +7,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class ITextureManager {
+    class ITextureManager : public NonCopyable {
         public:
             virtual ~ITextureManager() = default;
 

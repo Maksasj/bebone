@@ -7,7 +7,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class IMeshManager {
+    class IMeshManager : public NonCopyable {
         public:
             virtual ~IMeshManager() = default;
 

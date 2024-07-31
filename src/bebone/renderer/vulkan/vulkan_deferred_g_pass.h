@@ -34,9 +34,7 @@ namespace bebone::renderer {
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
             std::vector<VulkanBindlessBufferHandle> camera_ubo_handles;
 
-            std::shared_ptr<VulkanBufferMemoryTuple> mat_ubo;
-            VulkanBindlessBufferHandle mat_ubo_handles;
-
+            // Reference to mesh manager
             std::shared_ptr<VulkanMeshManager> mesh_manager;
 
             // Jobs

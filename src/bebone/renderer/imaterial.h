@@ -6,7 +6,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class IMaterial {
+    class IMaterial : public NonCopyable {
         private:
 
         public:

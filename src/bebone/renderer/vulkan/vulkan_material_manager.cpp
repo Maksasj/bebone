@@ -27,15 +27,8 @@ namespace bebone::renderer {
     }
 
     MaterialHandle VulkanMaterialManager::create_material(void* properties, const size_t& size) {
-        auto material = std::make_shared<VulkanMaterialImpl>(
-            this->device,
-            this->program_manager,
-            &properties,
-            sizeof(PBRMaterialProperties));
-
+        auto material = std::make_shared<VulkanMaterialImpl>(this->device, this->program_manager, properties, size);
         materials.push_back(material);
-
-        std::cout << "Material" << static_cast<u32>(material->get_handle()) << "\n";
 
         return material->get_handle();
     }

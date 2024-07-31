@@ -30,7 +30,7 @@
 namespace bebone::renderer {
     struct ModelHandle { size_t index; };
 
-    class IRenderer {
+    class IRenderer : public NonCopyable {
         private:
             const GfxAPI api;
 

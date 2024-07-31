@@ -149,29 +149,11 @@ namespace bebone::renderer {
         camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
         camera_ubo_handles  = pipeline_manager->bind_uniform_buffers(device, camera_ubo);
 
-        struct MatInfo {
-            TextureHandle albedo_handle;
-            TextureHandle height_handle;
-            TextureHandle metallic_handle;
-            TextureHandle roughness_handle;
-        };
-
-        mat_ubo = device->create_buffer_memory(sizeof(MatInfo));
-        mat_ubo_handles  = pipeline_manager->bind_uniform_buffer(device, mat_ubo);
-
-        MatInfo d;
-        d.albedo_handle = static_cast<TextureHandle>(15);
-        d.roughness_handle = static_cast<TextureHandle>(18);
-
-        mat_ubo->upload_data(device, &d, sizeof(MatInfo));
-
-        std::cout << "Handleee " << static_cast<u32>(mat_ubo_handles) << "\n";
-
         // Bind program
         set_program(program);
     }
 
-    void VulkanDeferredGPass::record(ICommandEncoder* encoder) {
+    void VulkanDeferredGPass::record(ICommandEncoder* encoder) {s
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 
         auto cmd = vulkan_encoder->get_command_buffer();
@@ -197,7 +179,7 @@ namespace bebone::renderer {
 
                 queued_jobs_handles[i].transform = queued_jobs_transform[i];
                 queued_jobs_handles[i].camera_handle = camera_ubo_handles[frame];
-                queued_jobs_handles[i].material_handle = mat_ubo_handles;
+                queued_jobs_handles[i].material_handle = static_cast<VulkanBindlessBufferHandle>(material);
 
                 auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
                 cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &queued_jobs_handles[i]);

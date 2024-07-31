@@ -16,7 +16,7 @@ namespace bebone::renderer {
         TextureHandle roughness;
     };
 
-    class IMaterialImpl {
+    class IMaterialImpl : public NonCopyable {
         public:
             virtual ~IMaterialImpl() = default;
 

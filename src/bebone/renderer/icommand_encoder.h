@@ -4,6 +4,8 @@
 #include "renderer_backend.h"
 
 namespace bebone::renderer {
+    using namespace bebone::core;
+
     class ICommandEncoder {
         private:
 

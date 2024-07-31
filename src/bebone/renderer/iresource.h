@@ -7,7 +7,7 @@
 #include "icommand_encoder.h"
 
 namespace bebone::renderer {
-    class IResource {
+    class IResource : public NonCopyable {
         private:
             std::string name;
 

@@ -4,7 +4,7 @@
 #include "icommand_encoder.h"
 
 namespace bebone::renderer {
-    class IProgram {
+    class IProgram : public NonCopyable {
         public:
             virtual ~IProgram() = default;
 
