@@ -26,10 +26,10 @@ namespace bebone::renderer {
 
     std::shared_ptr<IMesh> QuadMeshGenerator::generate(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) {
         const std::vector<Vertex> vertices {
-            {{ -quad_width, -quad_height, 0.0f}, Vec3f::zero, {1.0f, 1.0f}},
-            {{ -quad_width,  quad_height, 0.0f}, Vec3f::zero, {1.0f, 0.0f}},
-            {{  quad_width,  quad_height, 0.0f}, Vec3f::zero, {0.0f, 0.0f}},
-            {{  quad_width, -quad_height, 0.0f}, Vec3f::zero, {0.0f, 1.0f}}
+            {{ -quad_width, -quad_height, 0.0f}, Vec3f::zero, { 0.0f, 1.0f }},
+            {{ -quad_width,  quad_height, 0.0f}, Vec3f::zero, { 0.0f, 0.0f }},
+            {{  quad_width,  quad_height, 0.0f}, Vec3f::zero, { 1.0f, 0.0f }},
+            {{  quad_width, -quad_height, 0.0f}, Vec3f::zero, { 1.0f, 1.0f }}
         };
 
         const std::vector<u32> indices {
