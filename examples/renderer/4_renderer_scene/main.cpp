@@ -18,15 +18,7 @@ int main() {
         .roughness = renderer->load_texture("used-stainless-steel2_roughness.png")
     };
 
-    PBRMaterialProperties skybox {
-        .albedo = renderer->load_texture("autumn_field_puresky.jpg"),
-        .height = renderer->load_texture("used-stainless-steel2_height.png"),
-        .metallic = renderer->load_texture("used-stainless-steel2_metallic.png"),
-        .roughness = renderer->load_texture("used-stainless-steel2_roughness.png")
-    };
-
     auto material = renderer->create_material(&properties, sizeof(properties));
-    auto skybox_material = renderer->create_material(&skybox, sizeof(skybox));
 
     auto quad = renderer->generate_mesh(std::make_shared<QuadMeshGenerator>(2.0f, 2.0f, Vec3f::back));
     auto plate = renderer->generate_mesh(std::make_shared<CubeMeshGenerator>(2.0f, 2.0f, 2.0f));

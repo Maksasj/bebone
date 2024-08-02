@@ -7,14 +7,15 @@
 namespace bebone::renderer {
     class UVSphereMeshGenerator : public IMeshGenerator {
         private:
+            f32 sphere_radius;
+            u32 sphere_latitudes;
+            u32 sphere_longitudes;
+
+            // Precalculated points
             std::vector<Vec3f> sphere_vertices;
             std::vector<Vec3f> sphere_normals;
             std::vector<Vec2f> sphere_texcoord;
             std::vector<unsigned int> sphere_indices;
-
-            f32 sphere_radius;
-            u32 sphere_latitudes;
-            u32 sphere_longitudes;
 
         protected:
             void recalculate_vertices();
