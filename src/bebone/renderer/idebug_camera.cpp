@@ -86,7 +86,7 @@ namespace bebone::renderer {
 
     IDebugCamera::IDebugCamera(
         const std::shared_ptr<Window>& window
-    ) : IPerspectiveCamera(1.0472f, 0.1f, 100.0f), window(window), speed(1.0f), mouse_locked(false), cam_rotation(Vec3f::zero) {
+    ) : IPerspectiveCamera(1.0472f, 0.1f, 1000000.0f), window(window), speed(1.0f), mouse_locked(false), cam_rotation(Vec3f::zero) {
         window->add_listener([&](WindowPullEventsEvent& event) {
             std::ignore = event;
 

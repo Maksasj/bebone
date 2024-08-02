@@ -12,12 +12,13 @@
 #include "mesh/imesh_generator.h"
 #include "mesh/imesh_loader.h"
 
+#include "mesh/quad_mesh_generator.h"
 #include "mesh/cube_mesh_generator.h"
-#include "bebone/renderer/mesh/quad_mesh_generator.h"
+#include "mesh/uv_sphere_mesh_generator.h"
 
 #include "mesh/obj_mesh_loader.h"
 
-#include "bebone/renderer/vulkan/vulkan_renderer.h"
+#include "vulkan/vulkan_renderer.h"
 
 // Utils
 #include "mesh/opengl_triangle_mesh.h"
