@@ -7,13 +7,12 @@
 #include "imesh_builder.h"
 
 namespace bebone::renderer {
-    template<class Vertex>
     class IMeshLoader {
         protected:
-            std::shared_ptr<IMeshBuilder<Vertex>> builder;
+            std::shared_ptr<IMeshBuilder> builder;
 
         public:
-            IMeshLoader(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) : builder(builder) { }
+            IMeshLoader(const std::shared_ptr<IMeshBuilder>& builder) : builder(builder) { }
             virtual ~IMeshLoader() = default;
 
             virtual void reset() = 0;

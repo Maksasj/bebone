@@ -2,7 +2,7 @@
 
 namespace bebone::renderer {
 
-    OBJMeshLoader::OBJMeshLoader(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) : IMeshLoader(builder) {
+    OBJMeshLoader::OBJMeshLoader(const std::shared_ptr<IMeshBuilder>& builder) : IMeshLoader(builder) {
 
     }
 

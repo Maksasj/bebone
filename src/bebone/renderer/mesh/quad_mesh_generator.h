@@ -5,7 +5,7 @@
 #include "mesh/imesh_generator.h"
 
 namespace bebone::renderer {
-    class QuadMeshGenerator : public IMeshGenerator<Vertex> {
+    class QuadMeshGenerator : public IMeshGenerator {
         private:
             f32 quad_width;
             f32 quad_height;
@@ -17,6 +17,7 @@ namespace bebone::renderer {
             // Precalculated points
             std::array<Vec3f, 4> quad_vertices;
 
+        protected:
             void recalculate_vertices();
 
         public:
@@ -24,13 +25,18 @@ namespace bebone::renderer {
 
             void set_width(const f32& width);
             void set_height(const f32& height);
-            void set_facing(const Vec3f& height);
+            void set_facing(const Vec3f& facing);
+            void set_origin(const Vec3f& origin);
+            void set_up(const Vec3f& up_direction);
 
-            f32 get_width() const;
-            f32 get_height() const;
-            Vec3f get_facing() const;
+            [[nodiscard]] f32 get_width() const;
+            [[nodiscard]] f32 get_height() const;
+            [[nodiscard]] Vec3f get_facing() const;
+            [[nodiscard]] Vec3f get_origin() const;
+            [[nodiscard]] Vec3f get_up() const;
 
-            std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) override;
+            void append_vertices(const std::shared_ptr<IMeshBuilder>& builder) override;
+            std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder>& builder) override;
     };
 
 }

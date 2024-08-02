@@ -6,9 +6,9 @@
 #include "imesh_loader.h"
 
 namespace bebone::renderer {
-    class OBJMeshLoader : public IMeshLoader<Vertex> {
+    class OBJMeshLoader : public IMeshLoader {
         public:
-            OBJMeshLoader(const std::shared_ptr<IMeshBuilder<Vertex>>& builder);
+            OBJMeshLoader(const std::shared_ptr<IMeshBuilder>& builder);
 
             void reset() override;
 

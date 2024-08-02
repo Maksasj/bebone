@@ -63,7 +63,7 @@ static const char vulkan_deferred_g_pass_fragment_shader_code[] =
 
     "void main() {\n"
     "   out_position = vec4(in_position, 1.0);\n"
-    "   out_normals = vec4(in_normal, 1.0);\n"
+    "   out_normals = vec4((in_normal + vec3(1.0f, 1.0f, 1.0f)) / 2.0f, 1.0);\n"
     "   out_albedo =  vec4(texture(textures[materialUBO[handles.material_handle].albedo_handle], in_texcoord));\n"
     "   out_specular = vec4(texture(textures[materialUBO[handles.material_handle].roughness_handle], in_texcoord));\n"
     "}";

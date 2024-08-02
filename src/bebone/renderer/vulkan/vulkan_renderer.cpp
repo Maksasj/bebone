@@ -79,7 +79,7 @@ namespace bebone::renderer {
         return mesh_manager->load_mesh(file_path);
     }
 
-    MeshHandle VulkanRenderer::generate_mesh(const std::shared_ptr<IMeshGenerator<Vertex>>& mesh_generator) {
+    MeshHandle VulkanRenderer::generate_mesh(const std::shared_ptr<IMeshGenerator>& mesh_generator) {
         return mesh_manager->generate_mesh(mesh_generator);
     }
 

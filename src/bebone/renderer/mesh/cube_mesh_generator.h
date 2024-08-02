@@ -2,11 +2,13 @@
 #define _BEBONE_RENDERER_CUBE_MESH_GENERATOR_H_
 
 #include "renderer_backend.h"
-#include "imesh_generator.h"
+#include "quad_mesh_generator.h"
 
 namespace bebone::renderer {
-    class CubeMeshGenerator : public IMeshGenerator<Vertex> {
+    class CubeMeshGenerator : public IMeshGenerator {
         private:
+            QuadMeshGenerator quad_generator;
+
             f32 cube_width;
             f32 cube_height;
             f32 cube_length;
@@ -18,11 +20,12 @@ namespace bebone::renderer {
             void set_height(const f32& height);
             void set_length(const f32& length);
 
-            f32 get_width() const;
-            f32 get_height() const;
-            f32 get_length() const;
+            [[nodiscard]] f32 get_width() const;
+            [[nodiscard]] f32 get_height() const;
+            [[nodiscard]] f32 get_length() const;
 
-            std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) override;
+            void append_vertices(const std::shared_ptr<IMeshBuilder>& builder) override;
+            std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder>& builder) override;
     };
 }
 

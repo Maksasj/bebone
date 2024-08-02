@@ -51,7 +51,7 @@ namespace bebone::renderer {
             TextureHandle load_texture(const std::string& file_path) override;
 
             MeshHandle load_mesh(const std::string& file_path) override;
-            MeshHandle generate_mesh(const std::shared_ptr<IMeshGenerator<Vertex>>& mesh_generator) override;
+            MeshHandle generate_mesh(const std::shared_ptr<IMeshGenerator>& mesh_generator) override;
             MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
 
             MaterialHandle create_material(void* properties, const size_t& size) override;

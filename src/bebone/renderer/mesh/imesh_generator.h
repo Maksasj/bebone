@@ -7,14 +7,14 @@
 #include "imesh_builder.h"
 
 namespace bebone::renderer {
-    template<class Vertex>
     class IMeshGenerator {
         protected:
 
         public:
             virtual ~IMeshGenerator() = default;
 
-            virtual std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) = 0;
+            virtual void append_vertices(const std::shared_ptr<IMeshBuilder>& builder) = 0;
+            virtual std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder>& builder) = 0;
     };
 
 }

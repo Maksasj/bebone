@@ -38,10 +38,10 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanMeshManager> mesh_manager;
 
             // Jobs
-            static const u32 max_queued_jobs = 50;
+            static const u32 max_queued_jobs = 1000;
             std::vector<RenderQueueTask> queued_jobs;
             std::vector<Mat4f> queued_jobs_transform;
-            std::array<VulkanDeferredGPassHandles, 50> queued_jobs_handles;
+            std::array<VulkanDeferredGPassHandles, 1000> queued_jobs_handles;
 
         public:
             VulkanDeferredGPass(const std::string& pass_name, const Vec2i& viewport);

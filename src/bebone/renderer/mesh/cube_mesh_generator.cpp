@@ -5,7 +5,7 @@ namespace bebone::renderer {
         const f32& width,
         const f32& height,
         const f32& length
-    ) : cube_width(width), cube_height(height), cube_length(length) {
+    ) : quad_generator(width, height), cube_width(width), cube_height(height), cube_length(length) {
 
     }
 
@@ -33,25 +33,48 @@ namespace bebone::renderer {
         return cube_length;
     }
 
-    std::shared_ptr<IMesh> CubeMeshGenerator::generate(const std::shared_ptr<IMeshBuilder<Vertex>>& builder) {
-        const auto vertices = vector<Vertex> {
-            { { -cube_width, -cube_height, cube_length },  {1.0f, 1.0f, 1.0f},   {0.0f, 0.0f} },
-            { { cube_width, -cube_height, cube_length },   {1.0f, 1.0f, 0.0f},   {0.0f, 0.0f} },
-            { { cube_width, cube_height, cube_length },    {1.0f, 0.0f, 1.0f},   {0.0f, 0.0f} },
-            { { -cube_width, cube_height, cube_length },   {1.0f, 0.0f, 0.0f},   {0.0f, 0.0f} },
-            { { -cube_width, -cube_height, -cube_length }, {0.0f, 1.0f, 1.0f},   {0.0f, 0.0f} },
-            { { cube_width, -cube_height, -cube_length },  {0.0f, 1.0f, 0.0f},   {0.0f, 0.0f} },
-            { { cube_width, cube_height, -cube_length },   {0.0f, 0.0f, 1.0f},   {0.0f, 0.0f} },
-            { { -cube_width, cube_height, -cube_length },  {0.0f, 0.0f, 0.0f},   {0.0f, 0.0f} }
-        };
+    void CubeMeshGenerator::append_vertices(const std::shared_ptr<IMeshBuilder>& builder) {
+        quad_generator.set_width(cube_width);
+        quad_generator.set_height(cube_height);
+        quad_generator.set_facing(Vec3f::forward);
+        quad_generator.set_origin(Vec3f(0.0f, 0.0f, cube_width));
+        quad_generator.append_vertices(builder);
 
-        const auto indices = vector<u32> {
-            0, 1, 2, 2, 3, 0, 1, 5, 6, 6, 2, 1, 7, 6, 5, 5, 4, 7, 4, 0, 3, 3, 7, 4, 4, 5, 1, 1, 0, 4, 3, 2, 6, 6, 7, 3
-        };
+        quad_generator.set_width(cube_width);
+        quad_generator.set_height(cube_height);
+        quad_generator.set_facing(Vec3f::back);
+        quad_generator.set_origin(Vec3f(0.0f, 0.0f, -cube_width));
+        quad_generator.append_vertices(builder);
 
-        // Todo, with builder we need to interface via triangle api, not raw
-        builder->append_raw(vertices.data(), vertices.size(), indices.data(), indices.size());
+        quad_generator.set_width(cube_width);
+        quad_generator.set_height(cube_height);
+        quad_generator.set_facing(Vec3f::left);
+        quad_generator.set_origin(Vec3f(-cube_width, 0.0f, 0.0f));
+        quad_generator.append_vertices(builder);
 
+        quad_generator.set_width(cube_width);
+        quad_generator.set_height(cube_height);
+        quad_generator.set_facing(Vec3f::right);
+        quad_generator.set_origin(Vec3f(cube_width, 0.0f, 0.0f));
+        quad_generator.append_vertices(builder);
+
+        quad_generator.set_width(cube_width);
+        quad_generator.set_height(cube_length);
+        quad_generator.set_facing(Vec3f::up);
+        quad_generator.set_up(Vec3f::forward);
+        quad_generator.set_origin(Vec3f(0.0f, cube_height, 0.0f));
+        quad_generator.append_vertices(builder);
+
+        quad_generator.set_width(cube_width);
+        quad_generator.set_height(cube_length);
+        quad_generator.set_facing(Vec3f::down);
+        quad_generator.set_up(Vec3f::forward);
+        quad_generator.set_origin(Vec3f(0.0f, -cube_height, 0.0f));
+        quad_generator.append_vertices(builder);
+    }
+
+    std::shared_ptr<IMesh> CubeMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
+        append_vertices(builder);
         return builder->build();
     }
 }

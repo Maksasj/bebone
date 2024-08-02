@@ -16,7 +16,7 @@ namespace bebone::renderer {
         return static_cast<MeshHandle>(meshes.size() - 1);
     }
 
-    MeshHandle VulkanMeshManager::generate_mesh(const std::shared_ptr<IMeshGenerator<Vertex>>& mesh_generator) {
+    MeshHandle VulkanMeshManager::generate_mesh(const std::shared_ptr<IMeshGenerator>& mesh_generator) {
         auto builder = std::make_shared<VulkanTriangleMeshBuilder>(*device);
         auto mesh = mesh_generator->generate(builder);
 
