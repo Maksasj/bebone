@@ -106,7 +106,5 @@ int main() {
 
     geometry_program.destroy();
 
-    GLFWContext::terminate();
-
     return 0;
 }

@@ -8,8 +8,6 @@ namespace bexel {
     void Bexel::init() {
         BEBONE_PROFILE_RECORD(BEXEL_INIT)
 
-        GLFWContext::init();
-
         window = WindowFactory::create_window("4. Opengl Bexel example", game_width, game_height, OpenGL, {
             .enable_resize = true
         });
@@ -74,7 +72,5 @@ namespace bexel {
         world = nullptr;
 
         shader->destroy();
-
-        GLFWContext::terminate();
     }
 }

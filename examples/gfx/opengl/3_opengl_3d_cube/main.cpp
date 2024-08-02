@@ -107,7 +107,5 @@ int main() {
     ebo.destroy();
     shader_program.destroy();
 
-    GLFWContext::terminate();
-
     return 0;
 }

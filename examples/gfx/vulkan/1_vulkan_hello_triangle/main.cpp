@@ -26,8 +26,6 @@ std::string vulkan_device_read_file(const std::string& path) {
 }
 
 int main() {
-    GLFWContext::init();
-
     auto window = WindowFactory::create_window("1. Vulkan hello triangle example", 800, 600, Vulkan);
 
     auto instance = VulkanInstance::create_instance();
@@ -78,8 +76,6 @@ int main() {
     }
 
     instance->destroy();
-
-    GLFWContext::terminate();
 
     return 0;
 }

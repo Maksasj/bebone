@@ -8,8 +8,6 @@ using namespace bebone::gfx;
 int main() {
     BEBONE_PROFILE_RECORD(MAIN)
 
-    GLFWContext::init();
-
     auto window = WindowFactory::create_window("0. Begui Node graph example", screen_width, screen_height, OpenGL);
 
     window->add_listener([&](InputKeyEvent& event) {
@@ -60,8 +58,6 @@ int main() {
     }
 
     shader_program.destroy();
-
-    GLFWContext::terminate();
 
     BEBONE_PROFILE_STOP(MAIN)
     std::cout << BEBONE_PROFILER_SUM_UP() << "\n";

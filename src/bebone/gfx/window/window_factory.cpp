@@ -6,6 +6,8 @@
 
 namespace bebone::gfx {
     std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties) {
+        GLFWContext::init(); // this should be moved somewhere else
+
         std::shared_ptr<Window> window;
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);

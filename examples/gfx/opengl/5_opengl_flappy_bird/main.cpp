@@ -49,6 +49,5 @@ int main() {
         window->end_frame();
     }
     
-    GLFWContext::terminate();
     return 0;
 }

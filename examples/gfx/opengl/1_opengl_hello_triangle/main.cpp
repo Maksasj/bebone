@@ -11,8 +11,6 @@ const std::vector<Vec3f> vertices = { {-0.5f, -0.5f, 0.0f}, {0.5f, -0.5f, 0.0f},
 const std::vector<u32> indices = { 0, 1, 2, };
 
 int main() {
-    GLFWContext::init();
-
     auto window = WindowFactory::create_window("1. OpenGL hello triangle example", screen_width, screen_height, OpenGL);
 
     GLContext::load_opengl();
@@ -56,7 +54,6 @@ int main() {
     ebo.destroy();
     shader_program.destroy();
 
-    GLFWContext::terminate();
     return 0;
 }
 

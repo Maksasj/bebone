@@ -6,8 +6,6 @@ const unsigned int screen_height = 600;
 using namespace bebone::gfx;
 
 int main() {
-    GLFWContext::init();
-    
     auto window = WindowFactory::create_window("0. OpenGL window example", screen_width, screen_height, OpenGL);
 
     GLContext::load_opengl();
@@ -21,6 +19,5 @@ int main() {
         window->pull_events();
     }
 
-    GLFWContext::terminate();
     return 0;
 }

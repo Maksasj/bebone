@@ -5,8 +5,6 @@ using namespace bebone::gfx;
 
 int main() {
     /*
-    GLFWContext::init(); // this should be moved somewhere else
-
     auto window = WindowFactory::create_window("0. Renderer window example", 800, 600, GfxAPI::OpenGL);
     auto renderer = RendererFactory::create_renderer(window);
 
@@ -16,8 +14,6 @@ int main() {
         renderer->render(sprite, Transform{ .position = Vec3f::zero });
         renderer->present();
     }
-
-    GLFWContext::terminate();// this should be moved somewhere else
 P*/
 
     return 0;

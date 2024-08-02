@@ -26,8 +26,6 @@ const std::vector<u32> indices {
 };
 
 int main() {
-    GLFWContext::init();
-
     auto window = WindowFactory::create_window("0. Image example basic", screen_width, screen_height, OpenGL);
 
     GLContext::load_opengl();
@@ -95,8 +93,6 @@ int main() {
         glfwSwapBuffers(window->get_backend());
         window->pull_events();
     }
-
-    GLFWContext::terminate();
 
     return 0;
 }

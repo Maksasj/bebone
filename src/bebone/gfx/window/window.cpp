@@ -35,6 +35,7 @@ namespace bebone::gfx {
 
     Window::~Window() {
         glfwDestroyWindow(window);
+        GLFWContext::terminate();// this should be moved somewhere else
     }
 
     void Window::pull_events() {

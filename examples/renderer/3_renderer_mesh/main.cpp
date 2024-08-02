@@ -4,8 +4,6 @@ using namespace bebone::renderer;
 using namespace bebone::gfx;
 
 int main() {
-    GLFWContext::init(); // this should be moved somewhere else
-
     auto window = WindowFactory::create_window("3. Renderer mesh", 800, 600, Vulkan, { .enable_resize = true });
     auto renderer = RendererFactory::create_renderer(window);
 
@@ -18,8 +16,6 @@ int main() {
 
         window->pull_events();
     }
-
-    GLFWContext::terminate();// this should be moved somewhere else
 
     return 0;
 }

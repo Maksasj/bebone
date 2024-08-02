@@ -44,8 +44,6 @@ struct Camera {
 };
 
 int main() {
-    GLFWContext::init();
-
     auto window = WindowFactory::create_window("6. OpenGL Imgui example", screen_width, screen_height, OpenGL);
 
     GLContext::load_opengl();
@@ -138,8 +136,6 @@ int main() {
     vbo.destroy();
     ebo.destroy();
     shader_program.destroy();
-
-    GLFWContext::terminate();
 
     return 0;
 }

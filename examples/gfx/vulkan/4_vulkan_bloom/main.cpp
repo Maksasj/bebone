@@ -20,8 +20,6 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
 };
 
 int main() {
-    GLFWContext::init();
-
     auto window = WindowFactory::create_window("4. Vulkan bloom example", 800, 600, GfxAPI::Vulkan);
 
     auto instance = VulkanInstance::create_instance();
@@ -156,8 +154,6 @@ int main() {
     }
 
     instance->destroy();
-
-    GLFWContext::terminate();
 
     return 0;
 }
