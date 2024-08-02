@@ -9,7 +9,7 @@ int main() {
     auto window = WindowFactory::create_window("4. Renderer scene", 800, 600, Vulkan, { .enable_resize = true });
     auto renderer = RendererFactory::create_renderer(window);
 
-    auto suzanne = renderer->load_mesh("untitled.obj");
+    auto suzanne = renderer->load_mesh("suzanne.obj");
 
     PBRMaterialProperties properties {
         .albedo = renderer->load_texture("01-uv-texture.png"),
