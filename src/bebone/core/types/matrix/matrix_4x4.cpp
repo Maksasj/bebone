@@ -264,7 +264,36 @@ namespace bebone::core {
         };
     }
 
+#if 1
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at
+    (
+            Vec3f const & eye,
+            Vec3f const & center,
+            Vec3f const & up
+    )
+{
+    Vec3f const f((center - eye).normalize());
+    Vec3f const s(Vec3f::cross(f, up).normalize());
+    Vec3f const u(Vec3f::cross(s, f));
+
+    auto Result = Matrix<f32, 4, 4>::identity();
+    Result.e[0][0] = s.x;
+    Result.e[1][0] = s.y;
+    Result.e[2][0] = s.z;
+    Result.e[0][1] = u.x;
+    Result.e[1][1] = u.y;
+    Result.e[2][1] = u.z;
+    Result.e[0][2] =-f.x;
+    Result.e[1][2] =-f.y;
+    Result.e[2][2] =-f.z;
+    Result.e[3][0] = - Vec3f::dot(s, eye);
+    Result.e[3][1] = - Vec3f::dot(u, eye);
+    Result.e[3][2] =   Vec3f::dot(f, eye);
+    return Result;
+}
+#else
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
         return view(origin, center - origin, up);
     }
+#endif
 }

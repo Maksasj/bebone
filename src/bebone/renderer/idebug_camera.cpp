@@ -68,6 +68,8 @@ namespace bebone::renderer {
     void IDebugCamera::update_debug_camera() {
         update_camera_rotation();
         update_camera_position();
+
+        std::cout << get_position() << "\n";
     }
 
     void IDebugCamera::handle_mouse_lock(shared_ptr<Window>& window) {

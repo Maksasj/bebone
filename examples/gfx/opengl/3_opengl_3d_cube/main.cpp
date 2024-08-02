@@ -74,7 +74,7 @@ int main() {
     camera_ubo.bind();
     shader_program.bind_buffer("Camera", 1, camera_ubo);
     auto camera_ptr = static_cast<Mat4f*>(camera_ubo.map());
-        *camera_ptr = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) *  Mat4f::view(Vec3f(0, 0, 0), Vec3f::forward, Vec3f::up);
+        *camera_ptr = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) *  Mat4f::look_at(Vec3f(0, 0, -10.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::up);
     camera_ubo.unmap();
     camera_ubo.unbind();
 
@@ -86,8 +86,9 @@ int main() {
         transform.rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
         *transform_ptr = transform.translation * transform.rotation;
 
-        std::cout << Vec3f(0.0f, 2.0f, (sin(Time::get_seconds_elapsed()) + 1.0f) * 5.0f) << "\n";
-        transform.translation = Mat4f::translation(Vec3f(0.0f, 2.0f, (sin(Time::get_seconds_elapsed()) + 1.0f) * 5.0f));
+        auto time = Time::get_seconds_elapsed();
+        auto pos = Vec3f((sin(time)) * 5.0f, 0.0f, (sin(time)) * 5.0f);
+        transform.translation = Mat4f::translation(pos);
 
         shader_program.enable();
         vao.bind();

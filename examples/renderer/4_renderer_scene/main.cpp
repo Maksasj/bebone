@@ -20,11 +20,12 @@ int main() {
 
     auto material = renderer->create_material(&properties, sizeof(properties));
 
-    auto plate = renderer->generate_mesh(std::make_shared<QuadMeshGenerator>(2.0f, 2.0f));
+    auto plate = renderer->generate_mesh(std::make_shared<QuadMeshGenerator>(2.0f, 2.0f, Vec3f::back));
 
     while(!window->closing()) {
         renderer->render(suzanne, material, {});
         renderer->render(suzanne, material, { .position = Vec3f(3.0f, 0.0f, 0.0f) });
+        renderer->render(suzanne, material, { .position = Vec3f(0.0f, 0.0f, 10.0f) });
         renderer->render(plate, material, { .position = Vec3f(0.0f, -4.0f, 0.0f) });
 
         renderer->present();

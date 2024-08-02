@@ -84,7 +84,7 @@ namespace bebone::renderer {
         set_program(program);
 
         // Todo, move this to mesh manager
-        auto quad_generator = std::make_shared<QuadMeshGenerator>(1.0f, 1.0f);
+        auto quad_generator = std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back);
         quad_mesh = quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device));
 
         device->destroy_all(vert_shader_module, frag_shader_module);
@@ -100,7 +100,7 @@ namespace bebone::renderer {
         cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
             auto& viewport = get_viewport();
 
-            cmd->set_viewport(0, viewport.y, viewport.x, -viewport.y);
+            cmd->set_viewport(0, 0, viewport.x, viewport.y);
             program->bind(encoder);
 
             const auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource);
