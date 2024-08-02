@@ -1,6 +1,6 @@
 #include "uv_sphere_mesh_generator.h"
 
-#define BEBONE_PI 3.14159265359f
+// Implementation from https://gist.github.com/Pikachuxxxx/5c4c490a7d7679824e0e18af42918efc
 
 namespace bebone::renderer {
     using namespace bebone::core;
@@ -9,109 +9,101 @@ namespace bebone::renderer {
         const f32& radius,
         const u32& latitudes,
         const u32& longitudes
-    ) : radius(radius), latitudes(latitudes), longitudes(longitudes) {
-        generate_sphere_smooth();
+    ) : sphere_radius(radius), sphere_latitudes(latitudes), sphere_longitudes(longitudes) {
+        recalculate_vertices();
     }
 
-    void UVSphereMeshGenerator::generate_sphere_smooth() {
-        if(longitudes < 3)
-            longitudes = 3;
-        if(latitudes < 2)
-            latitudes = 2;
+    void UVSphereMeshGenerator::recalculate_vertices() {
+        const auto radius_inverse = 1.0f / sphere_radius;
+        const auto delta_latitude = BEBONE_PI / sphere_latitudes;
+        const auto delta_longitude = 2.0f * BEBONE_PI / sphere_longitudes;
 
-        std::vector<Vec3f> vertices;
-        std::vector<Vec3f> normals;
-        std::vector<Vec2f> uv;
-        std::vector<unsigned int> indices;
+        for (u32 i = 0; i <= sphere_latitudes; ++i) {
+            const auto latitude_angle = BEBONE_PI / 2 - i * delta_latitude;
+            f32 xy = sphere_radius * cosf(latitude_angle);
+            f32 z = sphere_radius * sinf(latitude_angle);
 
-        float nx, ny, nz, lengthInv = 1.0f / radius;    // normal
-        // Temporary vertex
-        struct ThisVertex
-        {
-            float x, y, z, s, t; // Postion and Texcoords
-        };
+            for (u32 j = 0; j <= sphere_longitudes; ++j) {
+                const auto longitude_angle = j * delta_longitude;
 
-        float deltaLatitude = BEBONE_PI / latitudes;
-        float deltaLongitude = 2 * BEBONE_PI / longitudes;
-        float latitudeAngle;
-        float longitudeAngle;
+                auto position = Vec3f { xy * cosf(longitude_angle), xy * sinf(longitude_angle), z };
+                sphere_vertices.push_back(position);
 
-        // Compute all vertices first except normals
-        for (int i = 0; i <= latitudes; ++i)
-        {
-            latitudeAngle = BEBONE_PI / 2 - i * deltaLatitude; /* Starting -pi/2 to pi/2 */
-            float xy = radius * cosf(latitudeAngle);    /* r * cos(phi) */
-            float z = radius * sinf(latitudeAngle);     /* r * sin(phi )*/
+                auto texcoord = Vec2f { (f32)j/ sphere_longitudes, (f32)i/ sphere_latitudes };
+                sphere_texcoord.push_back(texcoord);
 
-            /*
-             * We add (latitudes + 1) vertices per longitude because of equator,
-             * the North pole and South pole are not counted here, as they overlap.
-             * The first and last vertices have same position and normal, but
-             * different tex coords.
-             */
-            for (int j = 0; j <= longitudes; ++j)
-            {
-                longitudeAngle = j * deltaLongitude;
-
-                ThisVertex vertex;
-                vertex.x = xy * cosf(longitudeAngle);       /* x = r * cos(phi) * cos(theta)  */
-                vertex.y = xy * sinf(longitudeAngle);       /* y = r * cos(phi) * sin(theta) */
-                vertex.z = z;                               /* z = r * sin(phi) */
-                vertex.s = (float)j/longitudes;             /* s */
-                vertex.t = (float)i/latitudes;              /* t */
-                vertices.push_back(Vec3f(vertex.x, vertex.y, vertex.z));
-                uv.push_back(Vec2f(vertex.s, vertex.t));
-
-                // normalized vertex normal
-                nx = vertex.x * lengthInv;
-                ny = vertex.y * lengthInv;
-                nz = vertex.z * lengthInv;
-                normals.push_back(Vec3f(nx, ny, nz));
+                auto normal = position * radius_inverse;
+                sphere_normals.push_back(normal);
             }
         }
 
-        unsigned int k1, k2;
-        for(int i = 0; i < latitudes; ++i) {
-            k1 = i * (longitudes + 1);
-            k2 = k1 + longitudes + 1;
-            // 2 Triangles per latitude block excluding the first and last longitudes blocks
-            for(int j = 0; j < longitudes; ++j, ++k1, ++k2) {
+        for(int i = 0; i < sphere_latitudes; ++i) {
+            u32 k1 = i * (sphere_longitudes + 1);
+            u32 k2 = k1 + sphere_longitudes + 1;
+
+            for(int j = 0; j < sphere_longitudes; ++j, ++k1, ++k2) {
                 if (i != 0) {
-                    indices.push_back(k1);
-                    indices.push_back(k2);
-                    indices.push_back(k1 + 1);
+                    sphere_indices.push_back(k1);
+                    sphere_indices.push_back(k2);
+                    sphere_indices.push_back(k1 + 1);
 
-                    // indices.push_back(k1);
-                    // indices.push_back(k1 + 1);
-                    // indices.push_back(k2);
+                    // sphere_indices.push_back(k1);
+                    // sphere_indices.push_back(k1 + 1);
+                    // sphere_indices.push_back(k2);
                 }
 
-                if (i != (latitudes - 1)) {
-                    indices.push_back(k1 + 1);
-                    indices.push_back(k2);
-                    indices.push_back(k2 + 1);
+                if (i != (sphere_latitudes - 1)) {
+                    sphere_indices.push_back(k1 + 1);
+                    sphere_indices.push_back(k2);
+                    sphere_indices.push_back(k2 + 1);
 
-                    // indices.push_back(k1 + 1);
-                    // indices.push_back(k2 + 1);
-                    // indices.push_back(k2);
+                    // sphere_indices.push_back(k1 + 1);
+                    // sphere_indices.push_back(k2 + 1);
+                    // sphere_indices.push_back(k2);
                 }
             }
         }
+    }
 
-        sphereVertices = vertices;
-        sphereNormals = normals;
-        sphereUVs = uv;
-        sphereIndices = indices;
+    void UVSphereMeshGenerator::set_radius(const f32& radius) {
+        sphere_radius = radius;
+    }
+
+    void UVSphereMeshGenerator::set_latitudes(const u32& latitudes) {
+        sphere_latitudes = latitudes;
+
+        if(sphere_latitudes < 2)
+            sphere_latitudes = 2;
+    }
+
+    void UVSphereMeshGenerator::set_longitudes(const u32& longitudes) {
+        sphere_longitudes = longitudes;
+
+        if(sphere_longitudes < 3)
+            sphere_longitudes = 3;
+    }
+
+
+    f32 UVSphereMeshGenerator::get_radius() const {
+        return sphere_radius;
+    }
+
+    u32 UVSphereMeshGenerator::get_latitudes() const {
+        return sphere_latitudes;
+    }
+
+    u32 UVSphereMeshGenerator::get_longitudes() const {
+        return sphere_longitudes;
     }
 
     void UVSphereMeshGenerator::append_vertices(const std::shared_ptr<IMeshBuilder>& builder) {
         auto vertices = std::vector<Vertex> {};
 
-        for(int i = 0; i < sphereVertices.size(); ++i) {
-            vertices.push_back({sphereVertices[i], sphereNormals[i], sphereUVs[i]});
+        for(int i = 0; i < sphere_vertices.size(); ++i) {
+            vertices.push_back({sphere_vertices[i], sphere_normals[i], sphere_texcoord[i]});
         }
 
-        builder->append_raw(vertices.data(), vertices.size(), sphereIndices.data(), sphereIndices.size());
+        builder->append_raw(vertices.data(), vertices.size(), sphere_indices.data(), sphere_indices.size());
     }
 
     std::shared_ptr<IMesh> UVSphereMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
