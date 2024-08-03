@@ -67,6 +67,7 @@ namespace bebone::renderer {
 
         auto program_manager = vulkan_assembler->get_program_manager();
         auto pipeline_manager = program_manager->get_pipeline_manager();
+        mesh_manager = vulkan_assembler->get_mesh_manager();
 
         // Todo
         pipeline_layout = program_manager->get_pipeline_layout();
@@ -84,8 +85,7 @@ namespace bebone::renderer {
         set_program(program);
 
         // Todo, move this to mesh manager
-        auto quad_generator = std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back);
-        quad_mesh = quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+        quad_mesh = mesh_manager->generate_mesh(std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back));
 
         device->destroy_all(vert_shader_module, frag_shader_module);
         device->collect_garbage();
@@ -110,8 +110,7 @@ namespace bebone::renderer {
             // auto& pipeline = static_pointer_cast<VulkanProgram>(get_program())->get_pipeline();
             cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
 
-            quad_mesh->bind(encoder);
-            cmd->draw_indexed(quad_mesh->triangle_count());
+            mesh_manager->draw_indexed(encoder, quad_mesh);
         cmd->end_render_pass();
     }
 

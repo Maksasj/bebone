@@ -97,8 +97,8 @@ namespace bebone::renderer {
         auto device = vulkan_assembler->get_device();
         auto program_manager = vulkan_assembler->get_program_manager();
         auto texture_manager = vulkan_assembler->get_texture_manager();
-        mesh_manager = vulkan_assembler->get_mesh_manager();
 
+        mesh_manager = vulkan_assembler->get_mesh_manager();
         pipeline_layout = program_manager->get_pipeline_layout();
 
         auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
