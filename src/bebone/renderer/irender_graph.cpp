@@ -51,23 +51,23 @@ namespace bebone::renderer {
         return impl->get_render_passes();
     }
 
-    void IRenderGraph::add_resource(const std::shared_ptr<IResource>& render_resource) {
-        impl->add_resource(render_resource);
+    void IRenderGraph::add_attachment(const std::shared_ptr<IAttachment>& render_attachment) {
+        impl->add_attachment(render_attachment);
     }
 
-    std::optional<std::shared_ptr<IResource>> IRenderGraph::get_render_resource(const std::string& resource_name) const {
-        return impl->get_render_resource(resource_name);
+    std::optional<std::shared_ptr<IAttachment>> IRenderGraph::get_render_attachment(const std::string& attachment_name) const {
+        return impl->get_render_attachment(attachment_name);
     }
 
-    std::vector<std::shared_ptr<IResource>>& IRenderGraph::get_render_resources() {
-        return impl->get_render_resources();
+    std::vector<std::shared_ptr<IAttachment>>& IRenderGraph::get_render_attachments() {
+        return impl->get_render_attachments();
     }
 
     std::shared_ptr<IPassFactory> IRenderGraph::create_pass_factory() const {
         return impl->create_pass_factory();
     }
 
-    std::shared_ptr<IResourceFactory> IRenderGraph::create_resource_factory() const {
-        return impl->create_resource_factory();
+    std::shared_ptr<IAttachmentFactory> IRenderGraph::create_attachment_factory() const {
+        return impl->create_attachment_factory();
     }
 }

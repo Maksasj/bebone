@@ -2,8 +2,8 @@
 #define _BEBONE_RENDERER_IRENDER_QUEUE_PASS_H_
 
 #include "igraphics_pass.h"
-#include "ihdr_texture_resource.h"
-#include "idepth_resource.h"
+#include "ihdr_texture_attachment.h"
+#include "idepth_attachment.h"
 #include "transform.h"
 
 #include "mesh/imesh.h"

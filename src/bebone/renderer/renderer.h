@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_H_
 
 #include "irenderer.h"
-#include "renderer_factory.h"
+#include "attachment_factory.h"
 
 #include "irender_graph_impl.h"
 #include "ipass.h"

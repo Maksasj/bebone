@@ -1,5 +1,5 @@
-#ifndef _BEBONE_RENDERER_IRESOURCE_H_
-#define _BEBONE_RENDERER_IRESOURCE_H_
+#ifndef _BEBONE_RENDERER_IATTACHMENT_H_
+#define _BEBONE_RENDERER_IATTACHMENT_H_
 
 #include <string>
 
@@ -7,13 +7,13 @@
 #include "icommand_encoder.h"
 
 namespace bebone::renderer {
-    class IResource : public NonCopyable {
+    class IAttachment : public NonCopyable {
         private:
             std::string name;
 
         public:
-            IResource(const std::string& name);
-            virtual ~IResource() = default;
+            IAttachment(const std::string& name);
+            virtual ~IAttachment() = default;
 
             const std::string& get_name() const;
     };

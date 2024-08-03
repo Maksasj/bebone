@@ -5,22 +5,22 @@ namespace bebone::renderer {
 
     PBRRenderGraph::PBRRenderGraph(const std::string& name, const Vec2i& viewport, const std::shared_ptr<IRenderGraphImpl>& impl) : IRenderGraph(name, impl) {
         auto pass_factory = create_pass_factory();
-        auto resource_factory = create_resource_factory();
+        auto attachment_factory = create_attachment_factory();
 
-        auto gpass_position_texture = resource_factory->create_hdr_texture_resource("gpass_position_texture", viewport);
-        add_resource(gpass_position_texture);
+        auto gpass_position_texture = attachment_factory->create_hdr_texture_attachment("gpass_position_texture", viewport);
+        add_attachment(gpass_position_texture);
 
-        auto gpass_normals_texture = resource_factory->create_hdr_texture_resource("gpass_normals_texture", viewport);
-        add_resource(gpass_normals_texture);
+        auto gpass_normals_texture = attachment_factory->create_hdr_texture_attachment("gpass_normals_texture", viewport);
+        add_attachment(gpass_normals_texture);
 
-        auto gpass_albedo_texture = resource_factory->create_hdr_texture_resource("gpass_albedo_texture", viewport);
-        add_resource(gpass_albedo_texture);
+        auto gpass_albedo_texture = attachment_factory->create_hdr_texture_attachment("gpass_albedo_texture", viewport);
+        add_attachment(gpass_albedo_texture);
 
-        auto gpass_specular_texture = resource_factory->create_hdr_texture_resource("gpass_specular_texture", viewport);
-        add_resource(gpass_specular_texture);
+        auto gpass_specular_texture = attachment_factory->create_hdr_texture_attachment("gpass_specular_texture", viewport);
+        add_attachment(gpass_specular_texture);
 
-        auto gpass_depth = resource_factory->create_depth_resource("gpass_depth", viewport);
-        add_resource(gpass_depth);
+        auto gpass_depth = attachment_factory->create_depth_attachment("gpass_depth", viewport);
+        add_attachment(gpass_depth);
 
         gpass = pass_factory->create_deferred_g_pass("gpass", viewport);
         gpass->plug_output("position", gpass_position_texture);

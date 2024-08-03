@@ -21,19 +21,19 @@ namespace bebone::renderer {
         return render_passes;
     }
 
-    void IRenderGraphImpl::add_resource(const std::shared_ptr<IResource>& render_resource) {
-        render_resources.push_back(render_resource);
+    void IRenderGraphImpl::add_attachment(const std::shared_ptr<IAttachment>& render_attachment) {
+        render_attachments.push_back(render_attachment);
     }
 
-    std::optional<std::shared_ptr<IResource>> IRenderGraphImpl::get_render_resource(const std::string& resource_name) const {
-        for(auto& resource : render_resources)
-            if(resource->get_name() == resource_name)
-                return resource;
+    std::optional<std::shared_ptr<IAttachment>> IRenderGraphImpl::get_render_attachment(const std::string& attachment_name) const {
+        for(auto& attachment : render_attachments)
+            if(attachment->get_name() == attachment_name)
+                return attachment;
 
         return std::nullopt;
     }
 
-    std::vector<std::shared_ptr<IResource>>& IRenderGraphImpl::get_render_resources() {
-        return render_resources;
+    std::vector<std::shared_ptr<IAttachment>>& IRenderGraphImpl::get_render_attachments() {
+        return render_attachments;
     }
 }

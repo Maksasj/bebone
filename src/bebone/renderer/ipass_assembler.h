@@ -6,7 +6,7 @@
 #include "renderer_backend.h"
 #include "icommand_encoder.h"
 
-#include "iresource.h"
+#include "iattachment.h"
 
 namespace bebone::renderer {
     class IPassAssembler {

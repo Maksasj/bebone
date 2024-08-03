@@ -103,7 +103,7 @@ namespace bebone::renderer {
             cmd->set_viewport(0, 0, viewport.x, viewport.y);
             program->bind(encoder);
 
-            const auto texture = static_pointer_cast<VulkanHDRTextureResource>(texture_resource);
+            const auto texture = static_pointer_cast<VulkanHDRTextureAttachment>(texture_attachment);
             auto handles = u32(texture->get_handles()[frame]);
 
             // Todo

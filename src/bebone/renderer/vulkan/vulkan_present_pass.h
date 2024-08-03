@@ -7,8 +7,8 @@
 #include "ipass.h"
 #include "vulkan_command_encoder.h"
 #include "vulkan_pass_assembler.h"
-#include "vulkan_hdr_texture_resource.h"
-#include "vulkan_depth_resource.h"
+#include "vulkan_hdr_texture_attachment.h"
+#include "vulkan_depth_attachment.h"
 #include "vulkan_program.h"
 
 namespace bebone::renderer {

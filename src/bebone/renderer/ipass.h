@@ -6,8 +6,8 @@
 #include "renderer_backend.h"
 #include "icommand_encoder.h"
 
-#include "iresource.h"
-#include "resource_plug.h"
+#include "iattachment.h"
+#include "attachment_plug.h"
 #include "ipass_assembler.h"
 
 namespace bebone::renderer {
@@ -17,12 +17,12 @@ namespace bebone::renderer {
         private:
             std::string name;
 
-            std::vector<ResourcePlug> inputs;
-            std::vector<ResourcePlug> outputs;
+            std::vector<AttachmentPlug> inputs;
+            std::vector<AttachmentPlug> outputs;
 
         protected:
-            void register_input(const std::string& resource_name, std::shared_ptr<IResource>& resource);
-            void register_output(const std::string& resource_name, std::shared_ptr<IResource>& resource);
+            void register_input(const std::string& attachment_name, std::shared_ptr<IAttachment>& attachment);
+            void register_output(const std::string& attachment_name, std::shared_ptr<IAttachment>& attachment);
 
         public:
             IPass(const std::string& name);
@@ -35,8 +35,8 @@ namespace bebone::renderer {
 
             virtual void resize_viewport(const Vec2i& new_size) = 0;
 
-            void plug_input(const std::string& resource_name, const std::shared_ptr<IResource>& resource);
-            void plug_output(const std::string& resource_name, const std::shared_ptr<IResource>& resource);
+            void plug_input(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
+            void plug_output(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
 
             const std::string& get_name() const;
     };

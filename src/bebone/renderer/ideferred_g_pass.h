@@ -3,20 +3,20 @@
 
 #include <string>
 #include "irender_queue_pass.h"
-#include "ihdr_texture_resource.h"
-#include "idepth_resource.h"
+#include "ihdr_texture_attachment.h"
+#include "idepth_attachment.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;
 
     class IDeferredGPass : public IRenderQueuePass {
         protected:
-            std::shared_ptr<IResource> position_resource;
-            std::shared_ptr<IResource> normals_resource;
-            std::shared_ptr<IResource> albedo_resource;
-            std::shared_ptr<IResource> specular_resource;
+            std::shared_ptr<IAttachment> position_attachment;
+            std::shared_ptr<IAttachment> normals_attachment;
+            std::shared_ptr<IAttachment> albedo_attachment;
+            std::shared_ptr<IAttachment> specular_attachment;
 
-            std::shared_ptr<IResource> depth_resource;
+            std::shared_ptr<IAttachment> depth_attachment;
 
         public:
             IDeferredGPass(const std::string& pass_name, const Vec2i& viewport);

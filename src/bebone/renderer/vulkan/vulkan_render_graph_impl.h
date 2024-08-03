@@ -5,7 +5,7 @@
 #include "irender_graph_impl.h"
 #include "vulkan_command_encoder.h"
 #include "vulkan_pass_factory.h"
-#include "vulkan_resource_factory.h"
+#include "vulkan_attachment_factory.h"
 #include "vulkan_pass_assembler.h"
 #include "vulkan_mesh_manager.h"
 
@@ -41,7 +41,7 @@ namespace bebone::renderer {
             void resize_viewport(const Vec2i& new_size) override;
 
             std::shared_ptr<IPassFactory> create_pass_factory() const override;
-            std::shared_ptr<IResourceFactory> create_resource_factory() const override;
+            std::shared_ptr<IAttachmentFactory> create_attachment_factory() const override;
     };
 }
 

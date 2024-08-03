@@ -30,15 +30,15 @@ namespace bebone::renderer {
             virtual void submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform);
 
             virtual std::shared_ptr<IPassFactory> create_pass_factory() const;
-            virtual std::shared_ptr<IResourceFactory> create_resource_factory() const;
+            virtual std::shared_ptr<IAttachmentFactory> create_attachment_factory() const;
 
             void add_pass(const std::shared_ptr<IPass>& render_pass);
             std::optional<std::shared_ptr<IPass>> get_render_pass(const std::string& pass_name) const;
             std::vector<std::shared_ptr<IPass>>& get_render_passes();
 
-            void add_resource(const std::shared_ptr<IResource>& render_resource);
-            std::optional<std::shared_ptr<IResource>> get_render_resource(const std::string& resource_name) const;
-            std::vector<std::shared_ptr<IResource>>& get_render_resources();
+            void add_attachment(const std::shared_ptr<IAttachment>& render_attachment);
+            std::optional<std::shared_ptr<IAttachment>> get_render_attachment(const std::string& attachment_name) const;
+            std::vector<std::shared_ptr<IAttachment>>& get_render_attachments();
     };
 }
 

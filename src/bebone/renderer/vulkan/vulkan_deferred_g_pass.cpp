@@ -130,11 +130,11 @@ namespace bebone::renderer {
         auto program = program_manager->create_program(pipeline);
 
         // Setup render target
-        auto position = static_pointer_cast<VulkanHDRTextureResource>(position_resource)->get_handles();
-        auto normals = static_pointer_cast<VulkanHDRTextureResource>(normals_resource)->get_handles();
-        auto albedo = static_pointer_cast<VulkanHDRTextureResource>(albedo_resource)->get_handles();
-        auto specular = static_pointer_cast<VulkanHDRTextureResource>(specular_resource)->get_handles();
-        auto depth = static_pointer_cast<VulkanDepthResource>(depth_resource)->get_handles();
+        auto position = static_pointer_cast<VulkanHDRTextureAttachment>(position_attachment)->get_handles();
+        auto normals = static_pointer_cast<VulkanHDRTextureAttachment>(normals_attachment)->get_handles();
+        auto albedo = static_pointer_cast<VulkanHDRTextureAttachment>(albedo_attachment)->get_handles();
+        auto specular = static_pointer_cast<VulkanHDRTextureAttachment>(specular_attachment)->get_handles();
+        auto depth = static_pointer_cast<VulkanDepthAttachment>(depth_attachment)->get_handles();
 
         for(size_t i = 0; i < 3; ++i) {
             framebuffers.push_back(device->create_framebuffer({
