@@ -81,14 +81,13 @@ namespace bebone::renderer {
             { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions } }
         );
 
-        auto program = program_manager->create_program(pipeline);
-        set_program(program);
+        device->destroy_all(vert_shader_module, frag_shader_module);
+        device->collect_garbage();
+
+        set_program(program_manager->create_program(pipeline));
 
         // Todo, move this to mesh manager
         quad_mesh = mesh_manager->generate_mesh(std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back));
-
-        device->destroy_all(vert_shader_module, frag_shader_module);
-        device->collect_garbage();
     }
 
     void VulkanPresentPass::record(ICommandEncoder* encoder) {
@@ -98,17 +97,14 @@ namespace bebone::renderer {
         const auto& frame = vulkan_encoder->get_frame();
 
         cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
-            cmd->set_viewport(get_viewport());
-            program->bind(encoder);
+        cmd->set_viewport(get_viewport());
+        program->bind(encoder);
 
-            const auto texture = static_pointer_cast<VulkanHDRTextureAttachment>(texture_attachment);
-            auto handles = u32(texture->get_handles()[frame]);
+        const auto texture = static_pointer_cast<VulkanHDRTextureAttachment>(texture_attachment);
+        auto handles = u32(texture->get_handles()[frame]);
 
-            // Todo
-            // auto& pipeline = static_pointer_cast<VulkanProgram>(get_program())->get_pipeline();
-            cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
-
-            mesh_manager->draw_indexed(encoder, quad_mesh);
+        cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
+        mesh_manager->draw_indexed(encoder, quad_mesh);
         cmd->end_render_pass();
     }
 

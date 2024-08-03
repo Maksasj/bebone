@@ -40,7 +40,6 @@ namespace bebone::renderer {
             // Jobs
             static const u32 max_queued_jobs = 1000;
             std::vector<RenderQueueTask> queued_jobs;
-            std::vector<Mat4f> queued_jobs_transform;
 
         public:
             VulkanDeferredGPass(const std::string& pass_name, const Vec2i& viewport);
@@ -51,7 +50,7 @@ namespace bebone::renderer {
 
             void resize_viewport(const Vec2i& new_size) override;
 
-            void submit_task(const RenderQueueTask& task, const Transform& transform) override;
+            void submit_task(const RenderQueueTask& task) override;
     };
 }
 

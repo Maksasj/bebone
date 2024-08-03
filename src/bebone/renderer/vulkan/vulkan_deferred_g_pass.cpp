@@ -88,7 +88,6 @@ namespace bebone::renderer {
         const Vec2i& viewport
     ) : IDeferredGPass(pass_name, viewport) {
         queued_jobs.reserve(max_queued_jobs);
-        queued_jobs_transform.reserve(max_queued_jobs);
     }
 
     void VulkanDeferredGPass::assemble(IPassAssembler* assember) {
@@ -168,39 +167,32 @@ namespace bebone::renderer {
 
         // Record draw commands
         cmd->begin_render_pass(framebuffers[frame], render_pass);
-            cmd->set_viewport(get_viewport());
-            program->bind(encoder);
+        cmd->set_viewport(get_viewport());
+        program->bind(encoder);
 
-            for(size_t i = 0; i < queued_jobs.size(); ++i) {
-                const auto& mesh = queued_jobs[i].mesh;
-                const auto& material = queued_jobs[i].material;
+        for(const auto& [ mesh, material, transform ] : queued_jobs) {
+            const auto handles = VulkanDeferredGPassHandles {
+               .transform = calculate_transform_matrix(transform),
+               .camera_handle = camera_ubo_handles[frame],
+               .material_handle = static_cast<VulkanBindlessBufferHandle>(material)
+            };
 
-                const auto handles = VulkanDeferredGPassHandles {
-                   .transform = queued_jobs_transform[i],
-                   .camera_handle = camera_ubo_handles[frame],
-                   .material_handle = static_cast<VulkanBindlessBufferHandle>(material)
-                };
-
-                auto vulkan_program = static_pointer_cast<VulkanProgram>(program);
-                cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &handles);
-
-                mesh_manager->draw_indexed(encoder, mesh);
-            }
+            cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &handles);
+            mesh_manager->draw_indexed(encoder, mesh);
+        }
 
         cmd->end_render_pass();
     }
 
     void VulkanDeferredGPass::reset() {
         queued_jobs.clear();
-        queued_jobs_transform.clear();
     }
 
     void VulkanDeferredGPass::resize_viewport(const Vec2i& new_size) {
         // Todo
     }
 
-    void VulkanDeferredGPass::submit_task(const RenderQueueTask& task, const Transform& transform) {
+    void VulkanDeferredGPass::submit_task(const RenderQueueTask& task) {
         queued_jobs.push_back(task);
-        queued_jobs_transform.push_back(calculate_transform_matrix(transform));
     }
 }

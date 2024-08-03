@@ -37,7 +37,7 @@ namespace bebone::renderer {
     }
 
     void PBRRenderGraph::submit_geometry(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {
-        gpass->submit_task({ mesh, material }, transform);
+        gpass->submit_task({ mesh, material, transform });
     }
 
     void PBRRenderGraph::submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
