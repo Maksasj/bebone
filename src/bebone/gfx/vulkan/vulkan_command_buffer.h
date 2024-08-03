@@ -49,6 +49,7 @@ namespace bebone::gfx {
 
             VulkanCommandBuffer& end_render_pass();
 
+            VulkanCommandBuffer& set_viewport(const Vec2i& viewport, const f32& min_depth = 0.0f, const f32& max_depth = 1.0f);
             VulkanCommandBuffer& set_viewport(const f32& x, const f32& y, const f32& width, const f32& height, const f32& min_depth = 0.0f, const f32& max_depth = 1.0f);
             VulkanCommandBuffer& set_scissors(const i32& x, const i32& y, const u32& width, const u32& height);
 

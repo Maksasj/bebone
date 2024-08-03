@@ -31,7 +31,11 @@ namespace bebone::renderer {
         return camera;
     }
 
-    const Vec2i& IGraphicsPass::get_viewport() const {
+    Vec2i IGraphicsPass::get_viewport() const {
         return viewport;
+    }
+
+    f32 IGraphicsPass::get_viewport_aspect_ratio() const {
+        return static_cast<f32>(viewport.x) / static_cast<f32>(viewport.y);
     }
 }

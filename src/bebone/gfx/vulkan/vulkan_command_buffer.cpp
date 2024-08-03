@@ -88,7 +88,7 @@ namespace bebone::gfx {
 
         for(const auto& attachment : render_pass->get_attachments()) {
             if(attachment.type == Color)
-                clear_values.push_back({ .color = { 0.2f, 0.2f, 0.2f, 1.0f } }); // Todo clear values should be allowed to be changet
+                clear_values.push_back({ .color = { { 0.2f, 0.2f, 0.2f, 1.0f } } }); // Todo clear values should be allowed to be changet
             else if(attachment.type == Depth)
                 clear_values.push_back({ .depthStencil = { 1.0f, 0 }}); // Todo clear values should be allowed to be changet
         }
@@ -99,6 +99,10 @@ namespace bebone::gfx {
         vkCmdBeginRenderPass(backend, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
         return *this;
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(const Vec2i& viewport, const f32& min_depth, const f32& max_depth) {
+        return set_viewport(0, 0, static_cast<f32>(viewport.x), static_cast<f32>(viewport.y), min_depth, max_depth);
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(

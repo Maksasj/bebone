@@ -30,7 +30,8 @@ namespace bebone::renderer {
             void set_camera(const std::shared_ptr<ICamera>& camera);
             std::shared_ptr<ICamera> get_camera() const;
 
-            const Vec2i& get_viewport() const;
+            [[nodiscard]] Vec2i get_viewport() const;
+            [[nodiscard]] f32 get_viewport_aspect_ratio() const;
     };
 }
 
