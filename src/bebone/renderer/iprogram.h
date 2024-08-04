@@ -1,10 +1,14 @@
 #ifndef _BEBONE_RENDERER_IPROGRAM_H_
 #define _BEBONE_RENDERER_IPROGRAM_H_
 
-#include "icommand_encoder.h"
+#include "renderer_backend.h"
 
 namespace bebone::renderer {
-    class IProgram : public NonCopyable {
+    class ICommandEncoder;
+
+    using namespace bebone::core;
+
+    class IProgram : public core::NonCopyable {
         public:
             virtual ~IProgram() = default;
 

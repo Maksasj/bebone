@@ -97,14 +97,16 @@ namespace bebone::renderer {
         const auto& frame = vulkan_encoder->get_frame();
 
         cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
-        cmd->set_viewport(get_viewport());
-        program->bind(encoder);
+
+        encoder->set_viewport(get_viewport());
+        encoder->bind_program(program);
 
         const auto texture = static_pointer_cast<VulkanHDRTextureAttachment>(texture_attachment);
         auto handles = u32(texture->get_handles()[frame]);
 
         cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
         mesh_manager->draw_indexed(encoder, quad_mesh);
+
         cmd->end_render_pass();
     }
 

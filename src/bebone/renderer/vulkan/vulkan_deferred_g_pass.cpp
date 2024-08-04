@@ -167,8 +167,9 @@ namespace bebone::renderer {
 
         // Record draw commands
         cmd->begin_render_pass(framebuffers[frame], render_pass);
-        cmd->set_viewport(get_viewport());
-        program->bind(encoder);
+
+        encoder->set_viewport(get_viewport());
+        encoder->bind_program(program);
 
         for(const auto& [ mesh, material, transform ] : queued_jobs) {
             const auto handles = VulkanDeferredGPassHandles {

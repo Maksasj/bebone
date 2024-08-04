@@ -1,4 +1,6 @@
 #include "vulkan_command_encoder.h"
+#include "../iprogram.h"
+#include "vulkan_program.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -10,6 +12,14 @@ namespace bebone::renderer {
         const size_t& frame
     ) : device(device), swap_chain(swap_chain), command_buffer(command_buffer), frame(frame) {
 
+    }
+
+    void VulkanCommandEncoder::set_viewport(const Vec2i& viewport) {
+        command_buffer->set_viewport(viewport);
+    }
+
+    void VulkanCommandEncoder::bind_program(const std::shared_ptr<IProgram>& program) {
+        program->bind(this);
     }
 
     std::shared_ptr<VulkanDevice>& VulkanCommandEncoder::get_device() {
