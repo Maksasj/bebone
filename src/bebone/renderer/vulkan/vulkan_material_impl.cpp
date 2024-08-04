@@ -17,7 +17,7 @@ namespace bebone::renderer {
         material_uniform_buffer->upload_data(device, properties, size);
     }
 
-    const MaterialHandle& VulkanMaterialImpl::get_handle() const {
+    MaterialHandle VulkanMaterialImpl::get_handle() const {
         return handle;
     }
 

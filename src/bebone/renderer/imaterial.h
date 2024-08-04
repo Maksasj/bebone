@@ -20,7 +20,7 @@ namespace bebone::renderer {
         public:
             IMaterial(const std::shared_ptr<IMaterialImpl>& impl);
 
-            const MaterialHandle& get_handle() const;
+            MaterialHandle get_handle() const;
     };
 }
 

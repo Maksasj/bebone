@@ -11,6 +11,8 @@ namespace bebone::renderer {
     class ITexture : public NonCopyable {
         public:
             virtual ~ITexture() = default;
+
+            virtual TextureHandle get_handle() const = 0;
     };
 }
 

@@ -96,7 +96,7 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) {
-        render_graph->submit_geometry(mesh_handle, material_handle, transform);
+        render_graph->submit_geometry_task(mesh_handle, material_handle, transform);
     }
 
     void VulkanRenderer::present() {

@@ -13,7 +13,7 @@ namespace bebone::renderer {
         return texture;
     }
 
-    const VulkanBindlessTextureHandle& VulkanTexture::get_handle() const {
-        return handle;
+    TextureHandle VulkanTexture::get_handle() const {
+        return static_cast<TextureHandle>(handle);
     }
 }

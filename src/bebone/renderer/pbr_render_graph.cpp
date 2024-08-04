@@ -36,12 +36,15 @@ namespace bebone::renderer {
         add_pass(present);
     }
 
-    void PBRRenderGraph::submit_geometry(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {
+    void PBRRenderGraph::submit_geometry_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {
         gpass->submit_task({ mesh, material, transform });
     }
 
-    void PBRRenderGraph::submit_ui_geometry(const std::shared_ptr<IMesh>& mesh, const Transform& transform) {
+    void PBRRenderGraph::submit_ui_geometry_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {
+        // Todo
+
         std::ignore = mesh;
+        std::ignore = material;
         std::ignore = transform;
     }
 }

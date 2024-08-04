@@ -7,7 +7,7 @@ namespace bebone::renderer {
 
     }
 
-    const MaterialHandle& IMaterial::get_handle() const {
+    MaterialHandle IMaterial::get_handle() const {
         return impl->get_handle();
     }
 }

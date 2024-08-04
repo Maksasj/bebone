@@ -15,7 +15,7 @@ namespace bebone::renderer {
 
             virtual void set_properties(const void* properties) = 0;
 
-            virtual const MaterialHandle& get_handle() const = 0;
+            virtual MaterialHandle get_handle() const = 0;
     };
 }
 
