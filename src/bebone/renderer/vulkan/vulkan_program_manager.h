@@ -4,7 +4,7 @@
 #include "renderer_backend.h"
 #include "iprogram_manager.h"
 #include "vulkan_program.h"
-#include "vulkan_texture.h"
+#include "vulkan_texture_impl.h"
 
 namespace bebone::renderer {
     class VulkanProgramManager : public IProgramManager {
@@ -19,7 +19,7 @@ namespace bebone::renderer {
 
             std::shared_ptr<VulkanProgram> create_program(std::shared_ptr<VulkanPipeline>& pipeline);
 
-            void bind_texture(std::shared_ptr<VulkanTexture>& texture);
+            void bind_texture(std::shared_ptr<VulkanTextureImpl>& texture);
 
             std::shared_ptr<VulkanPipelineManager> get_pipeline_manager() const;
 

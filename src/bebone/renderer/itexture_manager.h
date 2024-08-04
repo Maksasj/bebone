@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_ITEXTURE_MANAGER_H_
 
 #include "renderer_backend.h"
-#include "itexture.h"
+#include "itexture_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;
@@ -17,7 +17,7 @@ namespace bebone::renderer {
 
             virtual TextureHandle load_texture_from_file(const std::string& file_path) = 0;
 
-            virtual std::optional<std::shared_ptr<ITexture>> get_texture(const TextureHandle& handle) const = 0;
+            virtual std::optional<std::shared_ptr<ITextureImpl>> get_texture(const TextureHandle& handle) const = 0;
     };
 }
 

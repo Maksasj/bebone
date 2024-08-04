@@ -12,7 +12,7 @@ namespace bebone::renderer {
         auto vulkan_extent = VkExtent3D { static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y), 1};
 
         auto vulkan_texture = device->create_texture(vulkan_extent, VK_FORMAT_R32G32B32A32_SFLOAT);
-        auto texture = std::make_shared<VulkanTexture>(vulkan_texture);
+        auto texture = std::make_shared<VulkanTextureImpl>(vulkan_texture);
 
         program_manager->bind_texture(texture);
         textures.push_back(texture);
@@ -34,7 +34,7 @@ namespace bebone::renderer {
         });
 
         auto vulkan_texture = std::make_shared<VulkanTextureTuple>(image, memory, view, sampler);
-        auto texture = std::make_shared<VulkanTexture>(vulkan_texture);
+        auto texture = std::make_shared<VulkanTextureImpl>(vulkan_texture);
 
         program_manager->bind_texture(texture);
         textures.push_back(texture);
@@ -43,7 +43,7 @@ namespace bebone::renderer {
     }
 
     TextureHandle VulkanTextureManager::load_texture_from_file(const std::string& file_path) {
-        auto texture = std::make_shared<VulkanTexture>(file_path, device);
+        auto texture = std::make_shared<VulkanTextureImpl>(file_path, device);
 
         program_manager->bind_texture(texture);
         textures.push_back(texture);
@@ -51,7 +51,7 @@ namespace bebone::renderer {
         return static_cast<TextureHandle>(texture->get_handle());
     }
 
-    std::optional<std::shared_ptr<ITexture>> VulkanTextureManager::get_texture(const TextureHandle& handle) const {
+    std::optional<std::shared_ptr<ITextureImpl>> VulkanTextureManager::get_texture(const TextureHandle& handle) const {
         for(auto& texture : textures)
             if(static_cast<TextureHandle>(texture->get_handle()) == handle)
                 return texture;

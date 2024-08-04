@@ -136,11 +136,11 @@ namespace bebone::renderer {
 
         for(size_t i = 0; i < 3; ++i) {
             framebuffers.push_back(device->create_framebuffer({
-                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(position[i]).value())->get_texture()->view,
-                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(normals[i]).value())->get_texture()->view,
-                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(albedo[i]).value())->get_texture()->view,
-                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(specular[i]).value())->get_texture()->view,
-                static_pointer_cast<VulkanTexture>(texture_manager->get_texture(depth[i]).value())->get_texture()->view
+                static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(position[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(normals[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(albedo[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(specular[i]).value())->get_texture()->view,
+                static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(depth[i]).value())->get_texture()->view
             }, render_pass, viewport));
         }
 

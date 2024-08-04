@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_VULKAN_TEXTURE_ATTACHMENT_H_
 
 #include "itexture_attachment.h"
-#include "vulkan_texture.h"
+#include "vulkan_texture_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;

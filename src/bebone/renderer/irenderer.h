@@ -6,7 +6,7 @@
 #include "irender_graph.h"
 #include "ipass.h"
 
-#include "itexture.h"
+#include "itexture_impl.h"
 
 #include "imaterial.h"
 #include "imaterial_impl.h"

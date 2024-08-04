@@ -2,7 +2,7 @@
 #define _BEBONE_RENDERER_IMATERIAL_IMPL_H_
 
 #include "renderer_backend.h"
-#include "itexture.h"
+#include "itexture_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;

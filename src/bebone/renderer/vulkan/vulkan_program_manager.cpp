@@ -11,7 +11,7 @@ namespace bebone::renderer {
         return program;
     }
 
-    void VulkanProgramManager::bind_texture(std::shared_ptr<VulkanTexture>& texture) {
+    void VulkanProgramManager::bind_texture(std::shared_ptr<VulkanTextureImpl>& texture) {
         texture->handle = pipeline_manager->bind_texture(device, texture->get_texture());
     }
 

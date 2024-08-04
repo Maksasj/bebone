@@ -7,7 +7,7 @@
 #include "vulkan_triangle_mesh.h"
 #include "vulkan_triangle_mesh_builder.h"
 #include "pbr_render_graph.h"
-#include "vulkan_texture.h"
+#include "vulkan_texture_impl.h"
 
 #include "vulkan_program_manager.h"
 #include "vulkan_texture_manager.h"
