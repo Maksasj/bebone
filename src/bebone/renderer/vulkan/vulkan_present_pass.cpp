@@ -50,6 +50,8 @@ namespace bebone::renderer {
     }
 
     void VulkanPresentPass::assemble(IPassAssembler* assember) {
+        target = assember->create_present_target();
+
         // Todo
         auto program = assember->get_program_manager()->create_program(
             get_impl(),
@@ -57,6 +59,7 @@ namespace bebone::renderer {
             vulkan_present_pass_fragment_shader_code);
 
         set_program(program);
+
 
         // Todo, move this to mesh manager
         auto mesh_manager = assember->get_mesh_manager();
@@ -79,6 +82,7 @@ namespace bebone::renderer {
         auto handles = u32(texture->get_handles()[frame]);
 
         auto cmd = vulkan_encoder->get_command_buffer();
+        auto pipeline_layout = static_pointer_cast<VulkanProgram>(program)->get_pipeline_layout();
         cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
         encoder->draw_indexed(quad_mesh);
         // mesh_manager->draw_indexed(encoder, quad_mesh);

@@ -13,11 +13,18 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_present_target() {
-        return std::make_shared<VulkanRendererTarget>(swap_chain);;
+        return std::make_shared<VulkanRenderTarget>(swap_chain);;
     }
 
-    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_render_target(const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) {
-        return std::make_shared<VulkanRendererTarget>(attachments, viewport);;
+    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_render_target(const std::shared_ptr<IPassImpl>& pass_impl, const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) {
+        auto vulkan_pass = static_pointer_cast<VulkanPassImpl>(pass_impl)->get_vulkan_pass();
+
+        return std::make_shared<VulkanRenderTarget>(
+            device,
+            vulkan_pass,
+            static_pointer_cast<VulkanTextureManager>(get_texture_manager()),
+            attachments,
+            viewport);
     }
 
     std::shared_ptr<VulkanDevice> VulkanPassAssembler::get_device() const {

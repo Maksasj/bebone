@@ -3,10 +3,19 @@
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    VulkanRendererTarget::VulkanRendererTarget(
+    VulkanRenderTarget::VulkanRenderTarget(const std::shared_ptr<VulkanSwapChain>& swap_chain) {
+        framebuffers = swap_chain->render_target->framebuffers;
+    }
+
+    VulkanRenderTarget::VulkanRenderTarget(
+        const std::shared_ptr<VulkanDevice>& device,
+        const std::shared_ptr<gfx::VulkanRenderPass>& render_pass,
+        const std::shared_ptr<VulkanTextureManager>& texture_manager,
         const std::vector<std::shared_ptr<IAttachment>>& attachments,
         const Vec2i& viewport
     ) {
+        const auto extent = VkExtent2D { static_cast<uint32_t>(viewport.x), static_cast<uint32_t>(viewport.y) };
+
         for(size_t i = 0; i < 3; ++i) { // Todo, fif
             auto vulkan_attachments = std::vector<std::shared_ptr<VulkanImageView>> {};
             vulkan_attachments.reserve(attachments.size());
@@ -14,7 +23,7 @@ namespace bebone::renderer {
             for(auto& attachment : attachments)
                 vulkan_attachments.push_back(static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(attachment[i]).value())->get_texture()->view);
 
-            framebuffers.push_back(device->create_framebuffer(vulkan_attachments, render_pass, viewport));
+            framebuffers.push_back(device->create_framebuffer(vulkan_attachments, render_pass, extent));
         }
     }
 }

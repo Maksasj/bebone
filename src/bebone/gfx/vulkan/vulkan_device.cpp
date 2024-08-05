@@ -417,7 +417,7 @@ namespace bebone::gfx {
 
     std::shared_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
         const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
-        std::shared_ptr<VulkanRenderPass>& render_pass,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) {
         auto framebuffer = std::make_shared<VulkanFramebuffer>(*this, attachments, render_pass, extent);
@@ -429,7 +429,7 @@ namespace bebone::gfx {
 
     std::vector<std::shared_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
         const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
-        std::shared_ptr<VulkanRenderPass>& render_pass,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent,
         const size_t& count
     ) {

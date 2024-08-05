@@ -27,7 +27,10 @@ namespace bebone::renderer {
                 const std::shared_ptr<IMaterialManager>& material_manager);
 
             std::shared_ptr<IRenderTarget> create_present_target() override;
-            std::shared_ptr<IRenderTarget> create_render_target(const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) override;
+            std::shared_ptr<IRenderTarget> create_render_target(
+                const std::shared_ptr<IPassImpl>& pass_impl,
+                const std::vector<std::shared_ptr<IAttachment>>& attachments,
+                const Vec2i& viewport) override;
 
             std::shared_ptr<VulkanDevice> get_device() const;
             std::shared_ptr<VulkanSwapChain> get_swap_chain() const;

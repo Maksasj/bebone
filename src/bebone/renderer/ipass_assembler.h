@@ -5,6 +5,7 @@
 #include "itexture_manager.h"
 #include "imesh_manager.h"
 #include "imaterial_manager.h"
+#include "ipass_impl.h"
 
 namespace bebone::renderer {
     class IPassAssembler {
@@ -22,7 +23,10 @@ namespace bebone::renderer {
                 const std::shared_ptr<IMaterialManager>& material_manager);
 
             virtual std::shared_ptr<IRenderTarget> create_present_target() = 0;
-            virtual std::shared_ptr<IRenderTarget> create_render_target(const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) = 0;
+            virtual std::shared_ptr<IRenderTarget> create_render_target(
+                const std::shared_ptr<IPassImpl>& pass_impl,
+                const std::vector<std::shared_ptr<IAttachment>>& attachments,
+                const Vec2i& viewport) = 0;
 
             std::shared_ptr<IProgramManager> get_program_manager() const;
             std::shared_ptr<ITextureManager> get_texture_manager() const;

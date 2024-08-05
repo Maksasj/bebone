@@ -10,7 +10,7 @@ namespace bebone::gfx {
     VulkanFramebuffer::VulkanFramebuffer(
         VulkanDevice& device,
         const std::vector<std::shared_ptr<VulkanImageView>>& attachment_views,
-        std::shared_ptr<VulkanRenderPass>& render_pass,
+        const std::shared_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) {
         auto attachments = std::vector<VkImageView> {};
