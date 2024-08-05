@@ -82,21 +82,20 @@ namespace bebone::renderer {
 
     void VulkanDeferredGPass::assemble(IPassAssembler* assember) {
         auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
-
-        auto device = vulkan_assembler->get_device();
-        auto program_manager = vulkan_assembler->get_program_manager();
-        auto texture_manager = vulkan_assembler->get_texture_manager();
-
         mesh_manager = vulkan_assembler->get_mesh_manager();
 
         // Create shader modules
-        auto program = program_manager->create_program(
+        auto program = assember->get_program_manager()->create_program(
+            get_impl(),
             vulkan_deferred_g_pass_vertex_shader_code,
             vulkan_deferred_g_pass_fragment_shader_code);
 
         set_program(program);
 
         // Setup render target
+        auto device = vulkan_assembler->get_device();
+        auto texture_manager = vulkan_assembler->get_texture_manager();
+
         auto position = static_pointer_cast<VulkanHDRTextureAttachment>(position_attachment)->get_handles();
         auto normals = static_pointer_cast<VulkanHDRTextureAttachment>(normals_attachment)->get_handles();
         auto albedo = static_pointer_cast<VulkanHDRTextureAttachment>(albedo_attachment)->get_handles();
@@ -113,31 +112,28 @@ namespace bebone::renderer {
             }, render_pass, viewport));
         }
 
-        // Camera data
-        camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
-        camera_ubo_handles  = pipeline_manager->bind_uniform_buffers(device, camera_ubo);
+        // Camera data Todo fix camera thing
+        // camera_ubo = device->create_buffer_memorys(sizeof(VulkanDeferredGPassCameraData), 3);
+        // camera_ubo_handles  = pipeline_manager->bind_uniform_buffers(device, camera_ubo);
     }
 
     void VulkanDeferredGPass::record(ICommandEncoder* encoder) {
-        auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
-
-        auto cmd = vulkan_encoder->get_command_buffer();
-        const auto& frame = vulkan_encoder->get_frame();
-
         // Update camera data
         auto camera_data = VulkanDeferredGPassCameraData {
             .matrix = camera->calculate_matrix(get_viewport_aspect_ratio())
         };
 
+        auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
+        const auto& frame = vulkan_encoder->get_frame();
         camera_ubo[frame]->upload_data(
             vulkan_encoder->get_device(),
             &camera_data,
             sizeof(VulkanDeferredGPassCameraData));
 
         // Record draw commands
-        cmd->begin_render_pass(framebuffers[frame], render_pass);
+        // cmd->begin_render_pass(framebuffers[frame], render_pass);
 
-        encoder->begin_render_pass(target, this);
+        encoder->begin_render_pass(target, get_impl());
 
         encoder->set_viewport(get_viewport());
         encoder->bind_program(program);
@@ -149,13 +145,14 @@ namespace bebone::renderer {
                .material_handle = static_cast<VulkanBindlessBufferHandle>(material)
             };
 
+            auto cmd = vulkan_encoder->get_command_buffer();
             cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &handles);
             mesh_manager->draw_indexed(encoder, mesh);
         }
 
         encoder->end_render_pass();
 
-        cmd->end_render_pass();
+        // cmd->end_render_pass();
     }
 
     void VulkanDeferredGPass::reset() {

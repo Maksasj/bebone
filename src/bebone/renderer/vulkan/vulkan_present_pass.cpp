@@ -42,24 +42,23 @@ namespace bebone::renderer {
 
     // Present pass
     VulkanPresentPass::VulkanPresentPass(
+        const std::shared_ptr<IPassImpl>& impl,
         const std::string& pass_name,
         const Vec2i& viewport
-    ) : IPresentPass(pass_name, viewport) {
+    ) : IPresentPass(impl, pass_name, viewport) {
 
     }
 
     void VulkanPresentPass::assemble(IPassAssembler* assember) {
         auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
-
-        auto device = vulkan_assembler->get_device();
-        auto swap_chain = vulkan_assembler->get_swap_chain();
-
-        auto program_manager = vulkan_assembler->get_program_manager();
-        auto pipeline_manager = program_manager->get_pipeline_manager();
         mesh_manager = vulkan_assembler->get_mesh_manager();
 
         // Todo
-        auto program = program_manager->create_program(vulkan_present_pass_vertex_shader_code, vulkan_present_pass_fragment_shader_code);
+        auto program = assember->get_program_manager()->create_program(
+            get_impl(),
+            vulkan_present_pass_vertex_shader_code,
+            vulkan_present_pass_fragment_shader_code);
+
         set_program(program);
 
         // Todo, move this to mesh manager
@@ -69,21 +68,24 @@ namespace bebone::renderer {
     void VulkanPresentPass::record(ICommandEncoder* encoder) {
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
 
-        auto cmd = vulkan_encoder->get_command_buffer();
-        const auto& frame = vulkan_encoder->get_frame();
+        // cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
 
-        cmd->begin_render_pass(vulkan_encoder->get_swap_chain());
+        encoder->begin_render_pass(target, get_impl());
 
         encoder->set_viewport(get_viewport());
         encoder->bind_program(program);
 
         const auto texture = static_pointer_cast<VulkanHDRTextureAttachment>(texture_attachment);
+        const auto& frame = vulkan_encoder->get_frame();
         auto handles = u32(texture->get_handles()[frame]);
 
+        auto cmd = vulkan_encoder->get_command_buffer();
         cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
         mesh_manager->draw_indexed(encoder, quad_mesh);
 
-        cmd->end_render_pass();
+        encoder->end_render_pass();
+
+        // cmd->end_render_pass();
     }
 
     void VulkanPresentPass::reset() {

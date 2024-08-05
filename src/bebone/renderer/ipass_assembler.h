@@ -1,19 +1,18 @@
 #ifndef _BEBONE_RENDERER_IPASS_ASSEMBLER_H_
 #define _BEBONE_RENDERER_IPASS_ASSEMBLER_H_
 
-#include <string>
-
 #include "renderer_backend.h"
-#include "icommand_encoder.h"
-
-#include "iattachment.h"
+#include "iprogram_manager.h"
 
 namespace bebone::renderer {
     class IPassAssembler {
         private:
+            std::shared_ptr<IProgramManager> program_manager;
 
         public:
+            IPassAssembler(const std::shared_ptr<IProgramManager>& program_manager);
 
+            std::shared_ptr<IProgramManager> get_program_manager() const;
     };
 }
 

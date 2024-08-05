@@ -9,7 +9,10 @@ namespace bebone::renderer {
             std::shared_ptr<IAttachment> texture_attachment;
 
         public:
-            IPresentPass(const std::string& pass_name, const Vec2i& viewport);
+            IPresentPass(
+                const std::shared_ptr<IPassImpl>& impl,
+                const std::string& pass_name,
+                const Vec2i& viewport);
     };
 }
 

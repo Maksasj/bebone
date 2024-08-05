@@ -15,7 +15,6 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
-            std::shared_ptr<VulkanProgramManager> program_manager;
             std::shared_ptr<VulkanTextureManager> texture_manager;
             std::shared_ptr<VulkanMeshManager> mesh_manager;
 
@@ -29,7 +28,6 @@ namespace bebone::renderer {
 
             std::shared_ptr<VulkanDevice> get_device() const;
             std::shared_ptr<VulkanSwapChain> get_swap_chain() const;
-            std::shared_ptr<VulkanProgramManager> get_program_manager() const;
             std::shared_ptr<VulkanTextureManager> get_texture_manager() const;
             std::shared_ptr<VulkanMeshManager> get_mesh_manager() const;
     };

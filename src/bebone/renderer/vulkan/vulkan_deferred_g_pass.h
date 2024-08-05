@@ -26,9 +26,6 @@ namespace bebone::renderer {
 
     class VulkanDeferredGPass : public IDeferredGPass {
         private:
-            // There
-            // std::shared_ptr<VulkanRenderPass> render_pass; // Todo, render pass should be abstracted with IPassImpl thing
-
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
 
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
