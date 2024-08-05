@@ -28,8 +28,6 @@
 #include "imaterial_manager.h"
 
 namespace bebone::renderer {
-    struct ModelHandle { size_t index; };
-
     class IRenderer : public NonCopyable {
         private:
             const GfxAPI api;
@@ -43,10 +41,10 @@ namespace bebone::renderer {
             IRenderer(const GfxAPI& api);
             virtual ~IRenderer() = default;
 
-            virtual std::shared_ptr<IProgramManager> get_program_manager() const = 0;
-            virtual std::shared_ptr<ITextureManager> get_texture_manager() const = 0;
-            virtual std::shared_ptr<IMeshManager> get_mesh_manager() const = 0;
-            virtual std::shared_ptr<IMaterialManager> get_material_manager() const = 0;
+            [[nodiscard]] virtual std::shared_ptr<IProgramManager> get_program_manager() const = 0;
+            [[nodiscard]] virtual std::shared_ptr<ITextureManager> get_texture_manager() const = 0;
+            [[nodiscard]] virtual std::shared_ptr<IMeshManager> get_mesh_manager() const = 0;
+            [[nodiscard]] virtual std::shared_ptr<IMaterialManager> get_material_manager() const = 0;
 
             virtual TextureHandle load_texture(const std::string& file_path) = 0;
 

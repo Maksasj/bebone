@@ -26,7 +26,7 @@ namespace bebone::renderer {
 
             void set_properties(const void* properties) override;
 
-            MaterialHandle get_handle() const override;
+            [[nodiscard]] MaterialHandle get_handle() const override;
     };
 }
 

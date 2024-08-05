@@ -68,17 +68,6 @@ static const char vulkan_deferred_g_pass_fragment_shader_code[] =
     "   out_specular = vec4(texture(textures[materialUBO[handles.material_handle].roughness_handle], in_texcoord));\n"
     "}";
 
-const auto vulkan_present_pass_vertex_descriptions = bebone::gfx::VulkanPipelineVertexInputStateTuple {
-    .binding_descriptions = {
-        { 0, sizeof(bebone::renderer::Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
-    },
-    .attribute_descriptions = {
-        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(bebone::renderer::Vertex, position) },
-        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(bebone::renderer::Vertex, normal) },
-        { 2, 0, VK_FORMAT_R32G32_SFLOAT,    offsetof(bebone::renderer::Vertex, texcoord) },
-    }
-};
-
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
@@ -98,7 +87,6 @@ namespace bebone::renderer {
         auto texture_manager = vulkan_assembler->get_texture_manager();
 
         mesh_manager = vulkan_assembler->get_mesh_manager();
-        pipeline_layout = program_manager->get_pipeline_layout();
 
         // Create render pass
         auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
@@ -111,21 +99,11 @@ namespace bebone::renderer {
         });
 
         // Create shader modules
-        auto vert_shader_module = device->create_shader_module(vulkan_deferred_g_pass_vertex_shader_code, VertexShader);
-        auto frag_shader_module = device->create_shader_module(vulkan_deferred_g_pass_fragment_shader_code, FragmentShader);
+        auto program = program_manager->create_program(
+            vulkan_deferred_g_pass_vertex_shader_code,
+            vulkan_deferred_g_pass_fragment_shader_code);
 
-        // Create pipeline
-        auto pipeline_manager = program_manager->get_pipeline_manager();
-        auto pipeline = pipeline_manager->create_pipeline(
-            device, render_pass, vert_shader_module, frag_shader_module,
-            { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions } }
-        );
-
-        // Delete shader modules and clear memory
-        device->destroy_all(vert_shader_module, frag_shader_module);
-        device->collect_garbage();
-
-        set_program(program_manager->create_program(pipeline));
+        set_program(program);
 
         // Setup render target
         auto position = static_pointer_cast<VulkanHDRTextureAttachment>(position_attachment)->get_handles();

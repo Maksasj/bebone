@@ -15,7 +15,7 @@ namespace bebone::renderer {
             IAttachment(const std::string& name);
             virtual ~IAttachment() = default;
 
-            const std::string& get_name() const;
+            [[nodiscard]] const std::string& get_name() const;
     };
 }
 

@@ -3,7 +3,10 @@
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    VulkanProgram::VulkanProgram(const std::shared_ptr<VulkanPipeline>& pipeline) : pipeline(pipeline) {
+    VulkanProgram::VulkanProgram(
+        const std::shared_ptr<VulkanPipeline>& pipeline,
+        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout
+    ) : pipeline(pipeline), pipeline_layout(pipeline_layout) {
 
     }
 
@@ -15,7 +18,11 @@ namespace bebone::renderer {
         cmd->bind_pipeline(pipeline);
     }
 
-        std::shared_ptr<VulkanPipeline>& VulkanProgram::get_pipeline() {
+    std::shared_ptr<VulkanPipeline> VulkanProgram::get_pipeline() {
         return pipeline;
+    }
+
+    std::shared_ptr<VulkanPipelineLayout> VulkanProgram::get_pipeline_layout() {
+        return pipeline_layout;
     }
 }

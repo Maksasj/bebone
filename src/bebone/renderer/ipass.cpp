@@ -15,7 +15,7 @@ namespace bebone::renderer {
 
     }
 
-    const std::string& IPass::get_name() const {
+    std::string IPass::get_name() const {
         return name;
     }
 

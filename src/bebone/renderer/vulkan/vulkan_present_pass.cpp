@@ -37,17 +37,6 @@ static const char vulkan_present_pass_fragment_shader_code[] =
     "   out_color = texture(textures[handles.texture], texcoord);\n"
     "}";
 
-const auto vulkan_present_pass_vertex_descriptions = bebone::gfx::VulkanPipelineVertexInputStateTuple {
-    .binding_descriptions = {
-        { 0, sizeof(bebone::renderer::Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
-    },
-    .attribute_descriptions = {
-        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(bebone::renderer::Vertex, position) },
-        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(bebone::renderer::Vertex, normal) },
-        { 2, 0, VK_FORMAT_R32G32_SFLOAT,    offsetof(bebone::renderer::Vertex, texcoord) },
-    }
-};
-
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
@@ -70,21 +59,8 @@ namespace bebone::renderer {
         mesh_manager = vulkan_assembler->get_mesh_manager();
 
         // Todo
-        pipeline_layout = program_manager->get_pipeline_layout();
-
-        auto vert_shader_module = device->create_shader_module(vulkan_present_pass_vertex_shader_code, VertexShader);
-        auto frag_shader_module = device->create_shader_module(vulkan_present_pass_fragment_shader_code, FragmentShader);
-
-        // Post pipeline
-        auto pipeline = pipeline_manager->create_pipeline(
-            device, swap_chain->render_pass, vert_shader_module, frag_shader_module,
-            { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions } }
-        );
-
-        device->destroy_all(vert_shader_module, frag_shader_module);
-        device->collect_garbage();
-
-        set_program(program_manager->create_program(pipeline));
+        auto program = program_manager->create_program(vulkan_present_pass_vertex_shader_code, vulkan_present_pass_fragment_shader_code);
+        set_program(program);
 
         // Todo, move this to mesh manager
         quad_mesh = mesh_manager->generate_mesh(std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back));

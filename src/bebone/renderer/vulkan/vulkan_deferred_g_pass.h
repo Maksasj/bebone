@@ -18,7 +18,7 @@ namespace bebone::renderer {
         Mat4f matrix;
     };
 
-    struct alignas(16) VulkanDeferredGPassHandles {
+    struct VulkanDeferredGPassHandles {
         Mat4f transform;
         VulkanBindlessBufferHandle camera_handle;
         VulkanBindlessBufferHandle material_handle;
@@ -26,9 +26,9 @@ namespace bebone::renderer {
 
     class VulkanDeferredGPass : public IDeferredGPass {
         private:
-            std::shared_ptr<VulkanPipelineLayout> pipeline_layout;
+            There
+            std::shared_ptr<VulkanRenderPass> render_pass; // Todo, render pass should be abstracted with IPassImpl thing
 
-            std::shared_ptr<VulkanRenderPass> render_pass;
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
 
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;

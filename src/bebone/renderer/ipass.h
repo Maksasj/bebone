@@ -38,7 +38,7 @@ namespace bebone::renderer {
             void plug_input(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
             void plug_output(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
 
-            const std::string& get_name() const;
+            [[nodiscard]] std::string get_name() const;
     };
 }
 

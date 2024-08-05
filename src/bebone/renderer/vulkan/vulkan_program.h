@@ -11,12 +11,18 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanPipeline> pipeline;
 
+            // Reference to bindless pipeline layout
+            std::shared_ptr<VulkanPipelineLayout> pipeline_layout;
+
         public:
-            VulkanProgram(const std::shared_ptr<VulkanPipeline>& pipeline);
+            VulkanProgram(
+                const std::shared_ptr<VulkanPipeline>& pipeline,
+                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout);
 
             void bind(ICommandEncoder* encoder) override;
 
-            std::shared_ptr<VulkanPipeline>& get_pipeline();
+            std::shared_ptr<VulkanPipeline> get_pipeline();
+            std::shared_ptr<VulkanPipelineLayout> get_pipeline_layout();
     };
 }
 

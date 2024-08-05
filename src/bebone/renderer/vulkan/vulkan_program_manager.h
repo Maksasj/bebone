@@ -17,15 +17,14 @@ namespace bebone::renderer {
         public:
             VulkanProgramManager(const std::shared_ptr<VulkanDevice>& device);
 
-            std::shared_ptr<VulkanProgram> create_program(std::shared_ptr<VulkanPipeline>& pipeline);
+            std::shared_ptr<IProgram> create_program(const std::string& vertex_shader_code, const std::string& fragment_shader_code) override;
 
             void bind_texture(std::shared_ptr<VulkanTextureImpl>& texture);
 
             std::shared_ptr<VulkanPipelineManager> get_pipeline_manager() const;
-
-            const std::shared_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
-            const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
-            const std::shared_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
+            std::shared_ptr<VulkanDescriptorSet> get_descriptor_set() const;
+            std::shared_ptr<VulkanDescriptorSetLayout> get_descriptor_set_layout() const;
+            std::shared_ptr<VulkanPipelineLayout> get_pipeline_layout() const;
     };
 }
 

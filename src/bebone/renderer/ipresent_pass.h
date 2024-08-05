@@ -5,8 +5,6 @@
 
 namespace bebone::renderer {
     class IPresentPass : public IGraphicsPass {
-        private:
-
         protected:
             std::shared_ptr<IAttachment> texture_attachment;
 
