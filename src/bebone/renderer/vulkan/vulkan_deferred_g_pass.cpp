@@ -89,19 +89,7 @@ namespace bebone::renderer {
         set_program(program);
 
         // Setup render target
-        auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
-        auto device = vulkan_assembler->get_device();
-        auto texture_manager = vulkan_assembler->get_texture_manager();
-
         target = assember->create_render_target({
-            position_attachment,
-            normals_attachment,
-            albedo_attachment,
-            specular_attachment,
-            depth_attachment
-        }, get_viewport());
-
-        target = std::make_shared<VulkanRendererTarget>(vector {
             position_attachment,
             normals_attachment,
             albedo_attachment,

@@ -12,6 +12,10 @@ namespace bebone::renderer {
 
     }
 
+    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_present_target() {
+        return std::make_shared<VulkanRendererTarget>(swap_chain);;
+    }
+
     std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_render_target(const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) {
         return std::make_shared<VulkanRendererTarget>(attachments, viewport);;
     }

@@ -21,6 +21,7 @@ namespace bebone::renderer {
                 const std::shared_ptr<IMeshManager>& mesh_manager,
                 const std::shared_ptr<IMaterialManager>& material_manager);
 
+            virtual std::shared_ptr<IRenderTarget> create_present_target() = 0;
             virtual std::shared_ptr<IRenderTarget> create_render_target(const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) = 0;
 
             std::shared_ptr<IProgramManager> get_program_manager() const;
