@@ -73,9 +73,10 @@ namespace bebone::renderer {
 
     // Present pass
     VulkanDeferredGPass::VulkanDeferredGPass(
+        const std::shared_ptr<IPassImpl>& impl,
         const std::string& pass_name,
         const Vec2i& viewport
-    ) : IDeferredGPass(pass_name, viewport) {
+    ) : IDeferredGPass(impl, pass_name, viewport) {
         queued_jobs.reserve(max_queued_jobs);
     }
 
@@ -87,16 +88,6 @@ namespace bebone::renderer {
         auto texture_manager = vulkan_assembler->get_texture_manager();
 
         mesh_manager = vulkan_assembler->get_mesh_manager();
-
-        // Create render pass
-        auto viewport = VkExtent2D { static_cast<uint32_t>(get_viewport().x), static_cast<uint32_t>(get_viewport().y) };
-        render_pass = device->create_render_pass(viewport, {
-            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* position */
-            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* normals  */
-            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* albedo   */
-            VulkanAttachmentDesc::color2D(viewport, { .format = VK_FORMAT_R32G32B32A32_SFLOAT }), /* specular */
-            VulkanAttachmentDesc::depth2D(viewport, { .format = device->find_depth_format() }),   /* depth    */
-        });
 
         // Create shader modules
         auto program = program_manager->create_program(
@@ -146,6 +137,8 @@ namespace bebone::renderer {
         // Record draw commands
         cmd->begin_render_pass(framebuffers[frame], render_pass);
 
+        encoder->begin_render_pass(target, this);
+
         encoder->set_viewport(get_viewport());
         encoder->bind_program(program);
 
@@ -159,6 +152,8 @@ namespace bebone::renderer {
             cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &handles);
             mesh_manager->draw_indexed(encoder, mesh);
         }
+
+        encoder->end_render_pass();
 
         cmd->end_render_pass();
     }

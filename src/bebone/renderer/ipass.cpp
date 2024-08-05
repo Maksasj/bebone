@@ -1,5 +1,7 @@
 #include "ipass.h"
 
+#include <utility>
+
 namespace bebone::renderer {
     void IPass::register_input(const std::string& attachment_name, std::shared_ptr<IAttachment>& attachment) {
         // Check if plug with same name does not exist
@@ -11,12 +13,16 @@ namespace bebone::renderer {
         outputs.emplace_back(attachment_name, attachment);
     }
 
-    IPass::IPass(const std::string& name) : name(name) {
+    IPass::IPass(const std::shared_ptr<IPassImpl>& impl, std::string  name) : impl(impl), name(std::move(name)) {
 
     }
 
     std::string IPass::get_name() const {
         return name;
+    }
+
+    std::shared_ptr<IPassImpl> IPass::get_impl() const {
+        return impl;
     }
 
     void IPass::plug_input(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment) {

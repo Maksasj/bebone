@@ -20,7 +20,7 @@ namespace bebone::renderer {
 
     class IRenderQueuePass : public IGraphicsPass {
         public:
-            IRenderQueuePass(const std::string& pass_name, const Vec2i& viewport);
+            IRenderQueuePass(const std::shared_ptr<IPassImpl>& impl, const std::string& pass_name, const Vec2i& viewport);
 
             virtual void submit_task(const RenderQueueTask& task) = 0;
     };

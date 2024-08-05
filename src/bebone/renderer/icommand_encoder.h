@@ -12,6 +12,8 @@ namespace bebone::renderer {
         private:
 
         public:
+            virtual void begin_render_pass(const std::shared_ptr<IRenderTarget>& render_target, const std::shared_ptr<IPassImpl>& pass);
+
             virtual void set_viewport(const Vec2i& viewport) = 0;
             virtual void bind_program(const std::shared_ptr<IProgram>& program) = 0;
     };

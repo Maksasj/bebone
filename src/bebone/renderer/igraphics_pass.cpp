@@ -2,9 +2,10 @@
 
 namespace bebone::renderer {
     IGraphicsPass::IGraphicsPass(
+        const std::shared_ptr<IPassImpl>& impl,
         const std::string& name,
         const Vec2i& viewport
-    ) : IPass(name), program_set_flag(false), viewport(viewport) {
+    ) : IPass(impl, name), program_set_flag(false), viewport(viewport) {
 
     }
 

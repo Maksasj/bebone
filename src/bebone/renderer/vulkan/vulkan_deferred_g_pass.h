@@ -26,8 +26,8 @@ namespace bebone::renderer {
 
     class VulkanDeferredGPass : public IDeferredGPass {
         private:
-            There
-            std::shared_ptr<VulkanRenderPass> render_pass; // Todo, render pass should be abstracted with IPassImpl thing
+            // There
+            // std::shared_ptr<VulkanRenderPass> render_pass; // Todo, render pass should be abstracted with IPassImpl thing
 
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
 
@@ -42,7 +42,10 @@ namespace bebone::renderer {
             std::vector<RenderQueueTask> queued_jobs;
 
         public:
-            VulkanDeferredGPass(const std::string& pass_name, const Vec2i& viewport);
+            VulkanDeferredGPass(
+                const std::shared_ptr<IPassImpl>& impl,
+                const std::string& pass_name,
+                const Vec2i& viewport);
 
             void assemble(IPassAssembler* assember) override;
             void record(ICommandEncoder* encoder) override;

@@ -20,7 +20,7 @@ namespace bebone::renderer {
             Vec2i viewport;
 
         public:
-            IGraphicsPass(const std::string& pass_name, const Vec2i& viewport);
+            IGraphicsPass(const std::shared_ptr<IPassImpl>& impl, const std::string& pass_name, const Vec2i& viewport);
 
             void check_requirements() override;
 

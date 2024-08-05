@@ -5,6 +5,8 @@
 #include "attachment_factory.h"
 
 #include "irender_graph_impl.h"
+
+#include "ipass_impl.h"
 #include "ipass.h"
 
 #include "mesh/imesh.h"
@@ -15,7 +17,6 @@
 #include "mesh/quad_mesh_generator.h"
 #include "mesh/cube_mesh_generator.h"
 #include "mesh/uv_sphere_mesh_generator.h"
-
 #include "mesh/obj_mesh_loader.h"
 
 #include "vulkan/vulkan_renderer.h"

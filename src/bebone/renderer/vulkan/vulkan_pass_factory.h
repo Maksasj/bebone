@@ -5,6 +5,7 @@
 
 #include "vulkan_present_pass.h"
 #include "vulkan_deferred_g_pass.h"
+#include "vulkan_pass_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;

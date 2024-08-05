@@ -16,11 +16,17 @@ namespace bebone::renderer {
         pipeline_manager = device->create_pipeline_manager();
     }
 
-    std::shared_ptr<IProgram> VulkanProgramManager::create_program(const std::string& vertex_shader_code, const std::string& fragment_shader_code) override {
+    std::shared_ptr<IProgram> VulkanProgramManager::create_program(
+        const std::shared_ptr<IPassImpl>& impl,
+        const std::string& vertex_shader_code,
+        const std::string& fragment_shader_code
+    ) {
         auto vert_shader_module = device->create_shader_module(vertex_shader_code, VertexShader);
         auto frag_shader_module = device->create_shader_module(fragment_shader_code, FragmentShader);
 
         // Create pipeline
+        auto render_pass = static_pointer_cast<VulkanPassImpl>(impl)->get_vulkan_pass();
+
         auto pipeline = pipeline_manager->create_pipeline(
             device, render_pass, vert_shader_module, frag_shader_module,
             { .vertex_input_state = { .vertex_descriptions = vulkan_present_pass_vertex_descriptions } }

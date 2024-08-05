@@ -6,6 +6,7 @@
 #include "renderer_backend.h"
 #include "icommand_encoder.h"
 
+#include "ipass_impl.h"
 #include "iattachment.h"
 #include "attachment_plug.h"
 #include "ipass_assembler.h"
@@ -14,6 +15,9 @@ namespace bebone::renderer {
     using namespace bebone::core;
 
     class IPass : public NonCopyable {
+        private:
+            std::shared_ptr<IPassImpl> impl;
+
         private:
             std::string name;
 
@@ -25,7 +29,7 @@ namespace bebone::renderer {
             void register_output(const std::string& attachment_name, std::shared_ptr<IAttachment>& attachment);
 
         public:
-            IPass(const std::string& name);
+            IPass(const std::shared_ptr<IPassImpl>& impl, std::string name);
             virtual ~IPass() = default;
 
             virtual void assemble(IPassAssembler* assember) = 0;
@@ -39,6 +43,7 @@ namespace bebone::renderer {
             void plug_output(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
 
             [[nodiscard]] std::string get_name() const;
+            [[nodiscard]] std::shared_ptr<IPassImpl> get_impl() const;
     };
 }
 

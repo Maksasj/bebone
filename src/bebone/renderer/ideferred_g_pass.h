@@ -19,7 +19,7 @@ namespace bebone::renderer {
             std::shared_ptr<IAttachment> depth_attachment;
 
         public:
-            IDeferredGPass(const std::string& pass_name, const Vec2i& viewport);
+            IDeferredGPass(const std::shared_ptr<IPassImpl>& impl, const std::string& pass_name, const Vec2i& viewport);
     };
 }
 

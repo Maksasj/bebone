@@ -5,6 +5,8 @@
 #include "iprogram_manager.h"
 #include "vulkan_program.h"
 #include "vulkan_texture_impl.h"
+#include "ipass_impl.h"
+#include "vulkan_pass_impl.h"
 
 namespace bebone::renderer {
     class VulkanProgramManager : public IProgramManager {
@@ -17,7 +19,7 @@ namespace bebone::renderer {
         public:
             VulkanProgramManager(const std::shared_ptr<VulkanDevice>& device);
 
-            std::shared_ptr<IProgram> create_program(const std::string& vertex_shader_code, const std::string& fragment_shader_code) override;
+            std::shared_ptr<IProgram> create_program(const std::shared_ptr<IPassImpl>& impl, const std::string& vertex_shader_code, const std::string& fragment_shader_code) override;
 
             void bind_texture(std::shared_ptr<VulkanTextureImpl>& texture);
 
