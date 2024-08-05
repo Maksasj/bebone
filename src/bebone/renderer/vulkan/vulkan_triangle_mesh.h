@@ -28,6 +28,7 @@ namespace bebone::renderer {
             u64 vertex_count() const override;
 
             void bind(ICommandEncoder* encoder) override;
+            void bind(const std::shared_ptr<VulkanCommandBuffer>& command_buffer);
     };
 }
 

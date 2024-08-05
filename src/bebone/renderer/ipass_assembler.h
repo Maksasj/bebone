@@ -6,6 +6,8 @@
 #include "imesh_manager.h"
 #include "imaterial_manager.h"
 #include "ipass_impl.h"
+#include "irender_target.h"
+#include "iattachment.h"
 
 namespace bebone::renderer {
     class IPassAssembler {

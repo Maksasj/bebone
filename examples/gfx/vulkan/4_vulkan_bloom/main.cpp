@@ -70,8 +70,8 @@ int main() {
     auto cube_generator = std::make_shared<CubeMeshGenerator>(1.0f, 1.0f, 1.0f);
     auto quad_generator = std::make_shared<QuadMeshGenerator>(1.0f, 1.0f);
 
-    auto cube_mesh = cube_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device));
-    auto quad_mesh = quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device));
+    auto cube_mesh = static_pointer_cast<VulkanTriangleMesh>(cube_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device)));
+    auto quad_mesh = static_pointer_cast<VulkanTriangleMesh>(quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device)));
 
     auto transform = Transform {};
     auto camera = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) * Mat4f::translation(Vec3f(0, 0, 5));
@@ -96,7 +96,6 @@ int main() {
         t_ubo[frame]->upload_data(device, &mat, sizeof(Mat4f));
 
         auto& cmd = command_buffers[frame];
-        VulkanCommandEncoder encoder(device, swap_chain, cmd, frame);
 
         cmd->begin_record();
         cmd->bind_descriptor_set(pipeline_manager->get_pipeline_layout(), pipeline_manager->get_descriptor_set());
@@ -112,7 +111,7 @@ int main() {
             auto handles = GeometryHandles { c_handles[frame], t_handles[frame] };
             cmd->push_constant(pipeline_manager->get_pipeline_layout(), sizeof(GeometryHandles), 0, &handles);
 
-            cube_mesh->bind(&encoder);
+            cube_mesh->bind(cmd);
             cmd->draw_indexed(cube_mesh->triangle_count());
         cmd->end_render_pass();
 
@@ -127,7 +126,7 @@ int main() {
             auto blur_handles = blur_texture_handles[frame];
             cmd->push_constant(pipeline_manager->get_pipeline_layout(), sizeof(VulkanBindlessTextureHandle), 0, &blur_handles);
 
-            quad_mesh->bind(&encoder);
+            quad_mesh->bind(cmd);
             cmd->draw_indexed(quad_mesh->triangle_count());
         cmd->end_render_pass();
 
@@ -142,7 +141,7 @@ int main() {
             auto post_handle = PostHandles { post_geometry_grayscale_texture_handles[frame], post_blur_texture_handles[frame] };
             cmd->push_constant(pipeline_manager->get_pipeline_layout(), sizeof(PostHandles), 0, &post_handle);
 
-            quad_mesh->bind(&encoder);
+            quad_mesh->bind(cmd);
             cmd->draw_indexed(quad_mesh->triangle_count());
         cmd->end_render_pass();
 

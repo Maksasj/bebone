@@ -3,6 +3,7 @@
 
 #include "icommand_encoder.h"
 #include "vulkan_pass_impl.h"
+#include "vulkan_render_target.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -21,7 +22,8 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,
                 const std::shared_ptr<VulkanCommandBuffer>& command_buffer,
-                const size_t& frame);
+                const size_t& frame,
+                const std::shared_ptr<IMeshManager>& mesh_manager);
 
             void begin_render_pass(const std::shared_ptr<IRenderTarget>& render_target, const std::shared_ptr<IPassImpl>& pass) override;
             void end_render_pass() override;

@@ -111,6 +111,12 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IRenderGraphImpl> VulkanRenderer::create_render_graph_impl() {
-        return std::make_shared<VulkanRenderGraphImpl>(device, swap_chain, program_manager, texture_manager, mesh_manager);
+        return std::make_shared<VulkanRenderGraphImpl>(
+            device,
+            swap_chain,
+            program_manager,
+            texture_manager,
+            mesh_manager,
+            material_manager);
     }
 }

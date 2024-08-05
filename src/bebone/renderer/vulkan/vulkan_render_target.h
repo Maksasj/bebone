@@ -5,6 +5,7 @@
 #include "../iattachment.h"
 #include "vulkan_texture_impl.h"
 #include "vulkan_texture_manager.h"
+#include "vulkan_attachment_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -21,6 +22,8 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanTextureManager>& texture_manager,
                 const std::vector<std::shared_ptr<IAttachment>>& attachments,
                 const Vec2i& viewport);
+
+            const std::vector<std::shared_ptr<VulkanFramebuffer>>& get_framebuffers();
     };
 }
 

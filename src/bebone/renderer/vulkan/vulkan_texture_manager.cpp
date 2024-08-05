@@ -1,4 +1,5 @@
 #include "vulkan_texture_manager.h"
+#include "vulkan_program_manager.h"
 
 namespace bebone::renderer {
     VulkanTextureManager::VulkanTextureManager(

@@ -3,8 +3,6 @@
 
 #include <string>
 #include "irender_queue_pass.h"
-#include "ihdr_texture_attachment.h"
-#include "idepth_attachment.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;

@@ -9,14 +9,18 @@ namespace bebone::renderer {
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
         const std::shared_ptr<VulkanCommandBuffer>& command_buffer,
-        const size_t& frame
-    ) : device(device), swap_chain(swap_chain), command_buffer(command_buffer), frame(frame) {
+        const size_t& frame,
+        const std::shared_ptr<IMeshManager>& mesh_manager
+    ) : ICommandEncoder(mesh_manager), device(device), swap_chain(swap_chain), command_buffer(command_buffer), frame(frame) {
 
     }
 
     void VulkanCommandEncoder::begin_render_pass(const std::shared_ptr<IRenderTarget>& render_target, const std::shared_ptr<IPassImpl>& pass) {
         auto vulkan_pass = static_pointer_cast<VulkanPassImpl>(pass)->get_vulkan_pass();
-        command_buffer->begin_render_pass(todo, vulkan_pass)
+        auto vulkan_render_target = static_pointer_cast<renderer::VulkanRenderTarget>(render_target);
+        auto framebuffers = vulkan_render_target->get_framebuffers();
+
+        command_buffer->begin_render_pass(framebuffers[frame], vulkan_pass);
     }
 
     void VulkanCommandEncoder::end_render_pass() {
@@ -32,7 +36,7 @@ namespace bebone::renderer {
     }
 
     void VulkanCommandEncoder::draw_indexed(const MeshHandle& handle) {
-        mesh_manager->draw_indexed(this, handle);
+        get_mesh_manager()->draw_indexed(this, handle);
     }
 
     std::shared_ptr<VulkanDevice>& VulkanCommandEncoder::get_device() {

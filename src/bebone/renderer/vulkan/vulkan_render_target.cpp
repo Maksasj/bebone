@@ -20,10 +20,16 @@ namespace bebone::renderer {
             auto vulkan_attachments = std::vector<std::shared_ptr<VulkanImageView>> {};
             vulkan_attachments.reserve(attachments.size());
 
-            for(auto& attachment : attachments)
-                vulkan_attachments.push_back(static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(attachment[i]).value())->get_texture()->view);
+            for(auto& attachment : attachments) {
+                auto handles = static_pointer_cast<VulkanAttachmentImpl>(attachment->get_impl())->get_handles();
+                vulkan_attachments.push_back(static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(handles[i]).value())->get_texture()->view);
+            }
 
             framebuffers.push_back(device->create_framebuffer(vulkan_attachments, render_pass, extent));
         }
+    }
+
+    const std::vector<std::shared_ptr<VulkanFramebuffer>>& VulkanRenderTarget::get_framebuffers() {
+        return framebuffers;
     }
 }

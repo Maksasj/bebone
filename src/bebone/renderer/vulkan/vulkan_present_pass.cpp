@@ -77,7 +77,7 @@ namespace bebone::renderer {
         encoder->bind_program(program);
 
         // Draw call
-        const auto texture = static_pointer_cast<VulkanHDRTextureAttachment>(texture_attachment);
+        const auto texture = static_pointer_cast<VulkanAttachmentImpl>(texture_attachment->get_impl());
         const auto& frame = vulkan_encoder->get_frame();
         auto handles = u32(texture->get_handles()[frame]);
 

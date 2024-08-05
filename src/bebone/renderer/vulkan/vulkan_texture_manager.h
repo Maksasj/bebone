@@ -2,10 +2,12 @@
 #define _BEBONE_RENDERER_VULKAN_TEXTURE_MANAGER_H_
 
 #include "itexture_manager.h"
-#include "vulkan_program_manager.h"
+#include "vulkan_texture_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
+
+    class VulkanProgramManager;
 
     class VulkanTextureManager : public ITextureManager {
         private:
