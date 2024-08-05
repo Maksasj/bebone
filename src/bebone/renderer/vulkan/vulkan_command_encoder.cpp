@@ -14,12 +14,25 @@ namespace bebone::renderer {
 
     }
 
+    void VulkanCommandEncoder::begin_render_pass(const std::shared_ptr<IRenderTarget>& render_target, const std::shared_ptr<IPassImpl>& pass) {
+        auto vulkan_pass = static_pointer_cast<VulkanPassImpl>(pass)->get_vulkan_pass();
+        command_buffer->begin_render_pass(todo, vulkan_pass)
+    }
+
+    void VulkanCommandEncoder::end_render_pass() {
+        command_buffer->end_render_pass();
+    }
+
     void VulkanCommandEncoder::set_viewport(const Vec2i& viewport) {
         command_buffer->set_viewport(viewport);
     }
 
     void VulkanCommandEncoder::bind_program(const std::shared_ptr<IProgram>& program) {
         program->bind(this);
+    }
+
+    void VulkanCommandEncoder::draw_indexed(const MeshHandle& handle) {
+        mesh_manager->draw_indexed(this, handle);
     }
 
     std::shared_ptr<VulkanDevice>& VulkanCommandEncoder::get_device() {

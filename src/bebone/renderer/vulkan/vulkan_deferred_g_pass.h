@@ -9,6 +9,7 @@
 #include "vulkan_depth_attachment.h"
 #include "ideferred_g_pass.h"
 #include "vulkan_program.h"
+#include "vulkan_render_target.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;
@@ -26,13 +27,10 @@ namespace bebone::renderer {
 
     class VulkanDeferredGPass : public IDeferredGPass {
         private:
-            std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
+            std::shared_ptr<IRenderTarget> target;
 
             std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> camera_ubo;
             std::vector<VulkanBindlessBufferHandle> camera_ubo_handles;
-
-            // Reference to mesh manager
-            std::shared_ptr<VulkanMeshManager> mesh_manager;
 
             // Jobs
             static const u32 max_queued_jobs = 1000;

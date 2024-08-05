@@ -6,8 +6,9 @@ namespace bebone::renderer {
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
         const std::shared_ptr<VulkanProgramManager>& program_manager,
         const std::shared_ptr<VulkanTextureManager>& texture_manager,
-        const std::shared_ptr<VulkanMeshManager>& mesh_manager
-    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager), mesh_manager(mesh_manager) {
+        const std::shared_ptr<VulkanMeshManager>& mesh_manager,
+        const std::shared_ptr<VulkanMaterialManager>& material_manager
+    ) : IRenderGraphImpl(), device(device), swap_chain(swap_chain), program_manager(program_manager), texture_manager(texture_manager), mesh_manager(mesh_manager), material_manager(material_manager) {
         for(size_t i = 0; i < 3; ++i)
             encoders.emplace_back(device, swap_chain, device->create_command_buffer(), i);
     }
@@ -18,7 +19,8 @@ namespace bebone::renderer {
             swap_chain,
             program_manager,
             texture_manager,
-            mesh_manager);
+            mesh_manager,
+            material_manager);
 
         for(auto& pass : get_render_passes())
             pass->assemble(&assembler);

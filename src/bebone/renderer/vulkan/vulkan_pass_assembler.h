@@ -3,6 +3,7 @@
 
 #include "renderer_backend.h"
 #include "ipass_assembler.h"
+#include "vulkan_render_target.h"
 
 #include "vulkan_program_manager.h"
 #include "vulkan_texture_manager.h"
@@ -15,21 +16,20 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
-            std::shared_ptr<VulkanTextureManager> texture_manager;
-            std::shared_ptr<VulkanMeshManager> mesh_manager;
 
         public:
             VulkanPassAssembler(
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const std::shared_ptr<VulkanProgramManager>& program_manager,
-                const std::shared_ptr<VulkanTextureManager>& texture_manager,
-                const std::shared_ptr<VulkanMeshManager>& mesh_manager);
+                const std::shared_ptr<IProgramManager>& program_manager,
+                const std::shared_ptr<ITextureManager>& texture_manager,
+                const std::shared_ptr<IMeshManager>& mesh_manager,
+                const std::shared_ptr<IMaterialManager>& material_manager);
+
+            std::shared_ptr<IRenderTarget> create_render_target(const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) override;
 
             std::shared_ptr<VulkanDevice> get_device() const;
             std::shared_ptr<VulkanSwapChain> get_swap_chain() const;
-            std::shared_ptr<VulkanTextureManager> get_texture_manager() const;
-            std::shared_ptr<VulkanMeshManager> get_mesh_manager() const;
     };
 }
 

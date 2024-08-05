@@ -50,9 +50,6 @@ namespace bebone::renderer {
     }
 
     void VulkanPresentPass::assemble(IPassAssembler* assember) {
-        auto vulkan_assembler = static_cast<VulkanPassAssembler*>(assember);
-        mesh_manager = vulkan_assembler->get_mesh_manager();
-
         // Todo
         auto program = assember->get_program_manager()->create_program(
             get_impl(),
@@ -62,6 +59,7 @@ namespace bebone::renderer {
         set_program(program);
 
         // Todo, move this to mesh manager
+        auto mesh_manager = assember->get_mesh_manager();
         quad_mesh = mesh_manager->generate_mesh(std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back));
     }
 
@@ -75,13 +73,15 @@ namespace bebone::renderer {
         encoder->set_viewport(get_viewport());
         encoder->bind_program(program);
 
+        // Draw call
         const auto texture = static_pointer_cast<VulkanHDRTextureAttachment>(texture_attachment);
         const auto& frame = vulkan_encoder->get_frame();
         auto handles = u32(texture->get_handles()[frame]);
 
         auto cmd = vulkan_encoder->get_command_buffer();
         cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
-        mesh_manager->draw_indexed(encoder, quad_mesh);
+        encoder->draw_indexed(quad_mesh);
+        // mesh_manager->draw_indexed(encoder, quad_mesh);
 
         encoder->end_render_pass();
 

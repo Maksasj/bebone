@@ -4,11 +4,16 @@ namespace bebone::renderer {
     VulkanPassAssembler::VulkanPassAssembler(
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanSwapChain>& swap_chain,
-        const std::shared_ptr<VulkanProgramManager>& program_manager,
-        const std::shared_ptr<VulkanTextureManager>& texture_manager,
-        const std::shared_ptr<VulkanMeshManager>& mesh_manager
-    ) : IPassAssembler(program_manager), device(device), swap_chain(swap_chain), texture_manager(texture_manager), mesh_manager(mesh_manager) {
+        const std::shared_ptr<IProgramManager>& program_manager,
+        const std::shared_ptr<ITextureManager>& texture_manager,
+        const std::shared_ptr<IMeshManager>& mesh_manager,
+        const std::shared_ptr<IMaterialManager>& material_manager
+    ) : IPassAssembler(program_manager, texture_manager, mesh_manager, material_manager), device(device), swap_chain(swap_chain) {
 
+    }
+
+    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_render_target(const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) {
+        return std::make_shared<VulkanRendererTarget>(attachments, viewport);;
     }
 
     std::shared_ptr<VulkanDevice> VulkanPassAssembler::get_device() const {
@@ -17,13 +22,5 @@ namespace bebone::renderer {
 
     std::shared_ptr<VulkanSwapChain> VulkanPassAssembler::get_swap_chain() const {
         return swap_chain;
-    }
-
-    std::shared_ptr<VulkanTextureManager> VulkanPassAssembler::get_texture_manager() const {
-        return texture_manager;
-    }
-
-    std::shared_ptr<VulkanMeshManager> VulkanPassAssembler::get_mesh_manager() const {
-        return mesh_manager;
     }
 }
