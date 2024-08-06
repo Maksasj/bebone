@@ -8,6 +8,7 @@
 #include "vulkan_program_manager.h"
 #include "vulkan_texture_manager.h"
 #include "vulkan_mesh_manager.h"
+#include "vulkan_uniform_buffer_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
@@ -26,6 +27,7 @@ namespace bebone::renderer {
                 const std::shared_ptr<IMeshManager>& mesh_manager,
                 const std::shared_ptr<IMaterialManager>& material_manager);
 
+            std::shared_ptr<IUniformBuffer> create_uniform_buffer(const size_t& size) override;
             std::shared_ptr<IRenderTarget> create_present_target() override;
             std::shared_ptr<IRenderTarget> create_render_target(
                 const std::shared_ptr<IPassImpl>& pass_impl,

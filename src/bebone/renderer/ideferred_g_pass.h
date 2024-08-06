@@ -6,8 +6,23 @@
 
 namespace bebone::renderer {
     using namespace bebone::core;
+    using namespace bebone::gfx;
+
+    struct VulkanDeferredGPassHandles {
+        Mat4f transform;
+        VulkanBindlessBufferHandle camera_handle;
+        VulkanBindlessBufferHandle material_handle;
+    };
 
     class IDeferredGPass : public IRenderQueuePass {
+        private:
+            std::shared_ptr<IRenderTarget> target;
+            std::shared_ptr<IUniformBuffer> camera_ubo;
+
+            // Jobs
+            static const u32 max_queued_jobs = 1000;
+            std::vector<RenderQueueTask> queued_jobs;
+
         protected:
             std::shared_ptr<IAttachment> position_attachment;
             std::shared_ptr<IAttachment> normals_attachment;
@@ -17,7 +32,18 @@ namespace bebone::renderer {
             std::shared_ptr<IAttachment> depth_attachment;
 
         public:
-            IDeferredGPass(const std::shared_ptr<IPassImpl>& impl, const std::string& pass_name, const Vec2i& viewport);
+            IDeferredGPass(
+                const std::shared_ptr<IPassImpl>& impl,
+                const std::string& pass_name,
+                const Vec2i& viewport);
+
+            void assemble(IPassAssembler* assember) override;
+            void record(ICommandEncoder* encoder) override;
+            void reset() override;
+
+            void resize_viewport(const Vec2i& new_size) override;
+
+            void submit_task(const RenderQueueTask& task) override;
     };
 }
 

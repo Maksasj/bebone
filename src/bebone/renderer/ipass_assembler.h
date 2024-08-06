@@ -8,6 +8,7 @@
 #include "ipass_impl.h"
 #include "irender_target.h"
 #include "iattachment.h"
+#include "iuniform_buffer.h"
 
 namespace bebone::renderer {
     class IPassAssembler {
@@ -24,6 +25,7 @@ namespace bebone::renderer {
                 const std::shared_ptr<IMeshManager>& mesh_manager,
                 const std::shared_ptr<IMaterialManager>& material_manager);
 
+            virtual std::shared_ptr<IUniformBuffer> create_uniform_buffer(const size_t& size) = 0;
             virtual std::shared_ptr<IRenderTarget> create_present_target() = 0;
             virtual std::shared_ptr<IRenderTarget> create_render_target(
                 const std::shared_ptr<IPassImpl>& pass_impl,

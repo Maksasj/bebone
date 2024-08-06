@@ -12,6 +12,14 @@ namespace bebone::renderer {
 
     }
 
+    std::shared_ptr<IUniformBuffer> VulkanPassAssembler::create_uniform_buffer(const size_t& size) {
+        auto vulkan_program_manager = static_pointer_cast<VulkanProgramManager>(get_program_manager());
+        auto pipeline_manager = static_pointer_cast<VulkanPipelineManager>(vulkan_program_manager->get_pipeline_manager());
+
+        auto impl = std::make_shared<VulkanUniformBufferImpl>(device, pipeline_manager, size);
+        return std::make_shared<IUniformBuffer>(impl);
+    }
+
     std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_present_target() {
         return std::make_shared<VulkanRenderTarget>(swap_chain);;
     }
