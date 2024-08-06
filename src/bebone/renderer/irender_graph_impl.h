@@ -25,7 +25,7 @@ namespace bebone::renderer {
 
             virtual void resize_viewport(const Vec2i& new_size) = 0;
 
-            virtual std::shared_ptr<IPassFactory> create_pass_factory() const = 0;
+            virtual std::shared_ptr<IPassImplFactory> create_pass_factory() const = 0;
             virtual std::shared_ptr<IAttachmentFactory> create_attachment_factory() const = 0;
 
             void add_pass(const std::shared_ptr<IPass>& render_pass);

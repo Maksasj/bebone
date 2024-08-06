@@ -61,8 +61,8 @@ namespace bebone::renderer {
             pass->resize_viewport(new_size);
     }
 
-    std::shared_ptr<IPassFactory> VulkanRenderGraphImpl::create_pass_factory() const {
-        return std::make_shared<VulkanPassFactory>(device, swap_chain);
+    std::shared_ptr<IPassImplFactory> VulkanRenderGraphImpl::create_pass_factory() const {
+        return std::make_shared<VulkanPassImplFactory>(device, swap_chain);
     }
 
     std::shared_ptr<IAttachmentFactory> VulkanRenderGraphImpl::create_attachment_factory() const {

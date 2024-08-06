@@ -22,7 +22,7 @@ namespace bebone::renderer {
         auto gpass_depth = attachment_factory->create_depth_attachment("gpass_depth", viewport);
         add_attachment(gpass_depth);
 
-        gpass = pass_factory->create_deferred_g_pass("gpass", viewport);
+        gpass = std::make_shared<IDeferredGPass>(pass_factory->create_deferred_g_pass_impl(viewport), "gpass", viewport);
         gpass->plug_output("position", gpass_position_texture);
         gpass->plug_output("normals", gpass_normals_texture);
         gpass->plug_output("albedo", gpass_albedo_texture);
@@ -31,7 +31,7 @@ namespace bebone::renderer {
         gpass->plug_output("depth", gpass_depth);
         add_pass(gpass);
 
-        present = pass_factory->create_present_pass("present", viewport);
+        present = std::make_shared<IPresentPass>(pass_factory->create_present_pass_impl(), "present", viewport);
         present->plug_input("texture", gpass_normals_texture);
         add_pass(present);
     }

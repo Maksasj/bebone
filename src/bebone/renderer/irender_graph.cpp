@@ -64,7 +64,7 @@ namespace bebone::renderer {
         return impl->get_render_attachments();
     }
 
-    std::shared_ptr<IPassFactory> IRenderGraph::create_pass_factory() const {
+    std::shared_ptr<IPassImplFactory> IRenderGraph::create_pass_factory() const {
         return impl->create_pass_factory();
     }
 

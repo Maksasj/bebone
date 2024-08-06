@@ -29,7 +29,7 @@ namespace bebone::renderer {
             virtual void submit_geometry_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform);
             virtual void submit_ui_geometry_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform);
 
-            virtual std::shared_ptr<IPassFactory> create_pass_factory() const;
+            virtual std::shared_ptr<IPassImplFactory> create_pass_factory() const;
             virtual std::shared_ptr<IAttachmentFactory> create_attachment_factory() const;
 
             void add_pass(const std::shared_ptr<IPass>& render_pass);

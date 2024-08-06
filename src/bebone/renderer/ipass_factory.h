@@ -9,14 +9,14 @@
 #include "ideferred_g_pass.h"
 
 namespace bebone::renderer {
-    class IPassFactory {
+    class IPassImplFactory {
         private:
 
         public:
-            virtual ~IPassFactory() = default;
+            virtual ~IPassImplFactory() = default;
 
-            virtual std::shared_ptr<IPresentPass> create_present_pass(const std::string& pass_name, const Vec2i& viewport) = 0;
-            virtual std::shared_ptr<IDeferredGPass> create_deferred_g_pass(const std::string& pass_name, const Vec2i& viewport) = 0;
+            virtual std::shared_ptr<IPassImpl> create_present_pass_impl() = 0;
+            virtual std::shared_ptr<IPassImpl> create_deferred_g_pass_impl(const Vec2i& viewport) = 0;
     };
 }
 
