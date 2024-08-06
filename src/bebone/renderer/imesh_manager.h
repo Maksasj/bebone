@@ -19,6 +19,9 @@ namespace bebone::renderer {
 
             virtual void draw_indexed(ICommandEncoder* encoder, const MeshHandle& handle) = 0;
 
+            virtual MeshHandle get_default_quad() = 0;
+            virtual MeshHandle get_default_cube() = 0;
+
             virtual std::optional<std::shared_ptr<IMesh>> get_mesh(const MeshHandle& handle) const = 0;
     };
 }

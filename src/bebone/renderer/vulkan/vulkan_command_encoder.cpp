@@ -35,6 +35,25 @@ namespace bebone::renderer {
         program->bind(this);
     }
 
+    void VulkanCommandEncoder::bind_draw_data(const std::shared_ptr<IProgram>& program, const Transform& transform, const std::shared_ptr<IUniformBuffer>& camera, const MaterialHandle& material) {
+        auto handles = DeferredGPassDrawData {
+            .transform = calculate_transform_matrix(transform),
+            .camera_handle = camera->get_handle(),
+            .material_handle = material
+        };
+
+        auto pipeline_layout = static_pointer_cast<VulkanProgram>(program)->get_pipeline_layout();
+        command_buffer->push_constant(pipeline_layout, sizeof(DeferredGPassDrawData), 0, &handles);
+    }
+
+    void VulkanCommandEncoder::bind_draw_data(const std::shared_ptr<IProgram>& program, const std::shared_ptr<IAttachment>& attachment) {
+        const auto texture = static_pointer_cast<VulkanAttachmentImpl>(attachment->get_impl());
+        auto handles = u32(texture->get_handles()[frame]);
+
+        auto pipeline_layout = static_pointer_cast<VulkanProgram>(program)->get_pipeline_layout();
+        command_buffer->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
+    }
+
     void VulkanCommandEncoder::draw_indexed(const MeshHandle& handle) {
         get_mesh_manager()->draw_indexed(this, handle);
     }

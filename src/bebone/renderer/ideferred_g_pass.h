@@ -8,12 +8,6 @@ namespace bebone::renderer {
     using namespace bebone::core;
     using namespace bebone::gfx;
 
-    struct VulkanDeferredGPassHandles {
-        Mat4f transform;
-        VulkanBindlessBufferHandle camera_handle;
-        VulkanBindlessBufferHandle material_handle;
-    };
-
     class IDeferredGPass : public IRenderQueuePass {
         private:
             std::shared_ptr<IRenderTarget> target;

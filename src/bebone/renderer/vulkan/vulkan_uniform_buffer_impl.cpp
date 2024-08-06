@@ -4,19 +4,19 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     VulkanUniformBufferImpl::VulkanUniformBufferImpl(
-        std::shared_ptr<VulkanDevice>& device,
+        const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<VulkanPipelineManager>& pipeline_manager,
         const size_t& size
-    ) {
-        buffers = device->create_buffer_memorys(size, 3);
-        handles  = pipeline_manager->bind_uniform_buffers(device, buffers);
+    ) : device(device) {
+        buffer = device->create_buffer_memory(size);
+        handle  = pipeline_manager->bind_uniform_buffer(this->device, buffer);
     }
 
     void VulkanUniformBufferImpl::upload_data(void* src, const size_t& size) {
-
+        buffer->upload_data(device, src, size);
     }
 
-    const std::vector<VulkanBindlessBufferHandle>& VulkanUniformBufferImpl::get_handles() const {
-        return handles;
+    UniformBufferHandle VulkanUniformBufferImpl::get_handle() {
+        return static_cast<UniformBufferHandle>(handle);
     }
 }

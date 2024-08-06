@@ -8,17 +8,21 @@ namespace bebone::renderer {
 
     class VulkanUniformBufferImpl : public IUniformBufferImpl {
         private:
-            std::vector<std::shared_ptr<VulkanBufferMemoryTuple>> buffers;
-            std::vector<VulkanBindlessBufferHandle> handles;
+            std::shared_ptr<VulkanDevice> device;
+
+        private:
+            std::shared_ptr<VulkanBufferMemoryTuple> buffer;
+            VulkanBindlessBufferHandle handle;
+
         public:
             VulkanUniformBufferImpl(
-                std::shared_ptr<VulkanDevice>& device,
+                const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanPipelineManager>& pipeline_manager,
                 const size_t& size);
 
             void upload_data(void* src, const size_t& size) override;
 
-            [[nodiscard]] const std::vector<VulkanBindlessBufferHandle>& get_handles() const;
+            virtual UniformBufferHandle get_handle() override;
     };
 }
 

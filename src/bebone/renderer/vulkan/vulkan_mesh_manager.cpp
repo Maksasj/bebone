@@ -4,7 +4,8 @@ namespace bebone::renderer {
     using namespace bebone::gfx;
 
     VulkanMeshManager::VulkanMeshManager(const std::shared_ptr<VulkanDevice>& device) : device(device) {
-
+        quad_mesh = generate_mesh(std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back));
+        cube_mesh = generate_mesh(std::make_shared<CubeMeshGenerator>(1.0f, 1.0f, 1.0f));
     }
 
     MeshHandle VulkanMeshManager::load_mesh(const std::string& file_path) {
@@ -42,6 +43,14 @@ namespace bebone::renderer {
 
         mesh->bind(encoder);
         cmd->draw_indexed(mesh->triangle_count());
+    }
+
+    MeshHandle VulkanMeshManager::get_default_quad() {
+        return quad_mesh;
+    }
+
+    MeshHandle VulkanMeshManager::get_default_cube() {
+        return cube_mesh;
     }
 
     std::optional<std::shared_ptr<IMesh>> VulkanMeshManager::get_mesh(const MeshHandle& handle) const {

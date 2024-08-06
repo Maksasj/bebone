@@ -1,6 +1,6 @@
 #include "ipresent_pass.h"
 
-static const char present_pass_vertex_shader_code[] =
+static const char present_vert_src[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
 
@@ -18,7 +18,7 @@ static const char present_pass_vertex_shader_code[] =
     "    out_texcoord = texcoord;\n"
     "}";
 
-static const char present_pass_fragment_shader_code[] =
+static const char present_frag_src[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
 
@@ -29,7 +29,7 @@ static const char present_pass_fragment_shader_code[] =
 
     "layout(set = 0, binding = 2) uniform sampler2D textures[];\n"
 
-    "layout( push_constant ) uniform Handles {\n"
+    "layout(std140, push_constant) uniform Handles {\n"
     "    int texture;\n"
     "} handles;\n"
 
@@ -49,17 +49,10 @@ namespace bebone::renderer {
     void IPresentPass::assemble(IPassAssembler* assember) {
         target = assember->create_present_target();
 
-        // Todo
-        auto program = assember->get_program_manager()->create_program(
-            get_impl(),
-            present_pass_vertex_shader_code,
-            present_pass_fragment_shader_code);
-
+        auto program = assember->get_program_manager()->create_program(get_impl(), present_vert_src, present_frag_src);
         set_program(program);
 
-        // Todo, move this to mesh manager
-        auto mesh_manager = assember->get_mesh_manager();
-        quad_mesh = mesh_manager->generate_mesh(std::make_shared<QuadMeshGenerator>(1.0f, 1.0f, Vec3f::back));
+        quad_mesh = assember->get_mesh_manager()->get_default_quad();
     }
 
     void IPresentPass::record(ICommandEncoder* encoder) {
@@ -68,14 +61,7 @@ namespace bebone::renderer {
         encoder->set_viewport(get_viewport());
         encoder->bind_program(program);
 
-        auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
-        const auto texture = static_pointer_cast<VulkanAttachmentImpl>(texture_attachment->get_impl());
-        const auto& frame = vulkan_encoder->get_frame();
-        auto handles = u32(texture->get_handles()[frame]);
-
-        auto cmd = vulkan_encoder->get_command_buffer();
-        auto pipeline_layout = static_pointer_cast<VulkanProgram>(program)->get_pipeline_layout();
-        cmd->push_constant(pipeline_layout, sizeof(u32), 0, &handles);
+        encoder->bind_draw_data(program, texture_attachment);
         encoder->draw_indexed(quad_mesh);
 
         encoder->end_render_pass();

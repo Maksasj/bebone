@@ -15,6 +15,7 @@ namespace bebone::renderer {
             virtual ~IUniformBufferImpl() = default;
 
             virtual void upload_data(void* src, const size_t& size) = 0;
+            virtual UniformBufferHandle get_handle() = 0;
     };
 
 }

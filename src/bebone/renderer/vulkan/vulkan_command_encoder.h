@@ -29,6 +29,8 @@ namespace bebone::renderer {
             void end_render_pass() override;
             void set_viewport(const Vec2i& viewport) override;
             void bind_program(const std::shared_ptr<IProgram>& program) override;
+            void bind_draw_data(const std::shared_ptr<IProgram>& program, const Transform& transform, const std::shared_ptr<IUniformBuffer>& camera, const MaterialHandle& material) override;
+            void bind_draw_data(const std::shared_ptr<IProgram>& program, const std::shared_ptr<IAttachment>& attachment) override;
             void draw_indexed(const MeshHandle& handle) override;
 
             std::shared_ptr<VulkanDevice>& get_device();

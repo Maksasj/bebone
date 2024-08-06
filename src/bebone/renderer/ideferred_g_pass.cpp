@@ -106,10 +106,7 @@ namespace bebone::renderer {
 
     void IDeferredGPass::record(ICommandEncoder* encoder) {
         auto camera_data = camera->calculate_matrix(get_viewport_aspect_ratio());
-
-        auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
-        const auto& frame = vulkan_encoder->get_frame();
-        camera_ubo[frame]->upload_data(vulkan_encoder->get_device(), &camera_data, sizeof(Mat4f));
+        camera_ubo->upload_data(&camera_data, sizeof(Mat4f));
 
         encoder->begin_render_pass(target, get_impl());
 
@@ -117,17 +114,7 @@ namespace bebone::renderer {
         encoder->bind_program(program);
 
         for(const auto& [ mesh, material, transform ] : queued_jobs) {
-            const auto handles = VulkanDeferredGPassHandles {
-                .transform = calculate_transform_matrix(transform),
-                .camera_handle = camera_ubo_handles[frame],
-                .material_handle = static_cast<VulkanBindlessBufferHandle>(material)
-            };
-
-            auto cmd = vulkan_encoder->get_command_buffer();
-
-            auto pipeline_layout = static_pointer_cast<VulkanProgram>(program)->get_pipeline_layout();
-            cmd->push_constant(pipeline_layout, sizeof(VulkanDeferredGPassHandles), 0, &handles);
-
+            encoder->bind_draw_data(program, transform, camera_ubo, material);
             encoder->draw_indexed(mesh);
         }
 

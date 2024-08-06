@@ -14,6 +14,8 @@ namespace bebone::renderer {
             IUniformBuffer(const std::shared_ptr<IUniformBufferImpl>& impl);
 
             void upload_data(void* src, const size_t& size);
+
+            UniformBufferHandle get_handle() const;
     };
 }
 

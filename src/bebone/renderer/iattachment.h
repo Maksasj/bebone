@@ -4,7 +4,6 @@
 #include <string>
 
 #include "renderer_backend.h"
-#include "icommand_encoder.h"
 #include "iattachment_impl.h"
 
 namespace bebone::renderer {
