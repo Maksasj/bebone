@@ -1,14 +1,11 @@
 #include <vector>
 
-#define OMNI_TYPES_MATRIX_COLLUM_MAJOR_ORDER
-#define OMNI_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int screen_width = 800;
+const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 struct Vertex {
     Vec3f pos;
@@ -49,18 +46,18 @@ struct Camera {
 int main() {
     GLFWContext::init();
 
-    auto window = WindowFactory::create_window("6. OpenGL Imgui example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("6. OpenGL Imgui example", screen_width, screen_height, GfxAPI::OpenGL);
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
     glfwSwapInterval(0);
 
-    auto vertexShader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::VERTEX_SHADER);
-    auto fragmentShader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::FRAGMENT_SHADER);
-    GLShaderProgram shaderProgram(vertexShader, fragmentShader);
+    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
+    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
+    GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
-    vertexShader.destroy();
-    fragmentShader.destroy();
+    vertex_shader.destroy();
+    fragment_shader.destroy();
     
     GLVertexArrayObject vao;
     vao.bind();
@@ -75,22 +72,22 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    GLUniformBufferObject transformUbo(sizeof(Transform));
-    GLUniformBufferObject cameraUbo(sizeof(Camera));
+    GLUniformBufferObject transform_ubo(sizeof(Transform));
+    GLUniformBufferObject camera_ubo(sizeof(Camera));
 
-    transformUbo.bind();
-    shaderProgram.bind_buffer("Transform", 0, transformUbo);
-    auto transformPtr = static_cast<Transform*>(transformUbo.map());
-        transformPtr->translation = Mat4f::translation(Vec3f(0, 0, 0));
-        transformPtr->scale = Mat4f::identity();
+    transform_ubo.bind();
+    shader_program.bind_buffer("Transform", 0, transform_ubo);
+    auto transform_ptr = static_cast<Transform*>(transform_ubo.map());
+        transform_ptr->translation = Mat4f::translation(Vec3f(0, 0, 0));
+        transform_ptr->scale = Mat4f::identity();
 
-    cameraUbo.bind();
-    shaderProgram.bind_buffer("Camera", 1, cameraUbo);
-    auto cameraPtr = static_cast<Camera*>(cameraUbo.map());
-        cameraPtr->proj = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
-        cameraPtr->view = Mat4f::translation(Vec3f(0, 0, 5));
-    cameraUbo.unmap();
-    cameraUbo.unbind();
+    camera_ubo.bind();
+    shader_program.bind_buffer("Camera", 1, camera_ubo);
+    auto camera_ptr = static_cast<Camera*>(camera_ubo.map());
+        camera_ptr->proj = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
+        camera_ptr->view = Mat4f::translation(Vec3f(0, 0, 5));
+    camera_ubo.unmap();
+    camera_ubo.unbind();
 
     float t = 0;
 
@@ -119,9 +116,9 @@ int main() {
 
         ImGui::ShowDemoWindow();
 
-        transformPtr->rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
+        transform_ptr->rotation = trait_bryan_angle_yxz(Vec3f(t * 0.001f, t * 0.001f, 0.0f));
 
-        shaderProgram.enable();
+        shader_program.enable();
 
         vao.bind();
 
@@ -134,13 +131,13 @@ int main() {
         GLFWContext::poll_events();
     }
 
-    transformUbo.unmap();
-    transformUbo.unbind();
+    transform_ubo.unmap();
+    transform_ubo.unbind();
 
     vao.destroy();
     vbo.destroy();
     ebo.destroy();
-    shaderProgram.destroy();
+    shader_program.destroy();
 
     GLFWContext::terminate();
 

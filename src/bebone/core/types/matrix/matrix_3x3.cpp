@@ -1,0 +1,173 @@
+#include "matrix_3x3.h"
+
+namespace bebone::core {
+    Matrix<f32, 3, 3>::Matrix(const f32& n00, const f32& n01, const f32& n02,
+                              const f32& n10, const f32& n11, const f32& n12,
+                              const f32& n20, const f32& n21, const f32& n22) {
+        e[0][0] = n00; e[0][1] = n10; e[0][2] = n20;
+        e[1][0] = n01; e[1][1] = n11; e[1][2] = n21;
+        e[2][0] = n02; e[2][1] = n12; e[2][2] = n22;
+    }
+
+    Matrix<f32, 3, 3>::Matrix(const Vec3f &a, const Vec3f &b, const Vec3f &c) {
+        e[0][0] = a.x; e[0][1] = a.y; e[0][2] = a.z;
+        e[1][0] = b.x; e[1][1] = b.y; e[1][2] = b.z;
+        e[2][0] = c.x; e[2][1] = c.y; e[2][2] = c.z;
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::get_rotation_x(const f32 &angle) {
+        f32 c = std::cos(angle);
+        f32 s = std::sin(angle);
+
+        return {
+            1.0f, 0.0f, 0.0f,
+            0.0f,  c,   -s,
+            0.0f,  s,    c
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::get_rotation_y(const f32 &angle) {
+        f32 c = std::cos(angle);
+        f32 s = std::sin(angle);
+
+        return {
+            c,   0.0f,  s,
+            0.0f, 1.0f, 0.0f,
+            -s,   0.0f,  c
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::get_rotation_z(const f32 &angle) {
+        f32 c = std::cos(angle);
+        f32 s = std::sin(angle);
+
+        return {
+            c,   -s,   0.0f,
+            s,    c,   0.0f,
+            0.0f, 0.0f, 1.0f
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::get_rotation_matrix(const f32 &angle, Vec3f axis) {
+        axis = axis.normalize();
+
+        f32 c = std::cos(angle);
+        f32 s = std::sin(angle);
+        f32 d = 1.0f - c;
+
+        f32 x = axis.x * d;
+        f32 y = axis.y * d;
+        f32 z = axis.z * d;
+
+        f32 axay = x * axis.y;
+        f32 axaz = x * axis.z;
+        f32 ayaz = y * axis.z;
+
+        return {
+             c + x * axis.x,   axay - s * axis.z, axaz + s * axis.y,
+            axay + s * axis.z,   c + y * axis.y,  ayaz - s * axis.x,
+            axaz - s * axis.y, ayaz + s * axis.x,   c + z * axis.z
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::get_reflection_matrix(const Vec3f& v) {
+        f32 x = v.x * -2.0f;
+        f32 y = v.y * -2.0f;
+        f32 z = v.z * -2.0f;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
+
+        return {
+            x * v.x + 1.0f,      vxvy,           vxvz,
+                 vxvy,      y * v.y + 1.0f,      vyvz,
+                 vxvz,           vyvz,      z * v.z + 1.0f
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::get_involution_matrix(const Vec3f& v) {
+        f32 x = v.x * 2.0f;
+        f32 y = v.y * 2.0f;
+        f32 z = v.z * 2.0f;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
+
+        return {
+            x * v.x - 1.0f,     vxvy,           vxvz,
+                vxvy,      y * v.y - 1.0f,      vyvz,
+                vxvz,           vyvz,      z * v.z - 1.0f
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::scale(const f32& s) {
+        return {
+             s,   0.0f, 0.0f,
+            0.0f,  s,   0.0f,
+            0.0f, 0.0f,  s
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::scale(const f32& sx, const f32& sy, const f32& sz) {
+        return {
+             sx,  0.0f, 0.0f,
+            0.0f,  sy,  0.0f,
+            0.0f, 0.0f,  sz
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::scale(const Vec3f& s) {
+        return {
+            s.x,  0.0f, 0.0f,
+            0.0f, s.y,  0.0f,
+            0.0f, 0.0f, s.z
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::scale(f32 s, Vec3f v) {
+        v = v.normalize();
+        s -= 1.0f;
+
+        f32 x = v.x * s;
+        f32 y = v.y * s;
+        f32 z = v.z * s;
+        f32 vxvy = x * v.y;
+        f32 vxvz = x * v.z;
+        f32 vyvz = y * v.z;
+
+        return {
+            x * v.x + 1.0f,       vxvy,         vxvz,
+                  vxvy,     y * v.y + 1.0f,     vyvz,
+                  vxvz,           vyvz,     z * v.z + 1.0f
+        };
+    }
+
+    Matrix<f32, 3, 3> Matrix<f32, 3, 3>::skew(f32 t, Vec3f a, Vec3f b) {
+        t = std::tan(t);
+        a = a.normalize();
+        b = b.normalize();
+
+        f32 x = a.x * t;
+        f32 y = a.y * t;
+        f32 z = a.z * t;
+
+        return {
+            x * b.x + 1.0f,     x * b.y,       x * b.z,
+               y * b.x,     y * b.y + 1.0f,    y * b.z,
+               z * b.x,         z * b.y,    z * b.z + 1.0f
+        };
+    }
+
+    std::string Matrix<f32, 3, 3>::to_string() const {
+        std::stringstream ss;
+
+        for (i32 i = 0; i < 3; ++i) {
+            for (i32 j = 0; j < 3; ++j) {
+                ss << e[j][i] << " ";
+            }
+            ss << std::endl;
+        }
+
+        return ss.str();
+    }
+}

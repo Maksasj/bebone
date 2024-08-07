@@ -7,10 +7,10 @@
 namespace bebone::core {
     /// Key data type, which holds the key code and input type
     struct Key {
-        KeyCode keyCode;
-        InputType inputType;
+        KeyCode key_code;
+        InputType input_type;
 
-        Key(KeyCode keyCode, InputType inputType);
+        Key(KeyCode key_code, InputType input_type);
         bool operator==(const Key& other) const;
         bool operator<(const Key& other) const;
     };

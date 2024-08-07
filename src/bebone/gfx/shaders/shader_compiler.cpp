@@ -2,19 +2,19 @@
 
 namespace bebone::gfx {
     ShaderCompiler::ShaderCompiler()
-        : m_defaultEntryPoint("main") {
+        : default_entry_point("main") {
 
     }
 
-    void ShaderCompiler::set_entry_point(const std::string& p_entryPoint) {
-        m_defaultEntryPoint = p_entryPoint;
+    void ShaderCompiler::set_entry_point(const std::string& entry_point) {
+        default_entry_point = entry_point;
     }
 
-    void ShaderCompiler::add_shader_source(const ShaderSource& p_shaderSource) {
-        m_shaderSources.push_back(p_shaderSource);
+    void ShaderCompiler::add_shader_source(const ShaderSource& shader_source) {
+        shader_sources.push_back(shader_source);
     }
 
     void ShaderCompiler::clear_shader_source() {
-        m_shaderSources.clear();
+        shader_sources.clear();
     }
 }

@@ -1,10 +1,9 @@
 #include "bebone/bebone.h"
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int screen_width = 800;
+const unsigned int screen_height = 600;
 
 using namespace bebone::gfx;
-using namespace bebone::gfx::opengl;
 
 void window_resize_event_listener(WindowSizeEvent&) {
     std::cout << "Window resize event !\n";
@@ -19,7 +18,7 @@ struct WindowPosEventListener : EventListener<WindowPosEvent> {
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("0. OpenGL window example", SCR_WIDTH, SCR_HEIGHT, GfxAPI::OPENGL);
+    auto window = WindowFactory::create_window("0. OpenGL window example", screen_width, screen_height, GfxAPI::OpenGL);
 
     WindowPosEventListener listener;
     window->add_listener(listener);
@@ -33,7 +32,7 @@ int main() {
     window->fire(WindowPosEvent(0, 0));
 
     GLContext::load_opengl();
-    GLContext::set_viewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    GLContext::set_viewport(0, 0, screen_width, screen_height);
 
     while (!window->closing()) {
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);

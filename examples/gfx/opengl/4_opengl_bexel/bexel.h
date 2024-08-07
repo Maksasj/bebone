@@ -1,22 +1,22 @@
 #ifndef BEXEL_BEXEL_H
 #define BEXEL_BEXEL_H
 
-#include "gfx/opengl/4_opengl_bexel/world/world.h"
+#include "world/world.h"
 #include "camera.h"
 
 namespace bexel {
-    static const u64 GAME_WIDTH = 800;
-    static const u64 GAME_HEIGHT = 600;
+    static const u64 game_width = 800;
+    static const u64 game_height = 600;
 
     class Bexel {
     private:
-        shared_ptr<Window> m_window;
+        shared_ptr<Window> window;
 
-        unique_ptr<GLShaderProgram> m_shader;
-        unique_ptr<GLTexture2D> m_texture;
+        unique_ptr<GLShaderProgram> shader;
+        unique_ptr<GLTexture2D> texture;
 
-        unique_ptr<Camera> m_camera;
-        unique_ptr<World> m_world;
+        unique_ptr<Camera> camera;
+        unique_ptr<World> world;
 
     public:
         Bexel();

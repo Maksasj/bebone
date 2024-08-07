@@ -1,9 +1,5 @@
 add_subdirectory(glad)
 
-set(OMNI_GLAD_INTEGRATION ON)
-include_directories("glad/include")
-add_subdirectory(omni_types)
-
 set(GLFW_BUILD_DOCS OFF CACHE BOOL  "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL  "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -20,3 +16,7 @@ add_subdirectory("Vulkan-Headers")
 add_subdirectory(stb)
 
 add_subdirectory(imgui)
+add_subdirectory(miniaudio)
+
+add_subdirectory(google-test)
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})

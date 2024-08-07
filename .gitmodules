@@ -7,10 +7,6 @@
 [submodule "3dparty/Vulkan-Headers"]
 	path = 3dparty/Vulkan-Headers
 	url = https://github.com/Maksasj/Vulkan-Headers.git
-[submodule "3dparty/omni_types"]
-	path = 3dparty/omni_types
-	url = https://github.com/Maksasj/omni_types
-
 [submodule "3dparty/stb"]
 	path = 3dparty/stb
 	url = https://github.com/Maksasj/stb
@@ -20,3 +16,10 @@
 [submodule "3dparty/glslang"]
 	path = 3dparty/glslang
 	url = https://github.com/Maksasj/glslang
+[submodule "3dparty/miniaudio"]
+	path = 3dparty/miniaudio
+	url = https://github.com/Maksasj/miniaudio
+[submodule "3dparty/google-test"]
+	path = 3dparty/google-test
+	url = https://github.com/Soskar1/googletest.git
+	branch = v1.14.x

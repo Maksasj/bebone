@@ -10,14 +10,14 @@ namespace game::core::ecs {
 
     class Collider : public Component {
         private:
-            Vec2f topLeft;
-            Vec2f bottomRight;
+            Vec2f top_left;
+            Vec2f bottom_right;
 
-            bool isTrigger;
+            bool trigger;
             bool triggered = false;
 
         public:
-            Collider(const Vec2f& localTopLeft, const Vec2f& localBottomRight, const bool& isTrigger = false);
+            Collider(const Vec2f& local_top_left, const Vec2f& local_bottom_right, const bool& is_trigger = false);
             void update() override { }
 
             [[nodiscard]] Vec2f get_top_left() const;

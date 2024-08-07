@@ -12,58 +12,60 @@
 namespace game::core::fsm {
     #define FLY_FORCE 0.06f
 
-    GameState::GameState(const shared_ptr<GameObject>& flappyBird) : endGameState(nullptr), flappyBird(flappyBird) {
+    GameState::GameState(const shared_ptr<GameObject>& flappy_bird, const shared_ptr<Input>& input)
+        : end_game_state(nullptr), flappy_bird(flappy_bird), input(input) {
+
         ground1 = Game::find_game_object_by_name("Ground1");
         ground2 = Game::find_game_object_by_name("Ground2");
         pipe1 = Game::find_game_object_by_name("Pipe1");
         pipe2 = Game::find_game_object_by_name("Pipe2");
 
-        auto groundSprite = ground2->get_component<SpriteRenderer>()->get_sprite();
+        auto ground_sprite = ground2->get_component<SpriteRenderer>()->get_sprite();
 
-        float endPoint = -groundSprite->get_unit_width() + 0.05f;
-        float startPoint = -endPoint;
+        float end_point = -ground_sprite->get_unit_width() + 0.05f;
+        float start_point = -end_point;
 
-        ground1->add_component<CyclicMovement>(endPoint, startPoint)->disable();
-        ground2->add_component<CyclicMovement>(endPoint, startPoint)->disable();
+        ground1->add_component<CyclicMovement>(end_point, start_point)->disable();
+        ground2->add_component<CyclicMovement>(end_point, start_point)->disable();
 
         pipe1->add_component<CyclicMovement>(-6.2f, 6.2f, true)->disable();
         pipe2->add_component<CyclicMovement>(-6.2f, 6.2f, true)->disable();
         
-        auto pipeSprite = pipe1->get_component<SpriteRenderer>()->get_sprite();
-        float emptySpace = 1.45f; // hardcoded value
-        Vec2f topPipeColliderTopLeftPoint = { -pipeSprite->get_unit_width() / 2.0f, pipeSprite->get_unit_height() / 2.0f };
-        Vec2f topPipeColliderBottomRightPoint = { pipeSprite->get_unit_width() / 2.0f, emptySpace };
-        pipe1->add_component<Collider>(topPipeColliderTopLeftPoint, topPipeColliderBottomRightPoint);
-        pipe2->add_component<Collider>(topPipeColliderTopLeftPoint, topPipeColliderBottomRightPoint);
+        auto pipe_sprite = pipe1->get_component<SpriteRenderer>()->get_sprite();
+        float empty_space = 1.45f; // hardcoded value
+        Vec2f top_pipe_collider_top_left_point = { -pipe_sprite->get_unit_width() / 2.0f, pipe_sprite->get_unit_height() / 2.0f };
+        Vec2f top_pipe_collider_bottom_right_point = { pipe_sprite->get_unit_width() / 2.0f, empty_space };
+        pipe1->add_component<Collider>(top_pipe_collider_top_left_point, top_pipe_collider_bottom_right_point);
+        pipe2->add_component<Collider>(top_pipe_collider_top_left_point, top_pipe_collider_bottom_right_point);
         
-        Vec2f bottomPipeColliderTopLeftPoint = { -pipeSprite->get_unit_width() / 2.0f, -emptySpace };
-        Vec2f bottomPipeColliderBottomRightPoint = { pipeSprite->get_unit_width() / 2.0f, -pipeSprite->get_unit_height() / 2.0f };
-        pipe1->add_component<Collider>(bottomPipeColliderTopLeftPoint, bottomPipeColliderBottomRightPoint);
-        pipe2->add_component<Collider>(bottomPipeColliderTopLeftPoint, bottomPipeColliderBottomRightPoint);
+        Vec2f bottom_pipe_collider_top_left_point = { -pipe_sprite->get_unit_width() / 2.0f, -empty_space };
+        Vec2f bottom_pipe_collider_bottom_right_point = { pipe_sprite->get_unit_width() / 2.0f, -pipe_sprite->get_unit_height() / 2.0f };
+        pipe1->add_component<Collider>(bottom_pipe_collider_top_left_point, bottom_pipe_collider_bottom_right_point);
+        pipe2->add_component<Collider>(bottom_pipe_collider_top_left_point, bottom_pipe_collider_bottom_right_point);
         
-        Vec2f emptySpaceTriggerTopLeftPoint = { -pipeSprite->get_unit_width() / 3.5f, emptySpace };
-        Vec2f emptySpaceTriggerBottomRightPoint = { pipeSprite->get_unit_width() / 3.5f, -emptySpace };
-        pipe1->add_component<Collider>(emptySpaceTriggerTopLeftPoint, emptySpaceTriggerBottomRightPoint, true);
-        pipe2->add_component<Collider>(emptySpaceTriggerTopLeftPoint, emptySpaceTriggerBottomRightPoint, true);
+        Vec2f empty_space_trigger_top_left_point = { -pipe_sprite->get_unit_width() / 3.5f, empty_space };
+        Vec2f empty_space_trigger_bottom_right_point = { pipe_sprite->get_unit_width() / 3.5f, -empty_space };
+        pipe1->add_component<Collider>(empty_space_trigger_top_left_point, empty_space_trigger_bottom_right_point, true);
+        pipe2->add_component<Collider>(empty_space_trigger_top_left_point, empty_space_trigger_bottom_right_point, true);
 
-        flappyBird->add_component<Flying>(FLY_FORCE)->disable();
+        flappy_bird->add_component<Flying>(FLY_FORCE, input)->disable();
         
-        auto flappyBirdSprite = flappyBird->get_component<SpriteRenderer>()->get_sprite();
-        Vec2f flappyBirdColliderTopLeftPoint = { -flappyBirdSprite->get_unit_width() / 2.0f, flappyBirdSprite->get_unit_height() / 2.0f };
-        Vec2f flappyBirdColliderBottomRightPoint = { flappyBirdSprite->get_unit_width() / 2.0f, -flappyBirdSprite->get_unit_height() / 2.0f};
-        flappyBird->add_component<Collider>(flappyBirdColliderTopLeftPoint, flappyBirdColliderBottomRightPoint);
+        auto flappy_bird_sprite = flappy_bird->get_component<SpriteRenderer>()->get_sprite();
+        Vec2f flappy_bird_collider_top_left_point = { -flappy_bird_sprite->get_unit_width() / 2.0f, flappy_bird_sprite->get_unit_height() / 2.0f };
+        Vec2f flappy_bird_collider_bottom_right_point = { flappy_bird_sprite->get_unit_width() / 2.0f, -flappy_bird_sprite->get_unit_height() / 2.0f};
+        flappy_bird->add_component<Collider>(flappy_bird_collider_top_left_point, flappy_bird_collider_bottom_right_point);
 
-        groundY = ground1->get_transform()->get_position().y + groundSprite->get_unit_height() / 2;
-        airY = -(ground1->get_transform()->get_position().y - groundSprite->get_unit_height() / 2) - 0.1f;
+        ground_y = ground1->get_transform()->get_position().y + ground_sprite->get_unit_height() / 2;
+        air_y = -(ground1->get_transform()->get_position().y - ground_sprite->get_unit_height() / 2) - 0.1f;
     }
 
     GameState::~GameState() {
-        endGameState = nullptr;
-        flappyBird = nullptr;
+        end_game_state = nullptr;
+        flappy_bird = nullptr;
     }
 
     void GameState::enter() {
-        auto flying = flappyBird->get_component<Flying>();
+        auto flying = flappy_bird->get_component<Flying>();
         flying->set_velocity(FLY_FORCE);
         flying->enable();
 
@@ -75,11 +77,11 @@ namespace game::core::fsm {
     }
 
     void GameState::update() {
-        if (flappyBird->get_transform()->get_position().y <= groundY) {
+        if (flappy_bird->get_transform()->get_position().y <= ground_y) {
             transition_to_end_game_state();
         }
         
-        if (flappyBird->get_transform()->get_position().y >= airY) {
+        if (flappy_bird->get_transform()->get_position().y >= air_y) {
             transition_to_end_game_state();
         }
         
@@ -88,24 +90,24 @@ namespace game::core::fsm {
         }
     }
 
-    bool GameState::pipe_player_collision_check(shared_ptr<GameObject> gameObject) const {
-        auto objColliders = gameObject->get_components<Collider>();
-        auto objTransform = gameObject->get_transform();
+    bool GameState::pipe_player_collision_check(shared_ptr<GameObject> game_object) const {
+        auto obj_colliders = game_object->get_components<Collider>();
+        auto obj_transform = game_object->get_transform();
 
-        auto playerCollider = flappyBird->get_component<Collider>();
-        auto playerTransform = flappyBird->get_transform();
+        auto player_collider = flappy_bird->get_component<Collider>();
+        auto player_transform = flappy_bird->get_transform();
 
-        Vec2f playerTopLeft = playerCollider->get_top_left() + playerTransform->get_position();
-        Vec2f playerBottomRight = playerCollider->get_bottom_right() + playerTransform->get_position();
+        Vec2f player_top_left = player_collider->get_top_left() + (Vec2f)player_transform->get_position();
+        Vec2f player_bottom_right = player_collider->get_bottom_right() + (Vec2f)player_transform->get_position();
         
-        for (const auto& collider : objColliders) {
-            Vec2f objTopLeft = collider->get_top_left() + objTransform->get_position();
-            Vec2f objBottomRight = collider->get_bottom_right() + objTransform->get_position();
+        for (const auto& collider : obj_colliders) {
+            Vec2f obj_top_left = collider->get_top_left() + (Vec2f)obj_transform->get_position();
+            Vec2f obj_bottom_right = collider->get_bottom_right() + (Vec2f)obj_transform->get_position();
 
-            bool collision = objTopLeft.x <= playerBottomRight.x &&
-                objBottomRight.x >= playerTopLeft.x &&
-                objTopLeft.y >= playerBottomRight.y &&
-                objBottomRight.y <= playerTopLeft.y;
+            bool collision = obj_top_left.x <= player_bottom_right.x &&
+                obj_bottom_right.x >= player_top_left.x &&
+                obj_top_left.y >= player_bottom_right.y &&
+                obj_bottom_right.y <= player_top_left.y;
 
             if (collision && collider->is_trigger() && !collider->is_triggered()) {
                 collider->enter_trigger();
@@ -121,7 +123,7 @@ namespace game::core::fsm {
     }
 
     void GameState::exit() {
-        flappyBird->get_component<Flying>()->disable();
+        flappy_bird->get_component<Flying>()->disable();
         ground1->get_component<CyclicMovement>()->disable();
         ground2->get_component<CyclicMovement>()->disable();
         pipe1->get_component<CyclicMovement>()->disable();
@@ -129,10 +131,10 @@ namespace game::core::fsm {
     }
 
     void GameState::set_end_game_state(shared_ptr<State> endGameState) {
-        this->endGameState = std::move(endGameState);
+        this->end_game_state = std::move(endGameState);
     }
 
     void GameState::transition_to_end_game_state() {
-        StateMachine::set_state(endGameState);
+        StateMachine::set_state(end_game_state);
     }
 }

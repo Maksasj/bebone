@@ -6,33 +6,33 @@
 
 namespace bebone::core {
     /// Meta function that is used for accessing function traits such as argument types
-    template<typename> struct function_traits;
+    template<typename> struct FunctionTraits;
 
     /// Meta function that is used for accessing function traits such as argument types
     template <typename Function>
-    struct function_traits : public function_traits<decltype(&std::remove_reference<Function>::type::operator())> {
+    struct FunctionTraits : public FunctionTraits<decltype(&std::remove_reference<Function>::type::operator())> {
 
     };
 
     /// Meta function that is used for accessing function traits such as argument types
     template <typename ClassType, typename ReturnType, typename... Arguments>
-    struct function_traits<ReturnType(ClassType::*)(Arguments...) const> : function_traits<ReturnType(*)(Arguments...)> {
+    struct FunctionTraits<ReturnType(ClassType::*)(Arguments...) const> : FunctionTraits<ReturnType(*)(Arguments...)> {
 
     };
 
     /// Meta function that is used for accessing function traits such as argument types
     template <typename ClassType, typename ReturnType, typename... Arguments>
-    struct function_traits<ReturnType(ClassType::*)(Arguments...)> : function_traits<ReturnType(*)(Arguments...)> {
+    struct FunctionTraits<ReturnType(ClassType::*)(Arguments...)> : FunctionTraits<ReturnType(*)(Arguments...)> {
 
     };
 
     /// Meta function that is used for accessing function traits such as argument types
     template <typename    ReturnType, typename... Arguments>
-    struct function_traits<ReturnType(*)(Arguments...)> {
+    struct FunctionTraits<ReturnType(*)(Arguments...)> {
         typedef ReturnType result_type;
 
         template <std::size_t Index>
-        using argument = typename std::tuple_element<Index, std::tuple<Arguments...>>::type;
+        using Argument = typename std::tuple_element<Index, std::tuple<Arguments...>>::type;
 
         static const std::size_t arity = sizeof...(Arguments);
     };

@@ -8,12 +8,12 @@ namespace bexel {
         private:
 
         protected:
-            Vec3f m_chunkPosition;
+            Vec3f chunk_position;
 
         public:
-            Block(const Vec3f& chunkPosition);
+            Block(const Vec3f& chunk_position);
 
-            void append_mesh(MeshBuilder& meshBuilder, World& world, Chunk& chunk) override;
+            void append_mesh(MeshBuilder& mesh_builder, World& world, Chunk& chunk) override;
     };
 }
 

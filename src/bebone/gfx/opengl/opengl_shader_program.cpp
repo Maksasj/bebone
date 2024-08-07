@@ -1,6 +1,6 @@
 #include "opengl_shader_program.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     GLShaderProgram::GLShaderProgram(const GLShader& vertex, const GLShader& fragment) {
         create_shader_program(vertex, fragment);
 
@@ -10,7 +10,7 @@ namespace bebone::gfx::opengl {
         }
 
         // Todo also look there
-        m_properties = vertex.get_properties() | fragment.get_properties();
+        properties = vertex.get_properties() | fragment.get_properties();
     }
 
     GLShaderProgram::~GLShaderProgram() {
@@ -28,84 +28,84 @@ namespace bebone::gfx::opengl {
 
     void GLShaderProgram::check_program_linking(const GLuint& program) {
         i32 success;
-        char infoLog[512];
+        char info_log[512];
 
         glGetProgramiv(program, GL_LINK_STATUS, &success);
         if (!success) {
-            glGetProgramInfoLog(program, 512, nullptr, infoLog);
+            glGetProgramInfoLog(program, 512, nullptr, info_log);
 
             // Todo resolve this
-            std::cout << infoLog << "\n";
+            std::cout << info_log << "\n";
 
-            throw std::runtime_error("Failed to link shader program, with error: " + std::string(infoLog));
+            throw std::runtime_error("Failed to link shader program, with error: " + std::string(info_log));
         }
     }
 
-    GLint GLShaderProgram::get_uniform_location(const char* uniformName) const {
-        return glGetUniformLocation(id, uniformName);
+    GLint GLShaderProgram::get_uniform_location(const char* uniform_name) const {
+        return glGetUniformLocation(id, uniform_name);
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const i32& value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const i32& value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
             glUniform1i(uniform, value);
         }
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const GLsizei& size, const i32* value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const GLsizei& size, const i32* value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
             glUniform1iv(uniform, size, value);
         }
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const u32& value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const u32& value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
             glUniform1ui(uniform, value);
         }
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const f32& value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const f32& value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
             glUniform1f(uniform, value);
         }
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const Vec2f& value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const Vec2f& value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
             glUniform2f(uniform, value.x, value.y);
         }
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const Vec3f& value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const Vec3f& value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
             glUniform3f(uniform, value.x, value.y, value.z);
         }
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const Vec4f& value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const Vec4f& value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
             glUniform4f(uniform, value.x, value.y, value.z, value.w);
         }
     }
 
-    void GLShaderProgram::set_uniform(const char* uniformName, const Mat4f& value) const {
-        if(m_properties & ENABLE_UNIFORMS) {
-            const auto uniform = get_uniform_location(uniformName);
-            glUniformMatrix4fv(uniform, 1, GL_FALSE, value.e);
+    void GLShaderProgram::set_uniform(const char* uniform_name, const Mat4f& value) const {
+        if(properties & EnableUniforms) {
+            const auto uniform = get_uniform_location(uniform_name);
+            glUniformMatrix4fv(uniform, 1, GL_FALSE, value.get_raw());
         }
     }
 
-    void GLShaderProgram::bind_buffer(const char* uniformBufferName, const i32& binding, const GLUniformBufferObject& buffer) const {
+    void GLShaderProgram::bind_buffer(const char* uniform_buffer_name, const i32& binding, const GLUniformBufferObject& buffer) const {
         buffer.bind_buffer_base(binding);
 
-        const auto uboIndex = glGetUniformBlockIndex(id, uniformBufferName);
-        glUniformBlockBinding(id, uboIndex, binding);
+        const auto ubo_index = glGetUniformBlockIndex(id, uniform_buffer_name);
+        glUniformBlockBinding(id, ubo_index, binding);
     }
 
     void GLShaderProgram::enable() {

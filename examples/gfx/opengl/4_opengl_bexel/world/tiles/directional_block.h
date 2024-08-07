@@ -8,7 +8,7 @@ namespace bexel {
         private:
 
         public:
-            DirectionalBlock(const Vec3f& chunkPosition);
+            DirectionalBlock(const Vec3f& chunk_position);
 
             virtual const vector<Vec2f>& get_up_tex_coords() = 0;
             virtual const vector<Vec2f>& get_down_tex_coords() = 0;
@@ -17,7 +17,7 @@ namespace bexel {
             virtual const vector<Vec2f>& get_forward_tex_coords() = 0;
             virtual const vector<Vec2f>& get_back_tex_coords() = 0;
 
-            void append_mesh(MeshBuilder& meshBuilder, World& world, Chunk& chunk) override;
+            void append_mesh(MeshBuilder& mesh_builder, World& world, Chunk& chunk) override;
     };
 }
 

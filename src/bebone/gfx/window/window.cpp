@@ -2,11 +2,11 @@
 
 namespace bebone::gfx {
     Window::Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties)
-        : windowHandler(this),
+        : window_handler(this),
           width(width),
           height(height)
     {
-        if(properties.enableResize)
+        if(properties.enable_resize)
             glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         else
             glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
@@ -30,68 +30,65 @@ namespace bebone::gfx {
         glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
         glfwSetKeyCallback(window, glfw_key_callback);
 
-        add_listener(inputHandler.get_key_listener());
-        add_listener(inputHandler.get_mouse_listener());
-
-        add_listener(windowHandler.get_window_size_listener());
+        add_listener(window_handler.get_window_size_listener());
     }
 
     Window::~Window() {
         glfwDestroyWindow(window);
     }
 
-    void Window::glfw_window_pos_callback(GLFWwindow* glfwWindow, int xPos, int yPos) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
-        window->fire(WindowPosEvent(xPos, yPos));
+    void Window::glfw_window_pos_callback(GLFWwindow* glfw_window, int x_pos, int y_pos) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
+        window->fire(WindowPosEvent(x_pos, y_pos));
     }
 
-    void Window::glfw_window_size_callback(GLFWwindow* glfwWindow, int width, int height) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_window_size_callback(GLFWwindow* glfw_window, int width, int height) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(WindowSizeEvent(width, height));
     }
 
-    void Window::glfw_window_close_callback(GLFWwindow* glfwWindow) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_window_close_callback(GLFWwindow* glfw_window) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(WindowCloseEvent());
     }
 
-    void Window::glfw_window_refresh_callback(GLFWwindow* glfwWindow) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_window_refresh_callback(GLFWwindow* glfw_window) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(WindowRefreshEvent());
     }
 
-    void Window::glfw_window_focus_callback(GLFWwindow* glfwWindow, int focused) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_window_focus_callback(GLFWwindow* glfw_window, int focused) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(WindowFocusEvent(focused));
     }
 
-    void Window::glfw_window_iconify_callback(GLFWwindow* glfwWindow, int iconified) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_window_iconify_callback(GLFWwindow* glfw_window, int iconified) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(WindowIconifyEvent(iconified));
     }
 
-    void Window::glfw_window_maximize_callback(GLFWwindow* glfwWindow, int maximized) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_window_maximize_callback(GLFWwindow* glfw_window, int maximized) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(WindowMaximizeEvent(maximized));
     }
 
-    void Window::glfw_framebuffer_size_callback(GLFWwindow* glfwWindow, int width, int height) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(FrameBufferSizeEvent(width, height));
     }
 
-    void Window::glfw_window_content_scale_callback(GLFWwindow* glfwWindow, float xscale, float yscale) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
-        window->fire(WindowContentScaleEvent(xscale, yscale));
+    void Window::glfw_window_content_scale_callback(GLFWwindow* glfw_window, float x_scale, float y_scale) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
+        window->fire(WindowContentScaleEvent(x_scale, y_scale));
     }
 
-    void Window::glfw_mouse_button_callback(GLFWwindow* glfwWindow, int button, int action, int mods) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_mouse_button_callback(GLFWwindow* glfw_window, int button, int action, int mods) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(InputMouseButtonEvent(button, action, mods));
     }
 
-    void Window::glfw_key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
-        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    void Window::glfw_key_callback(GLFWwindow* glfw_window, int key, int scancode, int action, int mods) {
+        auto* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfw_window));
         window->fire(InputKeyEvent(key, scancode, action, mods));
     }
 
@@ -115,7 +112,9 @@ namespace bebone::gfx {
         return static_cast<f32>(width) / static_cast<f32>(height);
     }
 
-    void Window::execute_input_actions() const {
-        inputHandler.execute_input_actions();
+    void Window::end_frame() {
+        double time_diff = watch.get_time_difference();
+        Time::set_delta_time(time_diff);
+        watch.update_timestamp();
     }
 }

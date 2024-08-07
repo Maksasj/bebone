@@ -16,11 +16,11 @@ namespace bebone::gfx {
              * @param title - window name/title
              * @param width - window width
              * @param height - window height
-             * @param gfxAPI - graphics API
+             * @param gfx_api - graphics API
              *
              * @return Window object
             */
-            static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfxAPI, const WindowProperties& properties = {});
+            static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties = {});
     };
 }
 

@@ -1,29 +1,29 @@
 #include "batch.h"
 
 namespace game::core {
-    Batch::Batch(shared_ptr<GLShaderProgram>& shaderProgram, shared_ptr<OrthographicCamera>& camera, const size_t& quadLimit) :
-        camera(camera), shaderProgram(shaderProgram), cachedTextureUnits(map<shared_ptr<GLTexture2D>, int>()), texturesToDraw(vector<shared_ptr<GLTexture2D>>()), currentTextureUnitIndex(0), indicesSize(0), quadSize(0), quadLimit(quadLimit) {
-        
-        textureUnitCapacity = min({GLGpuProperties::texture_unit_capacity(), MAX_TEXTURE_UNITS});
+    Batch::Batch(shared_ptr<GLShaderProgram>& shader_program, shared_ptr<OrthographicCamera>& camera, const size_t& quad_limit) :
+            camera(camera), shader_program(shader_program), cached_texture_units(map<shared_ptr<GLTexture2D>, int>()), textures_to_draw(vector<shared_ptr<GLTexture2D>>()), current_texture_unit_index(0), indices_size(0), quad_size(0), quad_limit(quad_limit) {
 
-        size_t indexLimit = quadLimit * 6;
-        size_t vertexLimit = quadLimit * 4;
+        texture_unit_capacity = min({GLGpuProperties::texture_unit_capacity(), max_texture_units});
+
+        size_t index_limit = quad_limit * 6;
+        size_t vertex_limit = quad_limit * 4;
 
         vao = make_shared<GLVertexArrayObject>();
 
         vao->bind();
-            vbo = make_shared<GLVertexBufferObject>(nullptr, vertexLimit * sizeof(ShaderVertex), GL_DYNAMIC_DRAW);
-            ebo = make_shared<GLElementBufferObject>(nullptr, indexLimit * sizeof(u32), GL_DYNAMIC_DRAW);
+            vbo = make_shared<GLVertexBufferObject>(nullptr, vertex_limit * sizeof(ShaderVertex), GL_DYNAMIC_DRAW);
+            ebo = make_shared<GLElementBufferObject>(nullptr, index_limit * sizeof(u32), GL_DYNAMIC_DRAW);
 
             vao->link_attributes(*vbo, 0, 3, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, position));
-            vao->link_attributes(*vbo, 1, 2, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, textureCoordinates));
-            vao->link_attributes(*vbo, 2, 1, GL_INT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, textureUnit));
+            vao->link_attributes(*vbo, 1, 2, GL_FLOAT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, texture_coordinates));
+            vao->link_attributes(*vbo, 2, 1, GL_INT, sizeof(ShaderVertex), (void*)offsetof(ShaderVertex, texture_unit));
         vao->unbind();
         vbo->unbind();
         ebo->unbind();
 
         #ifdef BATCH_DEBUG
-        drawCalls = 0;
+        draw_calls = 0;
         #endif
     }
 
@@ -37,75 +37,69 @@ namespace game::core {
         ebo->destroy();
         ebo = nullptr;
 
-        shaderProgram->destroy();
-        shaderProgram = nullptr;
+        shader_program->destroy();
+        shader_program = nullptr;
     }
 
-    void Batch::add(const shared_ptr<GameObject>& gameObject) {
-        if (gameObjectsToDraw.find(gameObject) == gameObjectsToDraw.end()) {
-            auto renderer = gameObject->get_component<SpriteRenderer>();
+    void Batch::add(const shared_ptr<GameObject>& game_object) {
+        if (game_objects_to_draw.find(game_object) == game_objects_to_draw.end()) {
+            auto renderer = game_object->get_component<SpriteRenderer>();
             if (renderer != nullptr) {
-                gameObjectsToDraw[gameObject] = renderer;
+                game_objects_to_draw[game_object] = renderer;
             } else {
-                cout << gameObject->get_name() << " does not have a SpriteRenderer!";
+                cout << game_object->get_name() << " does not have a SpriteRenderer!";
             }
         }
     }
 
-    void Batch::remove(const shared_ptr<GameObject>& gameObject) {
-        gameObjectsToDraw.erase(gameObject);
+    void Batch::remove(const shared_ptr<GameObject>& game_object) {
+        game_objects_to_draw.erase(game_object);
     }
 
     void Batch::render() {
-        gameObjectsToDrawIterator = gameObjectsToDraw.begin();
+        game_objects_to_draw_iterator = game_objects_to_draw.begin();
 
         #ifdef BATCH_DEBUG
-        drawCalls = 0;
+        draw_calls = 0;
         #endif
 
-        while (gameObjectsToDrawIterator != gameObjectsToDraw.end()) {
+        while (game_objects_to_draw_iterator != game_objects_to_draw.end()) {
             upload_textures();
 
-            shaderProgram->enable();
+            shader_program->enable();
 
-            Mat4f model = Mat4f::identity();
-            model = model * model.scale(1.0f);
-            model = model * omni::types::trait_bryan_angle_yxz(Vec3f(0.0f, 0.0f, 0.0f));
-            model = model * model.translation(Vec3f(0.0f, 0.0f, 0.0f));
-
-            for (auto texture : texturesToDraw) {
-                texture->bind_texture_unit(cachedTextureUnits[texture]);
+            for (const auto& texture : textures_to_draw) {
+                texture->bind_texture_unit(cached_texture_units[texture]);
             }
 
             vao->bind();
-                shaderProgram->set_uniform("u_Model", model);
-                shaderProgram->set_uniform("u_Projection", camera->get_projection_matrix());
-                shaderProgram->set_uniform("u_Textures", textureUnitCapacity, samplers);
-                GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indicesSize), GL_UNSIGNED_INT, nullptr);
+                shader_program->set_uniform("u_Projection", camera->get_projection_matrix());
+                shader_program->set_uniform("u_Textures", texture_unit_capacity, samplers);
+                GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices_size), GL_UNSIGNED_INT, nullptr);
             vao->unbind();
 
-            quadSize = 0;
-            indicesSize = 0;
-            currentTextureUnitIndex = 0;
-            cachedTextureUnits.clear();
-            texturesToDraw.clear();
+            quad_size = 0;
+            indices_size = 0;
+            current_texture_unit_index = 0;
+            cached_texture_units.clear();
+            textures_to_draw.clear();
 
             #ifdef BATCH_DEBUG
-            ++drawCalls;
+            ++draw_calls;
             #endif
         }
     }
 
     void Batch::upload_textures() {
-        while (gameObjectsToDrawIterator != gameObjectsToDraw.end()) {
-            if (quadSize + 1 > quadLimit) {
+        while (game_objects_to_draw_iterator != game_objects_to_draw.end()) {
+            if (quad_size + 1 > quad_limit) {
                 return;
             }
 
-            auto gameObject = gameObjectsToDrawIterator->first;
-            auto renderer = gameObjectsToDrawIterator->second;
+            auto game_object = game_objects_to_draw_iterator->first;
+            auto renderer = game_objects_to_draw_iterator->second;
 
-            auto transform = gameObject->get_transform();
+            auto transform = game_object->get_transform();
             auto sprite = renderer->get_sprite();
             auto texture = sprite->get_texture();
 
@@ -113,33 +107,33 @@ namespace game::core {
                 return;
             }
 
-            auto quad = create_quad(sprite, transform, cachedTextureUnits[texture]);
-            size_t verticesSize = quad.size() * sizeof(ShaderVertex);
+            auto quad = create_quad(sprite, transform, cached_texture_units[texture]);
+            size_t vertices_size = quad.size() * sizeof(ShaderVertex);
 
-            vbo->buffer_sub_data(quadSize * verticesSize, verticesSize, quad.data());
-            ++quadSize;
+            vbo->buffer_sub_data(quad_size * vertices_size, vertices_size, quad.data());
+            ++quad_size;
 
             add_indices();
-            ++gameObjectsToDrawIterator;
+            ++game_objects_to_draw_iterator;
         }
     }
 
     bool Batch::try_cache_texture(const shared_ptr<GLTexture2D>& texture) {
-        if (currentTextureUnitIndex >= textureUnitCapacity) {
+        if (current_texture_unit_index >= texture_unit_capacity) {
             return false;
         }
 
-        if (cachedTextureUnits.find(texture) == cachedTextureUnits.end()) {
-            cachedTextureUnits[texture] = currentTextureUnitIndex;
-            ++currentTextureUnitIndex;
+        if (cached_texture_units.find(texture) == cached_texture_units.end()) {
+            cached_texture_units[texture] = current_texture_unit_index;
+            ++current_texture_unit_index;
 
-            texturesToDraw.push_back(texture);
+            textures_to_draw.push_back(texture);
         }
 
         return true;
     }
 
-    array<ShaderVertex, 4> Batch::create_quad(const shared_ptr<Sprite>& sprite, const shared_ptr<Transform>& transform, const int& textureUnit) {
+    array<ShaderVertex, 4> Batch::create_quad(const shared_ptr<Sprite>& sprite, const shared_ptr<Transform>& transform, const int& texture_unit) {
         Vec3f position = transform->get_position();
         f32 scale = transform->get_scale();
         f32 rotation = transform->get_rotation();
@@ -149,62 +143,62 @@ namespace game::core {
         Vec2f tmp;
 
         ShaderVertex v0;
-        tmp = rotateVertex( {-width, -height}, rotation);
+        tmp = rotate_vertex({-width, -height}, rotation);
         v0.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
-        v0.textureCoordinates = { 0.0f, 0.0f };
-        v0.textureUnit = textureUnit;
+        v0.texture_coordinates = {0.0f, 0.0f };
+        v0.texture_unit = texture_unit;
 
         ShaderVertex v1;
-        tmp = rotateVertex( {-width, height}, rotation);
+        tmp = rotate_vertex({-width, height}, rotation);
         v1.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
-        v1.textureCoordinates = { 0.0f, 1.0f };
-        v1.textureUnit = textureUnit;
+        v1.texture_coordinates = {0.0f, 1.0f };
+        v1.texture_unit = texture_unit;
 
         ShaderVertex v2;
-        tmp = rotateVertex( {width, height}, rotation);
+        tmp = rotate_vertex({width, height}, rotation);
         v2.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
-        v2.textureCoordinates = { 1.0f, 1.0f };
-        v2.textureUnit = textureUnit;
+        v2.texture_coordinates = {1.0f, 1.0f };
+        v2.texture_unit = texture_unit;
 
         ShaderVertex v3;
-        tmp = rotateVertex( {width, -height}, rotation);
+        tmp = rotate_vertex({width, -height}, rotation);
         v3.position = Vec3f(position.x + tmp.x, position.y + tmp.y, position.z);
-        v3.textureCoordinates = { 1.0f, 0.0f };
-        v3.textureUnit = textureUnit;
+        v3.texture_coordinates = {1.0f, 0.0f };
+        v3.texture_unit = texture_unit;
 
         return { v0, v1, v2, v3 };
     }
 
-    Vec2f Batch::rotateVertex(const Vec2f& v, const f32& angle) const {
-        Vec2f newV = v;
+    Vec2f Batch::rotate_vertex(const Vec2f& v, const f32& angle) const {
+        Vec2f new_v = v;
         
         double radian = Math::deg_to_rad(angle);
-        newV.x = v.x * cos(radian) - v.y * sin(radian);
-        newV.y = v.x * sin(radian) + v.y * cos(radian);
-        return newV;
+        new_v.x = v.x * cos(radian) - v.y * sin(radian);
+        new_v.y = v.x * sin(radian) + v.y * cos(radian);
+        return new_v;
     }
 
     void Batch::add_indices() {
         unsigned int indices[6];
-        size_t totalVerticesSize = quadSize * 4;
+        size_t total_vertices_size = quad_size * 4;
 
-        indices[0] = totalVerticesSize - 4;
-        indices[1] = totalVerticesSize - 3;
-        indices[2] = totalVerticesSize - 1;
+        indices[0] = total_vertices_size - 4;
+        indices[1] = total_vertices_size - 3;
+        indices[2] = total_vertices_size - 1;
 
-        indices[3] = totalVerticesSize - 3;
-        indices[4] = totalVerticesSize - 2;
-        indices[5] = totalVerticesSize - 1;
+        indices[3] = total_vertices_size - 3;
+        indices[4] = total_vertices_size - 2;
+        indices[5] = total_vertices_size - 1;
 
-        ebo->buffer_sub_data(indicesSize * sizeof(unsigned int), sizeof(indices), indices);
+        ebo->buffer_sub_data(indices_size * sizeof(unsigned int), sizeof(indices), indices);
 
-        indicesSize += 6;
+        indices_size += 6;
     }
 
 #pragma region debug
     #ifdef BATCH_DEBUG
     size_t Batch::get_draw_call_count() const {
-        return drawCalls;
+        return draw_calls;
     }
     #endif
 #pragma endregion

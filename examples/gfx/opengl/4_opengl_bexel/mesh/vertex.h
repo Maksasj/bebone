@@ -1,14 +1,12 @@
 #ifndef BEXEL_VERTEX_H
 #define BEXEL_VERTEX_H
 
-#include "bebone.h"
+#include "bebone/bebone.h"
 
 namespace bexel {
-    using namespace bebone::core;
-    using namespace bebone;
     using namespace std;
+    using namespace bebone::core;
     using namespace bebone::gfx;
-    using namespace bebone::gfx::opengl;
 
     struct Vertex {
         Vec3f pos;
@@ -23,18 +21,18 @@ namespace bexel {
         }
 
         void rotate(const Mat4f& matrix) {
-            f32 resultX = pos.x * matrix.e[0 * 4 + 0] + pos.y * matrix.e[1 * 4 + 0] + pos.z * matrix.e[2 * 4 + 0] + 1.0f * matrix.e[3 * 4 + 0];
-            f32 resultY = pos.x * matrix.e[0 * 4 + 1] + pos.y * matrix.e[1 * 4 + 1] + pos.z * matrix.e[2 * 4 + 1] + 1.0f * matrix.e[3 * 4 + 1];
-            f32 resultZ = pos.x * matrix.e[0 * 4 + 2] + pos.y * matrix.e[1 * 4 + 2] + pos.z * matrix.e[2 * 4 + 2] + 1.0f * matrix.e[3 * 4 + 2];
-            const f32 resultW = pos.x * matrix.e[0 * 4 + 3] + pos.y * matrix.e[1 * 4 + 3] + pos.z * matrix.e[2 * 4 + 3] + 1.0f * matrix.e[3 * 4 + 3];
+            f32 result_x = Vec3f::dot(pos, (Vec3f)matrix[0]) + matrix(3, 0);
+            f32 result_y = Vec3f::dot(pos, (Vec3f)matrix[1]) + matrix(3, 1);
+            f32 result_z = Vec3f::dot(pos, (Vec3f)matrix[2]) + matrix(3, 2);
+            const f32 result_w = Vec3f::dot(pos, (Vec3f)matrix[3]) + matrix(3, 3);
 
-            if (resultW != 0.0f) {
-                resultX /= resultW;
-                resultY /= resultW;
-                resultZ /= resultW;
+            if (result_w != 0.0f) {
+                result_x /= result_w;
+                result_y /= result_w;
+                result_z /= result_w;
             }
 
-            pos = Vec3f(resultX, resultY, resultZ);
+            pos = Vec3f(result_x, result_y, result_z);
         }
     };
 }

@@ -1,17 +1,17 @@
 #include "shader_source.h"
 
 namespace bebone::gfx {
-    ShaderSource::ShaderSource(const std::string& p_shaderSource, const ShaderType& p_shaderType)
-        : m_shaderSource(p_shaderSource),
-          m_shaderType(p_shaderType) {
+    ShaderSource::ShaderSource(const std::string& shader_source, const ShaderType& shader_type)
+        : shader_source(shader_source),
+          shader_type(shader_type) {
 
     }
 
     const ShaderType& ShaderSource::get_type() const {
-        return m_shaderType;
+        return shader_type;
     }
 
     const std::string& ShaderSource::get_shader_source() const {
-        return m_shaderSource;
+        return shader_source;
     }
 }

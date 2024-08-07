@@ -5,17 +5,17 @@
 #include "opengl_shader_properties.h"
 #include "opengl_shader.h"
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     using namespace bebone::core;
 
     /// Shader Program
     class GLShaderProgram : private NonCopyable {
         private:
             GLuint id;
-            GLShaderProperties m_properties;
+            GLShaderProperties properties;
 
             void create_shader_program(const GLShader& vertex, const GLShader& fragment);
-            GLint get_uniform_location(const char* uniformName) const;
+            GLint get_uniform_location(const char* uniform_name) const;
 
             static void check_program_linking(const GLuint& program);
 
@@ -30,68 +30,68 @@ namespace bebone::gfx::opengl {
 
             /*!
              * glUniform1i
-             * @param uniformName - uniform name from the shader
+             * @param uniform_name - uniform name from the shader
              * @param value - the value to be assigned to the uniform
              */
-            void set_uniform(const char* uniformName, const i32& value) const;
+            void set_uniform(const char* uniform_name, const i32& value) const;
 
             /*!
              * glUniform1iv
-             * @param uniformName - uniform name from the shader
+             * @param uniform_name - uniform name from the shader
              * @param size - array size (not in bytes)
              * @param value - the value to be assigned to the uniform
              */
-            void set_uniform(const char* uniformName, const GLsizei& size, const i32* value) const;
+            void set_uniform(const char* uniform_name, const GLsizei& size, const i32* value) const;
 
             /*!
              * glUniform1ui
-             * @param uniformName - uniform name from the shader
+             * @param uniform_name - uniform name from the shader
              * @param value - the value to be assigned to the uniform
              */
-            void set_uniform(const char* uniformName, const u32& value) const;
+            void set_uniform(const char* uniform_name, const u32& value) const;
 
             /*!
              * glUniform1f
-             * @param uniformName - uniform name from the shader
+             * @param uniform_name - uniform name from the shader
              * @param value - the value to be assigned to the uniform
              */
-            void set_uniform(const char* uniformName, const f32& value) const;
+            void set_uniform(const char* uniform_name, const f32& value) const;
 
             /*!
             * glUniform2f
-            * @param uniformName - uniform name from the shader
+            * @param uniform_name - uniform name from the shader
             * @param value - the value to be assigned to the uniform
             */
-            void set_uniform(const char* uniformName, const Vec2f& value) const;
+            void set_uniform(const char* uniform_name, const Vec2f& value) const;
 
             /*!
             * glUniform3f
-            * @param uniformName - uniform name from the shader
+            * @param uniform_name - uniform name from the shader
             * @param value - the value to be assigned to the uniform
             */
-            void set_uniform(const char* uniformName, const Vec3f& value) const;
+            void set_uniform(const char* uniform_name, const Vec3f& value) const;
 
             /*!
             * glUniform4f
-            * @param uniformName - uniform name from the shader
+            * @param uniform_name - uniform name from the shader
             * @param value - the value to be assigned to the uniform
             */
-            void set_uniform(const char* uniformName, const Vec4f& value) const;
+            void set_uniform(const char* uniform_name, const Vec4f& value) const;
 
             /*!
              * glUniformMatrix4fv
-             * @param uniformName - uniform name from the shader
+             * @param uniform_name - uniform name from the shader
              * @param value - the value to be assigned to the uniform
              */
-            void set_uniform(const char* uniformName, const Mat4f& value) const;
+            void set_uniform(const char* uniform_name, const Mat4f& value) const;
 
             /*!
             * Binds uniform buffer object to shader program
-            * @param uniformBufferName - uniform buffer name
+            * @param uniform_buffer_name - uniform buffer name
             * @param binding - uniform buffer binding
             * @param buffer - GLUniformBufferObject object
             */
-            void bind_buffer(const char* uniformBufferName, const i32& binding, const GLUniformBufferObject& buffer) const;
+            void bind_buffer(const char* uniform_buffer_name, const i32& binding, const GLUniformBufferObject& buffer) const;
 
             /// Enables shader program
             void enable();

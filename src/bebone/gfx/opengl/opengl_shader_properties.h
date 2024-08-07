@@ -1,10 +1,10 @@
 #ifndef _BEBONE_GFX_OPENGL_OPENGL_SHADER_PROPERTIES_H_
 #define _BEBONE_GFX_OPENGL_OPENGL_SHADER_PROPERTIES_H_
 
-namespace bebone::gfx::opengl {
+namespace bebone::gfx {
     enum GLShaderProperties {
-        NONE = (1 << 0),
-        ENABLE_UNIFORMS = (1 << 1),
+        None = (1 << 0),
+        EnableUniforms = (1 << 1),
     };
 
     inline GLShaderProperties operator|(GLShaderProperties first, GLShaderProperties second) {
