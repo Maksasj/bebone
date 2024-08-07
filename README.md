@@ -23,15 +23,13 @@ Cool looking widgets
 
 **Bebone** provides multi layer APIs where each level build on top of previous:
 
-- **[Abstraction]()** basic abstraction layer, abstracts most basic things, such as OpenGL or Vulkan
-- **[System]()** advance abstraction layer, implements generalized systems on top of **abstraction layer**, such as **Renderer**
-- **[App]()** - complete application layer, combines multiple systems into self-contained application 
-
-
+- **[Abstraction]()** - basic abstraction layer. Abstracts most basic things, such as OpenGL or Vulkan
+- **[System]()** - advance abstraction layer. Implements generalized systems on top of abstraction layer, such as Renderer
+- **[App]()** - complete application layer. Combines multiple systems into self-contained application
 
 ## Features ✨
 
-For now **bebone** have severall modules:
+For now **bebone** has several modules:
 
 * [Core module](). Core **bebone** module implements most important abstractions which are widely used across all other modules. Implements **Memory, Debug, Types, Event, Input** abstractions
 * [Graphics module (GFX module)](). **Abstraction layer** module, implements basic abstractions on top of **Graphical APIs** such as **OpenGL** and **Vulkan**. **GFX module**
@@ -46,9 +44,6 @@ For now **bebone** have severall modules:
 * [App module]()
 
 ## Build 🛠
-For now there is only one build method
-
-### Build manually
 
 First of all requirements
   - [CMake](https://cmake.org/) (At least version 3.21)

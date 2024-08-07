@@ -5,12 +5,12 @@ In Bebone you can use event-based input system to add some actions to your keys.
 
 Input system works with ```Action<>``` delegate. Because of this feature, you will subscribe/unsubscribe your keyboard keys and mouse buttons to the 'in-game actions' (such as jumping, running, etc.). You can do this with these two methods:
 ```c++
-void register_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
-void remove_key_action(const KeyCode& keyCode, std::function<void()>& action, const InputType& inputType = InputType::PRESS);
+void register_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::Press);
+void remove_key_action(const KeyCode& key_code, std::function<void()>& action, const InputType& input_type = InputType::Press);
 ```
 * KeyCode — enum, which specifies the key to which you can subscribe an action
 * action — 'in-game action'
-* inputType — enum, which specifies in which case the action will be executed (by default it is set to PRESS)
+* input_type — enum, which specifies in which case the action will be executed (by default it is set to Press)
 
 All that is left to do is to add one command line inside the window loop to allow the framework to handle all the user input (maybe we will change it later):
 ```c++
