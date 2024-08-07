@@ -1,5 +1,3 @@
-#define BEBONE_TYPES_MATRIX_COLUMN_MAJOR_ORDER
-#define BEBONE_TYPES_MATRIX4X4_PROJECTION_MATRIX_INVERSE_Y_AXIS
 #include "bebone/bebone.h"
 
 using namespace bebone::core;
@@ -72,7 +70,7 @@ int main() {
     auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
 
     auto c_transform = CameraTransform {
-        Mat4f::view(Vec3f(0.0f, 0.0f, 10.0f), Vec3f::back, Vec3f::down),
+        Mat4f::view(Vec3f(0.0f, 0.0f, -10.0f), Vec3f::forward, Vec3f::down),
         Mat4f::perspective(1.0472, window->get_aspect(), 0.1f, 100.0f)
     };
 
@@ -88,7 +86,7 @@ int main() {
     f32 t = 0.0f;
     while (!window->closing()) {
         GLFWContext::poll_events();
-        t += Time::get_delta_time();
+        t += Time::get_delta_time() * 0.05f;
 
         uint32_t frame;
         if(!swap_chain->acquire_next_image(device, &frame).is_ok())
