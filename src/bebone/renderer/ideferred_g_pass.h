@@ -14,7 +14,6 @@ namespace bebone::renderer {
             std::shared_ptr<IUniformBuffer> camera_ubo;
 
             // Jobs
-            static const u32 max_queued_jobs = 1000;
             std::vector<RenderQueueTask> queued_jobs;
 
         protected:
@@ -26,10 +25,7 @@ namespace bebone::renderer {
             std::shared_ptr<IAttachment> depth_attachment;
 
         public:
-            IDeferredGPass(
-                const std::shared_ptr<IPassImpl>& impl,
-                const std::string& pass_name,
-                const Vec2i& viewport);
+            IDeferredGPass(const std::shared_ptr<IPassImpl>& impl, const std::string& pass_name, const Vec2i& viewport);
 
             void assemble(IPassAssembler* assember) override;
             void record(ICommandEncoder* encoder) override;

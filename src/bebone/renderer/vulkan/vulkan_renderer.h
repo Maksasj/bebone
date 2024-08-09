@@ -26,7 +26,7 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
 
-            // Main managers
+            // Managers
             std::shared_ptr<VulkanProgramManager> program_manager;
             std::shared_ptr<VulkanTextureManager> texture_manager;
             std::shared_ptr<VulkanMeshManager> mesh_manager;

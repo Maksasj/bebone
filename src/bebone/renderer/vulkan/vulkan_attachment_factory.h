@@ -10,15 +10,14 @@ namespace bebone::renderer {
 
     class VulkanAttachmentFactory : public IAttachmentFactory {
         private:
-            std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<ITextureManager> texture_manager;
 
         public:
-            VulkanAttachmentFactory(const std::shared_ptr<VulkanDevice>& device, const std::shared_ptr<ITextureManager>& texture_manager);
+            VulkanAttachmentFactory(const std::shared_ptr<ITextureManager>& texture_manager);
 
-            std::shared_ptr<IAttachment> create_texture_attachment(const std::string& attachment_name, const Vec2i& size) override;
-            std::shared_ptr<IAttachment> create_hdr_texture_attachment(const std::string& attachment_name, const Vec2i& size) override;
-            std::shared_ptr<IAttachment> create_depth_attachment(const std::string& attachment_name, const Vec2i& size) override;
+            std::shared_ptr<IAttachment> create_texture_attachment(const std::string& name, const Vec2i& size) override;
+            std::shared_ptr<IAttachment> create_hdr_texture_attachment(const std::string& name, const Vec2i& size) override;
+            std::shared_ptr<IAttachment> create_depth_attachment(const std::string& name, const Vec2i& size) override;
     };
 }
 

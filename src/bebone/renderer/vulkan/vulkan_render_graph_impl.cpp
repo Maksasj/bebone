@@ -66,6 +66,6 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IAttachmentFactory> VulkanRenderGraphImpl::create_attachment_factory() const {
-        return std::make_shared<VulkanAttachmentFactory>(device, texture_manager);
+        return std::make_shared<VulkanAttachmentFactory>(texture_manager);
     }
 }
