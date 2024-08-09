@@ -2,9 +2,17 @@
 
 namespace bebone::renderer {
     VulkanAttachmentImpl::VulkanAttachmentImpl(
-        const std::vector<TextureHandle>& handles
-    ) : handles(handles) {
+        std::shared_ptr<ITextureManager>& texture_manager, const Vec2i& size, const AttachmentType& type
+    ) {
+        handles.reserve(3);
 
+        if(type == Depth) {
+            for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
+                handles.push_back(texture_manager->create_depth_texture(size)); // Todo VK_FORMAT_R8G8B8A8_UNORM
+        } else {
+            for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
+                handles.push_back(texture_manager->create_texture(size)); // Todo VK_FORMAT_R8G8B8A8_UNORM
+        }
     }
 
     const std::vector<TextureHandle>& VulkanAttachmentImpl::get_handles() const {

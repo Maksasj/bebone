@@ -5,6 +5,13 @@
 #include "itexture_impl.h"
 
 namespace bebone::renderer {
+
+    enum AttachmentType {
+        Color,
+        HDRColor,
+        Depth
+    };
+
     class IAttachmentImpl : public core::NonCopyable {
         private:
 

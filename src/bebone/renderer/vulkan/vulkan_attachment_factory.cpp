@@ -3,38 +3,20 @@
 namespace bebone::renderer {
     VulkanAttachmentFactory::VulkanAttachmentFactory(
         const std::shared_ptr<VulkanDevice>& device,
-        const std::shared_ptr<VulkanTextureManager>& texture_manager
+        const std::shared_ptr<ITextureManager>& texture_manager
     ) : device(device), texture_manager(texture_manager) {
 
     }
 
     std::shared_ptr<IAttachment> VulkanAttachmentFactory::create_texture_attachment(const std::string& attachment_name, const Vec2i& size) {
-        auto handles = std::vector<TextureHandle> {};
-        handles.reserve(3); // Todo, this is a FIF moment
-
-        for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            handles.push_back(texture_manager->create_texture(size)); // Todo VK_FORMAT_R8G8B8A8_UNORM
-
-        return std::make_shared<IAttachment>(std::make_shared<VulkanAttachmentImpl>(handles), attachment_name);
+        return std::make_shared<IAttachment>(std::make_shared<VulkanAttachmentImpl>(texture_manager, size, Color), attachment_name);
     }
 
     std::shared_ptr<IAttachment> VulkanAttachmentFactory::create_hdr_texture_attachment(const std::string& attachment_name, const Vec2i& size) {
-        auto handles = std::vector<TextureHandle> {};
-        handles.reserve(3); // Todo, this is a FIF moment
-
-        for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            handles.push_back(texture_manager->create_texture(size));
-
-        return std::make_shared<IAttachment>(std::make_shared<VulkanAttachmentImpl>(handles), attachment_name);
+        return std::make_shared<IAttachment>(std::make_shared<VulkanAttachmentImpl>(texture_manager, size, HDRColor), attachment_name);
     }
 
     std::shared_ptr<IAttachment> VulkanAttachmentFactory::create_depth_attachment(const std::string& attachment_name, const Vec2i& size) {
-        auto handles = std::vector<TextureHandle> {};
-        handles.reserve(3); // Todo, this is a FIF moment
-
-        for(size_t i = 0; i < 3; ++i) // TODO, FIF, probably everything should be managed with handles
-            handles.push_back(texture_manager->create_depth_texture(size));
-
-        return std::make_shared<IAttachment>(std::make_shared<VulkanAttachmentImpl>(handles), attachment_name);
+        return std::make_shared<IAttachment>(std::make_shared<VulkanAttachmentImpl>(texture_manager, size, Depth), attachment_name);
     }
 }
