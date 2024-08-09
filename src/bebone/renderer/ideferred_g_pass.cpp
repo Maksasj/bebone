@@ -1,6 +1,6 @@
 #include "ideferred_g_pass.h"
 
-static const char deferred_g_pass_vertex_shader_code[] =
+static const char deferred_g_pass_vert_src[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
 
@@ -33,7 +33,7 @@ static const char deferred_g_pass_vertex_shader_code[] =
     "    gl_Position = final_pos;\n"
     "}";
 
-static const char deferred_g_pass_fragment_shader_code[] =
+static const char deferred_g_pass_frag_src[] =
     "#version 450 core\n"
     "#extension GL_EXT_nonuniform_qualifier : enable\n"
 
@@ -85,11 +85,7 @@ namespace bebone::renderer {
     }
 
     void IDeferredGPass::assemble(IPassAssembler* assember) {
-        auto program = assember->get_program_manager()->create_program(
-            get_impl(),
-            deferred_g_pass_vertex_shader_code,
-            deferred_g_pass_fragment_shader_code);
-
+        auto program = assember->get_program_manager()->create_program(get_impl(), deferred_g_pass_vert_src, deferred_g_pass_frag_src);
         set_program(program);
 
         // Setup render target

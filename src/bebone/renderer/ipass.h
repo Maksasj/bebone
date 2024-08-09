@@ -43,6 +43,8 @@ namespace bebone::renderer {
             void plug_output(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
 
             [[nodiscard]] std::string get_name() const;
+
+            void set_impl(const std::shared_ptr<IPassImpl>& new_impl);
             [[nodiscard]] std::shared_ptr<IPassImpl> get_impl() const;
     };
 }

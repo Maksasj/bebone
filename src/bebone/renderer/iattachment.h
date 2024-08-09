@@ -17,6 +17,8 @@ namespace bebone::renderer {
             IAttachment(const std::shared_ptr<IAttachmentImpl>& impl, const std::string& name);
             virtual ~IAttachment() = default;
 
+            [[nodiscard]] Vec2i get_size() const;
+            [[nodiscard]] AttachmentType get_type() const;
             [[nodiscard]] const std::string& get_name() const;
             [[nodiscard]] const std::shared_ptr<IAttachmentImpl>& get_impl() const;
     };

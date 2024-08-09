@@ -8,6 +8,14 @@ namespace bebone::renderer {
 
     }
 
+    Vec2i IAttachment::get_size() const {
+        return impl->get_size();
+    }
+
+    AttachmentType IAttachment::get_type() const {
+        return impl->get_type();
+    }
+
     const std::string& IAttachment::get_name() const {
         return name;
     }

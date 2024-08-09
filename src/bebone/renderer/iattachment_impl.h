@@ -16,7 +16,8 @@ namespace bebone::renderer {
         private:
 
         public:
-
+            [[nodiscard]] virtual Vec2i get_size() const = 0;
+            [[nodiscard]] virtual AttachmentType get_type() const = 0;
     };
 }
 

@@ -21,6 +21,10 @@ namespace bebone::renderer {
         return name;
     }
 
+    void IPass::set_impl(const std::shared_ptr<IPassImpl>& new_impl) {
+        impl = new_impl;
+    }
+
     std::shared_ptr<IPassImpl> IPass::get_impl() const {
         return impl;
     }
