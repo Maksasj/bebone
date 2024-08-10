@@ -43,7 +43,7 @@ namespace bebone::renderer {
         const std::string& pass_name,
         const Vec2i& viewport
     ) : IGraphicsPass(impl, pass_name, viewport) {
-        register_input("texture", texture_attachment);
+        register_resource("texture", texture_attachment);
     }
 
     void IPresentPass::assemble(IPassAssembler* assember) {

@@ -76,12 +76,12 @@ namespace bebone::renderer {
         const std::string& pass_name,
         const Vec2i& viewport
     ) : IRenderQueuePass(impl, pass_name, viewport) {
-        register_output("position", position_attachment);
-        register_output("normals", normals_attachment);
-        register_output("albedo", albedo_attachment);
-        register_output("specular", specular_attachment);
+        register_resource("position", position_attachment);
+        register_resource("normals", normals_attachment);
+        register_resource("albedo", albedo_attachment);
+        register_resource("specular", specular_attachment);
 
-        register_output("depth", depth_attachment);
+        register_resource("depth", depth_attachment);
     }
 
     void IDeferredGPass::assemble(IPassAssembler* assember) {

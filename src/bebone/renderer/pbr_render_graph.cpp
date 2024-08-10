@@ -23,14 +23,14 @@ namespace bebone::renderer {
         auto pass_factory = create_pass_factory();
 
         gpass = std::make_shared<IDeferredGPass>(pass_factory->create_deferred_g_pass_impl(viewport), "gpass", viewport);
-        gpass->plug_output("position", gpass_position);
-        gpass->plug_output("normals", gpass_normals);
-        gpass->plug_output("albedo", gpass_albedo);
-        gpass->plug_output("specular", gpass_specular);
-        gpass->plug_output("depth", gpass_depth);
+        gpass->plug("position", gpass_position);
+        gpass->plug("normals", gpass_normals);
+        gpass->plug("albedo", gpass_albedo);
+        gpass->plug("specular", gpass_specular);
+        gpass->plug("depth", gpass_depth);
 
         present = std::make_shared<IPresentPass>(pass_factory->create_present_pass_impl(), "present", viewport);
-        present->plug_input("texture", gpass_normals);
+        present->plug("texture", gpass_normals);
 
         add_pass(gpass);
         add_pass(present);

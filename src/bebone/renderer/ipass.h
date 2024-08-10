@@ -21,12 +21,10 @@ namespace bebone::renderer {
         private:
             std::string name;
 
-            std::vector<AttachmentPlug> inputs;
-            std::vector<AttachmentPlug> outputs;
+            std::vector<AttachmentPlug> attachment_resources;
 
         protected:
-            void register_input(const std::string& attachment_name, std::shared_ptr<IAttachment>& attachment);
-            void register_output(const std::string& attachment_name, std::shared_ptr<IAttachment>& attachment);
+            void register_resource(const std::string& attachment_name, std::shared_ptr<IAttachment>& attachment);
 
         public:
             IPass(const std::shared_ptr<IPassImpl>& impl, std::string name);
@@ -39,8 +37,7 @@ namespace bebone::renderer {
 
             virtual void resize_viewport(const Vec2i& new_size) = 0;
 
-            void plug_input(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
-            void plug_output(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
+            void plug(const std::string& attachment_name, const std::shared_ptr<IAttachment>& attachment);
 
             [[nodiscard]] std::string get_name() const;
 
