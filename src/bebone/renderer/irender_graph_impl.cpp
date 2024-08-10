@@ -37,7 +37,7 @@ namespace bebone::renderer {
         return render_resources;
     }
 
-    void IRenderGraphImpl::add_render_target(const std::shared_ptr<IRenderTarget> &render_target) {
+    void IRenderGraphImpl::add_target(const std::shared_ptr<IRenderTarget> &render_target) {
         render_targets.push_back(render_target);
     }
 

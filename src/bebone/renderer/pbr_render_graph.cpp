@@ -6,7 +6,6 @@ namespace bebone::renderer {
     PBRRenderGraph::PBRRenderGraph(const std::string& name, const Vec2i& viewport, const std::shared_ptr<IRenderGraphImpl>& impl) : IRenderGraph(name, impl) {
         // Attachments
         auto attachment_factory = create_attachment_factory();
-
         auto gpass_position = attachment_factory->create_hdr_texture_attachment("gpass_position_texture", viewport);
         auto gpass_normals = attachment_factory->create_hdr_texture_attachment("gpass_normals_texture", viewport);
         auto gpass_albedo = attachment_factory->create_hdr_texture_attachment("gpass_albedo_texture", viewport);
@@ -21,19 +20,30 @@ namespace bebone::renderer {
 
         // Passes
         auto pass_factory = create_pass_factory();
+        auto assembler = create_pass_assembler();
 
         gpass = std::make_shared<IDeferredGPass>(pass_factory->create_deferred_g_pass_impl(viewport), "gpass", viewport);
-        gpass->plug("position", gpass_position);
-        gpass->plug("normals", gpass_normals);
-        gpass->plug("albedo", gpass_albedo);
-        gpass->plug("specular", gpass_specular);
-        gpass->plug("depth", gpass_depth);
+        add_pass(gpass);
+
+        auto deferred_target = std::make_shared<IRenderTarget>(assembler->create_render_target_impl(gpass->get_impl(), {
+            gpass_position,
+            gpass_normals,
+            gpass_albedo,
+            gpass_specular,
+            gpass_depth
+        }, viewport), "deferred_target");
+
+        add_target(deferred_target);
+        gpass->plug("render_target", deferred_target);
 
         present = std::make_shared<IPresentPass>(pass_factory->create_present_pass_impl(), "present", viewport);
         present->plug("texture", gpass_normals);
-
-        add_pass(gpass);
         add_pass(present);
+
+        auto present_target = std::make_shared<IRenderTarget>(assembler->create_present_target_impl(), "present_target");
+        add_target(present_target);
+
+        present->plug("render_target", present_target);
     }
 
     void PBRRenderGraph::submit_geometry_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {

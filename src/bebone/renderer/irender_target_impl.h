@@ -4,7 +4,9 @@
 namespace bebone::renderer {
     class IRenderTargetImpl {
         private:
+
         public:
+
     };
 }
 

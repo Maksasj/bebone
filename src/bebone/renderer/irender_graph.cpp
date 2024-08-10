@@ -44,8 +44,8 @@ namespace bebone::renderer {
         impl->add_pass(render_pass);
     }
 
-    std::optional<std::shared_ptr<IPass>> IRenderGraph::get_render_pass(const std::string& pass_name) const {
-        return impl->get_render_pass(pass_name);
+    std::optional<std::shared_ptr<IPass>> IRenderGraph::get_render_pass(const std::string& name) const {
+        return impl->get_render_pass(name);
     }
 
     std::vector<std::shared_ptr<IPass>>& IRenderGraph::get_render_passes() {
@@ -56,12 +56,28 @@ namespace bebone::renderer {
         impl->add_attachment(render_attachment);
     }
 
-    std::optional<std::shared_ptr<IAttachment>> IRenderGraph::get_render_attachment(const std::string& attachment_name) const {
-        return impl->get_render_attachment(attachment_name);
+    std::optional<std::shared_ptr<IAttachment>> IRenderGraph::get_render_attachment(const std::string& name) const {
+        return impl->get_render_attachment(name);
     }
 
     std::vector<std::shared_ptr<IAttachment>>& IRenderGraph::get_render_attachments() {
         return impl->get_render_attachments();
+    }
+
+    void IRenderGraph::add_target(const std::shared_ptr<IRenderTarget>& render_target) {
+        impl->add_target(render_target);
+    }
+
+    std::optional<std::shared_ptr<IRenderTarget>> IRenderGraph::get_render_target(const std::string& name) const {
+        return impl->get_render_target(name);
+    }
+
+    std::vector<std::shared_ptr<IRenderTarget>>& IRenderGraph::get_render_targets() {
+        return impl->get_render_targets();
+    }
+
+    std::shared_ptr<IPassAssembler> IRenderGraph::create_pass_assembler() const {
+        return impl->create_pass_assembler();
     }
 
     std::shared_ptr<IPassImplFactory> IRenderGraph::create_pass_factory() const {

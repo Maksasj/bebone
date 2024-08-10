@@ -14,16 +14,10 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderGraphImpl::assemble() {
-        VulkanPassAssembler assembler(
-            device,
-            swap_chain,
-            program_manager,
-            texture_manager,
-            mesh_manager,
-            material_manager);
+        auto assembler = create_pass_assembler();
 
         for(auto& pass : get_render_passes())
-            pass->assemble(&assembler);
+            pass->assemble(assembler);
     }
 
     void VulkanRenderGraphImpl::record() {
@@ -59,6 +53,16 @@ namespace bebone::renderer {
     void VulkanRenderGraphImpl::resize_viewport(const Vec2i& new_size) {
         for(auto& pass : get_render_passes())
             pass->resize_viewport(new_size);
+    }
+
+    std::shared_ptr<IPassAssembler> VulkanRenderGraphImpl::create_pass_assembler() const {
+        return std::make_shared<VulkanPassAssembler>(
+            device,
+            swap_chain,
+            program_manager,
+            texture_manager,
+            mesh_manager,
+            material_manager);
     }
 
     std::shared_ptr<IPassImplFactory> VulkanRenderGraphImpl::create_pass_factory() const {

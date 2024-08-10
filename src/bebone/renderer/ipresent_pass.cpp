@@ -44,10 +44,12 @@ namespace bebone::renderer {
         const Vec2i& viewport
     ) : IGraphicsPass(impl, pass_name, viewport) {
         register_resource("texture", texture_attachment);
+
+        register_resource("render_target", render_target);
     }
 
-    void IPresentPass::assemble(IPassAssembler* assember) {
-        target = assember->create_present_target("present_target");
+    void IPresentPass::assemble(std::shared_ptr<IPassAssembler>& assember) {
+        // target = assember->create_present_target_impl("present_target");
 
         auto program = assember->get_program_manager()->create_program(get_impl(), present_vert_src, present_frag_src);
         set_program(program);
@@ -56,7 +58,7 @@ namespace bebone::renderer {
     }
 
     void IPresentPass::record(ICommandEncoder* encoder) {
-        encoder->begin_render_pass(target, get_impl());
+        encoder->begin_render_pass(render_target, get_impl());
 
         encoder->set_viewport(get_viewport());
         encoder->bind_program(program);

@@ -29,12 +29,11 @@ namespace bebone::renderer {
 
             std::shared_ptr<IUniformBuffer> create_uniform_buffer(const size_t& size) override;
 
-            std::shared_ptr<IRenderTarget> create_present_target(const std::string& name) override;
-            std::shared_ptr<IRenderTarget> create_render_target(
+            std::shared_ptr<IRenderTargetImpl> create_present_target_impl() override;
+            std::shared_ptr<IRenderTargetImpl> create_render_target_impl(
                 const std::shared_ptr<IPassImpl>& pass_impl,
                 const std::vector<std::shared_ptr<IAttachment>>& attachments,
-                const Vec2i& viewport,
-                const std::string& name) override;
+                const Vec2i& viewport) override;
 
             std::shared_ptr<VulkanDevice> get_device() const;
             std::shared_ptr<VulkanSwapChain> get_swap_chain() const;

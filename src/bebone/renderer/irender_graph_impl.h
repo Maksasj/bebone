@@ -26,19 +26,20 @@ namespace bebone::renderer {
 
             virtual void resize_viewport(const Vec2i& new_size) = 0;
 
+            virtual std::shared_ptr<IPassAssembler> create_pass_assembler() const = 0;
             virtual std::shared_ptr<IPassImplFactory> create_pass_factory() const = 0;
             virtual std::shared_ptr<IAttachmentFactory> create_attachment_factory() const = 0;
 
             void add_pass(const std::shared_ptr<IPass>& render_pass);
-            std::optional<std::shared_ptr<IPass>> get_render_pass(const std::string& pass_name) const;
+            std::optional<std::shared_ptr<IPass>> get_render_pass(const std::string& name) const;
             std::vector<std::shared_ptr<IPass>>& get_render_passes();
 
             void add_attachment(const std::shared_ptr<IAttachment>& render_attachment);
-            std::optional<std::shared_ptr<IAttachment>> get_render_attachment(const std::string& attachment_name) const;
+            std::optional<std::shared_ptr<IAttachment>> get_render_attachment(const std::string& name) const;
             std::vector<std::shared_ptr<IAttachment>>& get_render_attachments();
 
-            void add_render_target(const std::shared_ptr<IRenderTarget>& render_target);
-            std::optional<std::shared_ptr<IRenderTarget>> get_render_target(const std::string& render_target_name) const;
+            void add_target(const std::shared_ptr<IRenderTarget>& render_target);
+            std::optional<std::shared_ptr<IRenderTarget>> get_render_target(const std::string& name) const;
             std::vector<std::shared_ptr<IRenderTarget>>& get_render_targets();
     };
 }
