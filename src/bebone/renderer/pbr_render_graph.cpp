@@ -24,7 +24,6 @@ namespace bebone::renderer {
 
         // Passes
         auto pass_factory = create_pass_factory();
-        auto assembler = create_pass_assembler();
 
         gpass = std::make_shared<IDeferredGPass>(pass_factory->create_deferred_g_pass_impl(viewport), "gpass", viewport);
         add_pass(gpass);
@@ -34,19 +33,17 @@ namespace bebone::renderer {
         add_pass(present);
 
         // Render targets
+        auto assembler = create_pass_assembler();
+
         auto deferred_target = std::make_shared<IRenderTarget>(assembler->create_render_target_impl(gpass->get_impl(), {
-            gpass_position,
-            gpass_normals,
-            gpass_albedo,
-            gpass_specular,
-            gpass_depth
+            gpass_position, gpass_normals, gpass_albedo, gpass_specular, gpass_depth
         }, viewport), "deferred_target");
-        add_target(deferred_target);
         gpass->plug("render_target", deferred_target);
+        add_target(deferred_target);
 
         auto present_target = std::make_shared<IRenderTarget>(assembler->create_present_target_impl(), "present_target");
-        add_target(present_target);
         present->plug("render_target", present_target);
+        add_target(present_target);
     }
 
     void PBRRenderGraph::submit_geometry_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {

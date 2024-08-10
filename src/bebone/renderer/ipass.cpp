@@ -28,6 +28,26 @@ namespace bebone::renderer {
         return impl;
     }
 
+    void IPass::assemble(std::shared_ptr<IPassAssembler>& assember) {
+        std::ignore = assember;
+    }
+
+    void IPass::check_requirements() {
+
+    }
+
+    void IPass::record(ICommandEncoder* encoder) {
+        std::ignore = encoder;
+    }
+
+    void IPass::reset() {
+
+    }
+
+    void IPass::resize_viewport(const Vec2i& new_size) {
+        std::ignore = new_size;
+    }
+
     void IPass::plug(const std::string& name, const std::shared_ptr<IAttachment>& attachment) {
         for(auto& plug : attachment_resources) {
             if(plug.get_name() != name)

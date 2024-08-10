@@ -12,31 +12,14 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<IUniformBuffer> camera_ubo;
 
-            // Jobs
-            std::vector<RenderQueueTask> queued_jobs;
-
         protected:
             std::shared_ptr<IRenderTarget> render_target;
-
-            /*
-            std::shared_ptr<IAttachment> position_attachment;
-            std::shared_ptr<IAttachment> normals_attachment;
-            std::shared_ptr<IAttachment> albedo_attachment;
-            std::shared_ptr<IAttachment> specular_attachment;
-
-            std::shared_ptr<IAttachment> depth_attachment;
-            */
 
         public:
             IDeferredGPass(const std::shared_ptr<IPassImpl>& impl, const std::string& pass_name, const Vec2i& viewport);
 
             void assemble(std::shared_ptr<IPassAssembler>& assember) override;
             void record(ICommandEncoder* encoder) override;
-            void reset() override;
-
-            void resize_viewport(const Vec2i& new_size) override;
-
-            void submit_task(const RenderQueueTask& task) override;
     };
 }
 

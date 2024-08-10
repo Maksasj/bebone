@@ -77,28 +77,11 @@ namespace bebone::renderer {
         const Vec2i& viewport
     ) : IRenderQueuePass(impl, pass_name, viewport) {
         register_resource("render_target", render_target);
-
-        // register_resource("position", position_attachment);
-        // register_resource("normals", normals_attachment);
-        // register_resource("albedo", albedo_attachment);
-        // register_resource("specular", specular_attachment);
-        // register_resource("depth", depth_attachment);
     }
 
     void IDeferredGPass::assemble(std::shared_ptr<IPassAssembler>& assember) {
-        auto program = assember->get_program_manager()->create_program(get_impl(), deferred_g_pass_vert_src, deferred_g_pass_frag_src);
+        auto program = assember->create_program(get_impl(), deferred_g_pass_vert_src, deferred_g_pass_frag_src);
         set_program(program);
-
-        // Setup render target
-        /*
-        target = assember->create_render_target_impl(get_impl(), {
-            position_attachment,
-            normals_attachment,
-            albedo_attachment,
-            specular_attachment,
-            depth_attachment
-        }, get_viewport(), "deferred_g_target");
-        */
 
         camera_ubo = assember->create_uniform_buffer(sizeof(Mat4f));
     }
@@ -118,17 +101,5 @@ namespace bebone::renderer {
         }
 
         encoder->end_render_pass();
-    }
-
-    void IDeferredGPass::reset() {
-        queued_jobs.clear();
-    }
-
-    void IDeferredGPass::resize_viewport(const Vec2i& new_size) {
-        // Todo
-    }
-
-    void IDeferredGPass::submit_task(const RenderQueueTask& task) {
-        queued_jobs.push_back(task);
     }
 }

@@ -26,6 +26,7 @@ namespace bebone::renderer {
                 const std::shared_ptr<IMaterialManager>& material_manager);
 
             virtual std::shared_ptr<IUniformBuffer> create_uniform_buffer(const size_t& size) = 0;
+            std::shared_ptr<IProgram> create_program(const std::shared_ptr<IPassImpl>& impl, const std::string& vertex_shader_code, const std::string& fragment_shader_code);
 
             // Todo move this out
             virtual std::shared_ptr<IRenderTargetImpl> create_present_target_impl() = 0;
@@ -36,8 +37,11 @@ namespace bebone::renderer {
 
             std::shared_ptr<IProgramManager> get_program_manager() const;
             std::shared_ptr<ITextureManager> get_texture_manager() const;
-            std::shared_ptr<IMeshManager> get_mesh_manager() const;
             std::shared_ptr<IMaterialManager> get_material_manager() const;
+
+            std::shared_ptr<IMeshManager> get_mesh_manager() const;
+            MeshHandle get_default_quad() const;
+            MeshHandle get_default_cube() const;
     };
 }
 

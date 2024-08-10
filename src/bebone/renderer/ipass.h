@@ -32,12 +32,12 @@ namespace bebone::renderer {
             IPass(const std::shared_ptr<IPassImpl>& impl, std::string name);
             virtual ~IPass() = default;
 
-            virtual void assemble(std::shared_ptr<IPassAssembler>& assember) = 0;
-            virtual void check_requirements() = 0;
-            virtual void record(ICommandEncoder* encoder) = 0;
-            virtual void reset() = 0;
+            virtual void assemble(std::shared_ptr<IPassAssembler>& assember);
+            virtual void check_requirements();
+            virtual void record(ICommandEncoder* encoder);
+            virtual void reset();
 
-            virtual void resize_viewport(const Vec2i& new_size) = 0;
+            virtual void resize_viewport(const Vec2i& new_size);
 
             void plug(const std::string& name, const std::shared_ptr<IAttachment>& attachment);
             void plug(const std::string& name, const std::shared_ptr<IRenderTarget>& render_target);

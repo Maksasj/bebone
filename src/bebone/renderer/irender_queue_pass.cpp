@@ -8,4 +8,12 @@ namespace bebone::renderer {
     ) : IGraphicsPass(impl, pass_name, viewport) {
 
     }
+
+    void IRenderQueuePass::reset() {
+        queued_jobs.clear();
+    }
+
+    void IRenderQueuePass::submit_task(const RenderQueueTask& task)  {
+        queued_jobs.push_back(task);
+    }
 }

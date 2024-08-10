@@ -49,12 +49,10 @@ namespace bebone::renderer {
     }
 
     void IPresentPass::assemble(std::shared_ptr<IPassAssembler>& assember) {
-        // target = assember->create_present_target_impl("present_target");
-
-        auto program = assember->get_program_manager()->create_program(get_impl(), present_vert_src, present_frag_src);
+        auto program = assember->create_program(get_impl(), present_vert_src, present_frag_src);
         set_program(program);
 
-        quad_mesh = assember->get_mesh_manager()->get_default_quad();
+        quad_mesh = assember->get_default_quad();
     }
 
     void IPresentPass::record(ICommandEncoder* encoder) {
@@ -67,13 +65,5 @@ namespace bebone::renderer {
         encoder->draw_indexed(quad_mesh);
 
         encoder->end_render_pass();
-    }
-
-    void IPresentPass::reset() {
-
-    }
-
-    void IPresentPass::resize_viewport(const Vec2i& new_size) {
-        // Todo
     }
 }
