@@ -3,7 +3,11 @@
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    PBRRenderGraph::PBRRenderGraph(const std::string& name, const Vec2i& viewport, const std::shared_ptr<IRenderGraphImpl>& impl) : IRenderGraph(name, impl) {
+    PBRRenderGraph::PBRRenderGraph(
+        const std::shared_ptr<IRenderGraphImpl>& impl,
+        const std::string& name,
+        const Vec2i& viewport
+    ) : IRenderGraph(impl, name) {
         // Attachments
         auto attachment_factory = create_attachment_factory();
         auto gpass_position = attachment_factory->create_hdr_texture_attachment("gpass_position_texture", viewport);
@@ -25,6 +29,11 @@ namespace bebone::renderer {
         gpass = std::make_shared<IDeferredGPass>(pass_factory->create_deferred_g_pass_impl(viewport), "gpass", viewport);
         add_pass(gpass);
 
+        present = std::make_shared<IPresentPass>(pass_factory->create_present_pass_impl(), "present", viewport);
+        present->plug("texture", gpass_normals);
+        add_pass(present);
+
+        // Render targets
         auto deferred_target = std::make_shared<IRenderTarget>(assembler->create_render_target_impl(gpass->get_impl(), {
             gpass_position,
             gpass_normals,
@@ -32,17 +41,11 @@ namespace bebone::renderer {
             gpass_specular,
             gpass_depth
         }, viewport), "deferred_target");
-
         add_target(deferred_target);
         gpass->plug("render_target", deferred_target);
 
-        present = std::make_shared<IPresentPass>(pass_factory->create_present_pass_impl(), "present", viewport);
-        present->plug("texture", gpass_normals);
-        add_pass(present);
-
         auto present_target = std::make_shared<IRenderTarget>(assembler->create_present_target_impl(), "present_target");
         add_target(present_target);
-
         present->plug("render_target", present_target);
     }
 
