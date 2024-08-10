@@ -1,13 +1,13 @@
-#include "vulkan_render_target.h"
+#include "vulkan_render_target_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    VulkanRenderTarget::VulkanRenderTarget(const std::shared_ptr<VulkanSwapChain>& swap_chain) {
+    VulkanRenderTargetImpl::VulkanRenderTargetImpl(const std::shared_ptr<VulkanSwapChain>& swap_chain) {
         framebuffers = swap_chain->render_target->framebuffers;
     }
 
-    VulkanRenderTarget::VulkanRenderTarget(
+    VulkanRenderTargetImpl::VulkanRenderTargetImpl(
         const std::shared_ptr<VulkanDevice>& device,
         const std::shared_ptr<gfx::VulkanRenderPass>& render_pass,
         const std::shared_ptr<VulkanTextureManager>& texture_manager,
@@ -29,7 +29,7 @@ namespace bebone::renderer {
         }
     }
 
-    const std::vector<std::shared_ptr<VulkanFramebuffer>>& VulkanRenderTarget::get_framebuffers() {
+    const std::vector<std::shared_ptr<VulkanFramebuffer>>& VulkanRenderTargetImpl::get_framebuffers() {
         return framebuffers;
     }
 }

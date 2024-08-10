@@ -3,7 +3,7 @@
 
 #include "renderer_backend.h"
 #include "ipass_assembler.h"
-#include "vulkan_render_target.h"
+#include "vulkan_render_target_impl.h"
 
 #include "vulkan_program_manager.h"
 #include "vulkan_texture_manager.h"
@@ -28,11 +28,13 @@ namespace bebone::renderer {
                 const std::shared_ptr<IMaterialManager>& material_manager);
 
             std::shared_ptr<IUniformBuffer> create_uniform_buffer(const size_t& size) override;
-            std::shared_ptr<IRenderTarget> create_present_target() override;
+
+            std::shared_ptr<IRenderTarget> create_present_target(const std::string& name) override;
             std::shared_ptr<IRenderTarget> create_render_target(
                 const std::shared_ptr<IPassImpl>& pass_impl,
                 const std::vector<std::shared_ptr<IAttachment>>& attachments,
-                const Vec2i& viewport) override;
+                const Vec2i& viewport,
+                const std::string& name) override;
 
             std::shared_ptr<VulkanDevice> get_device() const;
             std::shared_ptr<VulkanSwapChain> get_swap_chain() const;

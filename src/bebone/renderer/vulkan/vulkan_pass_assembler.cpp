@@ -20,19 +20,24 @@ namespace bebone::renderer {
         return std::make_shared<IUniformBuffer>(impl);
     }
 
-    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_present_target() {
-        return std::make_shared<VulkanRenderTarget>(swap_chain);;
+    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_present_target(const std::string& name) {
+        return std::make_shared<IRenderTarget>(std::make_shared<VulkanRenderTargetImpl>(swap_chain), name);
     }
 
-    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_render_target(const std::shared_ptr<IPassImpl>& pass_impl, const std::vector<std::shared_ptr<IAttachment>>& attachments, const Vec2i& viewport) {
+    std::shared_ptr<IRenderTarget> VulkanPassAssembler::create_render_target(
+        const std::shared_ptr<IPassImpl>& pass_impl,
+        const std::vector<std::shared_ptr<IAttachment>>& attachments,
+        const Vec2i& viewport,
+        const std::string& name
+    ) {
         auto vulkan_pass = static_pointer_cast<VulkanPassImpl>(pass_impl)->get_vulkan_pass();
 
-        return std::make_shared<VulkanRenderTarget>(
+        return std::make_shared<IRenderTarget>(std::make_shared<VulkanRenderTargetImpl>(
             device,
             vulkan_pass,
             static_pointer_cast<VulkanTextureManager>(get_texture_manager()),
             attachments,
-            viewport);
+            viewport), name);
     }
 
     std::shared_ptr<VulkanDevice> VulkanPassAssembler::get_device() const {

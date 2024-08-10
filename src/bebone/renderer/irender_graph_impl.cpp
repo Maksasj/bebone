@@ -22,11 +22,11 @@ namespace bebone::renderer {
     }
 
     void IRenderGraphImpl::add_attachment(const std::shared_ptr<IAttachment>& render_attachment) {
-        render_attachments.push_back(render_attachment);
+        render_resources.push_back(render_attachment);
     }
 
     std::optional<std::shared_ptr<IAttachment>> IRenderGraphImpl::get_render_attachment(const std::string& attachment_name) const {
-        for(auto& attachment : render_attachments)
+        for(auto& attachment : render_resources)
             if(attachment->get_name() == attachment_name)
                 return attachment;
 
@@ -34,6 +34,22 @@ namespace bebone::renderer {
     }
 
     std::vector<std::shared_ptr<IAttachment>>& IRenderGraphImpl::get_render_attachments() {
-        return render_attachments;
+        return render_resources;
+    }
+
+    void IRenderGraphImpl::add_render_target(const std::shared_ptr<IRenderTarget> &render_target) {
+        render_targets.push_back(render_target);
+    }
+
+    std::optional<std::shared_ptr<IRenderTarget>> IRenderGraphImpl::get_render_target(const std::string &render_target_name) const {
+        for(auto& render_target : render_targets)
+            if(render_target->get_name() == render_target_name)
+                return render_target;
+
+        return std::nullopt;
+    }
+
+    std::vector<std::shared_ptr<IRenderTarget>>& IRenderGraphImpl::get_render_targets() {
+        return render_targets;
     }
 }

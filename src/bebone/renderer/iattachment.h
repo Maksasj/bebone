@@ -10,7 +10,6 @@ namespace bebone::renderer {
     class IAttachment : public NonCopyable {
         private:
             std::shared_ptr<IAttachmentImpl> impl;
-
             std::string name;
 
         public:

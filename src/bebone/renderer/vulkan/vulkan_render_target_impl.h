@@ -1,7 +1,7 @@
-#ifndef _BEBONE_RENDERER_VULKAN_RENDER_TARGET_H_
-#define _BEBONE_RENDERER_VULKAN_RENDER_TARGET_H_
+#ifndef _BEBONE_RENDERER_VULKAN_RENDER_TARGET_IMPL_H_
+#define _BEBONE_RENDERER_VULKAN_RENDER_TARGET_IMPL_H_
 
-#include "../irender_target.h"
+#include "../irender_target_impl.h"
 #include "../iattachment.h"
 #include "vulkan_texture_impl.h"
 #include "vulkan_texture_manager.h"
@@ -10,13 +10,14 @@
 namespace bebone::renderer {
     using namespace bebone::gfx;
 
-    class VulkanRenderTarget : public IRenderTarget {
+    class VulkanRenderTargetImpl : public IRenderTargetImpl {
         private:
             std::vector<std::shared_ptr<VulkanFramebuffer>> framebuffers;
 
         public:
-            VulkanRenderTarget(const std::shared_ptr<VulkanSwapChain>& swap_chain);
-            VulkanRenderTarget(
+            VulkanRenderTargetImpl(const std::shared_ptr<VulkanSwapChain>& swap_chain);
+
+            VulkanRenderTargetImpl(
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<gfx::VulkanRenderPass>& render_pass,
                 const std::shared_ptr<VulkanTextureManager>& texture_manager,

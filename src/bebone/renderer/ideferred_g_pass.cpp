@@ -95,7 +95,7 @@ namespace bebone::renderer {
             albedo_attachment,
             specular_attachment,
             depth_attachment
-        }, get_viewport());
+        }, get_viewport(), "deferred_g_target");
 
         camera_ubo = assember->create_uniform_buffer(sizeof(Mat4f));
     }

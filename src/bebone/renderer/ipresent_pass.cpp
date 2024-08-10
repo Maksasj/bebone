@@ -47,7 +47,7 @@ namespace bebone::renderer {
     }
 
     void IPresentPass::assemble(IPassAssembler* assember) {
-        target = assember->create_present_target();
+        target = assember->create_present_target("present_target");
 
         auto program = assember->get_program_manager()->create_program(get_impl(), present_vert_src, present_frag_src);
         set_program(program);

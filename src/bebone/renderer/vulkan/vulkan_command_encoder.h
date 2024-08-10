@@ -3,7 +3,7 @@
 
 #include "icommand_encoder.h"
 #include "vulkan_pass_impl.h"
-#include "vulkan_render_target.h"
+#include "vulkan_render_target_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::gfx;

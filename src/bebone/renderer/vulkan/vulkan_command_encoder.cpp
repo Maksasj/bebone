@@ -17,8 +17,8 @@ namespace bebone::renderer {
 
     void VulkanCommandEncoder::begin_render_pass(const std::shared_ptr<IRenderTarget>& render_target, const std::shared_ptr<IPassImpl>& pass) {
         auto vulkan_pass = static_pointer_cast<VulkanPassImpl>(pass)->get_vulkan_pass();
-        auto vulkan_render_target = static_pointer_cast<renderer::VulkanRenderTarget>(render_target);
-        auto framebuffers = vulkan_render_target->get_framebuffers();
+        auto vulkan_render_target_impl = static_pointer_cast<renderer::VulkanRenderTargetImpl>(render_target->get_impl());
+        auto framebuffers = vulkan_render_target_impl->get_framebuffers();
 
         command_buffer->begin_render_pass(framebuffers[frame], vulkan_pass);
     }
