@@ -1,14 +1,14 @@
-#ifndef _BEBONE_RENDERER_OPENGL_TRIANGLE_MESH_H_
-#define _BEBONE_RENDERER_OPENGL_TRIANGLE_MESH_H_
+#ifndef _BEBONE_RENDERER_OPENGL_TRIANGLE_MESH_IMPL_H_
+#define _BEBONE_RENDERER_OPENGL_TRIANGLE_MESH_IMPL_H_
 
 #include "renderer_backend.h"
-#include "imesh.h"
+#include "imesh_impl.h"
 #include "vertex.h"
 
 namespace bebone::renderer {
         using namespace bebone::gfx;
 
-        class OpenGLTriangleMesh : public IMesh {
+        class OpenGLTriangleMeshImpl : public IMeshImpl {
             private:
                 u64 indices_count;
 
@@ -18,8 +18,8 @@ namespace bebone::renderer {
                 unique_ptr<GLElementBufferObject> ebo;
 
             public:
-                OpenGLTriangleMesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indices);
-                ~OpenGLTriangleMesh() override;
+                OpenGLTriangleMeshImpl(const std::vector<Vertex>& vertices, const std::vector<u32>& indices);
+                ~OpenGLTriangleMeshImpl() override;
 
                 u64 triangle_count() const override;
                 u64 vertex_count() const override;

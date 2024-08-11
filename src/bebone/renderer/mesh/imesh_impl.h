@@ -1,5 +1,5 @@
-#ifndef _BEBONE_RENDERER_IMESH_H_
-#define _BEBONE_RENDERER_IMESH_H_
+#ifndef _BEBONE_RENDERER_IMESH_IMPL_H_
+#define _BEBONE_RENDERER_IMESH_IMPL_H_
 
 #include "renderer_backend.h"
 #include "vertex.h"
@@ -9,9 +9,9 @@ namespace bebone::renderer {
 
         class ICommandEncoder;
 
-        class IMesh {
+        class IMeshImpl {
             public:
-                virtual ~IMesh() = default;
+                virtual ~IMeshImpl() = default;
 
                 // Todo, resolve this command encoder cringe
                 virtual void bind(ICommandEncoder* encoder) = 0;

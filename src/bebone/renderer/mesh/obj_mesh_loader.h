@@ -12,7 +12,7 @@ namespace bebone::renderer {
 
             void reset() override;
 
-            std::shared_ptr<IMesh> load_from_file(const std::string& file_path) override;
+            std::shared_ptr<IMeshImpl> load_from_file(const std::string& file_path) override;
     };
 }
 

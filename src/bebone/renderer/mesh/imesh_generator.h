@@ -14,7 +14,7 @@ namespace bebone::renderer {
             virtual ~IMeshGenerator() = default;
 
             virtual void append_vertices(const std::shared_ptr<IMeshBuilder>& builder) = 0;
-            virtual std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder>& builder) = 0;
+            virtual std::shared_ptr<IMeshImpl> generate(const std::shared_ptr<IMeshBuilder>& builder) = 0;
     };
 
 }

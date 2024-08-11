@@ -11,7 +11,7 @@
 #include "imaterial.h"
 #include "imaterial_impl.h"
 
-#include "mesh/imesh.h"
+#include "mesh/imesh_impl.h"
 #include "mesh/imesh_builder.h"
 #include "mesh/imesh_generator.h"
 #include "mesh/imesh_loader.h"

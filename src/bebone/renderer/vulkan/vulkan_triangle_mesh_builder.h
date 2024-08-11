@@ -5,7 +5,7 @@
 #include "mesh/imesh_builder.h"
 #include "vertex.h"
 
-#include "vulkan_triangle_mesh.h"
+#include "vulkan_triangle_mesh_impl.h"
 
 namespace bebone::renderer {
     using namespace bebone::core;
@@ -32,7 +32,7 @@ namespace bebone::renderer {
 
             void reset() override;
 
-            std::shared_ptr<IMesh> build() override;
+            std::shared_ptr<IMeshImpl> build() override;
     };
 }
 

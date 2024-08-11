@@ -1,7 +1,7 @@
-#include "opengl_triangle_mesh.h"
+#include "opengl_triangle_mesh_impl.h"
 
 namespace bebone::renderer {
-    OpenGLTriangleMesh::OpenGLTriangleMesh(
+    OpenGLTriangleMeshImpl::OpenGLTriangleMeshImpl(
             const std::vector<Vertex>& vertices,
             const std::vector<u32>& indices
     ) : indices_count(indices.size()) {
@@ -21,21 +21,21 @@ namespace bebone::renderer {
         ebo->unbind();
     }
 
-    OpenGLTriangleMesh::~OpenGLTriangleMesh() {
+    OpenGLTriangleMeshImpl::~OpenGLTriangleMeshImpl() {
         vao->destroy();
         vbo->destroy();
         ebo->destroy();
     }
 
-    u64 OpenGLTriangleMesh::triangle_count() const {
+    u64 OpenGLTriangleMeshImpl::triangle_count() const {
         return indices_count;
     }
 
-    u64 OpenGLTriangleMesh::vertex_count() const {
+    u64 OpenGLTriangleMeshImpl::vertex_count() const {
         return indices_count * 3;
     }
 
-    void OpenGLTriangleMesh::bind(ICommandEncoder* encoder) {
+    void OpenGLTriangleMeshImpl::bind(ICommandEncoder* encoder) {
         vao->bind();
     }
 }

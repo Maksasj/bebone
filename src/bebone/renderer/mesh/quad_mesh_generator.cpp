@@ -96,7 +96,7 @@ namespace bebone::renderer {
         // builder->append_raw(vertices.data(), vertices.size(), indices.data(), indices.size());
     }
 
-    std::shared_ptr<IMesh> QuadMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
+    std::shared_ptr<IMeshImpl> QuadMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
         append_vertices(builder);
         return builder->build();
     }

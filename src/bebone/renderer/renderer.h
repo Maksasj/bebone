@@ -9,7 +9,7 @@
 #include "ipass_impl.h"
 #include "ipass.h"
 
-#include "mesh/imesh.h"
+#include "mesh/imesh_impl.h"
 #include "mesh/imesh_builder.h"
 #include "mesh/imesh_generator.h"
 #include "mesh/imesh_loader.h"
@@ -22,7 +22,7 @@
 #include "vulkan/vulkan_renderer.h"
 
 // Utils
-#include "mesh/opengl_triangle_mesh.h"
+#include "mesh/opengl_triangle_mesh_impl.h"
 #include "mesh/opengl_triangle_mesh_builder.h"
 
 #endif

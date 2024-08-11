@@ -4,7 +4,7 @@
 #include "igraphics_pass.h"
 #include "transform.h"
 
-#include "mesh/imesh.h"
+#include "mesh/imesh_impl.h"
 #include "imaterial_impl.h"
 
 namespace bebone::renderer {

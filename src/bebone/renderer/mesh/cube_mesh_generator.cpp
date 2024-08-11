@@ -73,7 +73,7 @@ namespace bebone::renderer {
         quad_generator.append_vertices(builder);
     }
 
-    std::shared_ptr<IMesh> CubeMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
+    std::shared_ptr<IMeshImpl> CubeMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
         append_vertices(builder);
         return builder->build();
     }

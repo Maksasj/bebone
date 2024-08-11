@@ -4,7 +4,7 @@
 #include "irenderer.h"
 #include "irender_graph.h"
 #include "vulkan_render_graph_impl.h"
-#include "vulkan_triangle_mesh.h"
+#include "vulkan_triangle_mesh_impl.h"
 #include "vulkan_triangle_mesh_builder.h"
 #include "pbr_render_graph.h"
 #include "vulkan_texture_impl.h"

@@ -3,7 +3,7 @@
 
 #include "renderer_backend.h"
 
-#include "imesh.h"
+#include "imesh_impl.h"
 #include "../vertex.h"
 
 namespace bebone::renderer {
@@ -23,7 +23,7 @@ namespace bebone::renderer {
 
             virtual void reset() = 0;
 
-            virtual std::shared_ptr<IMesh> build() = 0;
+            virtual std::shared_ptr<IMeshImpl> build() = 0;
     };
 }
 

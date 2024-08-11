@@ -6,7 +6,7 @@
 #include "irender_target.h"
 #include "ipass_impl.h"
 #include "iprogram.h"
-#include "mesh/imesh.h"
+#include "mesh/imesh_impl.h"
 #include "imesh_manager.h"
 
 #include "iuniform_buffer_impl.h"

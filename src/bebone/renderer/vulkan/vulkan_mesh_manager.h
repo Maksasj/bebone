@@ -5,12 +5,12 @@
 #include "vulkan_program_manager.h"
 #include "vulkan_material_impl.h"
 
-#include "mesh/imesh.h"
+#include "mesh/imesh_impl.h"
 #include "mesh/obj_mesh_loader.h"
 #include "mesh/quad_mesh_generator.h"
 #include "mesh/cube_mesh_generator.h"
 
-#include "vulkan_triangle_mesh.h"
+#include "vulkan_triangle_mesh_impl.h"
 #include "vulkan_triangle_mesh_builder.h"
 
 namespace bebone::renderer {
@@ -20,7 +20,7 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanDevice> device;
 
-            std::vector<std::shared_ptr<VulkanTriangleMesh>> meshes;
+            std::vector<std::shared_ptr<VulkanTriangleMeshImpl>> meshes;
 
             MeshHandle quad_mesh;
             MeshHandle cube_mesh;
@@ -37,7 +37,7 @@ namespace bebone::renderer {
             MeshHandle get_default_quad() override;
             MeshHandle get_default_cube() override;
 
-            [[nodiscard]] std::optional<std::shared_ptr<IMesh>> get_mesh(const MeshHandle& handle) const override;
+            [[nodiscard]] std::optional<std::shared_ptr<IMeshImpl>> get_mesh(const MeshHandle& handle) const override;
     };
 }
 

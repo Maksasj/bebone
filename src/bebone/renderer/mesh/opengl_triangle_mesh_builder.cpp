@@ -49,7 +49,7 @@ namespace bebone::renderer {
         index_offset = 0;
     }
 
-    std::shared_ptr<IMesh> OpenGLTriangleMeshBuilder::build() {
-        return std::make_shared<OpenGLTriangleMesh>(vertices, indices);
+    std::shared_ptr<IMeshImpl> OpenGLTriangleMeshBuilder::build() {
+        return std::make_shared<OpenGLTriangleMeshImpl>(vertices, indices);
     }
 }

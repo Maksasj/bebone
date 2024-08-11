@@ -106,7 +106,7 @@ namespace bebone::renderer {
         builder->append_raw(vertices.data(), vertices.size(), sphere_indices.data(), sphere_indices.size());
     }
 
-    std::shared_ptr<IMesh> UVSphereMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
+    std::shared_ptr<IMeshImpl> UVSphereMeshGenerator::generate(const std::shared_ptr<IMeshBuilder>& builder) {
         append_vertices(builder);
         return builder->build();
     }

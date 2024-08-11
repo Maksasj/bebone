@@ -70,8 +70,8 @@ int main() {
     auto cube_generator = std::make_shared<CubeMeshGenerator>(1.0f, 1.0f, 1.0f);
     auto quad_generator = std::make_shared<QuadMeshGenerator>(1.0f, 1.0f);
 
-    auto cube_mesh = static_pointer_cast<VulkanTriangleMesh>(cube_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device)));
-    auto quad_mesh = static_pointer_cast<VulkanTriangleMesh>(quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device)));
+    auto cube_mesh = static_pointer_cast<VulkanTriangleMeshImpl>(cube_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device)));
+    auto quad_mesh = static_pointer_cast<VulkanTriangleMeshImpl>(quad_generator->generate(std::make_shared<VulkanTriangleMeshBuilder>(*device)));
 
     auto transform = Transform {};
     auto camera = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) * Mat4f::translation(Vec3f(0, 0, 5));
