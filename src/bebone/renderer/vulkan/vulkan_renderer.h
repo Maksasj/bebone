@@ -32,12 +32,14 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanMeshManager> mesh_manager;
             std::shared_ptr<VulkanMaterialManager> material_manager;
 
+            // Render graph
             std::shared_ptr<IRenderGraph> render_graph;
 
             std::shared_ptr<ICamera> camera;
 
         protected:
             void resize_viewport(const Vec2i& new_size) override;
+            std::shared_ptr<IRenderGraphImpl> create_render_graph_impl() override;
 
         public:
             explicit VulkanRenderer(const std::shared_ptr<gfx::Window>& window);
@@ -49,18 +51,20 @@ namespace bebone::renderer {
             [[nodiscard]] std::shared_ptr<IMaterialManager> get_material_manager() const override;
 
             TextureHandle load_texture(const std::string& file_path) override;
+            TextureHandle create_texture(const Vec2i& size) override;
+            TextureHandle create_depth_texture(const Vec2i& size) override;
 
             MeshHandle load_mesh(const std::string& file_path) override;
             MeshHandle generate_mesh(const std::shared_ptr<IMeshGenerator>& mesh_generator) override;
             MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) override;
 
             MaterialHandle create_material(void* properties, const size_t& size) override;
-            MaterialHandle default_material() override;
+            MaterialHandle get_default_material() override;
 
+            void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Vec3f& position = Vec3f::zero) override;
             void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) override;
             void present() override;
 
-            std::shared_ptr<IRenderGraphImpl> create_render_graph_impl() override;
     };
 }
 

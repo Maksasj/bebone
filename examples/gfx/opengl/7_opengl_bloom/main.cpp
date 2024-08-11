@@ -74,7 +74,7 @@ int main() {
             geometry_program.set_uniform("cam", camera);
 
             cube_mesh->bind(nullptr);
-            GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(cube_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
+            GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(cube_mesh->get_triangle_count()), GL_UNSIGNED_INT, nullptr);
         geometry_fbo.unbind();
 
         // Blur pass
@@ -86,7 +86,7 @@ int main() {
             geometry_texture.bind();
 
             quad_mesh->bind(nullptr);
-            GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(quad_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
+            GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(quad_mesh->get_triangle_count()), GL_UNSIGNED_INT, nullptr);
         blur_fbo.unbind();
 
         // Final pass
@@ -98,7 +98,7 @@ int main() {
 
         grayscale_texture.bind_texture_unit(0);
         blur_texture.bind_texture_unit(1);
-        GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(quad_mesh->triangle_count()), GL_UNSIGNED_INT, nullptr);
+        GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(quad_mesh->get_triangle_count()), GL_UNSIGNED_INT, nullptr);
 
         GLFWContext::swap_buffers(*window);
         window->pull_events();

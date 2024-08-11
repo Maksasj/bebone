@@ -1,7 +1,5 @@
 #include "uv_sphere_mesh_generator.h"
 
-// Implementation from https://gist.github.com/Pikachuxxxx/5c4c490a7d7679824e0e18af42918efc
-
 namespace bebone::renderer {
     using namespace bebone::core;
 
@@ -13,6 +11,7 @@ namespace bebone::renderer {
         recalculate_vertices();
     }
 
+    // Implementation from https://gist.github.com/Pikachuxxxx/5c4c490a7d7679824e0e18af42918efc
     void UVSphereMeshGenerator::recalculate_vertices() {
         const auto radius_inverse = 1.0f / sphere_radius;
         const auto delta_latitude = BEBONE_PI / sphere_latitudes;
@@ -82,7 +81,6 @@ namespace bebone::renderer {
         if(sphere_longitudes < 3)
             sphere_longitudes = 3;
     }
-
 
     f32 UVSphereMeshGenerator::get_radius() const {
         return sphere_radius;

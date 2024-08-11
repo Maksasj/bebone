@@ -8,11 +8,11 @@ namespace bebone::renderer {
         this->indices = device.create_buffer_memory_from(indices);
     }
 
-    u64 VulkanTriangleMeshImpl::triangle_count() const {
+    u64 VulkanTriangleMeshImpl::get_triangle_count() const {
         return indices_count;
     }
 
-    u64 VulkanTriangleMeshImpl::vertex_count() const {
+    u64 VulkanTriangleMeshImpl::get_vertex_count() const {
         return indices_count * 3;
     }
 

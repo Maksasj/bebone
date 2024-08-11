@@ -12,7 +12,7 @@ namespace bebone::renderer {
             std::shared_ptr<IMeshBuilder> builder;
 
         public:
-            IMeshLoader(const std::shared_ptr<IMeshBuilder>& builder) : builder(builder) { }
+            IMeshLoader(const std::shared_ptr<IMeshBuilder>& builder);
             virtual ~IMeshLoader() = default;
 
             virtual void reset() = 0;

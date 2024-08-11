@@ -10,7 +10,7 @@ namespace bebone::renderer {
         // Todo creation of default material
     }
 
-    MaterialHandle VulkanMaterialManager::default_material() {
+    MaterialHandle VulkanMaterialManager::get_default_material() {
         return default_material_ptr->get_handle();
     }
 

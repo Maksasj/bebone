@@ -3,7 +3,7 @@
 namespace bebone::renderer {
     VulkanRenderer::VulkanRenderer(
         const std::shared_ptr<gfx::Window>& window
-    ) : IRenderer(Vulkan), window(window) {
+    ) : window(window) {
         // Setup vulkan
         instance = VulkanInstance::create_instance();
         device = instance->create_device(this->window);
@@ -73,7 +73,14 @@ namespace bebone::renderer {
     }
 
     TextureHandle VulkanRenderer::load_texture(const std::string& file_path) {
-        return texture_manager->load_texture_from_file(file_path);
+        return texture_manager->load_texture(file_path);
+    }
+
+    TextureHandle VulkanRenderer::create_texture(const Vec2i& size) {
+        return texture_manager->create_texture(size);
+    }
+    TextureHandle VulkanRenderer::create_depth_texture(const Vec2i& size) {
+        return texture_manager->create_depth_texture(size);
     }
 
     MeshHandle VulkanRenderer::load_mesh(const std::string& file_path) {
@@ -92,8 +99,12 @@ namespace bebone::renderer {
         return material_manager->create_material(properties, size);
     }
 
-    MaterialHandle VulkanRenderer::default_material() {
-        return material_manager->default_material();
+    MaterialHandle VulkanRenderer::get_default_material() {
+        return material_manager->get_default_material();
+    }
+
+    void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Vec3f& position) {
+        render_graph->submit_geometry_task(mesh_handle, material_handle, { .position = position });
     }
 
     void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) {

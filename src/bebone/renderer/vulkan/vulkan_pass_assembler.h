@@ -35,8 +35,8 @@ namespace bebone::renderer {
                 const std::vector<std::shared_ptr<IAttachment>>& attachments,
                 const Vec2i& viewport) override;
 
-            std::shared_ptr<VulkanDevice> get_device() const;
-            std::shared_ptr<VulkanSwapChain> get_swap_chain() const;
+            [[nodiscard]] std::shared_ptr<VulkanDevice> get_device() const;
+            [[nodiscard]] std::shared_ptr<VulkanSwapChain> get_swap_chain() const;
     };
 }
 

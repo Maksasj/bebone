@@ -18,7 +18,7 @@ namespace bebone::renderer {
 
             [[nodiscard]] Vec2i get_size() const override;
             [[nodiscard]] AttachmentType get_type() const override;
-            const std::vector<TextureHandle>& get_handles() const;
+            [[nodiscard]] const std::vector<TextureHandle>& get_handles() const;
     };
 }
 

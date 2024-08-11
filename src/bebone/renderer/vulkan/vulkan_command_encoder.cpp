@@ -58,19 +58,19 @@ namespace bebone::renderer {
         get_mesh_manager()->draw_indexed(this, handle);
     }
 
-    std::shared_ptr<VulkanDevice>& VulkanCommandEncoder::get_device() {
+    std::shared_ptr<VulkanDevice> VulkanCommandEncoder::get_device() {
         return device;
     }
 
-    std::shared_ptr<VulkanSwapChain>& VulkanCommandEncoder::get_swap_chain() {
+    std::shared_ptr<VulkanSwapChain> VulkanCommandEncoder::get_swap_chain() {
         return swap_chain;
     }
 
-    std::shared_ptr<VulkanCommandBuffer>& VulkanCommandEncoder::get_command_buffer() {
+    std::shared_ptr<VulkanCommandBuffer> VulkanCommandEncoder::get_command_buffer() {
         return command_buffer;
     }
 
-    const size_t& VulkanCommandEncoder::get_frame() const {
+    size_t VulkanCommandEncoder::get_frame() const {
         return frame;
     }
 }

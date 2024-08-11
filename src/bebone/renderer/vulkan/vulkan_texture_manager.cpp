@@ -9,8 +9,8 @@ namespace bebone::renderer {
 
     }
 
-    TextureHandle VulkanTextureManager::create_texture(const Vec2i& extent) {
-        auto vulkan_extent = VkExtent3D { static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y), 1};
+    TextureHandle VulkanTextureManager::create_texture(const Vec2i& size) {
+        auto vulkan_extent = VkExtent3D { static_cast<uint32_t>(size.x), static_cast<uint32_t>(size.y), 1};
 
         auto vulkan_texture = device->create_texture(vulkan_extent, VK_FORMAT_R32G32B32A32_SFLOAT);
         auto texture = std::make_shared<VulkanTextureImpl>(vulkan_texture);
@@ -21,8 +21,8 @@ namespace bebone::renderer {
         return static_cast<TextureHandle>(texture->get_handle());;
     }
 
-    TextureHandle VulkanTextureManager::create_depth_texture(const Vec2i& extent) {
-        auto vulkan_extent = VkExtent3D { static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y), 1};
+    TextureHandle VulkanTextureManager::create_depth_texture(const Vec2i& size) {
+        auto vulkan_extent = VkExtent3D { static_cast<uint32_t>(size.x), static_cast<uint32_t>(size.y), 1};
         auto format = device->find_depth_format();
 
         auto [ image, memory ] = device->create_image_memory(format, vulkan_extent,
@@ -43,7 +43,7 @@ namespace bebone::renderer {
         return static_cast<TextureHandle>(texture->get_handle());
     }
 
-    TextureHandle VulkanTextureManager::load_texture_from_file(const std::string& file_path) {
+    TextureHandle VulkanTextureManager::load_texture(const std::string& file_path) {
         auto texture = std::make_shared<VulkanTextureImpl>(file_path, device);
 
         program_manager->bind_texture(texture);

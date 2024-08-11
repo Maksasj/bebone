@@ -12,10 +12,10 @@ namespace bebone::renderer {
             virtual ~ITextureManager() = default;
 
             // Todo
-            virtual TextureHandle create_texture(const Vec2i& extent) = 0;
-            virtual TextureHandle create_depth_texture(const Vec2i& extent) = 0;
+            virtual TextureHandle create_texture(const Vec2i& size) = 0;
+            virtual TextureHandle create_depth_texture(const Vec2i& size) = 0;
 
-            virtual TextureHandle load_texture_from_file(const std::string& file_path) = 0;
+            virtual TextureHandle load_texture(const std::string& file_path) = 0;
 
             virtual std::optional<std::shared_ptr<ITextureImpl>> get_texture(const TextureHandle& handle) const = 0;
     };

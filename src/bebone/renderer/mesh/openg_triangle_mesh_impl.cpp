@@ -5,7 +5,6 @@ namespace bebone::renderer {
             const std::vector<Vertex>& vertices,
             const std::vector<u32>& indices
     ) : indices_count(indices.size()) {
-
         vao = make_unique<GLVertexArrayObject>();
         vao->bind();
 
@@ -27,11 +26,11 @@ namespace bebone::renderer {
         ebo->destroy();
     }
 
-    u64 OpenGLTriangleMeshImpl::triangle_count() const {
+    u64 OpenGLTriangleMeshImpl::get_triangle_count() const {
         return indices_count;
     }
 
-    u64 OpenGLTriangleMeshImpl::vertex_count() const {
+    u64 OpenGLTriangleMeshImpl::get_vertex_count() const {
         return indices_count * 3;
     }
 

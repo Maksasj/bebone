@@ -21,10 +21,9 @@ namespace bebone::renderer {
                 const std::shared_ptr<VulkanDevice>& device,
                 const std::shared_ptr<VulkanProgramManager>& program_manager);
 
-            TextureHandle create_texture(const Vec2i& extent) override;
-            TextureHandle create_depth_texture(const Vec2i& extent) override;
-
-            TextureHandle load_texture_from_file(const std::string& file_path) override;
+            TextureHandle load_texture(const std::string& file_path) override;
+            TextureHandle create_texture(const Vec2i& size) override;
+            TextureHandle create_depth_texture(const Vec2i& size) override;
 
             [[nodiscard]] std::optional<std::shared_ptr<ITextureImpl>> get_texture(const TextureHandle& handle) const override;
     };

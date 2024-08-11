@@ -35,15 +35,18 @@ namespace bebone::renderer {
                 const std::vector<std::shared_ptr<IAttachment>>& attachments,
                 const Vec2i& viewport) = 0;
 
-            std::shared_ptr<IProgramManager> get_program_manager() const;
-            CachedProgramSource get_shader_source(const std::string& name) const;
+            // Getters
+            [[nodiscard]] std::shared_ptr<IProgramManager> get_program_manager() const;
+            [[nodiscard]] CachedProgramSource get_shader_source(const std::string& name) const;
 
-            std::shared_ptr<ITextureManager> get_texture_manager() const;
-            std::shared_ptr<IMaterialManager> get_material_manager() const;
+            [[nodiscard]] std::shared_ptr<ITextureManager> get_texture_manager() const;
 
-            std::shared_ptr<IMeshManager> get_mesh_manager() const;
-            MeshHandle get_default_quad() const;
-            MeshHandle get_default_cube() const;
+            [[nodiscard]] std::shared_ptr<IMaterialManager> get_material_manager() const;
+            [[nodiscard]] MaterialHandle get_default_material() const;
+
+            [[nodiscard]] std::shared_ptr<IMeshManager> get_mesh_manager() const;
+            [[nodiscard]] MeshHandle get_default_quad() const;
+            [[nodiscard]] MeshHandle get_default_cube() const;
     };
 }
 

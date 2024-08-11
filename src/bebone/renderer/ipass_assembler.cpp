@@ -44,5 +44,10 @@ namespace bebone::renderer {
     std::shared_ptr<IMaterialManager> IPassAssembler::get_material_manager() const {
         return material_manager;
     }
+
+    MaterialHandle IPassAssembler::get_default_material() const {
+        return material_manager->get_default_material();
+    }
+
 }
 

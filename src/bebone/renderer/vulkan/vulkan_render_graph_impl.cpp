@@ -25,7 +25,7 @@ namespace bebone::renderer {
             return;
 
         auto& encoder = encoders[frame];
-        auto& cmd = encoder.get_command_buffer();
+        auto cmd = encoder.get_command_buffer();
 
         cmd->begin_record();
 
@@ -39,7 +39,7 @@ namespace bebone::renderer {
 
     void VulkanRenderGraphImpl::submit() {
         auto& encoder = encoders[frame];
-        auto& cmd = encoder.get_command_buffer();
+        auto cmd = encoder.get_command_buffer();
 
         if(!swap_chain->submit_present_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
             return;

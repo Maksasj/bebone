@@ -26,7 +26,7 @@ namespace bebone::renderer {
                 void append_vertices(const Vertex* vertices, const u64& count) override;
 
                 // Todo
-                void append_raw(const Vertex* verts, const u64& vert_count, const u32* inds , const u64& ind_count) override;
+                void append_raw(const Vertex* verts, const u64& vert_count, const u32* inds, const u64& ind_count) override;
 
                 void reset() override;
 

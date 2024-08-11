@@ -40,7 +40,7 @@ namespace bebone::renderer {
         auto mesh = meshes[static_cast<size_t>(handle)];
 
         mesh->bind(encoder);
-        cmd->draw_indexed(mesh->triangle_count());
+        cmd->draw_indexed(mesh->get_triangle_count());
     }
 
     MeshHandle VulkanMeshManager::get_default_quad() {

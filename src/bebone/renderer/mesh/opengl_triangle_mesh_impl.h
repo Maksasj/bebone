@@ -21,10 +21,10 @@ namespace bebone::renderer {
                 OpenGLTriangleMeshImpl(const std::vector<Vertex>& vertices, const std::vector<u32>& indices);
                 ~OpenGLTriangleMeshImpl() override;
 
-                u64 triangle_count() const override;
-                u64 vertex_count() const override;
-
                 void bind(ICommandEncoder* encoder) override;
+
+                [[nodiscard]] u64 get_triangle_count() const override;
+                [[nodiscard]] u64 get_vertex_count() const override;
         };
 }
 

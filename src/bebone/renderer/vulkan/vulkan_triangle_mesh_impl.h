@@ -24,8 +24,8 @@ namespace bebone::renderer {
         public:
             VulkanTriangleMeshImpl(VulkanDevice& device, const std::vector<Vertex>& vertices, const std::vector<u32>& indices);
 
-            u64 triangle_count() const override;
-            u64 vertex_count() const override;
+            u64 get_triangle_count() const override;
+            u64 get_vertex_count() const override;
 
             void bind(ICommandEncoder* encoder) override;
             void bind(const std::shared_ptr<VulkanCommandBuffer>& command_buffer);

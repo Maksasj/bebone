@@ -112,7 +112,7 @@ int main() {
             cmd->push_constant(pipeline_manager->get_pipeline_layout(), sizeof(GeometryHandles), 0, &handles);
 
             cube_mesh->bind(cmd);
-            cmd->draw_indexed(cube_mesh->triangle_count());
+            cmd->draw_indexed(cube_mesh->get_triangle_count());
         cmd->end_render_pass();
 
         // Blur pass
@@ -127,7 +127,7 @@ int main() {
             cmd->push_constant(pipeline_manager->get_pipeline_layout(), sizeof(VulkanBindlessTextureHandle), 0, &blur_handles);
 
             quad_mesh->bind(cmd);
-            cmd->draw_indexed(quad_mesh->triangle_count());
+            cmd->draw_indexed(quad_mesh->get_triangle_count());
         cmd->end_render_pass();
 
         // Final pass
@@ -142,7 +142,7 @@ int main() {
             cmd->push_constant(pipeline_manager->get_pipeline_layout(), sizeof(PostHandles), 0, &post_handle);
 
             quad_mesh->bind(cmd);
-            cmd->draw_indexed(quad_mesh->triangle_count());
+            cmd->draw_indexed(quad_mesh->get_triangle_count());
         cmd->end_render_pass();
 
         cmd->end_record();

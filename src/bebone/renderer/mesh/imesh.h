@@ -16,8 +16,8 @@ namespace bebone::renderer {
             // Todo, resolve this command encoder cringe
             virtual void bind(ICommandEncoder* encoder);
 
-            virtual u64 triangle_count() const;
-            virtual u64 vertex_count() const;
+            virtual u64 get_triangle_count() const;
+            virtual u64 get_vertex_count() const;
 
             std::shared_ptr<IMeshImpl> get_impl() const;
     };

@@ -33,11 +33,10 @@ namespace bebone::renderer {
             void bind_draw_data(const std::shared_ptr<IProgram>& program, const std::shared_ptr<IAttachment>& attachment) override;
             void draw_indexed(const MeshHandle& handle) override;
 
-            std::shared_ptr<VulkanDevice>& get_device();
-            std::shared_ptr<VulkanSwapChain>& get_swap_chain();
-
-            std::shared_ptr<VulkanCommandBuffer>& get_command_buffer();
-            [[nodiscard]] const size_t& get_frame() const;
+            std::shared_ptr<VulkanDevice> get_device();
+            std::shared_ptr<VulkanSwapChain> get_swap_chain();
+            std::shared_ptr<VulkanCommandBuffer> get_command_buffer();
+            [[nodiscard]] size_t get_frame() const;
     };
 }
 #endif

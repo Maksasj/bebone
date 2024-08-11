@@ -18,16 +18,16 @@ int main() {
 
     auto material = renderer->create_material(&properties, sizeof(properties));
 
-    auto quad = renderer->generate_mesh(std::make_shared<QuadMeshGenerator>(2.0f, 2.0f, Vec3f::back));
-    auto plate = renderer->generate_mesh(std::make_shared<CubeMeshGenerator>(2.0f, 2.0f, 2.0f));
-    auto sphere = renderer->generate_mesh(std::make_shared<UVSphereMeshGenerator>(2.0f, 64, 64));
+    auto quad = renderer->gen_mesh<QuadMeshGenerator>(2.0f, 2.0f, Vec3f::back);
+    auto plate = renderer->gen_mesh<CubeMeshGenerator>(2.0f, 2.0f, 2.0f);
+    auto sphere = renderer->gen_mesh<UVSphereMeshGenerator>(2.0f, 64, 64);
 
     while(!window->closing()) {
-        renderer->render(suzanne, material, {});
-        renderer->render(suzanne, material, { .position = Vec3f(3.0f, 0.0f, 0.0f) });
-        renderer->render(quad, material, { .position = Vec3f(0.0f, 4.0f, 0.0f) });
-        renderer->render(plate, material, { .position = Vec3f(0.0f, -4.0f, 0.0f) });
-        renderer->render(sphere, material, { .position = Vec3f(8.0f, 8.0f, 8.0f) });
+        renderer->render(suzanne, material, Vec3f::zero);
+        renderer->render(suzanne, material, Vec3f(3.0f, 0.0f, 0.0f));
+        renderer->render(quad, material, Vec3f(0.0f, 4.0f, 0.0f));
+        renderer->render(plate, material, Vec3f(0.0f, -4.0f, 0.0f));
+        renderer->render(sphere, material, Vec3f(8.0f, 8.0f, 8.0f));
 
         renderer->present();
         window->pull_events();

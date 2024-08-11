@@ -46,9 +46,9 @@ namespace bebone::renderer {
 
             void resize_viewport(const Vec2i& new_size) override;
 
-            std::shared_ptr<IPassAssembler> create_pass_assembler() const override;
-            std::shared_ptr<IPassImplFactory> create_pass_factory() const override;
-            std::shared_ptr<IAttachmentFactory> create_attachment_factory() const override;
+            [[nodiscard]] std::shared_ptr<IPassAssembler> create_pass_assembler() const override;
+            [[nodiscard]] std::shared_ptr<IPassImplFactory> create_pass_factory() const override;
+            [[nodiscard]] std::shared_ptr<IAttachmentFactory> create_attachment_factory() const override;
     };
 }
 
