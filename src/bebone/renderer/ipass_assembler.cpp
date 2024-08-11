@@ -21,6 +21,10 @@ namespace bebone::renderer {
         return program_manager;
     }
 
+    CachedProgramSource IPassAssembler::get_shader_source(const std::string& name) const {
+        // return program_manager->get_source(name);
+    }
+
     std::shared_ptr<ITextureManager> IPassAssembler::get_texture_manager() const {
         return texture_manager;
     }

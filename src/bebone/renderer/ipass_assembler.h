@@ -36,6 +36,8 @@ namespace bebone::renderer {
                 const Vec2i& viewport) = 0;
 
             std::shared_ptr<IProgramManager> get_program_manager() const;
+            CachedProgramSource get_shader_source(const std::string& name) const;
+
             std::shared_ptr<ITextureManager> get_texture_manager() const;
             std::shared_ptr<IMaterialManager> get_material_manager() const;
 
