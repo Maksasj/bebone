@@ -17,7 +17,7 @@ namespace bebone::renderer {
 
             virtual void reset() = 0;
 
-            virtual std::shared_ptr<IMeshImpl> load_from_file(const std::string& file) = 0;
+            virtual std::shared_ptr<IMesh> load_from_file(const std::string& file) = 0;
     };
 
 }

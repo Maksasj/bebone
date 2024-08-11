@@ -27,7 +27,7 @@ namespace bebone::renderer {
         builder->reset();
     }
 
-    std::shared_ptr<IMeshImpl> OBJMeshLoader::load_from_file(const std::string& file_path) {
+    std::shared_ptr<IMesh> OBJMeshLoader::load_from_file(const std::string& file_path) {
         auto file = std::ifstream(file_path);
 
         auto raw_vertices = std::vector<Vec3f> {};

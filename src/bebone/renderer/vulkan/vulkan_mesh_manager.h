@@ -20,7 +20,7 @@ namespace bebone::renderer {
         private:
             std::shared_ptr<VulkanDevice> device;
 
-            std::vector<std::shared_ptr<VulkanTriangleMeshImpl>> meshes;
+            std::vector<std::shared_ptr<IMesh>> meshes;
 
             MeshHandle quad_mesh;
             MeshHandle cube_mesh;
@@ -37,7 +37,7 @@ namespace bebone::renderer {
             MeshHandle get_default_quad() override;
             MeshHandle get_default_cube() override;
 
-            [[nodiscard]] std::optional<std::shared_ptr<IMeshImpl>> get_mesh(const MeshHandle& handle) const override;
+            [[nodiscard]] std::optional<std::shared_ptr<IMesh>> get_mesh(const MeshHandle& handle) const override;
     };
 }
 

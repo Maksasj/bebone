@@ -30,7 +30,7 @@ namespace bebone::renderer {
 
                 void reset() override;
 
-                std::shared_ptr<IMeshImpl> build() override;
+                std::shared_ptr<IMesh> build() override;
         };
 }
 

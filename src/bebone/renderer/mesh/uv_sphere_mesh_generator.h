@@ -32,7 +32,7 @@ namespace bebone::renderer {
             [[nodiscard]] u32 get_longitudes() const;
 
             void append_vertices(const std::shared_ptr<IMeshBuilder>& builder) override;
-            std::shared_ptr<IMeshImpl> generate(const std::shared_ptr<IMeshBuilder>& builder) override;
+            std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder>& builder) override;
     };
 
 }

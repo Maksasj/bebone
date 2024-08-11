@@ -49,7 +49,8 @@ namespace bebone::renderer {
         index_offset = 0;
     }
 
-    std::shared_ptr<IMeshImpl> VulkanTriangleMeshBuilder::build() {
-        return std::make_shared<VulkanTriangleMeshImpl>(device, vertices, indices);
+    std::shared_ptr<IMesh> VulkanTriangleMeshBuilder::build() {
+        auto impl = std::make_shared<VulkanTriangleMeshImpl>(device, vertices, indices);
+        return std::make_shared<IMesh>(impl);
     }
 }

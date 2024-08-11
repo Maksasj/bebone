@@ -11,8 +11,7 @@ namespace bebone::renderer {
     MeshHandle VulkanMeshManager::load_mesh(const std::string& file_path) {
         auto loader = std::make_shared<OBJMeshLoader>(std::make_shared<VulkanTriangleMeshBuilder>(*device));
         auto mesh = loader->load_from_file(file_path);
-
-        meshes.push_back(static_pointer_cast<VulkanTriangleMeshImpl>(mesh));
+        meshes.push_back(mesh);
 
         return static_cast<MeshHandle>(meshes.size() - 1);
     }
@@ -20,17 +19,16 @@ namespace bebone::renderer {
     MeshHandle VulkanMeshManager::generate_mesh(const std::shared_ptr<IMeshGenerator>& mesh_generator) {
         auto builder = std::make_shared<VulkanTriangleMeshBuilder>(*device);
         auto mesh = mesh_generator->generate(builder);
-
-        meshes.push_back(static_pointer_cast<VulkanTriangleMeshImpl>(mesh));
+        meshes.push_back(mesh);
 
         return static_cast<MeshHandle>(meshes.size() - 1);
     }
 
     MeshHandle VulkanMeshManager::create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) {
         // Todo make it this builder
-        auto mesh = std::make_shared<VulkanTriangleMeshImpl>(*device, vertices, indicies);
-
-        meshes.push_back(static_pointer_cast<VulkanTriangleMeshImpl>(mesh));
+        auto impl = std::make_shared<VulkanTriangleMeshImpl>(*device, vertices, indicies);
+        auto mesh = std::make_shared<IMesh>(impl);
+        meshes.push_back(mesh);
 
         return static_cast<MeshHandle>(meshes.size() - 1);
     }
@@ -53,7 +51,7 @@ namespace bebone::renderer {
         return cube_mesh;
     }
 
-    std::optional<std::shared_ptr<IMeshImpl>> VulkanMeshManager::get_mesh(const MeshHandle& handle) const {
+    std::optional<std::shared_ptr<IMesh>> VulkanMeshManager::get_mesh(const MeshHandle& handle) const {
         return meshes[static_cast<size_t>(handle)];
     }
 }

@@ -22,7 +22,7 @@ namespace bebone::renderer {
             virtual MeshHandle get_default_quad() = 0;
             virtual MeshHandle get_default_cube() = 0;
 
-            virtual std::optional<std::shared_ptr<IMeshImpl>> get_mesh(const MeshHandle& handle) const = 0;
+            virtual std::optional<std::shared_ptr<IMesh>> get_mesh(const MeshHandle& handle) const = 0;
     };
 }
 
