@@ -16,7 +16,7 @@ namespace bebone::renderer {
         auto texture = std::make_shared<VulkanTextureImpl>(vulkan_texture);
 
         program_manager->bind_texture(texture);
-        textures.push_back(texture);
+        textures.push_back(std::make_shared<ITexture>(texture));
 
         return static_cast<TextureHandle>(texture->get_handle());;
     }
@@ -38,14 +38,14 @@ namespace bebone::renderer {
         auto texture = std::make_shared<VulkanTextureImpl>(vulkan_texture);
 
         program_manager->bind_texture(texture);
-        textures.push_back(texture);
+        textures.push_back(std::make_shared<ITexture>(texture));
 
         return static_cast<TextureHandle>(texture->get_handle());
     }
 
     void VulkanTextureManager::delete_texture(const TextureHandle& handle) {
-        std::ignore = std::remove_if(textures.begin(), textures.end(), [&](const std::shared_ptr<ITextureImpl>& impl) {
-            return impl->get_handle() == handle;
+        std::ignore = std::remove_if(textures.begin(), textures.end(), [&](const std::shared_ptr<ITexture>& texture) {
+            return texture->get_handle() == handle;
         });
     }
 
@@ -53,12 +53,12 @@ namespace bebone::renderer {
         auto texture = std::make_shared<VulkanTextureImpl>(file_path, device);
 
         program_manager->bind_texture(texture);
-        textures.push_back(texture);
+        textures.push_back(std::make_shared<ITexture>(texture));
 
         return static_cast<TextureHandle>(texture->get_handle());
     }
 
-    std::optional<std::shared_ptr<ITextureImpl>> VulkanTextureManager::get_texture(const TextureHandle& handle) const {
+    std::optional<std::shared_ptr<ITexture>> VulkanTextureManager::get_texture(const TextureHandle& handle) const {
         for(auto& texture : textures)
             if(static_cast<TextureHandle>(texture->get_handle()) == handle)
                 return texture;

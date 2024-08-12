@@ -22,7 +22,7 @@ namespace bebone::renderer {
 
             for(auto& attachment : attachments) {
                 auto handles = static_pointer_cast<VulkanAttachmentImpl>(attachment->get_impl())->get_handles();
-                vulkan_attachments.push_back(static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(handles[i]).value())->get_texture()->view);
+                vulkan_attachments.push_back(static_pointer_cast<VulkanTextureImpl>(texture_manager->get_texture(handles[i]).value()->get_impl())->get_texture()->view);
             }
 
             framebuffers.push_back(device->create_framebuffer(vulkan_attachments, render_pass, extent));
