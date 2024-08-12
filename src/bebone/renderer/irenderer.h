@@ -61,8 +61,9 @@ namespace bebone::renderer {
             virtual void delete_mesh(const MeshHandle& handle) = 0;
 
             // Materials
-            virtual MaterialHandle create_material(void* properties, const size_t& size) = 0;
             virtual MaterialHandle get_default_material() = 0;
+            virtual MaterialHandle create_material(void* properties, const size_t& size) = 0;
+            virtual void delete_material(const MaterialHandle& handle) = 0;
 
             // Render graph
             std::shared_ptr<IRenderGraph> create_render_graph(const std::string& name);
@@ -70,6 +71,7 @@ namespace bebone::renderer {
             // Rendering
             virtual void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Vec3f& position) = 0;
             virtual void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform) = 0;
+
             virtual void present() = 0;
     };
 }

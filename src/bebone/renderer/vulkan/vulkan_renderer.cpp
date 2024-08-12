@@ -112,6 +112,10 @@ namespace bebone::renderer {
         return material_manager->get_default_material();
     }
 
+    void VulkanRenderer::delete_material(const MaterialHandle& handle) {
+        material_manager->delete_material(handle);
+    }
+
     void VulkanRenderer::render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Vec3f& position) {
         render_graph->submit_geometry_task(mesh_handle, material_handle, { .position = position });
     }

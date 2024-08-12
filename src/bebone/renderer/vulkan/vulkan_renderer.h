@@ -62,6 +62,7 @@ namespace bebone::renderer {
 
             MaterialHandle create_material(void* properties, const size_t& size) override;
             MaterialHandle get_default_material() override;
+            void delete_material(const MaterialHandle& handle) override;
 
             void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Vec3f& position = Vec3f::zero) override;
             void render(const MeshHandle& mesh_handle, const MaterialHandle& material_handle, const Transform& transform = {}) override;

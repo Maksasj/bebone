@@ -21,6 +21,12 @@ namespace bebone::renderer {
         return material->get_handle();
     }
 
+    void VulkanMaterialManager::delete_material(const MaterialHandle& handle) {
+        std::ignore = std::remove_if(materials.begin(), materials.end(), [&](const std::shared_ptr<IMaterialImpl>& impl) {
+            return impl->get_handle() == handle;
+        });
+    }
+
     std::optional<std::shared_ptr<IMaterialImpl>> VulkanMaterialManager::get_material(const MaterialHandle& handle) const {
         if(static_cast<MaterialHandle>(default_material_ptr->get_handle()) == handle)
             return default_material_ptr;

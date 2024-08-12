@@ -14,6 +14,7 @@ namespace bebone::renderer {
 
             virtual MaterialHandle get_default_material() = 0;
             virtual MaterialHandle create_material(void* properties, const size_t& size) = 0;
+            virtual void delete_material(const MaterialHandle& handle) = 0;
 
             virtual std::optional<std::shared_ptr<IMaterialImpl>> get_material(const MaterialHandle& handle) const = 0;
     };
