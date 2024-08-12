@@ -79,8 +79,13 @@ namespace bebone::renderer {
     TextureHandle VulkanRenderer::create_texture(const Vec2i& size) {
         return texture_manager->create_texture(size);
     }
+
     TextureHandle VulkanRenderer::create_depth_texture(const Vec2i& size) {
         return texture_manager->create_depth_texture(size);
+    }
+
+    void VulkanRenderer::delete_texture(const TextureHandle& handle) {
+        texture_manager->delete_texture(handle);
     }
 
     MeshHandle VulkanRenderer::load_mesh(const std::string& file_path) {

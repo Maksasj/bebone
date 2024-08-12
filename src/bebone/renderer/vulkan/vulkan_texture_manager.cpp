@@ -43,6 +43,12 @@ namespace bebone::renderer {
         return static_cast<TextureHandle>(texture->get_handle());
     }
 
+    void VulkanTextureManager::delete_texture(const TextureHandle& handle) {
+        std::ignore = std::remove_if(textures.begin(), textures.end(), [&](const std::shared_ptr<ITextureImpl>& impl) {
+            return impl->get_handle() == handle;
+        });
+    }
+
     TextureHandle VulkanTextureManager::load_texture(const std::string& file_path) {
         auto texture = std::make_shared<VulkanTextureImpl>(file_path, device);
 

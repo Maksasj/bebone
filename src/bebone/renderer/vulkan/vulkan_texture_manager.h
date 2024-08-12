@@ -14,7 +14,7 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanProgramManager> program_manager;
 
-            std::vector<std::shared_ptr<VulkanTextureImpl>> textures;
+            std::vector<std::shared_ptr<ITextureImpl>> textures;
 
         public:
             VulkanTextureManager(
@@ -24,6 +24,8 @@ namespace bebone::renderer {
             TextureHandle load_texture(const std::string& file_path) override;
             TextureHandle create_texture(const Vec2i& size) override;
             TextureHandle create_depth_texture(const Vec2i& size) override;
+
+            void delete_texture(const TextureHandle& handle) override;
 
             [[nodiscard]] std::optional<std::shared_ptr<ITextureImpl>> get_texture(const TextureHandle& handle) const override;
     };
