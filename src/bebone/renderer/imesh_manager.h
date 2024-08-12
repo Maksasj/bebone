@@ -16,6 +16,7 @@ namespace bebone::renderer {
             virtual MeshHandle load_mesh(const std::string& file_path) = 0;
             virtual MeshHandle generate_mesh(const std::shared_ptr<IMeshGenerator>& mesh_generator) = 0;
             virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
+            virtual void delete_mesh(const MeshHandle& handle) = 0;
 
             virtual void draw_indexed(ICommandEncoder* encoder, const MeshHandle& handle) = 0;
 

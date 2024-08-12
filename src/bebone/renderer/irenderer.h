@@ -58,6 +58,7 @@ namespace bebone::renderer {
                 return generate_mesh(generator);
             }
             virtual MeshHandle create_mesh(const std::vector<Vertex>& vertices, const std::vector<u32>& indicies) = 0;
+            virtual void delete_mesh(const MeshHandle& handle) = 0;
 
             // Materials
             virtual MaterialHandle create_material(void* properties, const size_t& size) = 0;

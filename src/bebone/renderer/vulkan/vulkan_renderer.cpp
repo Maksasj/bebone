@@ -100,6 +100,10 @@ namespace bebone::renderer {
         return mesh_manager->create_mesh(vertices,indicies);
     }
 
+    void VulkanRenderer::delete_mesh(const MeshHandle& handle) {
+        mesh_manager->delete_mesh(handle);
+    }
+
     MaterialHandle VulkanRenderer::create_material(void* properties, const size_t& size) {
         return material_manager->create_material(properties, size);
     }

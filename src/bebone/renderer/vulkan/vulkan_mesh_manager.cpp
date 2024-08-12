@@ -33,6 +33,11 @@ namespace bebone::renderer {
         return static_cast<MeshHandle>(meshes.size() - 1);
     }
 
+    void VulkanMeshManager::delete_mesh(const MeshHandle& handle) {
+        // Todo
+
+    }
+
     void VulkanMeshManager::draw_indexed(ICommandEncoder* encoder, const MeshHandle& handle) {
         auto vulkan_encoder = static_cast<VulkanCommandEncoder*>(encoder);
         auto cmd = vulkan_encoder->get_command_buffer();
