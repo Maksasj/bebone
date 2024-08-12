@@ -15,19 +15,19 @@ namespace bebone::renderer {
     }
 
     MaterialHandle VulkanMaterialManager::create_material(void* properties, const size_t& size) {
-        auto material = std::make_shared<VulkanMaterialImpl>(this->device, this->program_manager, properties, size);
-        materials.push_back(material);
+        auto impl = std::make_shared<VulkanMaterialImpl>(this->device, this->program_manager, properties, size);
+        materials.push_back(std::make_shared<IMaterial>(impl));
 
-        return material->get_handle();
+        return impl->get_handle();
     }
 
     void VulkanMaterialManager::delete_material(const MaterialHandle& handle) {
-        std::ignore = std::remove_if(materials.begin(), materials.end(), [&](const std::shared_ptr<IMaterialImpl>& impl) {
-            return impl->get_handle() == handle;
+        std::ignore = std::remove_if(materials.begin(), materials.end(), [&](const std::shared_ptr<IMaterial>& material) {
+            return material->get_handle() == handle;
         });
     }
 
-    std::optional<std::shared_ptr<IMaterialImpl>> VulkanMaterialManager::get_material(const MaterialHandle& handle) const {
+    std::optional<std::shared_ptr<IMaterial>> VulkanMaterialManager::get_material(const MaterialHandle& handle) const {
         if(static_cast<MaterialHandle>(default_material_ptr->get_handle()) == handle)
             return default_material_ptr;
 

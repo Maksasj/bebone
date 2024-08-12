@@ -13,8 +13,8 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanProgramManager> program_manager;
 
-            std::shared_ptr<IMaterialImpl> default_material_ptr;
-            std::vector<std::shared_ptr<IMaterialImpl>> materials;
+            std::shared_ptr<IMaterial> default_material_ptr;
+            std::vector<std::shared_ptr<IMaterial>> materials;
 
         public:
             VulkanMaterialManager(
@@ -25,7 +25,7 @@ namespace bebone::renderer {
             MaterialHandle create_material(void* properties, const size_t& size) override;
             void delete_material(const MaterialHandle& handle) override;
 
-            [[nodiscard]] std::optional<std::shared_ptr<IMaterialImpl>> get_material(const MaterialHandle& handle) const override;
+            [[nodiscard]] std::optional<std::shared_ptr<IMaterial>> get_material(const MaterialHandle& handle) const override;
     };
 }
 
