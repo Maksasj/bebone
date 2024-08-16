@@ -5,8 +5,8 @@ namespace bebone::renderer {
 
     UVSphereMeshGenerator::UVSphereMeshGenerator(
         const f32& radius,
-        const u32& latitudes,
-        const u32& longitudes
+        const i32& latitudes,
+        const i32& longitudes
     ) : sphere_radius(radius), sphere_latitudes(latitudes), sphere_longitudes(longitudes) {
         recalculate_vertices();
     }
@@ -17,12 +17,12 @@ namespace bebone::renderer {
         const auto delta_latitude = BEBONE_PI / sphere_latitudes;
         const auto delta_longitude = 2.0f * BEBONE_PI / sphere_longitudes;
 
-        for (u32 i = 0; i <= sphere_latitudes; ++i) {
+        for (i32 i = 0; i <= sphere_latitudes; ++i) {
             const auto latitude_angle = BEBONE_PI / 2 - i * delta_latitude;
             f32 xy = sphere_radius * cosf(latitude_angle);
             f32 z = sphere_radius * sinf(latitude_angle);
 
-            for (u32 j = 0; j <= sphere_longitudes; ++j) {
+            for (i32 j = 0; j <= sphere_longitudes; ++j) {
                 const auto longitude_angle = j * delta_longitude;
 
                 auto position = Vec3f { xy * cosf(longitude_angle), xy * sinf(longitude_angle), z };
@@ -36,11 +36,11 @@ namespace bebone::renderer {
             }
         }
 
-        for(int i = 0; i < sphere_latitudes; ++i) {
+        for(i32 i = 0; i < sphere_latitudes; ++i) {
             u32 k1 = i * (sphere_longitudes + 1);
             u32 k2 = k1 + sphere_longitudes + 1;
 
-            for(int j = 0; j < sphere_longitudes; ++j, ++k1, ++k2) {
+            for(i32 j = 0; j < sphere_longitudes; ++j, ++k1, ++k2) {
                 if (i != 0) {
                     sphere_indices.push_back(k1);
                     sphere_indices.push_back(k2);
@@ -68,14 +68,14 @@ namespace bebone::renderer {
         sphere_radius = radius;
     }
 
-    void UVSphereMeshGenerator::set_latitudes(const u32& latitudes) {
+    void UVSphereMeshGenerator::set_latitudes(const i32& latitudes) {
         sphere_latitudes = latitudes;
 
         if(sphere_latitudes < 2)
             sphere_latitudes = 2;
     }
 
-    void UVSphereMeshGenerator::set_longitudes(const u32& longitudes) {
+    void UVSphereMeshGenerator::set_longitudes(const i32& longitudes) {
         sphere_longitudes = longitudes;
 
         if(sphere_longitudes < 3)
@@ -86,18 +86,18 @@ namespace bebone::renderer {
         return sphere_radius;
     }
 
-    u32 UVSphereMeshGenerator::get_latitudes() const {
+    i32 UVSphereMeshGenerator::get_latitudes() const {
         return sphere_latitudes;
     }
 
-    u32 UVSphereMeshGenerator::get_longitudes() const {
+    i32 UVSphereMeshGenerator::get_longitudes() const {
         return sphere_longitudes;
     }
 
     void UVSphereMeshGenerator::append_vertices(const std::shared_ptr<IMeshBuilder>& builder) {
         auto vertices = std::vector<Vertex> {};
 
-        for(int i = 0; i < sphere_vertices.size(); ++i) {
+        for(u64 i = 0; i < sphere_vertices.size(); ++i) {
             vertices.push_back({sphere_vertices[i], sphere_normals[i], sphere_texcoord[i]});
         }
 

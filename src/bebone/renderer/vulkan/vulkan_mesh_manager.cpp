@@ -35,7 +35,7 @@ namespace bebone::renderer {
 
     void VulkanMeshManager::delete_mesh(const MeshHandle& handle) {
         // Todo
-
+        std::ignore = handle;
     }
 
     void VulkanMeshManager::draw_indexed(ICommandEncoder* encoder, const MeshHandle& handle) {

@@ -35,6 +35,8 @@ namespace bebone::renderer {
     }
 
     void OpenGLTriangleMeshImpl::bind(ICommandEncoder* encoder) {
+        std::ignore = encoder;
+
         vao->bind();
     }
 }

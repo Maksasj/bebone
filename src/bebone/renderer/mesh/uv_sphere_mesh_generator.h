@@ -8,8 +8,8 @@ namespace bebone::renderer {
     class UVSphereMeshGenerator : public IMeshGenerator {
         private:
             f32 sphere_radius;
-            u32 sphere_latitudes;
-            u32 sphere_longitudes;
+            i32 sphere_latitudes;
+            i32 sphere_longitudes;
 
             // Precalculated points
             std::vector<Vec3f> sphere_vertices;
@@ -21,15 +21,15 @@ namespace bebone::renderer {
             void recalculate_vertices();
 
         public:
-            UVSphereMeshGenerator(const f32& radius, const u32& latitudes, const u32& longitudes);
+            UVSphereMeshGenerator(const f32& radius, const i32& latitudes, const i32& longitudes);
 
             void set_radius(const f32& radius);
-            void set_latitudes(const u32& latitudes);
-            void set_longitudes(const u32& longitudes);
+            void set_latitudes(const i32& latitudes);
+            void set_longitudes(const i32& longitudes);
 
             [[nodiscard]] f32 get_radius() const;
-            [[nodiscard]] u32 get_latitudes() const;
-            [[nodiscard]] u32 get_longitudes() const;
+            [[nodiscard]] i32 get_latitudes() const;
+            [[nodiscard]] i32 get_longitudes() const;
 
             void append_vertices(const std::shared_ptr<IMeshBuilder>& builder) override;
             std::shared_ptr<IMesh> generate(const std::shared_ptr<IMeshBuilder>& builder) override;

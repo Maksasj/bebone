@@ -24,6 +24,7 @@ namespace bebone::renderer {
                 const std::shared_ptr<ITextureManager>& texture_manager,
                 const std::shared_ptr<IMeshManager>& mesh_manager,
                 const std::shared_ptr<IMaterialManager>& material_manager);
+            virtual ~IPassAssembler() = default;
 
             virtual std::shared_ptr<IUniformBuffer> create_uniform_buffer(const size_t& size) = 0;
             std::shared_ptr<IProgram> create_program(const std::shared_ptr<IPassImpl>& impl, const std::string& vertex_shader_code, const std::string& fragment_shader_code);

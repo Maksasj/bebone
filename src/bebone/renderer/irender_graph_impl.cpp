@@ -1,10 +1,6 @@
 #include "irender_graph_impl.h"
 
 namespace bebone::renderer {
-    IRenderGraphImpl::IRenderGraphImpl() {
-
-    }
-
     void IRenderGraphImpl::add_pass(const std::shared_ptr<IPass>& render_pass) {
         render_passes.push_back(render_pass);
     }

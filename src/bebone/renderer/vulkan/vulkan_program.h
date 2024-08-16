@@ -21,8 +21,8 @@ namespace bebone::renderer {
 
             void bind(ICommandEncoder* encoder) override;
 
-            std::shared_ptr<VulkanPipeline> get_pipeline();
-            std::shared_ptr<VulkanPipelineLayout> get_pipeline_layout();
+            [[nodiscard]] std::shared_ptr<VulkanPipeline> get_pipeline();
+            [[nodiscard]] std::shared_ptr<VulkanPipelineLayout> get_pipeline_layout();
     };
 }
 

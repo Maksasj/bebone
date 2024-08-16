@@ -53,13 +53,13 @@ namespace bebone::gfx {
              * @param height - window height
             */
             Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties = {});
-            ~Window();
+            virtual ~Window();
 
             /*!
              * Function that checks does window want to close
              * @return - boolean value is window closing
             */
-            bool closing() const;
+            [[nodiscard]] bool closing() const;
 
             /// Function that returns window width
             const int& get_width() const;

@@ -13,9 +13,9 @@ namespace bebone::renderer {
     };
 
     class IAttachmentImpl : public core::NonCopyable {
-        private:
-
         public:
+            virtual ~IAttachmentImpl() = default;
+
             [[nodiscard]] virtual Vec2i get_size() const = 0;
             [[nodiscard]] virtual AttachmentType get_type() const = 0;
     };

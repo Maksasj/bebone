@@ -14,7 +14,7 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanPipelineManager> pipeline_manager;
 
-            std::vector<std::shared_ptr<VulkanProgram>> programs;
+            std::vector<std::shared_ptr<IProgram>> programs;
 
         public:
             VulkanProgramManager(const std::shared_ptr<VulkanDevice>& device);
@@ -23,10 +23,10 @@ namespace bebone::renderer {
 
             void bind_texture(std::shared_ptr<VulkanTextureImpl>& texture);
 
-            std::shared_ptr<VulkanPipelineManager> get_pipeline_manager() const;
-            std::shared_ptr<VulkanDescriptorSet> get_descriptor_set() const;
-            std::shared_ptr<VulkanDescriptorSetLayout> get_descriptor_set_layout() const;
-            std::shared_ptr<VulkanPipelineLayout> get_pipeline_layout() const;
+            [[nodiscard]] std::shared_ptr<VulkanPipelineManager> get_pipeline_manager() const;
+            [[nodiscard]] std::shared_ptr<VulkanDescriptorSet> get_descriptor_set() const;
+            [[nodiscard]] std::shared_ptr<VulkanDescriptorSetLayout> get_descriptor_set_layout() const;
+            [[nodiscard]] std::shared_ptr<VulkanPipelineLayout> get_pipeline_layout() const;
     };
 }
 

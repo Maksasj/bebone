@@ -22,6 +22,7 @@ namespace bebone::renderer {
 
             std::vector<std::shared_ptr<IMesh>> meshes;
 
+            // Default meshes
             MeshHandle quad_mesh;
             MeshHandle cube_mesh;
 

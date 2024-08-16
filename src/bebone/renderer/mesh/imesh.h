@@ -12,6 +12,7 @@ namespace bebone::renderer {
 
         public:
             IMesh(const std::shared_ptr<IMeshImpl>& impl);
+            virtual ~IMesh() = default;
 
             // Todo, resolve this command encoder cringe
             virtual void bind(ICommandEncoder* encoder);

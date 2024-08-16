@@ -47,6 +47,7 @@ namespace bebone::renderer {
         device->destroy_all(swap_chain);
         swap_chain = device->create_swap_chain(window);
 
+        // Todo, creation of new render graph on frame resize is a bit stupid
         render_graph = create_default_render_graph(window->get_size());
         render_graph->assemble();
 

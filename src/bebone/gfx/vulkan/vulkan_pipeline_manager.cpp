@@ -37,6 +37,8 @@ namespace bebone::gfx {
         const auto constant_ranges = { VulkanConstRange(const_ranges_size, 0) };
 
         bindless_pipeline_layout = device.create_pipeline_layout({ bindless_descriptor_set_layout }, constant_ranges);
+
+        std::ignore = bindless_storage_index; // Todo
     }
 
     std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
