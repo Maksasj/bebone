@@ -1,4 +1,4 @@
-include_directories("./")
+include_directories(".")
 
 file(GLOB_RECURSE SRC_FILES "*.cpp")
 set(EXECUTABLES)
@@ -19,3 +19,9 @@ foreach(EXECUTABLE ${EXECUTABLES})
             COMMENT "Running test ${EXECUTABLE}"
     )
 endforeach()
+
+# Register bebone core tests target
+file(GLOB_RECURSE SRC_FILES "*.cpp")
+add_executable(bebone_core_tests ${SRC_FILES})
+target_link_libraries(bebone_core_tests bebone_core)
+target_link_libraries(bebone_core_tests gtest gtest_main)
