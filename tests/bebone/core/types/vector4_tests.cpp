@@ -4,10 +4,6 @@
 using namespace bebone::core;
 
 TEST(Vector4Math, Addition) {
-    // Arrange
-    // Act
-    // Assert
-
     Vec4f a(2.4f, 2.0f, 1.0f, 0.0f);
     Vec4f b(3.4f, 45.0, 4.0f, 4.0f);
     Vec4f result(5.8f, 47.0f, 5.0f, 4.0f);

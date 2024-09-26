@@ -9,17 +9,18 @@
 
 namespace bebone::sound_system {
     class SoundEngine {
-    private:
-        ma_engine engine;
-    public:
-        SoundEngine();
-        ~SoundEngine();
+        private:
+            ma_engine engine;
 
-        std::shared_ptr<Sound> load_sound(const std::string& path,
-                        const std::shared_ptr<SoundFactory>& sound_factory = std::make_shared<LightweightSoundFactory>());
+        public:
+            SoundEngine();
+            ~SoundEngine();
 
-        void load_sound(const std::string& path, const std::shared_ptr<Sound>& sound,
-                        const std::shared_ptr<SoundFactory>& sound_factory = std::make_shared<LightweightSoundFactory>());
+            std::shared_ptr<Sound> load_sound(const std::string& path,
+                            const std::shared_ptr<SoundFactory>& sound_factory = std::make_shared<LightweightSoundFactory>());
+
+            void load_sound(const std::string& path, const std::shared_ptr<Sound>& sound,
+                            const std::shared_ptr<SoundFactory>& sound_factory = std::make_shared<LightweightSoundFactory>());
     };
 }
 
