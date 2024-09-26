@@ -7,6 +7,8 @@
 #include "debug/ilogger.h"
 #include "debug/console_logger.h"
 
+#include "debug/logger.h"
+
 #include "debug/profiler.h"
 
 // Memory
