@@ -4,7 +4,9 @@
 #include "types/types.h"
 
 // Debug
-#include "debug/logger.tpp"
+#include "debug/ilogger.h"
+#include "debug/console_logger.h"
+
 #include "debug/profiler.h"
 
 // Memory
