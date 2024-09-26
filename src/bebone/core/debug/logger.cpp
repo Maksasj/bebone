@@ -5,6 +5,10 @@ namespace bebone::core {
         logger_instance = std::make_unique<ConsoleLogger>();
     }
 
+    std::ostream& Logger::log(const LogLevel& logLevel) {
+        return get_instance()->log(logLevel);
+    }
+
     std::ostream& Logger::log_trace() {
         return get_instance()->log_trace();
     }

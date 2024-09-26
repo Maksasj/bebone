@@ -14,6 +14,8 @@ namespace bebone::core {
             Logger();
 
         public:
+            static std::ostream& log(const LogLevel& logLevel);
+
             static std::ostream& log_trace();
             static std::ostream& log_debug();
             static std::ostream& log_information();
@@ -23,6 +25,15 @@ namespace bebone::core {
 
             static std::unique_ptr<ILogger>& get_instance();
     };
-}
+}s
+
+#define LOG(LOG_LEVEL) bebone::core::Logger::log(LOG_LEVEL)
+
+#define LOG_TRACE bebone::core::Logger::log_trace()
+#define LOG_DEBUG bebone::core::Logger::log_debug()
+#define LOG_INFORMATION bebone::core::Logger::log_debug()
+#define LOG_WARNING bebone::core::Logger::log_debug()
+#define LOG_ERROR bebone::core::Logger::log_debug()
+#define LOG_CRITICAL bebone::core::Logger::log_debug()
 
 #endif

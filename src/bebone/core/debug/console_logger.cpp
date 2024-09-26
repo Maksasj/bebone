@@ -1,8 +1,19 @@
 #include "console_logger.h"
 
 namespace bebone::core {
-    ConsoleLogger::ConsoleLogger() : stream(std::cout) {
+    ConsoleLogger::ConsoleLogger(std::ostream& st) : stream(st) {
 
+    }
+
+    std::ostream& ConsoleLogger::log(const LogLevel& logLevel) {
+        switch (logLevel) {
+            case LogLevel::Trace: return log_trace();
+            case LogLevel::Debug: return log_debug();
+            case LogLevel::Information: return log_information();
+            case LogLevel::Warning: return log_warning();
+            case LogLevel::Error: return log_error();
+            case LogLevel::Critical: return log_critical();
+        }
     }
 
     std::ostream& ConsoleLogger::log_trace() {

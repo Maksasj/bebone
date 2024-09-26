@@ -9,7 +9,9 @@ namespace bebone::core {
                 std::ostream& stream;
 
             public:
-                ConsoleLogger();
+                explicit ConsoleLogger(std::ostream& st = std::cout);
+
+                std::ostream& log(const LogLevel& logLevel) override;
 
                 std::ostream& log_trace() override;
                 std::ostream& log_debug() override;

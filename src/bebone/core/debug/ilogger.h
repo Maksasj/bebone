@@ -13,6 +13,8 @@ namespace bebone::core {
         public:
             virtual ~ILogger() = default;
 
+            virtual std::ostream& log(const LogLevel& logLevel) = 0;
+
             virtual std::ostream& log_trace() = 0;
             virtual std::ostream& log_debug() = 0;
             virtual std::ostream& log_information() = 0;
