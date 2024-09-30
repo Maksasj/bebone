@@ -25,7 +25,7 @@ namespace bebone::core {
 
             static std::unique_ptr<ILogger>& get_instance();
     };
-}s
+}
 
 #define LOG(LOG_LEVEL) bebone::core::Logger::log(LOG_LEVEL)
 
