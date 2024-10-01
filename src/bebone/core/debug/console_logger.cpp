@@ -5,38 +5,16 @@ namespace bebone::core {
 
     }
 
-    std::ostream& ConsoleLogger::log(const LogLevel& logLevel) {
-        switch (logLevel) {
-            case LogLevel::Trace: return log_trace();
-            case LogLevel::Debug: return log_debug();
-            case LogLevel::Information: return log_information();
-            case LogLevel::Warning: return log_warning();
-            case LogLevel::Error: return log_error();
-            case LogLevel::Critical: return log_critical();
-        }
-    }
+    void ConsoleLogger::log_impl(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) {
+        const auto& log_level_str = stringify_log_level(log_level);
+        const auto& log_level_color = unix_log_level_color(log_level);
 
-    std::ostream& ConsoleLogger::log_trace() {
-        return stream;
-    }
+        auto t = std::time(nullptr);
+        auto tm = *std::localtime(&t);
 
-    std::ostream& ConsoleLogger::log_debug() {
-        return stream;
-    }
+        // Todo add this
+        // const std::source_location& location = std::source_location::current();
 
-    std::ostream& ConsoleLogger::log_information() {
-        return stream;
-    }
-
-    std::ostream& ConsoleLogger::log_warning() {
-        return stream;
-    }
-
-    std::ostream& ConsoleLogger::log_error() {
-        return stream;
-    }
-
-    std::ostream& ConsoleLogger::log_critical() {
-        return stream;
+        stream << UnixConsoleColors::Gray << "[" << std::put_time(&tm, "%H:%M:%S") << " " << log_level_color << std::format("{}", log_level_str) << UnixConsoleColors::Gray << "] " << UnixConsoleColors::Default << std::vformat(users_fmt, args) << std::endl;
     }
 }

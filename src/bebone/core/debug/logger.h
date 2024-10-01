@@ -16,26 +16,22 @@ namespace bebone::core {
             Logger();
 
         public:
-            static std::ostream& log(const LogLevel& logLevel);
-
-            static std::ostream& log_trace();
-            static std::ostream& log_debug();
-            static std::ostream& log_information();
-            static std::ostream& log_warning();
-            static std::ostream& log_error();
-            static std::ostream& log_critical();
+            template<typename... Args>
+            static void log(const LogLevel& log_level, std::string_view users_fmt, Args&&... args) {
+                get_instance()->log_impl(log_level, users_fmt, std::make_format_args(args...));
+            }
 
             static std::unique_ptr<ILogger>& get_instance();
     };
 }
 
-#define LOG(LOG_LEVEL) bebone::core::Logger::log(LOG_LEVEL)
+#define LOG(LOG_LEVEL, FORMAT, ...) bebone::core::Logger::log(LOG_LEVEL, FORMAT, __VA_ARGS__)
 
-#define LOG_TRACE bebone::core::Logger::log_trace()
-#define LOG_DEBUG bebone::core::Logger::log_debug()
-#define LOG_INFORMATION bebone::core::Logger::log_debug()
-#define LOG_WARNING bebone::core::Logger::log_debug()
-#define LOG_ERROR bebone::core::Logger::log_debug()
-#define LOG_CRITICAL bebone::core::Logger::log_debug()
+#define LOG_TRACE(FORMAT, ...) bebone::core::Logger::log(LogLevel::Trace, FORMAT, __VA_ARGS__)
+#define LOG_DEBUG(FORMAT, ...) bebone::core::Logger::log(LogLevel::Debug, FORMAT, __VA_ARGS__)
+#define LOG_INFORMATION(FORMAT, ...) bebone::core::Logger::log(LogLevel::Information, FORMAT, __VA_ARGS__)
+#define LOG_WARNING(FORMAT, ...) bebone::core::Logger::log(LogLevel::Warning, FORMAT, __VA_ARGS__)
+#define LOG_ERROR(FORMAT, ...) bebone::core::Logger::log(LogLevel::Error, FORMAT, __VA_ARGS__)
+#define LOG_CRITICAL(FORMAT, ...) bebone::core::Logger::log(LogLevel::Critical, FORMAT, __VA_ARGS__)
 
 #endif

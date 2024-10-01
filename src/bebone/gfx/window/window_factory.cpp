@@ -7,6 +7,7 @@
 namespace bebone::gfx {
     std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties) {
         GLFWContext::init(); // this should be moved somewhere else
+        LOG_TRACE("Initializing window {} {} with title: '{}'", width, height, title);
 
         std::shared_ptr<Window> window;
 

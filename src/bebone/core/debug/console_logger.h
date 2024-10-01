@@ -1,6 +1,11 @@
 #ifndef _BEBONE_CORE_CONSOLE_LOGGER_H_
 #define _BEBONE_CORE_CONSOLE_LOGGER_H_
 
+#include <format>
+#include <ctime>
+#include <iomanip>
+#include <source_location>
+
 #include "ilogger.h"
 
 namespace bebone::core {
@@ -8,17 +13,11 @@ namespace bebone::core {
             private:
                 std::ostream& stream;
 
+            protected:
+                void log_impl(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) override;
+
             public:
                 explicit ConsoleLogger(std::ostream& st = std::cout);
-
-                std::ostream& log(const LogLevel& logLevel) override;
-
-                std::ostream& log_trace() override;
-                std::ostream& log_debug() override;
-                std::ostream& log_information() override;
-                std::ostream& log_warning() override;
-                std::ostream& log_error() override;
-                std::ostream& log_critical() override;
         };
 }
 

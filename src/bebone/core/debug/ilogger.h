@@ -3,24 +3,22 @@
 
 #include <iostream>
 #include <ostream>
+#include <cstdarg>
+#include <format>
 
 #include "log_level.h"
 
 namespace bebone::core {
+    class Logger;
+
     class ILogger {
-        private:
+        protected:
+            virtual void log_impl(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) = 0;
 
         public:
             virtual ~ILogger() = default;
 
-            virtual std::ostream& log(const LogLevel& logLevel) = 0;
-
-            virtual std::ostream& log_trace() = 0;
-            virtual std::ostream& log_debug() = 0;
-            virtual std::ostream& log_information() = 0;
-            virtual std::ostream& log_warning() = 0;
-            virtual std::ostream& log_error() = 0;
-            virtual std::ostream& log_critical() = 0;
+            friend class Logger;
     };
 }
 
