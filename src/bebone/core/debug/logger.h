@@ -1,6 +1,8 @@
 #ifndef _BEBONE_CORE_LOGGER_H_
 #define _BEBONE_CORE_LOGGER_H_
 
+#include <memory>
+
 #include "ilogger.h"
 
 #include "console_logger.h"
