@@ -18,7 +18,7 @@ namespace bebone::core {
         public:
             template<typename... Args>
             static void log(const LogLevel& log_level, std::string_view users_fmt, Args&&... args) {
-                get_instance()->log_impl(log_level, users_fmt, std::make_format_args(args...));
+                get_instance()->log(log_level, users_fmt, std::make_format_args(args...));
             }
 
             static std::unique_ptr<ILogger>& get_instance();

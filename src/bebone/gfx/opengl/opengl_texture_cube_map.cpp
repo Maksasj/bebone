@@ -13,9 +13,9 @@ namespace bebone::gfx {
             const auto type = ColorRGBA::get_gl_type();
 
             glTexImage2D(
-                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                    0, format, width, height, 0,
-                    format, type, images[i]->data());
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                0, format, width, height, 0,
+                format, type, images[i]->data());
         }
 
         const GLTextureParameters parameters;

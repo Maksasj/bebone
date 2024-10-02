@@ -5,7 +5,7 @@ namespace bebone::core {
 
     }
 
-    void ConsoleLogger::log_impl(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) {
+    void ConsoleLogger::log(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) {
         const auto& log_level_str = stringify_log_level(log_level);
         const auto& log_level_color = unix_log_level_color(log_level);
 

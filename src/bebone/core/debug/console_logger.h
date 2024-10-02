@@ -14,11 +14,10 @@ namespace bebone::core {
             private:
                 std::ostream& stream;
 
-            protected:
-                void log_impl(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) override;
-
             public:
                 explicit ConsoleLogger(std::ostream& st = std::cout);
+
+                void log(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) override;
         };
 }
 
