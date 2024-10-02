@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iomanip>
 #include <source_location>
+#include <sstream>
 
 #include "ilogger.h"
 
