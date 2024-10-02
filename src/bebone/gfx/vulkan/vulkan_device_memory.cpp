@@ -17,8 +17,10 @@ namespace bebone::gfx {
         alloc_info.allocationSize = requirements.size;
         alloc_info.memoryTypeIndex = device.find_memory_type(requirements.memoryTypeBits, properties);
 
-        if (vkAllocateMemory(device.device, &alloc_info, nullptr, &backend) != VK_SUCCESS)
+        if (vkAllocateMemory(device.device, &alloc_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to allocate vulkan buffer memory");
             throw std::runtime_error("failed to allocate vulkan buffer memory!");
+        }
     }
 
     void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer) {

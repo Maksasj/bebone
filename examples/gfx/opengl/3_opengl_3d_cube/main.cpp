@@ -39,8 +39,8 @@ int main() {
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, screen_width, screen_height);
 
-    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", VertexShader);
-    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", FragmentShader);
+    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderType::VertexShader);
+    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderType::FragmentShader);
     GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
     vertex_shader.destroy();

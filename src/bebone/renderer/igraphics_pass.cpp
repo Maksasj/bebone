@@ -10,8 +10,10 @@ namespace bebone::renderer {
     }
 
     void IGraphicsPass::check_requirements() {
-        if(!program_set_flag)
+        if(!program_set_flag) {
+            LOG_ERROR("IGraphicsPass is not provided with shader program");
             throw std::runtime_error("IGraphicsPass is not provided with shader program");
+        }
     }
 
     void IGraphicsPass::set_program(const std::shared_ptr<IProgram>& arg_program) {

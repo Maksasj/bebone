@@ -27,8 +27,10 @@ namespace bebone::gfx {
         count_info.pDescriptorCounts = &max_binding;
         alloc_info.pNext = &count_info; // Todo
 
-        if (vkAllocateDescriptorSets(device.device, &alloc_info, &backend) != VK_SUCCESS)
+        if (vkAllocateDescriptorSets(device.device, &alloc_info, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to allocate descriptor sets");
             throw std::runtime_error("failed to allocate descriptor sets!");
+        }
     }
 
     void VulkanDescriptorSet::destroy(VulkanDevice&) {

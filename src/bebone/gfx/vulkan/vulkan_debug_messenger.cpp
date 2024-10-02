@@ -12,7 +12,7 @@ namespace bebone::gfx {
         std::ignore = message_type;
         std::ignore = user_ptr;
 
-        std::cerr << "validation layer: " << callback->pMessage << std::endl;
+        LOG_WARNING("Validation layer: {}", callback->pMessage);
 
         return VK_FALSE;
     }
@@ -56,8 +56,10 @@ namespace bebone::gfx {
 
         populate_debug_messenger_create_info(create_info);
 
-        if(CreateDebugUtilsMessengerEXT(vulkan_instance.get_instance(), &create_info, nullptr, &debug_messenger) != VK_SUCCESS)
+        if(CreateDebugUtilsMessengerEXT(vulkan_instance.get_instance(), &create_info, nullptr, &debug_messenger) != VK_SUCCESS) {
+            LOG_ERROR("Failed to set up debug messenger");
             throw std::runtime_error("failed to set up debug messenger!");
+        }
     }
 
     VulkanDebugMessenger::~VulkanDebugMessenger() {

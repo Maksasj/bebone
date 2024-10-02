@@ -13,11 +13,14 @@ namespace bebone::core {
         class ConsoleLogger : public ILogger  {
             private:
                 std::ostream& stream;
+                LogLevel log_level;
 
             public:
                 explicit ConsoleLogger(std::ostream& st = std::cout);
 
-                void log(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) override;
+                void log(const LogLevel& level, std::string_view format, std::format_args&& args) override;
+
+                void set_log_level(const LogLevel& level) override;
         };
 }
 

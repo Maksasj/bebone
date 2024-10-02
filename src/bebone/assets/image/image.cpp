@@ -120,7 +120,8 @@ namespace bebone::assets {
             return std::make_shared<Image>(color, width, height);
         }
 
-        throw std::runtime_error("Unsupported color format " + file_path);
+        LOG_ERROR("Unsupported color format {}", file_path);
+        // throw std::runtime_error("Unsupported color format " + file_path); Todo
     }
 
     template<typename Color>

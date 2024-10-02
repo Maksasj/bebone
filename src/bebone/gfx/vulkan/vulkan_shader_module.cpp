@@ -10,8 +10,10 @@ namespace bebone::gfx {
         create_info.codeSize = code.get_byte_code().size() * sizeof(unsigned int);
         create_info.pCode = reinterpret_cast<const uint32_t*>(code.get_byte_code().data());
 
-        if(vkCreateShaderModule(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateShaderModule(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create shader module");
             throw std::runtime_error("Failed to create shader module");
+        }
     }
 
     void VulkanShaderModule::destroy(VulkanDevice& device) {

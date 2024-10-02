@@ -26,8 +26,8 @@ int main() {
 
     // Geometry pass
     GLShaderProgram geometry_program(
-        GLShaderFactory::create_shader("main.vert.glsl", VertexShader, EnableUniforms),
-        GLShaderFactory::create_shader("main.frag.glsl", FragmentShader, EnableUniforms));
+        GLShaderFactory::create_shader("main.vert.glsl", ShaderType::VertexShader, EnableUniforms),
+        GLShaderFactory::create_shader("main.frag.glsl", ShaderType::FragmentShader, EnableUniforms));
 
     auto geometry_fbo = GLFramebuffer();
         auto geometry_texture = GLTexture2D(800, 600);
@@ -41,8 +41,8 @@ int main() {
 
     // Blur pass
     GLShaderProgram blur_program(
-        GLShaderFactory::create_shader("blur.vert.glsl", VertexShader, EnableUniforms),
-        GLShaderFactory::create_shader("blur.frag.glsl", FragmentShader, EnableUniforms));
+        GLShaderFactory::create_shader("blur.vert.glsl", ShaderType::VertexShader, EnableUniforms),
+        GLShaderFactory::create_shader("blur.frag.glsl", ShaderType::FragmentShader, EnableUniforms));
 
     auto blur_fbo = GLFramebuffer();
         auto blur_texture = GLTexture2D(800, 600);
@@ -54,8 +54,8 @@ int main() {
 
     // Final pass
     GLShaderProgram post_program(
-        GLShaderFactory::create_shader("post.vert.glsl", VertexShader, EnableUniforms),
-        GLShaderFactory::create_shader("post.frag.glsl", FragmentShader, EnableUniforms));
+        GLShaderFactory::create_shader("post.vert.glsl", ShaderType::VertexShader, EnableUniforms),
+        GLShaderFactory::create_shader("post.frag.glsl", ShaderType::FragmentShader, EnableUniforms));
 
     while (!window->closing()) {
         transform.rotation.x += Time::get_seconds_elapsed();

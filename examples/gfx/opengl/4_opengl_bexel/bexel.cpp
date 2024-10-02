@@ -17,8 +17,8 @@ namespace bexel {
     void Bexel::load() {
         const auto shader_flags = EnableUniforms;
 
-        auto vertex_shader = GLShaderFactory::create_shader("assets/vertex.glsl", VertexShader, shader_flags);
-        auto fragment_shader = GLShaderFactory::create_shader("assets/fragment.glsl", FragmentShader, shader_flags);
+        auto vertex_shader = GLShaderFactory::create_shader("assets/vertex.glsl", ShaderType::VertexShader, shader_flags);
+        auto fragment_shader = GLShaderFactory::create_shader("assets/fragment.glsl", ShaderType::FragmentShader, shader_flags);
 
         shader = make_unique<GLShaderProgram>(vertex_shader, fragment_shader);
 

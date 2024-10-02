@@ -32,8 +32,8 @@ int main() {
     auto device = instance->create_device(window);
     auto swap_chain = device->create_swap_chain(window);
 
-    auto vert_shader_module = device->create_shader_module(vulkan_device_read_file("vert.glsl"), VertexShader);
-    auto frag_shader_module = device->create_shader_module(vulkan_device_read_file("frag.glsl"), FragmentShader);
+    auto vert_shader_module = device->create_shader_module(vulkan_device_read_file("vert.glsl"), ShaderType::VertexShader);
+    auto frag_shader_module = device->create_shader_module(vulkan_device_read_file("frag.glsl"), ShaderType::FragmentShader);
 
     auto pipeline_layout = device->create_pipeline_layout({}, {});
 

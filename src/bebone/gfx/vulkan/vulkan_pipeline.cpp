@@ -19,9 +19,9 @@ namespace bebone::gfx {
             stage.pName = "main";
             stage.pSpecializationInfo = nullptr;
 
-            if(shader_module->type == VertexShader)
+            if(shader_module->type == ShaderType::VertexShader)
                 stage.stage = VK_SHADER_STAGE_VERTEX_BIT;
-            else if(shader_module->type == FragmentShader)
+            else if(shader_module->type == ShaderType::FragmentShader)
                 stage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
             stages.push_back(stage);
@@ -197,8 +197,10 @@ namespace bebone::gfx {
             .basePipelineIndex = config_info.base_pipeline_index
         };
 
-        if(vkCreateGraphicsPipelines(device.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateGraphicsPipelines(device.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create graphics pipeline");
             throw std::runtime_error("failed to create graphics pipeline");
+        }
     }
 
     /*

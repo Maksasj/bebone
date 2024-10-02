@@ -59,8 +59,8 @@ namespace bebone::gfx {
         const std::string& fragment_shader_file_path,
         VulkanPipelineConfig config_info
     ) {
-        auto vert_shader_module = device->create_shader_module(vulkan_device_read_file(vertex_shader_file_path), VertexShader);
-        auto frag_shader_module = device->create_shader_module(vulkan_device_read_file(fragment_shader_file_path), FragmentShader);
+        auto vert_shader_module = device->create_shader_module(vulkan_device_read_file(vertex_shader_file_path), ShaderType::VertexShader);
+        auto frag_shader_module = device->create_shader_module(vulkan_device_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
 
         auto pipeline = create_pipeline(device, render_pass, vert_shader_module, frag_shader_module, config_info);
 
@@ -101,11 +101,11 @@ namespace bebone::gfx {
     ) {
         // Todo
         if(!attachment->get_sampler().has_value())
-            std::cout << "Sampler does not have any value";
+            LOG_WARNING("Sampler does not have any value");
 
         // Todo
         if(!attachment->get_view().has_value())
-            std::cout << "View does not have any value";
+            LOG_WARNING("View does not have any value");
 
         // Todo
         auto sampler = attachment->get_sampler().value();

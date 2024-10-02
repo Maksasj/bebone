@@ -22,7 +22,7 @@ namespace bebone::renderer {
 
     void VulkanRenderGraphImpl::record() {
         if(!swap_chain->acquire_next_image(device, &frame).is_ok()) {
-            std::cout << "Window is resized !\n";
+            LOG_TRACE("Window is resized");
             return;
         }
 
@@ -44,7 +44,7 @@ namespace bebone::renderer {
         auto cmd = encoders[frame].get_command_buffer();
 
         if(!swap_chain->submit_present_command_buffers(device, cmd, &frame).is_ok()) {
-            std::cout << "Window is resized !\n";
+            LOG_TRACE("Window is resized");
             return;
         }
     }

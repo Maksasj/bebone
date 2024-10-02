@@ -28,8 +28,10 @@ namespace bebone::gfx {
         create_info.height = extent.height;
         create_info.layers = 1;
 
-        if(vkCreateFramebuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateFramebuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create framebuffer");
             throw std::runtime_error("failed to create framebuffer!");
+        }
     }
 
     void VulkanFramebuffer::destroy(VulkanDevice& device) {

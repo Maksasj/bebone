@@ -21,8 +21,10 @@ namespace bebone::gfx {
         pool_info.maxSets = static_cast<uint32_t>(65536 * pool_sizes.size());
         pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
-        if(vkCreateDescriptorPool(device.device, &pool_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateDescriptorPool(device.device, &pool_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create descriptor pool");
             throw std::runtime_error("failed to create descriptor pool!");
+        }
     }
 
     std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(

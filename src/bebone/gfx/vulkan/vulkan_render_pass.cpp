@@ -63,8 +63,10 @@ namespace bebone::gfx {
         render_pass_info.dependencyCount = 1;
         render_pass_info.pDependencies = &dependency;
 
-        if(vkCreateRenderPass(device.device, &render_pass_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateRenderPass(device.device, &render_pass_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create render pass");
             throw std::runtime_error("failed to create render pass!");
+        }
     }
 
     std::optional<VulkanAttachmentDesc> VulkanRenderPass::get_depth_attachment() const {

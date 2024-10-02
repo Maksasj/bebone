@@ -6,7 +6,8 @@ namespace bebone::gfx {
 
         if(vertex.get_properties() != fragment.get_properties()) {
             // Todo, we need to have some sort of policy for compatibility of shader properties
-            throw std::runtime_error("Provided opengl shaders have different properties, therefore they can not be use for shader program creation");
+            LOG_ERROR("Provided OpenGL shaders have different properties, therefore they can not be use for shader program creation");
+            // throw std::runtime_error("Provided OpenGL shaders have different properties, therefore they can not be use for shader program creation"); Todo
         }
 
         // Todo also look there
@@ -34,10 +35,8 @@ namespace bebone::gfx {
         if (!success) {
             glGetProgramInfoLog(program, 512, nullptr, info_log);
 
-            // Todo resolve this
-            std::cout << info_log << "\n";
-
-            throw std::runtime_error("Failed to link shader program, with error: " + std::string(info_log));
+            // throw std::runtime_error("Failed to link shader program, with error: " + std::string(info_log)); Todo
+            LOG_ERROR("Failed to link shader program, with error: {}", std::string(info_log));
         }
     }
 

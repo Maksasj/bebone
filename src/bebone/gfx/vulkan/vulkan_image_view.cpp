@@ -25,8 +25,10 @@ namespace bebone::gfx {
             .layerCount = image_view_info.subresource_range.layer_count
         };
 
-        if(vkCreateImageView(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateImageView(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create texture image view");
             throw std::runtime_error("failed to create texture image view!");
+        }
     }
 
     void VulkanImageView::destroy(VulkanDevice& device) {

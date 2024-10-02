@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    enum ShaderType {
+    enum class ShaderType {
         FragmentShader,
         VertexShader
     };

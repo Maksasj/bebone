@@ -4,33 +4,36 @@
 #include <miniaudio.h>
 #include <memory>
 
+#include "../core/core.h"
+
 namespace bebone::sound_system {
     class SoundEngine;
 
     class Sound {
-    private:
-        std::shared_ptr<ma_sound> loaded_sound;
+        private:
+            std::shared_ptr<ma_sound> loaded_sound;
 
-        void free();
-        ma_sound* get_raw_sound() const;
-    public:
-        Sound();
-        ~Sound();
+            void free();
+            ma_sound* get_raw_sound() const;
 
-        void play() const;
-        void stop() const;
-        void rewind() const;
+        public:
+            Sound();
+            ~Sound();
 
-        void set_volume(const float& volume) const;
-        void set_pan(const float& pan) const;
-        void set_pitch(const float& pitch) const;
-        void set_looping(const bool& loop) const;
+            void play() const;
+            void stop() const;
+            void rewind() const;
 
-        bool is_playing() const;
-        bool at_end() const;
-        bool is_looping() const;
+            void set_volume(const float& volume) const;
+            void set_pan(const float& pan) const;
+            void set_pitch(const float& pitch) const;
+            void set_looping(const bool& loop) const;
 
-        friend class SoundEngine;
+            bool is_playing() const;
+            bool at_end() const;
+            bool is_looping() const;
+
+            friend class SoundEngine;
     };
 }
 

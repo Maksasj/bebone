@@ -129,8 +129,8 @@ namespace bebone::renderer {
         const std::string& vertex_shader_code,
         const std::string& fragment_shader_code
     ) {
-        auto vert_shader_module = device->create_shader_module(vertex_shader_code, VertexShader);
-        auto frag_shader_module = device->create_shader_module(fragment_shader_code, FragmentShader);
+        auto vert_shader_module = device->create_shader_module(vertex_shader_code, ShaderType::VertexShader);
+        auto frag_shader_module = device->create_shader_module(fragment_shader_code, ShaderType::FragmentShader);
 
         // Create pipeline
         auto render_pass = static_pointer_cast<VulkanPassImpl>(impl)->get_vulkan_pass();
