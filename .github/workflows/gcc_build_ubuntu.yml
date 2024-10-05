@@ -34,13 +34,14 @@ jobs:
     - name: Install Vulkan 3
       run: sudo apt install vulkan-sdk
 
+    - name: Install GCC 13
+      run: sudo apt-get update && sudo apt-get -y install g++-13
+
+    - name: Install Ninja
+      run: sudo apt install ninja-build
+
     - name: Configure CMake
-      uses: threeal/cmake-action@v1.3.0
-      with:
-        generator: Ninja
-        c-compiler: gcc
-        cxx-compiler: g++
-        build-dir: ${{env.BUILD_DIR}}
+      run: cmake -B ${{env.BUILD_DIR}} -G Ninja
 
     - name: Build
       run: cmake --build ${{github.workspace}}/${{env.BUILD_DIR}} --config ${{env.BUILD_TYPE}}
