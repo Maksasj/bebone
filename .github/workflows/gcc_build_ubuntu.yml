@@ -37,7 +37,7 @@ jobs:
       run: sudo apt install vulkan-sdk
 
     - name: Install GCC 13
-      run: sudo apt-get update && sudo apt-get -y install g++-13
+      run: sudo apt-get update && sudo apt-get -y install g++-13  && which gcc-13 && which g++-13
 
     - name: Install Ninja
       run: sudo apt install ninja-build
