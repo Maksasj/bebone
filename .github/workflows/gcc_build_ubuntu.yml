@@ -43,7 +43,7 @@ jobs:
       run: sudo apt install ninja-build
 
     - name: Configure CMake
-      run: cmake -B ${{env.BUILD_DIR}} -D CMAKE_C_COMPILER=gcc-13 -D CMAKE_CXX_COMPILER=g++-13 -G Ninja
+      run: cmake -B ${{env.BUILD_DIR}} -D CMAKE_C_COMPILER=/usr/bin/gcc-13 -D CMAKE_CXX_COMPILER=/usr/bin/g++-13 -G Ninja
 
     - name: Build
       run: cmake --build ${{github.workspace}}/${{env.BUILD_DIR}} --config ${{env.BUILD_TYPE}}
