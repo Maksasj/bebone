@@ -18,6 +18,7 @@ namespace bebone::core {
             public:
                 explicit ConsoleLogger(std::ostream& st = std::cout);
 
+                void log(const LogLevel& level, std::string_view format) override;
                 void log(const LogLevel& level, std::string_view format, std::format_args&& args) override;
 
                 void set_log_level(const LogLevel& level) override;
