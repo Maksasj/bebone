@@ -1,7 +1,6 @@
 #include "obj_mesh_loader.h"
 
 namespace bebone::renderer {
-
     OBJMeshLoader::OBJMeshLoader(const std::shared_ptr<IMeshBuilder>& builder) : IMeshLoader(builder) {
 
     }
@@ -28,6 +27,8 @@ namespace bebone::renderer {
     }
 
     std::shared_ptr<IMesh> OBJMeshLoader::load_from_file(const std::string& file_path) {
+        LOG_INFORMATION("Loading OBJ mesh from {}", file_path);
+
         auto file = std::ifstream(file_path);
 
         auto raw_vertices = std::vector<Vec3f> {};
@@ -95,6 +96,8 @@ namespace bebone::renderer {
                 }
             }
         }
+
+        LOG_INFORMATION("Successfully loaded {} vertices", vertices.size());
 
         builder->append_raw(vertices.data(), vertices.size(), indicies.data(), indicies.size());
 

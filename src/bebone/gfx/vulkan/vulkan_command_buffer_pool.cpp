@@ -13,6 +13,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create command pool");
             throw std::runtime_error("failed to create command pool!");
         }
+
+        LOG_TRACE("Created command buffer pool");
     }
 
     std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer(VulkanDevice& device) {
@@ -81,6 +83,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroyCommandPool(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed command buffer pool");
 
         mark_destroyed();
     }

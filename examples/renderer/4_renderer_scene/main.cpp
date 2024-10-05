@@ -4,13 +4,12 @@ using namespace bebone::renderer;
 using namespace bebone::gfx;
 
 int main() {
-    auto window = WindowFactory::create_window("4. Renderer scene", 800, 600, Vulkan, { .enable_resize = true });
-    auto renderer = RendererFactory::create_renderer(window);
+    auto [ window, renderer ] = create_window_renderer("4. Renderer scene", 800, 600, Vulkan, { .enable_resize = false });
 
     auto suzanne = renderer->load_mesh("suzanne.obj");
 
     PBRMaterialProperties properties {
-        .albedo = renderer->load_texture("01-uv-texture.png"),
+        .albedo = renderer->load_texture("autumn_field_puresky.jpg"),
         .height = renderer->load_texture("used-stainless-steel2_height.png"),
         .metallic = renderer->load_texture("used-stainless-steel2_metallic.png"),
         .roughness = renderer->load_texture("used-stainless-steel2_roughness.png")

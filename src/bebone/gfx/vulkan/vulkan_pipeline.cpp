@@ -201,6 +201,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create graphics pipeline");
             throw std::runtime_error("failed to create graphics pipeline");
         }
+
+        LOG_TRACE("Created Vulkan graphics pipeline");
     }
 
     /*
@@ -226,7 +228,9 @@ namespace bebone::gfx {
             return;
 
         vkDestroyPipeline(device.device, backend, nullptr);
-        
+
+        LOG_TRACE("Destroyed Vulkan graphics pipeline");
+
         mark_destroyed();
     }
 }

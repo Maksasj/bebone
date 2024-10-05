@@ -33,6 +33,8 @@ namespace bebone::renderer {
 
         auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
         pass->set_camera(camera);
+
+        LOG_TRACE("Initialized Vulkan renderer");
     }
 
     VulkanRenderer::~VulkanRenderer() {
@@ -40,6 +42,8 @@ namespace bebone::renderer {
     }
 
     void VulkanRenderer::resize_viewport(const Vec2i& new_size) {
+        LOG_TRACE("Renderer resizing viewport");
+
         std::ignore = new_size;
 
         device->wait_idle();
@@ -55,6 +59,7 @@ namespace bebone::renderer {
 
         auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
         pass->set_camera(camera);
+
     }
 
     std::shared_ptr<IProgramManager> VulkanRenderer::get_program_manager() const {

@@ -26,6 +26,8 @@ namespace bebone::gfx {
         create_logical_device();
 
         command_buffer_pool = create_command_buffer_pool();
+
+        LOG_TRACE("Created Vulkan device");
     }
 
     void VulkanDevice::pick_physical_device(VulkanInstance& instance) {
@@ -619,6 +621,8 @@ namespace bebone::gfx {
 
         vkDestroyDevice(device, nullptr);
         vkDestroySurfaceKHR(instance.get_instance(), surface, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan device");
     }
 
     VkFormat VulkanDevice::find_depth_format() {

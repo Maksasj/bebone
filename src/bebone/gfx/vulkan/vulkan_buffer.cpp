@@ -26,6 +26,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create Vulkan buffer");
             // throw std::runtime_error("failed to create vulkan buffer!"); Todo
         }
+
+        LOG_TRACE("Created Vulkan buffer with size {}", size);
     }
 
     VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
@@ -68,5 +70,7 @@ namespace bebone::gfx {
         vkDestroyBuffer(device.device, backend, nullptr);
 
         mark_destroyed();
+
+        LOG_TRACE("Destroyed Vulkan buffer");
     }
 }

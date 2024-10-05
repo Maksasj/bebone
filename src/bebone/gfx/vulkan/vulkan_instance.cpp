@@ -48,8 +48,12 @@ namespace bebone::gfx {
 
         has_gflw_required_instance_extensions();
 
-        if(enable_validation_layers)
+        if(enable_validation_layers) {
+            LOG_INFORMATION("Enabled vulkan validation layers");
             debug_messenger = std::make_unique<VulkanDebugMessenger>(*this);
+        }
+
+        LOG_TRACE("Created Vulkan instance");
     }
 
     bool VulkanInstance::check_validation_layer_support() {
@@ -135,6 +139,8 @@ namespace bebone::gfx {
             destroy_all(child);
 
         vkDestroyInstance(instance, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan instance");
     }
 }
 

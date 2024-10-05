@@ -24,6 +24,8 @@ namespace bebone::gfx {
         render_target = device.create_render_target(render_pass, images);
 
         create_sync_objects(device);
+
+        LOG_TRACE("Created Vulkan swap chain");
     }
 
     const size_t& VulkanSwapChain::get_current_frame() const {
@@ -260,6 +262,8 @@ namespace bebone::gfx {
         }
 
         vkDestroySwapchainKHR(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan swap chain");
 
         mark_destroyed();
     }

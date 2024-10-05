@@ -14,6 +14,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create shader module");
             throw std::runtime_error("Failed to create shader module");
         }
+
+        LOG_TRACE("Created Vulkan shader module");
     }
 
     void VulkanShaderModule::destroy(VulkanDevice& device) {
@@ -21,6 +23,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroyShaderModule(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan shader module");
 
         mark_destroyed();
     }

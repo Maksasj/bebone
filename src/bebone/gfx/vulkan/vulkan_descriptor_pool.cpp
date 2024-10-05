@@ -25,6 +25,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create descriptor pool");
             throw std::runtime_error("failed to create descriptor pool!");
         }
+
+        LOG_TRACE("Created Descriptor pool");
     }
 
     std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(
@@ -53,6 +55,8 @@ namespace bebone::gfx {
             return;
         
         vkDestroyDescriptorPool(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Descriptor pool");
 
         mark_destroyed();
     }

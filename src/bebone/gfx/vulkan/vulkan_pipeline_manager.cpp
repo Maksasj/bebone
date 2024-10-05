@@ -39,6 +39,8 @@ namespace bebone::gfx {
         bindless_pipeline_layout = device.create_pipeline_layout({ bindless_descriptor_set_layout }, constant_ranges);
 
         std::ignore = bindless_storage_index; // Todo
+
+        LOG_TRACE("Created Vulkan pipeline manager");
     }
 
     std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
@@ -177,6 +179,8 @@ namespace bebone::gfx {
         bindless_descriptor_set_layout->destroy(device);
         bindless_descriptor_set->destroy(device);
         descriptor_pool->destroy(device);
+
+        LOG_TRACE("Destroyed Vulkan pipeline manager");
 
         mark_destroyed();
     }

@@ -18,6 +18,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to allocate command buffers");
             throw std::runtime_error("Failed to allocate command buffers !");
         }
+
+        LOG_TRACE("Allocated 1 command buffer");
     }
 
     VulkanCommandBuffer::VulkanCommandBuffer(VulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool) {
@@ -32,6 +34,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to allocate command buffers");
             throw std::runtime_error("Failed to allocate command buffers !");
         }
+
+        LOG_TRACE("Allocated 1 command buffer");
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::begin_record() {
@@ -267,7 +271,7 @@ namespace bebone::gfx {
 
     void VulkanCommandBuffer::destroy(VulkanDevice&) {
         // Todo
-        
+
         mark_destroyed();
     }
 }

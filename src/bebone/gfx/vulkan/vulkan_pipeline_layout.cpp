@@ -33,6 +33,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create pipeline layout");
             throw std::runtime_error("Failed to create pipeline layout");
         }
+
+        LOG_TRACE("Created Vulkan pipeline layout");
     }
 
     void VulkanPipelineLayout::destroy(VulkanDevice& device) {
@@ -40,6 +42,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroyPipelineLayout(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan pipeline layout");
 
         mark_destroyed();
     }

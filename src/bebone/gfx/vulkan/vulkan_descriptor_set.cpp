@@ -31,6 +31,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to allocate descriptor sets");
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
+
+        LOG_TRACE("Allocated Descriptor set");
     }
 
     void VulkanDescriptorSet::destroy(VulkanDevice&) {

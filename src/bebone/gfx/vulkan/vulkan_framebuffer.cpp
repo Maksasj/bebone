@@ -32,6 +32,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create framebuffer");
             throw std::runtime_error("failed to create framebuffer!");
         }
+
+        LOG_TRACE("Created Vulkan framebuffer");
     }
 
     void VulkanFramebuffer::destroy(VulkanDevice& device) {
@@ -39,6 +41,8 @@ namespace bebone::gfx {
             return;
             
         vkDestroyFramebuffer(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan framebuffer");
 
         mark_destroyed();
     }

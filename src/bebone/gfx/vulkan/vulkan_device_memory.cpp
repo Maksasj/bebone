@@ -21,6 +21,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to allocate vulkan buffer memory");
             throw std::runtime_error("failed to allocate vulkan buffer memory!");
         }
+
+        LOG_TRACE("Allocated Vulkan device memory");
     }
 
     void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer) {
@@ -47,15 +49,6 @@ namespace bebone::gfx {
         vkUnmapMemory(device.device, backend);
     }
 
-    void VulkanDeviceMemory::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-        
-        vkFreeMemory(device.device, backend, nullptr);
-
-        mark_destroyed();
-    }
-
     void VulkanDeviceMemory::upload_data(VulkanDevice& device, const void* src, const size_t& size) {
         void* data;
 
@@ -66,5 +59,16 @@ namespace bebone::gfx {
 
     void VulkanDeviceMemory::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
         upload_data(*device, src, size);
+    }
+
+    void VulkanDeviceMemory::destroy(VulkanDevice& device) {
+        if(is_destroyed())
+            return;
+
+        vkFreeMemory(device.device, backend, nullptr);
+
+        LOG_TRACE("Freed Vulkan device memory");
+
+        mark_destroyed();
     }
 }

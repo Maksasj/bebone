@@ -38,6 +38,8 @@ namespace bebone::gfx {
             LOG_ERROR("Failed to create image");
             throw std::runtime_error("failed to create image!");
         }
+
+        LOG_TRACE("Created Vulkan image");
     }
 
     // Todo, clear out this
@@ -104,6 +106,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroyImage(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan image");
 
         mark_destroyed();
     }
