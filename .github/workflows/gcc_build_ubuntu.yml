@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v1
@@ -38,9 +38,6 @@ jobs:
 
     - name: Install GCC 13
       run: sudo apt-get update && sudo apt-get -y install g++-13
-
-    - name: Test
-      run: which gcc-13
 
     - name: Install Ninja
       run: sudo apt install ninja-build
