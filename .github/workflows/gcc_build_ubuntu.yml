@@ -9,6 +9,8 @@ on:
 env:
   BUILD_TYPE: Release
   BUILD_DIR: build
+  CMAKE_C_COMPILER: gcc-13
+  CMAKE_CPP_COMPILER: g++-13
 
 jobs:
   build:
