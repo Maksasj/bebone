@@ -5,7 +5,7 @@ namespace bebone::assets {
 
     template<typename Color>
     Image<Color>::Image(const std::vector<Color>& data, const size_t& width, const size_t& height) : color(data), width(width), height(height) {
-
+        LOG_INFORMATION("Created image {}x{}", width, height);
     }
 
     template<typename Color>
@@ -73,11 +73,15 @@ namespace bebone::assets {
 
     template<typename Color>
     std::shared_ptr<Image<Color>> Image<Color>::from_color(const size_t& width, const size_t& height, const Color& color) {
+        LOG_INFORMATION("Created image from color");
+
         return std::make_shared<Image<Color>>(std::vector<Color>(width * height, color), width, height);
     }
 
     template<typename Color>
     std::shared_ptr<Image<Color>> Image<Color>::from_white_noise(const size_t& width, const size_t & height) {
+        LOG_INFORMATION("Created image from white noise");
+
         const auto size = width * height;
 
         std::vector<Color> color(size);
@@ -89,10 +93,17 @@ namespace bebone::assets {
 
     template<typename Color>
     std::shared_ptr<Image<Color>> Image<Color>::load_from_file(const std::string& file_path, const bool& v_flip) {
+        LOG_INFORMATION("Loading image from file {}", file_path);
+
         stbi_set_flip_vertically_on_load(v_flip);
 
         int width, height, channels;
         void* bytes = stbi_load(file_path.c_str(), &width, &height, &channels, 0);
+
+        if(bytes == nullptr) {
+            LOG_ERROR("Failed to load image from file {}", file_path);
+            // throw std::runtime_error("Unsupported color format " + file_path); Todo
+        }
 
         const auto size = width * height;
 
@@ -120,11 +131,14 @@ namespace bebone::assets {
             return std::make_shared<Image>(color, width, height);
         }
 
-        throw std::runtime_error("Unsupported color format " + file_path);
+        LOG_ERROR("Unsupported color format {}", file_path);
+        // throw std::runtime_error("Unsupported color format " + file_path); Todo
     }
 
     template<typename Color>
     void Image<Color>::export_to_file(const std::string& file_name) {
+        LOG_INFORMATION("Exporting image into {}", file_name);
+
         if(Color::get_format() & BEBONE_TYPES_COLOR_FLOAT) {
             auto image = to<ColorRGBA32>();
             const auto channels = image->get_channels();

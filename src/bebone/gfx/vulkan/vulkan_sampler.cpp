@@ -25,6 +25,9 @@ namespace bebone::gfx {
 
         // Todo
         vkCreateSampler(device.device, &sampler_info, nullptr, &backend);
+        LOG_WARNING("vkCreateSampler result is not handled");
+
+        LOG_TRACE("Created Vulkan sampler");
     }
 
     void VulkanSampler::destroy(VulkanDevice& device) {
@@ -32,6 +35,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroySampler(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan sampler");
 
         mark_destroyed();
     }

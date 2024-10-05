@@ -24,6 +24,8 @@ namespace bebone::gfx {
         render_target = device.create_render_target(render_pass, images);
 
         create_sync_objects(device);
+
+        LOG_TRACE("Created Vulkan swap chain");
     }
 
     const size_t& VulkanSwapChain::get_current_frame() const {
@@ -45,8 +47,10 @@ namespace bebone::gfx {
             VK_NULL_HANDLE,
             image_index);
 
-        if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-            throw std::runtime_error("failed to acquire swap chain image!");
+        if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+            LOG_ERROR("Failed to acquire swap chain image");
+            // throw std::runtime_error("failed to acquire swap chain image!"); Todo
+        }
 
         return { result };
     }
@@ -77,8 +81,10 @@ namespace bebone::gfx {
         submit_info.pSignalSemaphores = signal_semaphores;
 
         vkResetFences(device->device, 1, &in_flight_fences[current_frame]);
-        if(vkQueueSubmit(device->graphics_queue, 1, &submit_info, in_flight_fences[current_frame]) != VK_SUCCESS)
-            throw std::runtime_error("failed to submit draw command buffer!");
+        if(vkQueueSubmit(device->graphics_queue, 1, &submit_info, in_flight_fences[current_frame]) != VK_SUCCESS) {
+            LOG_ERROR("Failed to submit draw command buffer");
+            // throw std::runtime_error("failed to submit draw command buffer!"); Todo
+        }
 
         // Todo, Presenting part
         VkSwapchainKHR swap_chains[] = { backend };
@@ -95,8 +101,10 @@ namespace bebone::gfx {
 
         current_frame = (current_frame + 1) % image_count;
 
-        if(result != VK_SUCCESS)
-            throw std::runtime_error("failed to acquire submit command buffers !");
+        if(result != VK_SUCCESS) {
+            LOG_ERROR("Failed to acquire submit command buffers");
+            // throw std::runtime_error("failed to acquire submit command buffers !"); Todo
+        }
 
         return { result };
     }
@@ -134,7 +142,7 @@ namespace bebone::gfx {
         if (swap_chain_support.capabilities.maxImageCount > 0 && image_count > swap_chain_support.capabilities.maxImageCount)
             image_count = swap_chain_support.capabilities.maxImageCount;
 
-        std::cout << "Chosen swap chain image count " << image_count << "\n";
+        LOG_INFORMATION("Chosen swap chain image count {}", image_count);
 
         VkSwapchainCreateInfoKHR create_info = {};
         create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -165,8 +173,10 @@ namespace bebone::gfx {
         create_info.clipped = VK_TRUE;
         create_info.oldSwapchain = VK_NULL_HANDLE;
 
-        if(vkCreateSwapchainKHR(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
-            throw std::runtime_error("failed to create swap chain!");
+        if(vkCreateSwapchainKHR(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create swap chain");
+            // throw std::runtime_error("failed to create swap chain!"); Todo
+        }
     }
 
     void VulkanSwapChain::create_sync_objects(VulkanDevice& device) {
@@ -183,14 +193,20 @@ namespace bebone::gfx {
         fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
         for (size_t i = 0; i < image_count; i++) {
-            if(vkCreateSemaphore(device.device, &semaphore_info, nullptr, &image_available_semaphores[i]) != VK_SUCCESS)
-                throw std::runtime_error("failed to create synchronization objects for a frame!");
+            if(vkCreateSemaphore(device.device, &semaphore_info, nullptr, &image_available_semaphores[i]) != VK_SUCCESS) {
+                LOG_ERROR("Failed to create synchronization objects for a frame");
+                // throw std::runtime_error("failed to create synchronization objects for a frame!"); Todo
+            }
 
-            if(vkCreateSemaphore(device.device, &semaphore_info, nullptr, &render_finished_semaphores[i]) != VK_SUCCESS)
-                throw std::runtime_error("failed to create synchronization objects for a frame!");
+            if(vkCreateSemaphore(device.device, &semaphore_info, nullptr, &render_finished_semaphores[i]) != VK_SUCCESS) {
+                LOG_ERROR("Failed to create synchronization objects for a frame");
+                // throw std::runtime_error("failed to create synchronization objects for a frame!"); Todo
+            }
 
-            if (vkCreateFence(device.device, &fence_info, nullptr, &in_flight_fences[i]) != VK_SUCCESS)
-                throw std::runtime_error("failed to create synchronization objects for a frame!");
+            if (vkCreateFence(device.device, &fence_info, nullptr, &in_flight_fences[i]) != VK_SUCCESS) {
+                LOG_ERROR("Failed to create synchronization objects for a frame");
+                // throw std::runtime_error("failed to create synchronization objects for a frame!"); Todo
+            }
         }
     }
 
@@ -205,12 +221,12 @@ namespace bebone::gfx {
     VkPresentModeKHR VulkanSwapChain::choose_swap_present_mode(const std::vector<VkPresentModeKHR> &available_present_modes) {
         for (const auto &available_present_mode : available_present_modes) {
             if (available_present_mode == VK_PRESENT_MODE_MAILBOX_KHR) {
-                std::cout << "Present mode: Mailbox" << std::endl;
+                LOG_INFORMATION("Present mode: Mailbox");
                 return available_present_mode;
             }
         }
 
-        std::cout << "Present mode: V-Sync" << std::endl;
+        LOG_INFORMATION("Present mode: V-Sync");
 
         return VK_PRESENT_MODE_FIFO_KHR;
     }
@@ -246,6 +262,8 @@ namespace bebone::gfx {
         }
 
         vkDestroySwapchainKHR(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan swap chain");
 
         mark_destroyed();
     }

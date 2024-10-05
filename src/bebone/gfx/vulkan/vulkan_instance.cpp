@@ -7,8 +7,10 @@ namespace bebone::gfx {
     }
 
     VulkanInstance::VulkanInstance() {
-        if (enable_validation_layers && !check_validation_layer_support())
+        if (enable_validation_layers && !check_validation_layer_support()) {
+            LOG_ERROR("Validation layers requested, but not available");
             throw std::runtime_error("validation layers requested, but not available!");
+        }
 
         VkApplicationInfo app_info = {};
         app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -39,13 +41,19 @@ namespace bebone::gfx {
             create_info.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS)
+        if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create instance");
             throw std::runtime_error("failed to create instance!");
+        }
 
         has_gflw_required_instance_extensions();
 
-        if(enable_validation_layers)
+        if(enable_validation_layers) {
+            LOG_INFORMATION("Enabled vulkan validation layers");
             debug_messenger = std::make_unique<VulkanDebugMessenger>(*this);
+        }
+
+        LOG_TRACE("Created Vulkan instance");
     }
 
     bool VulkanInstance::check_validation_layer_support() {
@@ -72,7 +80,6 @@ namespace bebone::gfx {
         return true;
     }
 
-    // Todo remove all std::couts
     void VulkanInstance::has_gflw_required_instance_extensions() {
         uint32_t extension_count = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extension_count, nullptr);
@@ -80,21 +87,21 @@ namespace bebone::gfx {
         auto extensions = std::vector<VkExtensionProperties>(extension_count);
         vkEnumerateInstanceExtensionProperties(nullptr, &extension_count, extensions.data());
 
-        std::cout << "available extensions:" << std::endl;
         auto available = std::unordered_set<std::string>{};
-
         for(const auto &extension : extensions) {
-            std::cout << "\t" << extension.extensionName << std::endl;
+            LOG_INFORMATION("Available extensions: {}", extension.extensionName);
+
             available.insert(extension.extensionName);
         }
 
-        std::cout << "required extensions:" << std::endl;
         auto required_extensions = get_required_extensions();
-
         for(const auto &required : required_extensions) {
-            std::cout << "\t" << required << std::endl;
-            if(available.find(required) == available.end())
+            LOG_INFORMATION("Required extensions: {}", required);
+
+            if(available.find(required) == available.end()) {
+                LOG_ERROR("Missing required GLFW extension");
                 throw std::runtime_error("Missing required glfw extension");
+            }
         }
     }
 
@@ -132,6 +139,8 @@ namespace bebone::gfx {
             destroy_all(child);
 
         vkDestroyInstance(instance, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan instance");
     }
 }
 

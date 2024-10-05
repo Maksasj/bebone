@@ -10,8 +10,11 @@ namespace bebone::gfx {
         pool_info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
         if (vkCreateCommandPool(device.device, &pool_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create command pool");
             throw std::runtime_error("failed to create command pool!");
         }
+
+        LOG_TRACE("Created command buffer pool");
     }
 
     std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer(VulkanDevice& device) {
@@ -80,6 +83,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroyCommandPool(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed command buffer pool");
 
         mark_destroyed();
     }

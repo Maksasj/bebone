@@ -29,8 +29,12 @@ namespace bebone::gfx {
         pipeline_layout_info.pushConstantRangeCount = ranges.size();
         pipeline_layout_info.pPushConstantRanges = ranges.data();
 
-        if(vkCreatePipelineLayout(device.device, &pipeline_layout_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreatePipelineLayout(device.device, &pipeline_layout_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create pipeline layout");
             throw std::runtime_error("Failed to create pipeline layout");
+        }
+
+        LOG_TRACE("Created Vulkan pipeline layout");
     }
 
     void VulkanPipelineLayout::destroy(VulkanDevice& device) {
@@ -38,6 +42,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroyPipelineLayout(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan pipeline layout");
 
         mark_destroyed();
     }

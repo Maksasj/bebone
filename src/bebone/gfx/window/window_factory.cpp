@@ -27,6 +27,7 @@ namespace bebone::gfx {
 
         if (window->get_backend() == nullptr) {
             GLFWContext::terminate();
+            LOG_ERROR("Failed to create GLFW window");
             throw std::runtime_error("Failed to create GLFW window");
         }
 

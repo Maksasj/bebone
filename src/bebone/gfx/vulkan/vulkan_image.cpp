@@ -34,8 +34,12 @@ namespace bebone::gfx {
         create_info.pQueueFamilyIndices = image_info.ptr_queue_family_indices;
         create_info.initialLayout = image_info.initial_layout;
 
-        if(vkCreateImage(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateImage(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create image");
             throw std::runtime_error("failed to create image!");
+        }
+
+        LOG_TRACE("Created Vulkan image");
     }
 
     // Todo, clear out this
@@ -75,8 +79,10 @@ namespace bebone::gfx {
 
             source_stage = VK_PIPELINE_STAGE_TRANSFER_BIT;
             destination_stage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        } else
+        } else {
+            LOG_ERROR("Unsupported image layout transition");
             throw std::runtime_error("unsupported layout transition!");
+        }
 
         vkCmdPipelineBarrier(command_buffer->backend, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
@@ -100,6 +106,8 @@ namespace bebone::gfx {
             return;
 
         vkDestroyImage(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan image");
 
         mark_destroyed();
     }

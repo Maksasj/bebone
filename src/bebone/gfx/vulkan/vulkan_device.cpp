@@ -26,6 +26,8 @@ namespace bebone::gfx {
         create_logical_device();
 
         command_buffer_pool = create_command_buffer_pool();
+
+        LOG_TRACE("Created Vulkan device");
     }
 
     void VulkanDevice::pick_physical_device(VulkanInstance& instance) {
@@ -35,7 +37,7 @@ namespace bebone::gfx {
 
         vkGetPhysicalDeviceProperties(physical_device, &properties);
 
-        std::cout << "physical device: " << properties.deviceName << std::endl;
+        LOG_INFORMATION("Physical device: {}", properties.deviceName);
     }
 
     std::shared_ptr<VulkanDescriptorPool> VulkanDevice::create_descriptor_pool() {
@@ -113,8 +115,10 @@ namespace bebone::gfx {
         const size_t& binding,
         const std::vector<size_t>& dst_array_elements
     ) {
-        if(buffers.size() != dst_array_elements.size())
+        if(buffers.size() != dst_array_elements.size()) {
+            LOG_ERROR("Buffer an dst_array_elements count is not matching");
             throw std::runtime_error("buffer an dst_array_elements count is not matching");
+        }
 
         for(size_t i = 0; i < dst_array_elements.size(); ++i) {
             auto& buffer = buffers[i];
@@ -131,8 +135,10 @@ namespace bebone::gfx {
         const size_t& binding,
         const std::vector<size_t>& dst_array_elements
     ) {
-        if(tuples.size() != dst_array_elements.size())
+        if(tuples.size() != dst_array_elements.size()) {
+            LOG_ERROR("Buffer an dst_array_elements count is not matching");
             throw std::runtime_error("buffer an dst_array_elements count is not matching");
+        }
 
         for(size_t i = 0; i < dst_array_elements.size(); ++i) {
             const auto& buffer = tuples[i]->buffer;
@@ -550,8 +556,10 @@ namespace bebone::gfx {
         create_info.pNext = &device_features_2;
         create_info.enabledLayerCount = 0;
 
-        if(vkCreateDevice(physical_device, &create_info, nullptr, &device) != VK_SUCCESS)
+        if(vkCreateDevice(physical_device, &create_info, nullptr, &device) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create logical device");
             throw std::runtime_error("failed to create logical device!");
+        }
 
         vkGetDeviceQueue(device, indices.graphics_family, 0, &graphics_queue);
         vkGetDeviceQueue(device, indices.present_family, 0, &present_queue);
@@ -573,6 +581,7 @@ namespace bebone::gfx {
                 return format;
         }
 
+        LOG_ERROR("Failed to find supported format");
         throw std::runtime_error("failed to find supported format!");
     }
 
@@ -585,6 +594,7 @@ namespace bebone::gfx {
                 return i;
         }
 
+        LOG_ERROR("Failed to find suitable memory type");
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
@@ -611,6 +621,8 @@ namespace bebone::gfx {
 
         vkDestroyDevice(device, nullptr);
         vkDestroySurfaceKHR(instance.get_instance(), surface, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan device");
     }
 
     VkFormat VulkanDevice::find_depth_format() {

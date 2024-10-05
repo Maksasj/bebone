@@ -56,6 +56,8 @@ namespace bebone::gfx {
             auto framebuffer = device.create_framebuffer(attachments, render_pass, render_pass->get_extent());
             framebuffers.push_back(framebuffer);
         }
+
+        LOG_TRACE("Created Vulkan render target");
     }
 
     VulkanRenderTarget::VulkanRenderTarget(
@@ -92,6 +94,8 @@ namespace bebone::gfx {
 
             framebuffers.push_back(framebuffer);
         }
+
+        LOG_TRACE("Created Vulkan render target");
     }
 
     vector<shared_ptr<IVulkanAttachment>>& VulkanRenderTarget::get_color_attachment(const size_t& index) {
@@ -113,6 +117,8 @@ namespace bebone::gfx {
 
         for (auto& framebuffer : framebuffers)
             framebuffer->destroy(device);
+
+        LOG_TRACE("Destroyed Vulkan render target");
 
         mark_destroyed();
     }

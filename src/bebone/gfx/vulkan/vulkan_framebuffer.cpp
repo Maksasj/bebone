@@ -28,8 +28,12 @@ namespace bebone::gfx {
         create_info.height = extent.height;
         create_info.layers = 1;
 
-        if(vkCreateFramebuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateFramebuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create framebuffer");
             throw std::runtime_error("failed to create framebuffer!");
+        }
+
+        LOG_TRACE("Created Vulkan framebuffer");
     }
 
     void VulkanFramebuffer::destroy(VulkanDevice& device) {
@@ -37,6 +41,8 @@ namespace bebone::gfx {
             return;
             
         vkDestroyFramebuffer(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan framebuffer");
 
         mark_destroyed();
     }

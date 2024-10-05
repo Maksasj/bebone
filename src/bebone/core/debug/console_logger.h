@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iomanip>
 #include <source_location>
+#include <sstream>
 
 #include "ilogger.h"
 
@@ -12,12 +13,15 @@ namespace bebone::core {
         class ConsoleLogger : public ILogger  {
             private:
                 std::ostream& stream;
-
-            protected:
-                void log_impl(const LogLevel& log_level, std::string_view users_fmt, std::format_args&& args) override;
+                LogLevel log_level;
 
             public:
                 explicit ConsoleLogger(std::ostream& st = std::cout);
+
+                void log(const LogLevel& level, std::string_view format) override;
+                void log(const LogLevel& level, std::string_view format, std::format_args&& args) override;
+
+                void set_log_level(const LogLevel& level) override;
         };
 }
 

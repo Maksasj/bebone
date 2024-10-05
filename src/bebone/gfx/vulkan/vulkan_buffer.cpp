@@ -22,8 +22,12 @@ namespace bebone::gfx {
         create_info.queueFamilyIndexCount = buffer_info.queue_family_index_count;
         create_info.pQueueFamilyIndices = buffer_info.ptr_queue_family_indices;
 
-        if(vkCreateBuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
-            throw std::runtime_error("failed to create vulkan buffer!");
+        if(vkCreateBuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create Vulkan buffer");
+            // throw std::runtime_error("failed to create vulkan buffer!"); Todo
+        }
+
+        LOG_TRACE("Created Vulkan buffer with size {}", size);
     }
 
     VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
@@ -66,5 +70,7 @@ namespace bebone::gfx {
         vkDestroyBuffer(device.device, backend, nullptr);
 
         mark_destroyed();
+
+        LOG_TRACE("Destroyed Vulkan buffer");
     }
 }

@@ -3,10 +3,6 @@
 
 #include <chrono>
 
-namespace bebone::gfx {
-    class Window;
-}
-
 namespace bebone::core {
     using namespace std::chrono;
 
@@ -14,15 +10,13 @@ namespace bebone::core {
         private:
             static double delta_time;
 
-            static void set_delta_time(const double& time);
-
-        public:
+    public:
             static const steady_clock::time_point startup_time;
 
             static double get_delta_time();
             static double get_seconds_elapsed();
 
-            friend class bebone::gfx::Window;
+            static void set_delta_time(const double& time);
     };
 
     struct Timestamp {

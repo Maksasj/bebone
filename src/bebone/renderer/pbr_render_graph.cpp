@@ -44,6 +44,8 @@ namespace bebone::renderer {
         auto present_target = std::make_shared<IRenderTarget>(assembler->create_present_target_impl(), "present_target");
         present->plug("render_target", present_target);
         add_target(present_target);
+
+        LOG_INFORMATION("Initialized PBR render graph");
     }
 
     void PBRRenderGraph::submit_geometry_task(const MeshHandle& mesh, const MaterialHandle& material, const Transform& transform) {

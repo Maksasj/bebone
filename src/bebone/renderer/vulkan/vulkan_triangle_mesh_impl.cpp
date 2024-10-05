@@ -21,10 +21,10 @@ namespace bebone::renderer {
 
         // Todo
         if(!vertices.has_value())
-            std::cout << "Vertices are not provided\n";
+            LOG_WARNING("Vertices are not provided");
         
         if(!indices.has_value())
-            std::cout << "Vertices are not provided\n";
+            LOG_WARNING("Vertices are not provided");
 
         cmd->bind_vertex_buffer(vertices.value());
         cmd->bind_index_buffer(indices.value());
@@ -33,10 +33,10 @@ namespace bebone::renderer {
     void VulkanTriangleMeshImpl::bind(const std::shared_ptr<VulkanCommandBuffer>& command_buffer) {
         // Todo
         if(!vertices.has_value())
-            std::cout << "Vertices are not provided\n";
+            LOG_WARNING("Vertices are not provided");
 
         if(!indices.has_value())
-            std::cout << "Vertices are not provided\n";
+            LOG_WARNING("Vertices are not provided");
 
         command_buffer->bind_vertex_buffer(vertices.value());
         command_buffer->bind_index_buffer(indices.value());

@@ -9,8 +9,10 @@ namespace bebone::gfx {
     /// OpenGL context wrapper
     struct GLContext {
         static void inline load_opengl() {
-            if(gladLoadGL() == 0)
-                throw std::runtime_error("Failed to load OpenGL");
+            if(gladLoadGL() == 0) {
+                LOG_CRITICAL("Failed to load OpenGL");
+                // Todo throw std::runtime_error("Failed to load OpenGL");
+            }
 
             // Setting default opengl settings
             enable(GL_CULL_FACE);
