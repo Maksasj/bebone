@@ -1,7 +1,7 @@
 #include "vulkan_command_buffer_pool.h"
 
 namespace bebone::gfx {
-    VulkanCommandBufferPool::VulkanCommandBufferPool(VulkanDevice& device) {
+    VulkanCommandBufferPool::VulkanCommandBufferPool(VulkanDevice& device) : device(device) {
         VulkanQueueFamilyIndices queue_family_indices = device.find_physical_queue_families();
 
         VkCommandPoolCreateInfo pool_info = {};
@@ -15,6 +15,12 @@ namespace bebone::gfx {
         }
 
         LOG_TRACE("Created command buffer pool");
+    }
+
+    VulkanCommandBufferPool::~VulkanCommandBufferPool() {
+        vkDestroyCommandPool(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed command buffer pool");
     }
 
     std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer(VulkanDevice& device) {

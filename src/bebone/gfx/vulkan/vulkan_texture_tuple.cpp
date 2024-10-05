@@ -18,7 +18,7 @@ namespace bebone::gfx {
 
         image = im; memory = mem;
 
-        image->transition_layout(device, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        image->transition_layout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
         auto size = raw->get_width() * raw->get_height() * sizeof(ColorRGBA);
         auto staged = device.create_buffer_memory(size);
@@ -32,7 +32,7 @@ namespace bebone::gfx {
         device.collect_garbage();
         */
 
-        image->transition_layout(device, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        image->transition_layout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         sampler = device.create_sampler();
         view = device.create_image_view(*image, ColorRGBA::get_vulkan_format());

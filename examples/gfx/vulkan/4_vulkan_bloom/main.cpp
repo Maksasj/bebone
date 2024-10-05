@@ -22,8 +22,8 @@ const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
 int main() {
     auto window = WindowFactory::create_window("4. Vulkan bloom example", 800, 600, GfxAPI::Vulkan);
 
-    auto instance = VulkanInstance::create_instance();
-    auto device = instance->create_device(window);
+    VulkanInstance instance;
+    auto device = instance.create_device(window);
     auto swap_chain = device->create_swap_chain(window);
     auto command_buffers = device->create_command_buffers(3);
 

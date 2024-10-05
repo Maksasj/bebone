@@ -28,8 +28,8 @@ std::string vulkan_device_read_file(const std::string& path) {
 int main() {
     auto window = WindowFactory::create_window("1. Vulkan hello triangle example", 800, 600, Vulkan);
 
-    auto instance = VulkanInstance::create_instance();
-    auto device = instance->create_device(window);
+    VulkanInstance instance;
+    auto device = instance.create_device(window);
     auto swap_chain = device->create_swap_chain(window);
 
     auto vert_shader_module = device->create_shader_module(vulkan_device_read_file("vert.glsl"), ShaderType::VertexShader);

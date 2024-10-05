@@ -3,10 +3,9 @@
 namespace bebone::renderer {
     VulkanRenderer::VulkanRenderer(
         const std::shared_ptr<gfx::Window>& window
-    ) : window(window) {
+    ) : window(window), instance() {
         // Setup vulkan
-        instance = VulkanInstance::create_instance();
-        device = instance->create_device(this->window);
+        device = instance.create_device(this->window);
         swap_chain = device->create_swap_chain(this->window);
 
         // Create all needed managers

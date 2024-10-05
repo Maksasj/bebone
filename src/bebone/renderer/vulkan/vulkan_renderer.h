@@ -22,7 +22,7 @@ namespace bebone::renderer {
             std::shared_ptr<Window> window;
 
             // Vulkan specific stuff
-            std::shared_ptr<VulkanInstance> instance;
+            VulkanInstance instance;
             std::shared_ptr<VulkanDevice> device;
             std::shared_ptr<VulkanSwapChain> swap_chain;
 

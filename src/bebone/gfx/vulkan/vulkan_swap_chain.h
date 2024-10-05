@@ -21,6 +21,9 @@ namespace bebone::gfx {
     class VulkanCommandBuffer;
 
     class VulkanSwapChain : public VulkanWrapper<VkSwapchainKHR>, private core::NonCopyable {
+        private:
+            VulkanDevice& device;
+
         protected:
             VkExtent2D extent;
 
@@ -46,6 +49,7 @@ namespace bebone::gfx {
 
     public:
             VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);
+            ~VulkanSwapChain();
 
             const size_t& get_current_frame() const;
             const VkExtent2D& get_extent() const;

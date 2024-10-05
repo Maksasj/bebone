@@ -22,19 +22,16 @@ namespace bebone::gfx {
             static std::vector<const char *> get_required_extensions();
 
         public:
+            VulkanInstance();
+            ~VulkanInstance();
+
             bool const static enable_validation_layers = true;
 
             VkInstance& get_instance();
 
-            VulkanInstance();
-
             std::shared_ptr<VulkanDevice> create_device(std::shared_ptr<Window>& window);
 
             const std::vector<const char *> validation_layers = { "VK_LAYER_KHRONOS_validation" };
-
-            static std::shared_ptr<VulkanInstance> create_instance() {
-                return std::make_shared<VulkanInstance>();
-            }
 
             /*
             void destroy_all(std::shared_ptr<VulkanDevice>& device);

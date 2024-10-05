@@ -6,7 +6,7 @@ set(BEBONE_VERSION_MAJOR 0 CACHE STRING "Bebone major version")
 set(BEBONE_VERSION_MINOR 2 CACHE STRING "Bebone minor version")
 set(BEBONE_VERSION_PATCH 0 CACHE STRING "Bebone patch version")
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -24,7 +24,7 @@ endif()
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++2b")
 endif()
 
 # Bebone build options

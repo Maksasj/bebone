@@ -38,10 +38,14 @@ namespace bebone::gfx {
 
     class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
         private:
+            VulkanDevice& device;
+            bool swap_chain;
+
+        private:
             VkExtent3D extent;
 
         public:
-            VulkanImage(const VkImage& image);
+            VulkanImage(VulkanDevice& device, const VkImage& image);
 
             // Todo save extent somewhere
             VulkanImage(
@@ -50,16 +54,12 @@ namespace bebone::gfx {
                 VkExtent3D extent,
                 VulkanImageInfo image_info = {});
 
-            void transition_layout(
-                VulkanDevice& device,
-                VkImageLayout old_layout,
-                VkImageLayout new_layout);
+            ~VulkanImage();
+
+            void transition_layout(VkImageLayout old_layout, VkImageLayout new_layout);
 
             VkExtent3D get_extent() const;
-
-            VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
-
-            // void destroy(VulkanDevice& device) override;
+            VkMemoryRequirements get_memory_requirements();
     };
 }
 

@@ -16,11 +16,16 @@ namespace bebone::gfx {
     class VulkanImage;
 
     class VulkanDeviceMemory : public VulkanWrapper<VkDeviceMemory>, private core::NonCopyable {
+        private:
+                VulkanDevice& device;
+
         public:
             VulkanDeviceMemory(
                 VulkanDevice& device,
                 VkMemoryRequirements requirements,
                 VkMemoryPropertyFlags properties);
+
+            ~VulkanDeviceMemory();
 
             void bind_buffer_memory(
                 VulkanDevice& device,

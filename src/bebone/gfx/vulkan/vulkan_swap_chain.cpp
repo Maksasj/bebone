@@ -6,7 +6,7 @@
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
-    VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent) {
+    VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent) : device(device) {
         auto swap_chain_support = device.get_swap_chain_support();
         extent = choose_swap_extent(swap_chain_support.capabilities, window_extent);
 
@@ -26,6 +26,19 @@ namespace bebone::gfx {
         create_sync_objects(device);
 
         LOG_TRACE("Created Vulkan swap chain");
+    }
+
+    VulkanSwapChain::~VulkanSwapChain() {
+        // Todo move this somewhere else
+        for (size_t i = 0; i < image_count; i++) {
+            vkDestroySemaphore(device.device, render_finished_semaphores[i], nullptr);
+            vkDestroySemaphore(device.device, image_available_semaphores[i], nullptr);
+            vkDestroyFence(device.device, in_flight_fences[i], nullptr);
+        }
+
+        vkDestroySwapchainKHR(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan swap chain");
     }
 
     const size_t& VulkanSwapChain::get_current_frame() const {

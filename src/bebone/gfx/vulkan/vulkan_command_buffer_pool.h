@@ -11,8 +11,12 @@
 
 namespace bebone::gfx {
     class VulkanCommandBufferPool : public VulkanWrapper<VkCommandPool>, private core::NonCopyable {
+        private:
+            VulkanDevice& device;
+
         public:
             VulkanCommandBufferPool(VulkanDevice& device);
+            ~VulkanCommandBufferPool();
 
             std::shared_ptr<VulkanCommandBuffer> create_command_buffer(VulkanDevice& device);
             std::shared_ptr<VulkanCommandBuffer> create_command_buffer(std::shared_ptr<VulkanDevice>& device);

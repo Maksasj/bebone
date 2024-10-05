@@ -14,3 +14,4 @@ file(GLOB_RECURSE BEBONE_SOUND_SRC_FILES "*.cpp")
 add_library(bebone_sound STATIC ${BEBONE_SOUND_SRC_FILES})
 
 target_link_libraries(bebone_sound miniaudio)
+target_link_libraries(bebone_sound bebone_core)

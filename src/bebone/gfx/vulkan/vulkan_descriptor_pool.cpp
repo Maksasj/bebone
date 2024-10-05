@@ -5,7 +5,7 @@
 #include "vulkan_descriptor_set.h"
 
 namespace bebone::gfx {
-    VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) {
+    VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice& device) : device(device) {
         // Todo Why do we need to set type to specific, i wanned to use this also for ssbo
         auto pool_sizes = std::vector<VkDescriptorPoolSize> {
             { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 65536 },
@@ -27,6 +27,12 @@ namespace bebone::gfx {
         }
 
         LOG_TRACE("Created Descriptor pool");
+    }
+
+    VulkanDescriptorPool::~VulkanDescriptorPool() {
+        vkDestroyDescriptorPool(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Descriptor pool");
     }
 
     std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(

@@ -19,7 +19,7 @@
 #include "vulkan_framebuffer.h"
 
 namespace bebone::gfx {
-    VulkanDevice::VulkanDevice(VulkanInstance& instance, VulkanWindow &window) {
+    VulkanDevice::VulkanDevice(VulkanInstance& instance, VulkanWindow &window) : instance(instance) {
         window.create_window_surface(instance.get_instance(), &surface);
 
         pick_physical_device(instance);
@@ -28,6 +28,28 @@ namespace bebone::gfx {
         command_buffer_pool = create_command_buffer_pool();
 
         LOG_TRACE("Created Vulkan device");
+    }
+
+    VulkanDevice::~VulkanDevice() {
+        wait_idle();
+
+        /*
+        collect_garbage();
+
+        for(auto& child : child_objects) {
+            if(!child->is_destroyed()) {
+                destroy_all(child);
+            }
+        }
+
+        */
+
+        vkDestroyDevice(device, nullptr);
+
+        LOG_WARNING("TODO, destroy surface KHR");
+        vkDestroySurfaceKHR(instance.get_instance(), surface, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan device");
     }
 
     void VulkanDevice::pick_physical_device(VulkanInstance& instance) {
@@ -339,7 +361,7 @@ namespace bebone::gfx {
     std::shared_ptr<VulkanImageMemoryTuple> VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
         auto image = create_image(format, extent, image_info);
 
-        auto req = image->get_memory_requirements(*this);
+        auto req = image->get_memory_requirements();
 
         auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(*this, image);
@@ -349,7 +371,7 @@ namespace bebone::gfx {
 
     // Todo Why this function is public ?, and probably could be static
     std::shared_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
-        auto im = std::make_shared<VulkanImage>(image);
+        auto im = std::make_shared<VulkanImage>(*this, image);
 
         // This image provided by implementation so, no need in clearing
 

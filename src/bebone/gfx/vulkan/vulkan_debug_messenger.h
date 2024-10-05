@@ -13,7 +13,6 @@ namespace bebone::gfx {
 
         public:
             VulkanDebugMessenger(VulkanInstance& instance);
-
             ~VulkanDebugMessenger();
 
             static void populate_debug_messenger_create_info(VkDebugUtilsMessengerCreateInfoEXT &create_info);

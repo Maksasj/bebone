@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImage::VulkanImage(const VkImage& image) {
+    VulkanImage::VulkanImage(VulkanDevice& device, const VkImage& image) : device(device), swap_chain(true) {
         backend = image;
     }
 
@@ -15,7 +15,7 @@ namespace bebone::gfx {
         VkFormat format,
         VkExtent3D extent,
         VulkanImageInfo image_info
-    ) : extent(extent) {
+    ) : device(device), swap_chain(false), extent(extent) {
         VkImageCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -42,9 +42,15 @@ namespace bebone::gfx {
         LOG_TRACE("Created Vulkan image");
     }
 
+    VulkanImage::~VulkanImage() {
+        if(!swap_chain)
+            vkDestroyImage(device.device, backend, nullptr);
+
+        LOG_DEBUG("Destroyed Vulkan image");
+    };
+
     // Todo, clear out this
     void VulkanImage::transition_layout(
-        VulkanDevice& device,
         VkImageLayout old_layout,
         VkImageLayout new_layout
     ) {
@@ -93,7 +99,7 @@ namespace bebone::gfx {
         return extent;
     }
 
-    VkMemoryRequirements VulkanImage::get_memory_requirements(VulkanDevice& device) {
+    VkMemoryRequirements VulkanImage::get_memory_requirements() {
         VkMemoryRequirements requirements;
 
         vkGetImageMemoryRequirements(device.device, backend, &requirements);

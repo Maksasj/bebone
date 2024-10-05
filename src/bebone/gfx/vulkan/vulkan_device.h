@@ -45,6 +45,8 @@ namespace bebone::gfx {
 
     class VulkanDevice : private core::NonCopyable {
         private:
+            VulkanInstance& instance;
+
             // Todo, abstract all things below
             VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 
@@ -66,6 +68,8 @@ namespace bebone::gfx {
             VulkanDevice(
                 VulkanInstance& instance,
                 VulkanWindow &window);
+
+            ~VulkanDevice();
 
             std::shared_ptr<VulkanDeviceMemory> create_device_memory(
                 VkMemoryRequirements requirements,

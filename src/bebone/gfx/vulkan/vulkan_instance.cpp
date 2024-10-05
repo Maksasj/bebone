@@ -56,6 +56,10 @@ namespace bebone::gfx {
         LOG_TRACE("Created Vulkan instance");
     }
 
+    VulkanInstance::~VulkanInstance() {
+        vkDestroyInstance(instance, nullptr);
+    }
+
     bool VulkanInstance::check_validation_layer_support() {
         uint32_t layer_count;
         vkEnumerateInstanceLayerProperties(&layer_count, nullptr);

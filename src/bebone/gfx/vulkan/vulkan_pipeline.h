@@ -15,17 +15,21 @@ namespace bebone::gfx {
 
     class VulkanPipeline : public VulkanWrapper<VkPipeline>, private core::NonCopyable {
         private:
+            VulkanDevice& device;
+
+        protected:
              static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(
                  const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules);
 
         public:
-            // Todo, actually swap chain is not needed there
             VulkanPipeline(
                 VulkanDevice& device,
                 const std::shared_ptr<VulkanRenderPass>& render_pass,
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig& config_info);
+
+            ~VulkanPipeline();
 
             // void recreate(
             //     VulkanDevice& device,

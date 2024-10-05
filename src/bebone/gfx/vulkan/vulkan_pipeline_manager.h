@@ -15,6 +15,9 @@ namespace bebone::gfx {
 
     class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {
         private:
+            VulkanDevice& device;
+
+        private:
             std::shared_ptr<VulkanDescriptorPool> descriptor_pool;
 
             std::shared_ptr<VulkanDescriptorSetLayout> bindless_descriptor_set_layout;
@@ -33,9 +36,10 @@ namespace bebone::gfx {
 
         public:
             VulkanPipelineManager(VulkanDevice& device);
+            ~VulkanPipelineManager();
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
-                std::shared_ptr<VulkanDevice>& device,
+                std::shared_ptr<VulkanDevice>& device, // Todo  REMOVE THIS
                 const std::shared_ptr<VulkanRenderPass>& render_pass,
                 std::shared_ptr<VulkanShaderModule> vertex_shader_module,
                 std::shared_ptr<VulkanShaderModule> fragment_shader_module,
@@ -74,9 +78,9 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanDevice>& device,
                 const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& buffers);
 
-            const std::shared_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
-            const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
-            const std::shared_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
+            [[nodiscard]] const std::shared_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
+            [[nodiscard]] const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
+            [[nodiscard]] const std::shared_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
 
             // void destroy(VulkanDevice& device) override;
     };

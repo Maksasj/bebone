@@ -10,7 +10,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         VkMemoryRequirements requirements,
         VkMemoryPropertyFlags properties
-    ) {
+    ) : device(device) {
         VkMemoryAllocateInfo alloc_info{};
 
         alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -23,6 +23,12 @@ namespace bebone::gfx {
         }
 
         LOG_TRACE("Allocated Vulkan device memory");
+    }
+
+    VulkanDeviceMemory::~VulkanDeviceMemory() {
+        vkFreeMemory(device.device, backend, nullptr);
+
+        LOG_TRACE("Freed Vulkan device memory");
     }
 
     void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer) {

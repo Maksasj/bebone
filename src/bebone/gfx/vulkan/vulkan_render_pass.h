@@ -10,7 +10,10 @@
 #include "vulkan_attachment.h"
 
 namespace bebone::gfx {
-    class VulkanRenderPass : public VulkanWrapper<VkRenderPass> {
+    class VulkanRenderPass : public VulkanWrapper<VkRenderPass>, core::NonCopyable {
+        private:
+            VulkanDevice& device;
+
         private:
             vector<VulkanAttachmentDesc> attachments;
 
@@ -24,6 +27,7 @@ namespace bebone::gfx {
 
         public:
             VulkanRenderPass(VulkanDevice& device, VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
+            ~VulkanRenderPass();
 
             std::optional<VulkanAttachmentDesc> get_depth_attachment() const;
 
