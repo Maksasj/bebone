@@ -113,7 +113,8 @@ int main() {
             continue;
     }
 
-    instance->destroy();
+    // Todo
+    // instance->destroy();
 
     return 0;
 }

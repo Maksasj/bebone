@@ -78,7 +78,7 @@ namespace bebone::gfx {
             const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
             const std::shared_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

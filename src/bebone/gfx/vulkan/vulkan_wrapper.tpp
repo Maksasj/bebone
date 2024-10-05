@@ -5,6 +5,7 @@ namespace bebone::gfx {
     class VulkanDevice;
 
     class VulkanApi {
+        /*
         private:
             bool destroyed = false;
 
@@ -16,6 +17,7 @@ namespace bebone::gfx {
 
             const bool& is_destroyed() const;
             virtual void destroy(VulkanDevice& device) = 0;
+        */
     };
 
     template<class T>

@@ -141,8 +141,8 @@ namespace bebone::renderer {
         );
 
         // Delete shader modules and clear memory
-        device->destroy_all(vert_shader_module, frag_shader_module);
-        device->collect_garbage();
+        // device->destroy_all(vert_shader_module, frag_shader_module); Todo
+        // device->collect_garbage();
 
         return std::make_shared<VulkanProgram>(pipeline, pipeline_manager->get_pipeline_layout());
     }

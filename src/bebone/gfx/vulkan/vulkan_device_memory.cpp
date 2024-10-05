@@ -61,6 +61,7 @@ namespace bebone::gfx {
         upload_data(*device, src, size);
     }
 
+    /*
     void VulkanDeviceMemory::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -71,4 +72,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

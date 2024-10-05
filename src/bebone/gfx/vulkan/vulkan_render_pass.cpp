@@ -90,6 +90,7 @@ namespace bebone::gfx {
         return extent;
     }
 
+    /*
     void VulkanRenderPass::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -100,4 +101,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

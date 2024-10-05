@@ -20,7 +20,7 @@ namespace bebone::gfx {
 
             VulkanShaderModule(VulkanDevice& device, const ShaderCode& code);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

@@ -35,9 +35,11 @@ namespace bebone::gfx {
         LOG_TRACE("Allocated Descriptor set");
     }
 
+    /*
     void VulkanDescriptorSet::destroy(VulkanDevice&) {
         // Todo
 
         mark_destroyed();
     }
+    */
 }

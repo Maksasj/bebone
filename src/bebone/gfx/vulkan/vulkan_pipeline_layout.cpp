@@ -37,6 +37,7 @@ namespace bebone::gfx {
         LOG_TRACE("Created Vulkan pipeline layout");
     }
 
+    /*
     void VulkanPipelineLayout::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -47,4 +48,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

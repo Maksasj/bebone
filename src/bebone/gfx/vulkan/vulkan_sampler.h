@@ -17,7 +17,7 @@ namespace bebone::gfx {
         public:
             VulkanSampler(VulkanDevice& device);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

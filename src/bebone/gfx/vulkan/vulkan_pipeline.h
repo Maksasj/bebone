@@ -35,7 +35,7 @@ namespace bebone::gfx {
 
             void bind(VkCommandBuffer command_buffer);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

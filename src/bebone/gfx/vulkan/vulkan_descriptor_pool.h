@@ -24,7 +24,7 @@ namespace bebone::gfx {
                 const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout,
                 const size_t& count);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };  
 }
 

@@ -101,6 +101,7 @@ namespace bebone::gfx {
         return requirements;
     }
 
+    /*
     void VulkanImage::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -111,4 +112,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

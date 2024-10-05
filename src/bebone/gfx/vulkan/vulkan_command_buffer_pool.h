@@ -25,7 +25,7 @@ namespace bebone::gfx {
             VkCommandBuffer begin_single_time_commands(VulkanDevice& device);
             void end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

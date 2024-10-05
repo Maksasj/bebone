@@ -16,10 +16,12 @@ namespace bebone::gfx {
         memory->upload_data(device, src, size);
     }
 
+    /*
     void VulkanBufferMemoryTuple::destroy(VulkanDevice& device) {
         buffer->destroy(device);
         memory->destroy(device);
 
         mark_destroyed();
     }
+    */
 }

@@ -33,7 +33,7 @@ namespace bebone::gfx {
             vector<shared_ptr<IVulkanAttachment>>& get_color_attachment(const size_t& index);
             vector<shared_ptr<IVulkanAttachment>>& depth_attachment();
 
-            void destroy(VulkanDevice& device);
+            // void destroy(VulkanDevice& device);
     };
 }
 

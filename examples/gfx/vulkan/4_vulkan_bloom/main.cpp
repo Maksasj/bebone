@@ -152,7 +152,8 @@ int main() {
         window->pull_events();
     }
 
-    instance->destroy();
+    // Todo
+    // instance->destroy();
 
     return 0;
 }

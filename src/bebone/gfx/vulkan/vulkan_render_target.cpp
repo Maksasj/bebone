@@ -106,6 +106,7 @@ namespace bebone::gfx {
         return depth_attachments;
     }
 
+    /*
     void VulkanRenderTarget::destroy(VulkanDevice& device) {
         // Todo
         for(auto& frame : color_attachments)
@@ -122,4 +123,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

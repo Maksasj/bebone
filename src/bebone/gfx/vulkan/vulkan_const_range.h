@@ -12,7 +12,7 @@ namespace bebone::gfx {
         public:
             VulkanConstRange(const size_t& size, const u32& offset, const VkShaderStageFlags& stage_flags = VK_SHADER_STAGE_ALL);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

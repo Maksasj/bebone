@@ -62,7 +62,7 @@ namespace bebone::gfx {
                 std::shared_ptr<VulkanCommandBuffer>& command_buffer,
                 uint32_t *image_index);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

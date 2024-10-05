@@ -81,7 +81,7 @@ int main() {
             continue;
     }
 
-    instance->destroy();
+    // instance->destroy();
 
     return 0;
 }

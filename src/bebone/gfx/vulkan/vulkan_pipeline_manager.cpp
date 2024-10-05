@@ -66,8 +66,8 @@ namespace bebone::gfx {
 
         auto pipeline = create_pipeline(device, render_pass, vert_shader_module, frag_shader_module, config_info);
 
-        device->destroy_all(vert_shader_module, frag_shader_module);
-        device->collect_garbage();
+        // device->destroy_all(vert_shader_module, frag_shader_module);
+        // device->collect_garbage();
 
         return pipeline;
     }
@@ -171,6 +171,7 @@ namespace bebone::gfx {
         return bindless_pipeline_layout;
     }
 
+    /*
     void VulkanPipelineManager::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -184,4 +185,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

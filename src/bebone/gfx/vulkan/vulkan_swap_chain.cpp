@@ -248,6 +248,7 @@ namespace bebone::gfx {
         }
     }
 
+    /*
     void VulkanSwapChain::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -267,4 +268,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

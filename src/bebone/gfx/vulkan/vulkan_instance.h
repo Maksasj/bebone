@@ -36,9 +36,10 @@ namespace bebone::gfx {
                 return std::make_shared<VulkanInstance>();
             }
 
+            /*
             void destroy_all(std::shared_ptr<VulkanDevice>& device);
-
             void destroy();
+            */
     };
 }
 

@@ -241,6 +241,7 @@ namespace bebone::gfx {
 
             VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
+            /*
             template <typename... Args>
             void destroy_all(Args... args) {
                 (args.destroy(*this), ...);
@@ -261,6 +262,7 @@ namespace bebone::gfx {
             void collect_garbage();
 
             void destroy(VulkanInstance& instance);
+            */
 
             VkFormat find_depth_format();
     };

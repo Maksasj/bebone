@@ -30,6 +30,7 @@ namespace bebone::gfx {
         LOG_TRACE("Created Vulkan sampler");
     }
 
+    /*
     void VulkanSampler::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -40,4 +41,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

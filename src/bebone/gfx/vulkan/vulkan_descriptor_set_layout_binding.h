@@ -17,7 +17,7 @@ namespace bebone::gfx {
         public:
             VulkanDescriptorSetLayoutBinding(const VulkanDescriptorSetLayoutBindingType& type, const u32& binding);
 
-            void destroy(VulkanDevice&) override;
+            // void destroy(VulkanDevice&) override;
     };
 }
 

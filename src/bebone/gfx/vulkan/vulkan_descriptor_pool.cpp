@@ -50,6 +50,7 @@ namespace bebone::gfx {
         return descriptors;
     }
 
+    /*
     void VulkanDescriptorPool::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -60,4 +61,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

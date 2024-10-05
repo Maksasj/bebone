@@ -127,6 +127,7 @@ namespace bebone::gfx {
         return device;
     }
 
+    /*
     void VulkanInstance::destroy_all(std::shared_ptr<VulkanDevice>& device) {
         device->destroy(*this);
     }
@@ -142,5 +143,6 @@ namespace bebone::gfx {
 
         LOG_TRACE("Destroyed Vulkan instance");
     }
+    */
 }
 

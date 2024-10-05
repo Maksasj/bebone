@@ -27,8 +27,10 @@ namespace bebone::gfx {
         // Todo Probably uploading data to gpu need some sort of render graph api
         staged->buffer->copy_to_image(device, image);
 
+        /*
         device.destroy_all(staged);
         device.collect_garbage();
+        */
 
         image->transition_layout(device, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
@@ -81,6 +83,7 @@ namespace bebone::gfx {
         return Color; // Todo, this may not be always true
     }
 
+    /*
     void VulkanTextureTuple::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -92,4 +95,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

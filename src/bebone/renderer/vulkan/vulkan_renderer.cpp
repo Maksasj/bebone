@@ -38,7 +38,7 @@ namespace bebone::renderer {
     }
 
     VulkanRenderer::~VulkanRenderer() {
-        instance->destroy();
+        // instance->destroy();
     }
 
     void VulkanRenderer::resize_viewport(const Vec2i& new_size) {
@@ -48,14 +48,14 @@ namespace bebone::renderer {
 
         device->wait_idle();
 
-        device->destroy_all(swap_chain);
+        // device->destroy_all(swap_chain);
         swap_chain = device->create_swap_chain(window);
 
         // Todo, creation of new render graph on frame resize is a bit stupid
         render_graph = create_default_render_graph(window->get_size());
         render_graph->assemble();
 
-        device->collect_garbage();
+        // device->collect_garbage();
 
         auto pass = static_pointer_cast<IGraphicsPass>(render_graph->get_render_pass("gpass").value());
         pass->set_camera(camera);

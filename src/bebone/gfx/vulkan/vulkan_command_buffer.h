@@ -89,7 +89,7 @@ namespace bebone::gfx {
             VulkanCommandBuffer& draw(const size_t& vertex_count);
             VulkanCommandBuffer& draw_indexed(const size_t& vertex_count);
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

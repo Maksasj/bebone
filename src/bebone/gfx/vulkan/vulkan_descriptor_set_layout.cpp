@@ -61,6 +61,7 @@ namespace bebone::gfx {
         LOG_TRACE("Created Descriptor set layout");
     }
 
+    /*
     void VulkanDescriptorSetLayout::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -71,4 +72,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

@@ -33,6 +33,7 @@ namespace bebone::gfx {
         LOG_TRACE("Created Vulkan image view");
     }
 
+    /*
     void VulkanImageView::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -43,4 +44,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

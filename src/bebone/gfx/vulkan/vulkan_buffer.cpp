@@ -63,6 +63,7 @@ namespace bebone::gfx {
         return size;
     }
 
+    /*
     void VulkanBuffer::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -73,4 +74,5 @@ namespace bebone::gfx {
 
         LOG_TRACE("Destroyed Vulkan buffer");
     }
+    */
 }

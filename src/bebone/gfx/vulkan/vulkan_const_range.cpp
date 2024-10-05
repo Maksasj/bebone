@@ -11,7 +11,9 @@ namespace bebone::gfx {
         };
     }
 
+    /*
     void VulkanConstRange::destroy(VulkanDevice& device) {
         std::ignore = device;
     }
+    */
 }

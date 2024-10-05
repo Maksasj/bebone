@@ -31,7 +31,9 @@ namespace bebone::gfx {
         }
     }
 
+    /*
     void VulkanDescriptorSetLayoutBinding::destroy(VulkanDevice&) {
         mark_destroyed();
     }
+    */
 }

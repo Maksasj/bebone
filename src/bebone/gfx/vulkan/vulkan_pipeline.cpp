@@ -223,6 +223,7 @@ namespace bebone::gfx {
         vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, backend);
     }
 
+    /*
     void VulkanPipeline::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
@@ -233,4 +234,5 @@ namespace bebone::gfx {
 
         mark_destroyed();
     }
+    */
 }

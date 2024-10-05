@@ -602,6 +602,7 @@ namespace bebone::gfx {
         vkDeviceWaitIdle(device);
     }
 
+    /*
     void VulkanDevice::collect_garbage() {
         child_objects.erase(std::remove_if(child_objects.begin(), child_objects.end(), [](shared_ptr<VulkanApi>& child) {
             return child->is_destroyed();
@@ -624,6 +625,7 @@ namespace bebone::gfx {
 
         LOG_TRACE("Destroyed Vulkan device");
     }
+    */
 
     VkFormat VulkanDevice::find_depth_format() {
         return find_supported_format(

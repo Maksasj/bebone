@@ -58,7 +58,7 @@ namespace bebone::gfx {
 
             const size_t& get_size() const;
 
-            void destroy(VulkanDevice& device) override;
+            // void destroy(VulkanDevice& device) override;
     };
 }
 

@@ -269,9 +269,11 @@ namespace bebone::gfx {
         return *this;
     }
 
+    /*
     void VulkanCommandBuffer::destroy(VulkanDevice&) {
         // Todo
 
         mark_destroyed();
     }
+    */
 }
