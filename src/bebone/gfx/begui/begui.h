@@ -6,8 +6,6 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include "../window/window.h"
-#include "../../core/core.h"
-
 #include "theme.h"
 
 namespace bebone::gfx {

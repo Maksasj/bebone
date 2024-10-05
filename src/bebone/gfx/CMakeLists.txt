@@ -1,6 +1,6 @@
 file(GLOB_RECURSE BEBONE_GFX_SRC_FILES "*.cpp")
 
-set(BEBONE_GFX_INCLUDES "${CMAKE_SOURCE_DIR}/src/bebone/gfx" )
+set(BEBONE_GFX_INCLUDES "${CMAKE_SOURCE_DIR}/src/bebone/gfx")
 
 list(APPEND BEBONE_GFX_INCLUDES 
     "${CMAKE_SOURCE_DIR}/3dparty/glad/include"
