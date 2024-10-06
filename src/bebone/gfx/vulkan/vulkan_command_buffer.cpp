@@ -6,23 +6,7 @@
 #include "vulkan_descriptor_set.h"
 
 namespace bebone::gfx {
-    VulkanCommandBuffer::VulkanCommandBuffer(std::shared_ptr<VulkanDevice>& device, VulkanCommandBufferPool& command_buffer_pool) {
-        VkCommandBufferAllocateInfo alloc_info{};
-
-        alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        alloc_info.commandPool = command_buffer_pool.backend;
-        alloc_info.commandBufferCount = static_cast<uint32_t>(1); // Todo
-
-        if(vkAllocateCommandBuffers(device->device, &alloc_info, &backend) != VK_SUCCESS) {
-            LOG_ERROR("Failed to allocate command buffers");
-            throw std::runtime_error("Failed to allocate command buffers !");
-        }
-
-        LOG_TRACE("Allocated 1 command buffer");
-    }
-
-    VulkanCommandBuffer::VulkanCommandBuffer(VulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool) {
+    VulkanCommandBuffer::VulkanCommandBuffer(VulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool) : device_owner(device) {
         VkCommandBufferAllocateInfo alloc_info{};
 
         alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -111,6 +95,11 @@ namespace bebone::gfx {
         vkCmdBeginRenderPass(backend, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
         return *this;
+    }
+
+    VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(std::unique_ptr<Window>& window) {
+        // Flipped viewport
+        return set_viewport(0, window->get_height(), window->get_width(), -window->get_height());
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::set_viewport(const Vec2i& viewport, const f32& min_depth, const f32& max_depth) {

@@ -44,8 +44,8 @@ namespace bebone::gfx {
             auto attachments = std::vector<std::shared_ptr<VulkanImageView>> {};
             attachments.reserve(color_attachments.size());
 
-            for(size_t a = 0; a < color_attachments.size(); ++a) {
-                auto attachment = color_attachments[a][i];
+            for(auto& color_attachment : color_attachments) {
+                auto attachment = color_attachment[i];
                 attachments.push_back(attachment->get_view().value());
             }
 

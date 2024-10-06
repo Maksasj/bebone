@@ -17,7 +17,7 @@ namespace bebone::gfx {
 
     class VulkanDeviceMemory : public VulkanWrapper<VkDeviceMemory>, private core::NonCopyable {
         private:
-                VulkanDevice& device;
+                VulkanDevice& device_owner;
 
         public:
             VulkanDeviceMemory(
@@ -27,34 +27,17 @@ namespace bebone::gfx {
 
             ~VulkanDeviceMemory();
 
-            void bind_buffer_memory(
-                VulkanDevice& device,
-                VulkanBuffer& buffer);
+            void bind_buffer_memory(VulkanBuffer& buffer);
+            void bind_buffer_memory(std::shared_ptr<VulkanBuffer>& buffer);
 
-            void bind_buffer_memory(
-                VulkanDevice& device,
-                std::shared_ptr<VulkanBuffer>& buffer);
+            void bind_image_memory(VulkanImage& image);
 
-            void bind_image_memory(
-                VulkanDevice& device,
-                VulkanImage& image);
+            void bind_image_memory(std::shared_ptr<VulkanImage>& image);
 
-            void bind_image_memory(
-                VulkanDevice& device,
-                std::shared_ptr<VulkanImage>& image);
+            void map(const size_t& size, void** data);
+            void unmap();
 
-            void map(VulkanDevice& device, const size_t& size, void** data);
-            void unmap(VulkanDevice& device);
-
-            void upload_data(
-                std::shared_ptr<VulkanDevice>& device,
-                const void* src,
-                const size_t& size);
-
-            void upload_data(
-                VulkanDevice& device,
-                const void* src,
-                const size_t& size);
+            void upload_data(const void* src, const size_t& size);
 
             // void destroy(VulkanDevice& device) override;
     };

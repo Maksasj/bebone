@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImage::VulkanImage(VulkanDevice& device, const VkImage& image) : device(device), swap_chain(true) {
+    VulkanImage::VulkanImage(VulkanDevice& device, const VkImage& image) : device_owner(device), swap_chain(true) {
         backend = image;
     }
 
@@ -15,7 +15,7 @@ namespace bebone::gfx {
         VkFormat format,
         VkExtent3D extent,
         VulkanImageInfo image_info
-    ) : device(device), swap_chain(false), extent(extent) {
+    ) : device_owner(device), swap_chain(false), extent(extent) {
         VkImageCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -44,7 +44,7 @@ namespace bebone::gfx {
 
     VulkanImage::~VulkanImage() {
         if(!swap_chain)
-            vkDestroyImage(device.device, backend, nullptr);
+            vkDestroyImage(device_owner.device, backend, nullptr);
 
         LOG_DEBUG("Destroyed Vulkan image");
     };
@@ -54,7 +54,7 @@ namespace bebone::gfx {
         VkImageLayout old_layout,
         VkImageLayout new_layout
     ) {
-        auto command_buffer = device.begin_single_time_commands();
+        auto command_buffer = device_owner.begin_single_time_commands();
 
         VkImageMemoryBarrier barrier{};
 
@@ -92,7 +92,7 @@ namespace bebone::gfx {
 
         vkCmdPipelineBarrier(command_buffer->backend, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-        device.end_single_time_commands(command_buffer);
+        device_owner.end_single_time_commands(command_buffer);
     }
 
     VkExtent3D VulkanImage::get_extent() const {
@@ -102,7 +102,7 @@ namespace bebone::gfx {
     VkMemoryRequirements VulkanImage::get_memory_requirements() {
         VkMemoryRequirements requirements;
 
-        vkGetImageMemoryRequirements(device.device, backend, &requirements);
+        vkGetImageMemoryRequirements(device_owner.device, backend, &requirements);
 
         return requirements;
     }

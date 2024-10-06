@@ -2,10 +2,6 @@
 #include "vulkan_device.h"
 
 namespace bebone::gfx {
-    VkInstance& VulkanInstance::get_instance() {
-        return instance;
-    }
-
     VulkanInstance::VulkanInstance() {
         if (enable_validation_layers && !check_validation_layer_support()) {
             LOG_ERROR("Validation layers requested, but not available");
@@ -41,7 +37,7 @@ namespace bebone::gfx {
             create_info.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS) {
+        if (vkCreateInstance(&create_info, nullptr, &backend) != VK_SUCCESS) {
             LOG_ERROR("Failed to create instance");
             throw std::runtime_error("failed to create instance!");
         }
@@ -57,7 +53,7 @@ namespace bebone::gfx {
     }
 
     VulkanInstance::~VulkanInstance() {
-        vkDestroyInstance(instance, nullptr);
+        vkDestroyInstance(backend, nullptr);
     }
 
     bool VulkanInstance::check_validation_layer_support() {

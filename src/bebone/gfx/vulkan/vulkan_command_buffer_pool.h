@@ -12,21 +12,19 @@
 namespace bebone::gfx {
     class VulkanCommandBufferPool : public VulkanWrapper<VkCommandPool>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         public:
             VulkanCommandBufferPool(VulkanDevice& device);
             ~VulkanCommandBufferPool();
 
-            std::shared_ptr<VulkanCommandBuffer> create_command_buffer(VulkanDevice& device);
-            std::shared_ptr<VulkanCommandBuffer> create_command_buffer(std::shared_ptr<VulkanDevice>& device);
+            std::shared_ptr<VulkanCommandBuffer> create_command_buffer();
 
-            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(
-                const size_t& count);
+            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
 
             // Todo, refactor this
-            VkCommandBuffer begin_single_time_commands(VulkanDevice& device);
-            void end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer);
+            VkCommandBuffer begin_single_time_commands();
+            void end_single_time_commands(VkCommandBuffer command_buffer);
 
             // void destroy(VulkanDevice& device) override;
     };

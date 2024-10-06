@@ -5,7 +5,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         VkExtent2D extent,
         const std::vector<VulkanAttachmentDesc>& attachments
-    ) : device(device), attachments(attachments), depth_attachment_index(0), has_depth_attachment_flag(false), color_attachment_count(0), extent(extent) {
+    ) : device_owner(device), attachments(attachments), depth_attachment_index(0), has_depth_attachment_flag(false), color_attachment_count(0), extent(extent) {
         auto descriptions = std::vector<VkAttachmentDescription> {};
         descriptions.reserve(attachments.size());
 
@@ -72,7 +72,7 @@ namespace bebone::gfx {
     }
 
     VulkanRenderPass::~VulkanRenderPass() {
-        vkDestroyRenderPass(device.device, backend, nullptr);
+        vkDestroyRenderPass(device_owner.device, backend, nullptr);
 
         LOG_TRACE("Destroyed Vulkan render pass");
     }

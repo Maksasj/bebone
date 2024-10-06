@@ -34,7 +34,7 @@ namespace bebone::gfx {
 
     class VulkanImageView : public VulkanWrapper<VkImageView>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         public:
             VulkanImageView( // Todo add necessary const

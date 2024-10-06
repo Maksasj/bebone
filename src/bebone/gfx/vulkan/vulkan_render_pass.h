@@ -12,7 +12,7 @@
 namespace bebone::gfx {
     class VulkanRenderPass : public VulkanWrapper<VkRenderPass>, core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         private:
             vector<VulkanAttachmentDesc> attachments;

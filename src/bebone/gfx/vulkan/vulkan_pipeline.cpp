@@ -36,7 +36,7 @@ namespace bebone::gfx {
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
         const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig& config_info
-    ) : device(device) {
+    ) : device_owner(device) {
         // VkPipelineShaderStageCreateInfo
         auto stages = VulkanPipeline::collect_shader_stages(shader_modules);
 
@@ -206,7 +206,7 @@ namespace bebone::gfx {
     }
 
     VulkanPipeline::~VulkanPipeline() {
-        vkDestroyPipeline(device.device, backend, nullptr);
+        vkDestroyPipeline(device_owner.device, backend, nullptr);
 
         LOG_TRACE("Destroyed Vulkan graphics pipeline");
     }

@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) : device(device) {
+    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) : device_owner(device) {
         VkImageViewCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -34,7 +34,7 @@ namespace bebone::gfx {
     }
 
     VulkanImageView::~VulkanImageView() {
-        // vkDestroyImageView(device.device, backend, nullptr);
+        // vkDestroyImageView(device_owner.device, backend, nullptr);
 
         LOG_DEBUG("Destroyed Vulkan image view");
     }

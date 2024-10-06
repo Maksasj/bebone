@@ -10,7 +10,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         VkMemoryRequirements requirements,
         VkMemoryPropertyFlags properties
-    ) : device(device) {
+    ) : device_owner(device) {
         VkMemoryAllocateInfo alloc_info{};
 
         alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -26,45 +26,41 @@ namespace bebone::gfx {
     }
 
     VulkanDeviceMemory::~VulkanDeviceMemory() {
-        vkFreeMemory(device.device, backend, nullptr);
+        vkFreeMemory(device_owner.device, backend, nullptr);
 
         LOG_TRACE("Freed Vulkan device memory");
     }
 
-    void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, VulkanBuffer& buffer) {
-        vkBindBufferMemory(device.device, buffer.backend, backend, 0);
+    void VulkanDeviceMemory::bind_buffer_memory(VulkanBuffer& buffer) {
+        vkBindBufferMemory(device_owner.device, buffer.backend, backend, 0);
     }
 
-    void VulkanDeviceMemory::bind_buffer_memory(VulkanDevice& device, std::shared_ptr<VulkanBuffer>& buffer) {
-        bind_buffer_memory(device, *buffer);
+    void VulkanDeviceMemory::bind_buffer_memory(std::shared_ptr<VulkanBuffer>& buffer) {
+        bind_buffer_memory(*buffer);
     }
 
-    void VulkanDeviceMemory::bind_image_memory(VulkanDevice& device, VulkanImage& image) {
-        vkBindImageMemory(device.device, image.backend, backend, 0);
+    void VulkanDeviceMemory::bind_image_memory(VulkanImage& image) {
+        vkBindImageMemory(device_owner.device, image.backend, backend, 0);
     }
 
-    void VulkanDeviceMemory::bind_image_memory(VulkanDevice& device, std::shared_ptr<VulkanImage>& image) {
-        bind_image_memory(device, *image);
+    void VulkanDeviceMemory::bind_image_memory(std::shared_ptr<VulkanImage>& image) {
+        bind_image_memory(*image);
     }
 
-    void VulkanDeviceMemory::map(VulkanDevice& device, const size_t& size, void** data) {
-        vkMapMemory(device.device, backend, 0, size, 0, data);
+    void VulkanDeviceMemory::map(const size_t& size, void** data) {
+        vkMapMemory(device_owner.device, backend, 0, size, 0, data);
     }
 
-    void VulkanDeviceMemory::unmap(VulkanDevice& device) {
-        vkUnmapMemory(device.device, backend);
+    void VulkanDeviceMemory::unmap() {
+        vkUnmapMemory(device_owner.device, backend);
     }
 
-    void VulkanDeviceMemory::upload_data(VulkanDevice& device, const void* src, const size_t& size) {
+    void VulkanDeviceMemory::upload_data(const void* src, const size_t& size) {
         void* data;
 
-        map(device, size, &data);
+        map(size, &data);
         memcpy(data, src, size);
-        unmap(device);
-    }
-
-    void VulkanDeviceMemory::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
-        upload_data(*device, src, size);
+        unmap();
     }
 
     /*

@@ -31,7 +31,7 @@ namespace bebone::gfx {
 
         // Creating bindless descriptor set layout
         bindless_descriptor_set_layout = device.create_descriptor_set_layout(bindless_bindings);
-        bindless_descriptor_set = descriptor_pool->create_descriptor(device, bindless_descriptor_set_layout);
+        bindless_descriptor_set = descriptor_pool->create_descriptor(bindless_descriptor_set_layout);
 
         // Creating bindless pipeline layout
         const auto constant_ranges = { VulkanConstRange(const_ranges_size, 0) };

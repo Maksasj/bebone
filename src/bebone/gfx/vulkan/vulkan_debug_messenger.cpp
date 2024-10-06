@@ -51,19 +51,19 @@ namespace bebone::gfx {
         create_info.pUserData = nullptr;  // Optional
     }
 
-    VulkanDebugMessenger::VulkanDebugMessenger(VulkanInstance& instance) : vulkan_instance(instance) {
+    VulkanDebugMessenger::VulkanDebugMessenger(VulkanInstance& instance) : instance_owner(instance) {
         VkDebugUtilsMessengerCreateInfoEXT create_info;
 
         populate_debug_messenger_create_info(create_info);
 
-        if(CreateDebugUtilsMessengerEXT(vulkan_instance.get_instance(), &create_info, nullptr, &debug_messenger) != VK_SUCCESS) {
+        if(CreateDebugUtilsMessengerEXT(instance_owner.backend, &create_info, nullptr, &debug_messenger) != VK_SUCCESS) {
             LOG_ERROR("Failed to set up debug messenger");
             throw std::runtime_error("failed to set up debug messenger!");
         }
     }
 
     VulkanDebugMessenger::~VulkanDebugMessenger() {
-        DestroyDebugUtilsMessengerEXT(vulkan_instance.get_instance(), debug_messenger, nullptr);
+        DestroyDebugUtilsMessengerEXT(instance_owner.backend, debug_messenger, nullptr);
     }
 }
 

@@ -15,23 +15,9 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanBuffer> buffer;
             std::shared_ptr<VulkanDeviceMemory> memory;
 
-            VulkanBufferMemoryTuple();
+            VulkanBufferMemoryTuple(const shared_ptr<VulkanBuffer>& buffer, const shared_ptr<VulkanDeviceMemory>& memory);
 
-            VulkanBufferMemoryTuple(
-                const shared_ptr<VulkanBuffer>& buffer,
-                const shared_ptr<VulkanDeviceMemory>& memory);
-
-            void upload_data(
-                std::shared_ptr<VulkanDevice>& device,
-                const void* src,
-                const size_t& size);
-
-            void upload_data(
-                VulkanDevice& device,
-                const void* src,
-                const size_t& size);
-
-            // void destroy(VulkanDevice& device) override;
+            void upload_data(const void* src, const size_t& size);
     };
 }
 

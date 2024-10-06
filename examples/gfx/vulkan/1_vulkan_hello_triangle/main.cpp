@@ -28,9 +28,9 @@ std::string vulkan_device_read_file(const std::string& path) {
 int main() {
     auto window = WindowFactory::create_window("1. Vulkan hello triangle example", 800, 600, Vulkan);
 
-    VulkanInstance instance;
-    VulkanDevice device(instance, window);
-    VulkanSwapChain swap_chain(device, window);
+    auto instance = VulkanInstance();
+    auto device = VulkanDevice(instance, window);
+    auto swap_chain = VulkanSwapChain(device, window);
 
     auto pipeline_layout = device.create_pipeline_layout({}, {});
 
@@ -60,9 +60,7 @@ int main() {
         cmd->begin_record();
 
         cmd->begin_render_pass(swap_chain);
-            // Flipped viewport
-            cmd->set_viewport(0, window->get_height(), window->get_width(), -window->get_height());
-
+            cmd->set_viewport(window);
             cmd->bind_pipeline(pipeline);
             cmd->bind_vertex_buffer(vb);
             cmd->bind_index_buffer(eb);

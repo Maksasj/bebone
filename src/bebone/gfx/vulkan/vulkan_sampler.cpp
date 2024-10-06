@@ -5,7 +5,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanSampler::VulkanSampler(VulkanDevice& device) {
+    VulkanSampler::VulkanSampler(VulkanDevice& device) : device_owner(device) {
         VkSamplerCreateInfo sampler_info{};
 
         sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -28,6 +28,12 @@ namespace bebone::gfx {
         LOG_WARNING("vkCreateSampler result is not handled");
 
         LOG_TRACE("Created Vulkan sampler");
+    }
+
+    VulkanSampler::~VulkanSampler() {
+        vkDestroySampler(device_owner.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan sampler");
     }
 
     /*

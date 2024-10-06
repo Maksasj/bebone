@@ -47,7 +47,7 @@ namespace bebone::gfx {
 
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         private:
             size_t size; // Todo, Do we really need to store buffer size there ?
@@ -56,10 +56,9 @@ namespace bebone::gfx {
             VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
             ~VulkanBuffer();
 
+            void copy_to_image(std::shared_ptr<VulkanImage>& image);
+
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
-
-            void copy_to_image(VulkanDevice& device, std::shared_ptr<VulkanImage>& image);
-
             const size_t& get_size() const;
 
             // void destroy(VulkanDevice& device) override;

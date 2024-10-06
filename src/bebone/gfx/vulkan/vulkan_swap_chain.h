@@ -22,11 +22,10 @@ namespace bebone::gfx {
 
     class VulkanSwapChain : public VulkanWrapper<VkSwapchainKHR>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         protected:
             VkExtent2D extent;
-
             VkSurfaceFormatKHR surface_format;
             VkPresentModeKHR present_mode;
 
@@ -46,8 +45,6 @@ namespace bebone::gfx {
             void create_sync_objects(VulkanDevice& device);
 
             std::vector<std::shared_ptr<VulkanSwapChainImageTuple>> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
-
-
 
     public:
             VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);

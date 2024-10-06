@@ -11,7 +11,7 @@ namespace bebone::gfx {
 
     class VulkanPipelineLayout : public VulkanWrapper<VkPipelineLayout>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         public:
             VulkanPipelineLayout(

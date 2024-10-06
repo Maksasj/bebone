@@ -17,7 +17,7 @@ namespace bebone::gfx {
 
     class VulkanFramebuffer : public VulkanWrapper<VkFramebuffer>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         public:
             VulkanFramebuffer(

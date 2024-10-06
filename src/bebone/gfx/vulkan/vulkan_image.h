@@ -38,7 +38,7 @@ namespace bebone::gfx {
 
     class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
             bool swap_chain;
 
         private:

@@ -8,20 +8,7 @@ namespace bebone::gfx {
 
     }
 
-    void VulkanBufferMemoryTuple::upload_data(std::shared_ptr<VulkanDevice>& device, const void* src, const size_t& size) {
-        memory->upload_data(device, src, size);
+    void VulkanBufferMemoryTuple::upload_data(const void* src, const size_t& size) {
+        memory->upload_data(src, size);
     }
-
-    void VulkanBufferMemoryTuple::upload_data(VulkanDevice& device, const void* src, const size_t& size) {
-        memory->upload_data(device, src, size);
-    }
-
-    /*
-    void VulkanBufferMemoryTuple::destroy(VulkanDevice& device) {
-        buffer->destroy(device);
-        memory->destroy(device);
-
-        mark_destroyed();
-    }
-    */
 }

@@ -10,7 +10,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         const size_t& size,
         VulkanBufferInfo buffer_info
-    )  : device(device), size(size) {
+    )  : device_owner(device), size(size) {
         VkBufferCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -31,21 +31,13 @@ namespace bebone::gfx {
     }
 
     VulkanBuffer::~VulkanBuffer() {
-        vkDestroyBuffer(device.device, backend, nullptr);
+        vkDestroyBuffer(device_owner.device, backend, nullptr);
 
         LOG_TRACE("Destroyed Vulkan buffer");
     }
 
-    VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
-        VkMemoryRequirements requirements;
-
-        vkGetBufferMemoryRequirements(device.device, backend, &requirements);
-
-        return requirements;
-    }
-
-    void VulkanBuffer::copy_to_image(VulkanDevice& device, std::shared_ptr<VulkanImage>& image) {
-        auto command_buffer = device.begin_single_time_commands();
+    void VulkanBuffer::copy_to_image(std::shared_ptr<VulkanImage>& image) {
+        auto command_buffer = device_owner.begin_single_time_commands();
 
         VkBufferImageCopy region{};
         region.bufferOffset = 0;
@@ -62,7 +54,15 @@ namespace bebone::gfx {
 
         vkCmdCopyBufferToImage(command_buffer->backend, backend, image->backend, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
-        device.end_single_time_commands(command_buffer);
+        device_owner.end_single_time_commands(command_buffer);
+    }
+
+    VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
+        VkMemoryRequirements requirements;
+
+        vkGetBufferMemoryRequirements(device.device, backend, &requirements);
+
+        return requirements;
     }
 
     const size_t& VulkanBuffer::get_size() const {

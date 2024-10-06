@@ -15,7 +15,7 @@ namespace bebone::gfx {
 
     class VulkanPipeline : public VulkanWrapper<VkPipeline>, private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         protected:
              static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(

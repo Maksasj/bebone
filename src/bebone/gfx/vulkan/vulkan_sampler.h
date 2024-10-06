@@ -14,8 +14,12 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanSampler : public VulkanWrapper<VkSampler>, private core::NonCopyable {
+        private:
+            VulkanDevice& device_owner;
+
         public:
             VulkanSampler(VulkanDevice& device);
+            ~VulkanSampler();
 
             // void destroy(VulkanDevice& device) override;
     };

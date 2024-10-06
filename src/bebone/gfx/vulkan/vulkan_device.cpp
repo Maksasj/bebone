@@ -19,9 +19,9 @@
 #include "vulkan_framebuffer.h"
 
 namespace bebone::gfx {
-    VulkanDevice::VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window) : instance(instance) {
+    VulkanDevice::VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window) : instance_owner(instance) {
         auto& vulkan_window = *static_cast<VulkanWindow*>(window.get());
-        vulkan_window.create_window_surface(instance.get_instance(), &surface);
+        vulkan_window.create_window_surface(instance.backend, &surface);
 
         pick_physical_device(instance);
         create_logical_device();
@@ -34,21 +34,10 @@ namespace bebone::gfx {
     VulkanDevice::~VulkanDevice() {
         wait_idle();
 
-        /*
-        collect_garbage();
-
-        for(auto& child : // child_objects) {
-            if(!child->is_destroyed()) {
-                destroy_all(child);
-            }
-        }
-
-        */
-
         vkDestroyDevice(device, nullptr);
 
-        LOG_WARNING("TODO, destroy surface KHR");
-        vkDestroySurfaceKHR(instance.get_instance(), surface, nullptr);
+        LOG_DEBUG("TODO, destroy surface KHR");
+        vkDestroySurfaceKHR(instance_owner.backend, surface, nullptr);
 
         LOG_TRACE("Destroyed Vulkan device");
     }
@@ -263,7 +252,7 @@ namespace bebone::gfx {
     }
 
     std::shared_ptr<VulkanCommandBuffer> VulkanDevice::begin_single_time_commands() {
-        auto command_buffer = command_buffer_pool->create_command_buffer(*this);
+        auto command_buffer = command_buffer_pool->create_command_buffer();
 
         command_buffer->begin_record();
 
@@ -315,7 +304,7 @@ namespace bebone::gfx {
         auto requirements = buffer->get_memory_requirements(*this);
 
         auto memory = create_device_memory(requirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT); // Todo this should be configurable
-        memory->bind_buffer_memory(*this, buffer);
+        memory->bind_buffer_memory(buffer);
 
         return std::make_shared<VulkanBufferMemoryTuple>(buffer, memory);
     }
@@ -362,7 +351,7 @@ namespace bebone::gfx {
         auto req = image->get_memory_requirements();
 
         auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-        memory->bind_image_memory(*this, image);
+        memory->bind_image_memory(image);
 
         return std::make_shared<VulkanImageMemoryTuple>(image, memory);
     }

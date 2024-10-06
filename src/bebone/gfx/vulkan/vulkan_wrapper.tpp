@@ -2,8 +2,6 @@
 #define _BEBONE_GFX_VULKAN_WRAPPER_TPP_
 
 namespace bebone::gfx {
-    class VulkanDevice;
-
     class VulkanApi {
         /*
         private:

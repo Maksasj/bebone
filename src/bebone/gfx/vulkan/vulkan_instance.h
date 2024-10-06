@@ -7,13 +7,13 @@
 #include "../window/vulkan_window.h"
 #include "vulkan_debug_messenger.h"
 
+#include "vulkan_wrapper.tpp"
+
 namespace bebone::gfx {
     class VulkanDevice;
 
-    class VulkanInstance : private core::NonCopyable {
+    class VulkanInstance : public VulkanWrapper<VkInstance>, private core::NonCopyable {
         private:
-            VkInstance instance;
-
             std::unique_ptr<VulkanDebugMessenger> debug_messenger;
             std::vector<std::shared_ptr<VulkanDevice>> child_devices;
 
@@ -27,10 +27,7 @@ namespace bebone::gfx {
 
             bool const static enable_validation_layers = true;
 
-            VkInstance& get_instance();
-
             std::shared_ptr<VulkanDevice> create_device(std::unique_ptr<Window>& window);
-
             const std::vector<const char *> validation_layers = { "VK_LAYER_KHRONOS_validation" };
 
             /*

@@ -45,7 +45,7 @@ namespace bebone::gfx {
 
     class VulkanDevice : private core::NonCopyable {
         private:
-            VulkanInstance& instance;
+            VulkanInstance& instance_owner;
 
             // Todo, abstract all things below
             VkPhysicalDevice physical_device = VK_NULL_HANDLE;
@@ -89,7 +89,7 @@ namespace bebone::gfx {
                 auto tuple = create_buffer_memory(size, buffer_info);
                 auto [ _, b_memory ] = tuple;
 
-                b_memory->upload_data(*this, data.data(), size);
+                b_memory->upload_data(data.data(), size);
 
                 return tuple;
             }
