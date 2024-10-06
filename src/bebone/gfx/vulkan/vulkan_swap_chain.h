@@ -44,7 +44,7 @@ namespace bebone::gfx {
             void create_swap_chain(VulkanDevice& device);
             void create_sync_objects(VulkanDevice& device);
 
-            std::vector<std::shared_ptr<VulkanSwapChainImageTuple>> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
+            std::vector<std::unique_ptr<VulkanSwapChainImageTuple>> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
 
     public:
             VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);
@@ -62,7 +62,7 @@ namespace bebone::gfx {
                 uint32_t *image_index);
 
             VulkanResult submit_present_command_buffers(
-                std::shared_ptr<VulkanCommandBuffer>& command_buffer,
+                VulkanCommandBuffer& command_buffer,
                 uint32_t *image_index);
 
             // void destroy(VulkanDevice& device) override;

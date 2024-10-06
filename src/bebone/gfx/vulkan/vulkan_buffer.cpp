@@ -36,7 +36,7 @@ namespace bebone::gfx {
         LOG_TRACE("Destroyed Vulkan buffer");
     }
 
-    void VulkanBuffer::copy_to_image(std::shared_ptr<VulkanImage>& image) {
+    void VulkanBuffer::copy_to_image(std::unique_ptr<VulkanImage>& image) {
         auto command_buffer = device_owner.begin_single_time_commands();
 
         VkBufferImageCopy region{};
@@ -57,10 +57,10 @@ namespace bebone::gfx {
         device_owner.end_single_time_commands(command_buffer);
     }
 
-    VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
+    VkMemoryRequirements VulkanBuffer::get_memory_requirements() {
         VkMemoryRequirements requirements;
 
-        vkGetBufferMemoryRequirements(device.device, backend, &requirements);
+        vkGetBufferMemoryRequirements(device_owner.device, backend, &requirements);
 
         return requirements;
     }

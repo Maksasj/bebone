@@ -11,17 +11,17 @@ namespace bebone::gfx {
         using namespace bebone::core;
 
         struct VulkanSwapChainImageTuple : public IVulkanAttachment {
-            std::shared_ptr<VulkanImage> image;
-            std::shared_ptr<VulkanImageView> view;
+            std::unique_ptr<VulkanImage> image;
+            std::unique_ptr<VulkanImageView> view;
 
             VulkanSwapChainImageTuple(
-                const shared_ptr<VulkanImage>& image,
-                const shared_ptr<VulkanImageView>& view);
+                unique_ptr<VulkanImage>& image,
+                unique_ptr<VulkanImageView>& view);
 
-            std::optional<std::shared_ptr<VulkanImage>> get_image() override;
-            std::optional<std::shared_ptr<VulkanImageView>> get_view() override;
-            std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
-            std::optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+            std::optional<std::unique_ptr<VulkanImage>> get_image() override;
+            std::optional<std::unique_ptr<VulkanImageView>> get_view() override;
+            std::optional<std::unique_ptr<VulkanDeviceMemory>> get_memory() override;
+            std::optional<std::unique_ptr<VulkanSampler>> get_sampler() override;
 
             VulkanAttachmentType get_type() const override;
 
@@ -29,19 +29,19 @@ namespace bebone::gfx {
         };
 
         struct VulkanDepthImageTuple : public IVulkanAttachment {
-            std::shared_ptr<VulkanImage> image;
-            std::shared_ptr<VulkanImageView> view;
-            std::shared_ptr<VulkanDeviceMemory> memory;
+            std::unique_ptr<VulkanImage> image;
+            std::unique_ptr<VulkanImageView> view;
+            std::unique_ptr<VulkanDeviceMemory> memory;
 
             VulkanDepthImageTuple(
-                const shared_ptr<VulkanImage>& image,
-                const shared_ptr<VulkanImageView>& view,
-                const shared_ptr<VulkanDeviceMemory>& memory);
+                unique_ptr<VulkanImage>& image,
+                unique_ptr<VulkanImageView>& view,
+                unique_ptr<VulkanDeviceMemory>& memory);
 
-            std::optional<std::shared_ptr<VulkanImage>> get_image() override;
-            std::optional<std::shared_ptr<VulkanImageView>> get_view() override;
-            std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
-            std::optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+            std::optional<std::unique_ptr<VulkanImage>> get_image() override;
+            std::optional<std::unique_ptr<VulkanImageView>> get_view() override;
+            std::optional<std::unique_ptr<VulkanDeviceMemory>> get_memory() override;
+            std::optional<std::unique_ptr<VulkanSampler>> get_sampler() override;
 
             VulkanAttachmentType get_type() const override;
 
@@ -49,12 +49,12 @@ namespace bebone::gfx {
         };
 
         struct VulkanImageMemoryTuple {
-            std::shared_ptr<VulkanImage> image;
-            std::shared_ptr<VulkanDeviceMemory> memory;
+            std::unique_ptr<VulkanImage> image;
+            std::unique_ptr<VulkanDeviceMemory> memory;
 
             VulkanImageMemoryTuple(
-                const shared_ptr<VulkanImage>& image,
-                const shared_ptr<VulkanDeviceMemory>& memory);
+                unique_ptr<VulkanImage>& image,
+                unique_ptr<VulkanDeviceMemory>& memory);
 
             // void destroy(VulkanDevice& device) override;
         };
@@ -68,12 +68,12 @@ namespace std {
 
     template<>
     struct tuple_element<0, bebone::gfx::VulkanSwapChainImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
+        using type = std::unique_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
     struct tuple_element<1, bebone::gfx::VulkanSwapChainImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImageView>;
+        using type = std::unique_ptr<bebone::gfx::VulkanImageView>;
     };
 }
 
@@ -99,17 +99,17 @@ namespace std {
 
     template<>
     struct tuple_element<0, bebone::gfx::VulkanDepthImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
+        using type = std::unique_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
     struct tuple_element<1, bebone::gfx::VulkanDepthImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImageView>;
+        using type = std::unique_ptr<bebone::gfx::VulkanImageView>;
     };
 
     template<>
     struct tuple_element<2, bebone::gfx::VulkanDepthImageTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
+        using type = std::unique_ptr<bebone::gfx::VulkanDeviceMemory>;
     };
 }
 
@@ -137,12 +137,12 @@ namespace std {
 
     template<>
     struct tuple_element<0, bebone::gfx::VulkanImageMemoryTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
+        using type = std::unique_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
     struct tuple_element<1, bebone::gfx::VulkanImageMemoryTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
+        using type = std::unique_ptr<bebone::gfx::VulkanDeviceMemory>;
     };
 }
 
@@ -162,24 +162,24 @@ namespace bebone::gfx {
 
 namespace std {
     template<>
-    struct tuple_size<std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>>
+    struct tuple_size<std::unique_ptr<bebone::gfx::VulkanImageMemoryTuple>>
             : std::integral_constant<std::size_t, 2> { };
 
     template<>
-    struct tuple_element<0, std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
+    struct tuple_element<0, std::unique_ptr<bebone::gfx::VulkanImageMemoryTuple>> {
+        using type = std::unique_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
-    struct tuple_element<1, std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>> {
-        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
+    struct tuple_element<1, std::unique_ptr<bebone::gfx::VulkanImageMemoryTuple>> {
+        using type = std::unique_ptr<bebone::gfx::VulkanDeviceMemory>;
     };
 }
 
 // Todo, why this needs to be in bebone::gfx namespace ?
 namespace bebone::gfx {
     template<std::size_t i>
-    auto get(const std::shared_ptr<bebone::gfx::VulkanImageMemoryTuple>& tuple) {
+    auto get(const std::unique_ptr<bebone::gfx::VulkanImageMemoryTuple>& tuple) {
         if constexpr (i == 0) {
             return tuple->image;
         } else if constexpr (i == 1) {

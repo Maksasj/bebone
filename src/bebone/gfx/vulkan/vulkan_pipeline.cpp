@@ -238,8 +238,8 @@ namespace bebone::gfx {
     /*
     void VulkanPipeline::recreate(
         VulkanDevice& device,
-        std::shared_ptr<VulkanShaderModule>& vertShaderModule,
-        std::shared_ptr<VulkanShaderModule>& fragShaderModule,
+        std::unique_ptr<VulkanShaderModule>& vertShaderModule,
+        std::unique_ptr<VulkanShaderModule>& fragShaderModule,
         const PipelineConfigInfo& config_info
     ) {
         // Todo move this

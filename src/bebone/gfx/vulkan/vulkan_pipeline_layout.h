@@ -16,7 +16,7 @@ namespace bebone::gfx {
         public:
             VulkanPipelineLayout(
                 VulkanDevice& device,
-                const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
+                const std::vector<std::unique_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
                 const std::vector<VulkanConstRange>& constant_ranges);
 
             ~VulkanPipelineLayout();

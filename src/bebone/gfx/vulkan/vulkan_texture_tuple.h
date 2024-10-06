@@ -18,10 +18,10 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     struct VulkanTextureTuple : public IVulkanAttachment, private core::NonCopyable {
-        std::shared_ptr<VulkanImage> image;
-        std::shared_ptr<VulkanDeviceMemory> memory;
-        std::shared_ptr<VulkanImageView> view;
-        std::shared_ptr<VulkanSampler> sampler;
+        std::unique_ptr<VulkanImage> image;
+        std::unique_ptr<VulkanDeviceMemory> memory;
+        std::unique_ptr<VulkanImageView> view;
+        std::unique_ptr<VulkanSampler> sampler;
 
         public:
             VulkanTextureTuple( // Constructors that require VulkanDevice& need to protected
@@ -29,20 +29,20 @@ namespace bebone::gfx {
                 const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
 
             VulkanTextureTuple(
-                const std::shared_ptr<VulkanImage>& image,
-                const std::shared_ptr<VulkanDeviceMemory>& memory,
-                const std::shared_ptr<VulkanImageView>& view,
-                const std::shared_ptr<VulkanSampler>& sampler);
+                std::unique_ptr<VulkanImage>& image,
+                std::unique_ptr<VulkanDeviceMemory>& memory,
+                std::unique_ptr<VulkanImageView>& view,
+                std::unique_ptr<VulkanSampler>& sampler);
 
             VulkanTextureTuple(
                 VulkanDevice& device,
                 VkExtent3D extent,
                 VkFormat image_format);
 
-            std::optional<std::shared_ptr<VulkanImage>> get_image() override;
-            std::optional<std::shared_ptr<VulkanImageView>> get_view() override;
-            std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() override;
-            std::optional<std::shared_ptr<VulkanSampler>> get_sampler() override;
+            std::optional<std::unique_ptr<VulkanImage>> get_image() override;
+            std::optional<std::unique_ptr<VulkanImageView>> get_view() override;
+            std::optional<std::unique_ptr<VulkanDeviceMemory>> get_memory() override;
+            std::optional<std::unique_ptr<VulkanSampler>> get_sampler() override;
 
             VulkanAttachmentType get_type() const override;
 
@@ -58,22 +58,22 @@ namespace std {
 
     template<>
     struct tuple_element<0, bebone::gfx::VulkanTextureTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImage>;
+        using type = std::unique_ptr<bebone::gfx::VulkanImage>;
     };
 
     template<>
     struct tuple_element<1, bebone::gfx::VulkanTextureTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanDeviceMemory>;
+        using type = std::unique_ptr<bebone::gfx::VulkanDeviceMemory>;
     };
 
     template<>
     struct tuple_element<2, bebone::gfx::VulkanTextureTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanImageView>;
+        using type = std::unique_ptr<bebone::gfx::VulkanImageView>;
     };
 
     template<>
     struct tuple_element<3, bebone::gfx::VulkanTextureTuple> {
-        using type = std::shared_ptr<bebone::gfx::VulkanSampler>;
+        using type = std::unique_ptr<bebone::gfx::VulkanSampler>;
     };
 }
 

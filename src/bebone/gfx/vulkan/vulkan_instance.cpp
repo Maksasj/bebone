@@ -53,6 +53,8 @@ namespace bebone::gfx {
     }
 
     VulkanInstance::~VulkanInstance() {
+        debug_messenger.reset();
+
         vkDestroyInstance(backend, nullptr);
     }
 
@@ -118,16 +120,16 @@ namespace bebone::gfx {
         return extensions;
     }
 
-    std::shared_ptr<VulkanDevice> VulkanInstance::create_device(std::unique_ptr<Window>& window) {
-        auto device = std::make_shared<VulkanDevice>(*this, window);
+    std::unique_ptr<VulkanDevice> VulkanInstance::create_device(std::unique_ptr<Window>& window) {
+        auto device = std::make_unique<VulkanDevice>(*this, window);
 
-        child_devices.push_back(device);
+        // child_devices.push_back(device);
 
         return device;
     }
 
     /*
-    void VulkanInstance::destroy_all(std::shared_ptr<VulkanDevice>& device) {
+    void VulkanInstance::destroy_all(std::unique_ptr<VulkanDevice>& device) {
         device->destroy(*this);
     }
 

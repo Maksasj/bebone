@@ -8,7 +8,7 @@ namespace bebone::gfx {
     VulkanDescriptorSet::VulkanDescriptorSet(
         VulkanDevice& device,
         VulkanDescriptorPool& descriptor_pool,
-        const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
+        const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
     ) {
         VkDescriptorSetAllocateInfo alloc_info{};
         alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;

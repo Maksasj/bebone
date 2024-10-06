@@ -18,9 +18,8 @@ namespace bebone::gfx {
             VulkanCommandBufferPool(VulkanDevice& device);
             ~VulkanCommandBufferPool();
 
-            std::shared_ptr<VulkanCommandBuffer> create_command_buffer();
-
-            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
+            std::unique_ptr<VulkanCommandBuffer> create_command_buffer();
+            std::vector<std::unique_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
 
             // Todo, refactor this
             VkCommandBuffer begin_single_time_commands();

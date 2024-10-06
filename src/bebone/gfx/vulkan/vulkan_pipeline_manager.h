@@ -18,11 +18,11 @@ namespace bebone::gfx {
             VulkanDevice& device;
 
         private:
-            std::shared_ptr<VulkanDescriptorPool> descriptor_pool;
+            std::unique_ptr<VulkanDescriptorPool> descriptor_pool;
 
-            std::shared_ptr<VulkanDescriptorSetLayout> bindless_descriptor_set_layout;
-            std::shared_ptr<VulkanDescriptorSet> bindless_descriptor_set;
-            std::shared_ptr<VulkanPipelineLayout> bindless_pipeline_layout;
+            std::unique_ptr<VulkanDescriptorSetLayout> bindless_descriptor_set_layout;
+            std::unique_ptr<VulkanDescriptorSet> bindless_descriptor_set;
+            std::unique_ptr<VulkanPipelineLayout> bindless_pipeline_layout;
 
             u32 bindless_uniforms_index;
             u32 bindless_storage_index;
@@ -38,16 +38,16 @@ namespace bebone::gfx {
             VulkanPipelineManager(VulkanDevice& device);
             ~VulkanPipelineManager();
 
-            std::shared_ptr<VulkanPipeline> create_pipeline(
-                std::shared_ptr<VulkanDevice>& device, // Todo  REMOVE THIS
+            std::unique_ptr<VulkanPipeline> create_pipeline(
+                std::unique_ptr<VulkanDevice>& device, // Todo  REMOVE THIS
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
                 std::unique_ptr<VulkanShaderModule> vertex_shader_module,
                 std::unique_ptr<VulkanShaderModule> fragment_shader_module,
                 VulkanPipelineConfig config_info
             );
 
-            std::shared_ptr<VulkanPipeline> create_pipeline(
-                std::shared_ptr<VulkanDevice>& device,
+            std::unique_ptr<VulkanPipeline> create_pipeline(
+                std::unique_ptr<VulkanDevice>& device,
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
                 const std::string& vertex_shader_file_path,
                 const std::string& fragment_shader_file_path,
@@ -55,32 +55,32 @@ namespace bebone::gfx {
             );
 
             VulkanBindlessTextureHandle bind_texture(
-                std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<VulkanTextureTuple>& texture);
+                std::unique_ptr<VulkanDevice>& device,
+                std::unique_ptr<VulkanTextureTuple>& texture);
 
             std::vector<VulkanBindlessTextureHandle> bind_textures(
-                std::shared_ptr<VulkanDevice>& device,
-                std::vector<std::shared_ptr<VulkanTextureTuple>>& texture);
+                std::unique_ptr<VulkanDevice>& device,
+                std::vector<std::unique_ptr<VulkanTextureTuple>>& texture);
 
             VulkanBindlessTextureHandle bind_attachment(
-                std::shared_ptr<VulkanDevice>& device,
-                std::shared_ptr<IVulkanAttachment>& attachment);
+                std::unique_ptr<VulkanDevice>& device,
+                std::unique_ptr<IVulkanAttachment>& attachment);
 
             std::vector<VulkanBindlessTextureHandle> bind_attachments(
-                std::shared_ptr<VulkanDevice>& device,
-                std::vector<std::shared_ptr<IVulkanAttachment>>& attachments);
+                std::unique_ptr<VulkanDevice>& device,
+                std::vector<std::unique_ptr<IVulkanAttachment>>& attachments);
 
             VulkanBindlessBufferHandle bind_uniform_buffer(
-                std::shared_ptr<VulkanDevice>& device,
-                const std::shared_ptr<VulkanBufferMemoryTuple>& buffer);
+                std::unique_ptr<VulkanDevice>& device,
+                const std::unique_ptr<VulkanBufferMemoryTuple>& buffer);
 
             std::vector<VulkanBindlessBufferHandle> bind_uniform_buffers(
-                std::shared_ptr<VulkanDevice>& device,
-                const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& buffers);
+                std::unique_ptr<VulkanDevice>& device,
+                const std::vector<std::unique_ptr<VulkanBufferMemoryTuple>>& buffers);
 
-            [[nodiscard]] const std::shared_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
-            [[nodiscard]] const std::shared_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
-            [[nodiscard]] const std::shared_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
+            [[nodiscard]] const std::unique_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
+            [[nodiscard]] const std::unique_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
+            [[nodiscard]] const std::unique_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
 
             // void destroy(VulkanDevice& device) override;
     };

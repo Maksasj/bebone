@@ -95,7 +95,7 @@ namespace bebone::gfx {
     }
 
     VulkanResult VulkanSwapChain::submit_present_command_buffers(
-        std::shared_ptr<VulkanCommandBuffer>& command_buffer,
+        VulkanCommandBuffer& command_buffer,
         uint32_t *image_index
     ) {
         // Submitting and synchronization
@@ -114,7 +114,7 @@ namespace bebone::gfx {
         submit_info.pWaitSemaphores = wait_semaphores;
         submit_info.pWaitDstStageMask = wait_stages;
         submit_info.commandBufferCount = 1;
-        submit_info.pCommandBuffers = &command_buffer->backend;
+        submit_info.pCommandBuffers = &command_buffer.backend;
         submit_info.signalSemaphoreCount = 1;
         submit_info.pSignalSemaphores = signal_semaphores;
 
@@ -147,14 +147,14 @@ namespace bebone::gfx {
         return { result };
     }
 
-    std::vector<std::shared_ptr<VulkanSwapChainImageTuple>> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat image_format) {
+    std::vector<std::unique_ptr<VulkanSwapChainImageTuple>> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat image_format) {
         uint32_t image_count;
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, nullptr);
         auto images = std::vector<VkImage> {};
         images.resize(image_count);
 
-        auto out = std::vector<std::shared_ptr<VulkanSwapChainImageTuple>> {};
+        auto out = std::vector<std::unique_ptr<VulkanSwapChainImageTuple>> {};
         out.reserve(image_count);
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, images.data());
@@ -163,7 +163,7 @@ namespace bebone::gfx {
             auto image = device.create_image(vk_image);
             auto view = device.create_image_view(*image, image_format);
 
-            out.push_back(std::make_shared<VulkanSwapChainImageTuple>(image, view));
+            out.push_back(std::make_unique<VulkanSwapChainImageTuple>(image, view));
         }
 
         return out;

@@ -16,9 +16,9 @@ namespace bebone::gfx {
     class VulkanRenderTarget {
         public:
             // Vector of all FIFO attachments
-            vector<vector<shared_ptr<IVulkanAttachment>>> color_attachments;
-            vector<shared_ptr<IVulkanAttachment>> depth_attachments;
-            vector<shared_ptr<VulkanFramebuffer>> framebuffers;
+            vector<vector<unique_ptr<IVulkanAttachment>>> color_attachments;
+            vector<unique_ptr<IVulkanAttachment>> depth_attachments;
+            vector<unique_ptr<VulkanFramebuffer>> framebuffers;
 
             // This is still just a swap chain render target constructor
             VulkanRenderTarget(
@@ -28,10 +28,12 @@ namespace bebone::gfx {
             VulkanRenderTarget(
                 VulkanDevice& device,
                 std::unique_ptr<VulkanRenderPass>& render_pass,
-                std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images);
+                std::vector<std::unique_ptr<VulkanSwapChainImageTuple>>& images);
 
-            vector<shared_ptr<IVulkanAttachment>>& get_color_attachment(const size_t& index);
-            vector<shared_ptr<IVulkanAttachment>>& depth_attachment();
+            ~VulkanRenderTarget();
+
+            vector<unique_ptr<IVulkanAttachment>>& get_color_attachment(const size_t& index);
+            vector<unique_ptr<IVulkanAttachment>>& depth_attachment();
 
             // void destroy(VulkanDevice& device);
     };

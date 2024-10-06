@@ -19,23 +19,24 @@ namespace bebone::gfx {
 
     VulkanCommandBufferPool::~VulkanCommandBufferPool() {
         device_owner.wait_idle();
+
         vkDestroyCommandPool(device_owner.device, backend, nullptr);
 
         LOG_TRACE("Destroyed command buffer pool");
     }
 
-    std::shared_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer() {
-        return std::make_shared<VulkanCommandBuffer>(device_owner, *this);
+    std::unique_ptr<VulkanCommandBuffer> VulkanCommandBufferPool::create_command_buffer() {
+        return std::make_unique<VulkanCommandBuffer>(device_owner, *this);
     }
 
-    std::vector<std::shared_ptr<VulkanCommandBuffer>> VulkanCommandBufferPool::create_command_buffers(
+    std::vector<std::unique_ptr<VulkanCommandBuffer>> VulkanCommandBufferPool::create_command_buffers(
         const size_t& count
     ) {
-        auto command_buffers = std::vector<std::shared_ptr<VulkanCommandBuffer>> {};
+        auto command_buffers = std::vector<std::unique_ptr<VulkanCommandBuffer>> {};
         command_buffers.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
-            command_buffers.push_back(create_command_buffer());
+            command_buffers.push_back(std::move(create_command_buffer()));
 
         return command_buffers;
     }

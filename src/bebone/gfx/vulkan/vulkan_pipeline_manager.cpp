@@ -26,7 +26,10 @@ namespace bebone::gfx {
         // Creating bindless pipeline layout
         const auto constant_ranges = { VulkanConstRange(const_ranges_size, 0) };
 
-        bindless_pipeline_layout = device.create_pipeline_layout({ bindless_descriptor_set_layout }, constant_ranges);
+        std::vector<std::unique_ptr<VulkanDescriptorSetLayout>> layouts;
+        layouts.push_back(std::move(bindless_descriptor_set_layout));
+
+        bindless_pipeline_layout = device.create_pipeline_layout(layouts, constant_ranges);
 
         std::ignore = bindless_storage_index; // Todo
 
@@ -42,8 +45,8 @@ namespace bebone::gfx {
         LOG_DEBUG("Destroyed Vulkan pipeline manager");
     }
 
-    std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
-        std::shared_ptr<VulkanDevice>& device,
+    std::unique_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
+        std::unique_ptr<VulkanDevice>& device,
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         std::unique_ptr<VulkanShaderModule> vertex_shader_module,
         std::unique_ptr<VulkanShaderModule> fragment_shader_module,
@@ -57,8 +60,8 @@ namespace bebone::gfx {
         return device->create_pipeline(render_pass, *bindless_pipeline_layout, shader_modules, std::move(config_info));;
     }
 
-    std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
-        std::shared_ptr<VulkanDevice>& device,
+    std::unique_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
+        std::unique_ptr<VulkanDevice>& device,
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         const std::string& vertex_shader_file_path,
         const std::string& fragment_shader_file_path,
@@ -76,8 +79,8 @@ namespace bebone::gfx {
     }
 
     VulkanBindlessTextureHandle VulkanPipelineManager::bind_texture(
-        std::shared_ptr<VulkanDevice>& device,
-        std::shared_ptr<VulkanTextureTuple>& texture
+        std::unique_ptr<VulkanDevice>& device,
+        std::unique_ptr<VulkanTextureTuple>& texture
     ) {
         const auto handle = bindless_samplers_index;
 
@@ -88,8 +91,8 @@ namespace bebone::gfx {
     }
 
     std::vector<VulkanBindlessTextureHandle> VulkanPipelineManager::bind_textures(
-        std::shared_ptr<VulkanDevice>& device,
-        std::vector<std::shared_ptr<VulkanTextureTuple>>& textures
+        std::unique_ptr<VulkanDevice>& device,
+        std::vector<std::unique_ptr<VulkanTextureTuple>>& textures
     ) {
         auto handles = std::vector<VulkanBindlessTextureHandle> {};
         handles.reserve(textures.size());
@@ -101,8 +104,8 @@ namespace bebone::gfx {
     }
 
     VulkanBindlessTextureHandle VulkanPipelineManager::bind_attachment(
-        std::shared_ptr<VulkanDevice>& device,
-        std::shared_ptr<IVulkanAttachment>& attachment
+        std::unique_ptr<VulkanDevice>& device,
+        std::unique_ptr<IVulkanAttachment>& attachment
     ) {
         // Todo
         if(!attachment->get_sampler().has_value())
@@ -125,8 +128,8 @@ namespace bebone::gfx {
     }
 
     std::vector<VulkanBindlessTextureHandle> VulkanPipelineManager::bind_attachments(
-        std::shared_ptr<VulkanDevice>& device,
-        std::vector<std::shared_ptr<IVulkanAttachment>>& attachments
+        std::unique_ptr<VulkanDevice>& device,
+        std::vector<std::unique_ptr<IVulkanAttachment>>& attachments
     ) {
         auto handles = std::vector<VulkanBindlessTextureHandle> {};
         handles.reserve(attachments.size());
@@ -138,8 +141,8 @@ namespace bebone::gfx {
     }
 
     VulkanBindlessBufferHandle VulkanPipelineManager::bind_uniform_buffer(
-        std::shared_ptr<VulkanDevice>& device,
-        const std::shared_ptr<VulkanBufferMemoryTuple>& buffer
+        std::unique_ptr<VulkanDevice>& device,
+        const std::unique_ptr<VulkanBufferMemoryTuple>& buffer
     ) {
         const auto handle = bindless_uniforms_index;
 
@@ -150,8 +153,8 @@ namespace bebone::gfx {
     }
 
     std::vector<VulkanBindlessBufferHandle> VulkanPipelineManager::bind_uniform_buffers(
-        std::shared_ptr<VulkanDevice>& device,
-        const std::vector<std::shared_ptr<VulkanBufferMemoryTuple>>& buffers
+        std::unique_ptr<VulkanDevice>& device,
+        const std::vector<std::unique_ptr<VulkanBufferMemoryTuple>>& buffers
     ) {
         auto handles = std::vector<VulkanBindlessBufferHandle> {};
         handles.reserve(buffers.size());
@@ -162,15 +165,15 @@ namespace bebone::gfx {
         return handles;
     }
 
-    const std::shared_ptr<VulkanDescriptorSet>& VulkanPipelineManager::get_descriptor_set() const {
+    const std::unique_ptr<VulkanDescriptorSet>& VulkanPipelineManager::get_descriptor_set() const {
         return bindless_descriptor_set;
     }
 
-    const std::shared_ptr<VulkanDescriptorSetLayout>& VulkanPipelineManager::get_descriptor_set_layout() const {
+    const std::unique_ptr<VulkanDescriptorSetLayout>& VulkanPipelineManager::get_descriptor_set_layout() const {
         return bindless_descriptor_set_layout;
     }
 
-    const std::shared_ptr<VulkanPipelineLayout>& VulkanPipelineManager::get_pipeline_layout() const {
+    const std::unique_ptr<VulkanPipelineLayout>& VulkanPipelineManager::get_pipeline_layout() const {
         return bindless_pipeline_layout;
     }
 

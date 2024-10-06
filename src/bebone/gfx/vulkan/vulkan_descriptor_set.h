@@ -17,7 +17,7 @@ namespace bebone::gfx {
             VulkanDescriptorSet(
                 VulkanDevice& device,
                 VulkanDescriptorPool& descriptor_pool,
-                const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
+                const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
 
             // void destroy(VulkanDevice& device) override;
     };

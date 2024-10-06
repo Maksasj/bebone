@@ -2,28 +2,33 @@
 
 #include "vulkan_image.h"
 #include "vulkan_image_view.h"
+#include "vulkan_sampler.h"
 
 namespace bebone::gfx {
         VulkanSwapChainImageTuple::VulkanSwapChainImageTuple(
-            const shared_ptr<VulkanImage>& image,
-            const shared_ptr<VulkanImageView>& view
-        ) : image(image), view(view)  {
+            unique_ptr<VulkanImage>& image,
+            unique_ptr<VulkanImageView>& view
+        ) : image(std::move(image)), view(std::move(view))  {
 
         }
 
-        std::optional<std::shared_ptr<VulkanImage>> VulkanSwapChainImageTuple::get_image() {
-            return image;
-        }
-
-        std::optional<std::shared_ptr<VulkanImageView>> VulkanSwapChainImageTuple::get_view() {
-            return view;
-        }
-
-        std::optional<std::shared_ptr<VulkanDeviceMemory>> VulkanSwapChainImageTuple::get_memory() {
+        std::optional<std::unique_ptr<VulkanImage>> VulkanSwapChainImageTuple::get_image() {
+            LOG_WARNING("TODO get_image returning nullopt");
+            // return image;
             return std::nullopt;
         }
 
-        std::optional<std::shared_ptr<VulkanSampler>> VulkanSwapChainImageTuple::get_sampler() {
+        std::optional<std::unique_ptr<VulkanImageView>> VulkanSwapChainImageTuple::get_view() {
+            LOG_WARNING("TODO get_view returning nullopt");
+            // return view;
+            return std::nullopt;
+        }
+
+        std::optional<std::unique_ptr<VulkanDeviceMemory>> VulkanSwapChainImageTuple::get_memory() {
+            return std::nullopt;
+        }
+
+        std::optional<std::unique_ptr<VulkanSampler>> VulkanSwapChainImageTuple::get_sampler() {
             return std::nullopt;
         }
 
@@ -40,26 +45,32 @@ namespace bebone::gfx {
          */
 
         VulkanDepthImageTuple::VulkanDepthImageTuple(
-            const shared_ptr<VulkanImage>& image,
-            const shared_ptr<VulkanImageView>& view,
-            const shared_ptr<VulkanDeviceMemory>& memory
-        ) : image(image), view(view), memory(memory) {
+            unique_ptr<VulkanImage>& image,
+            unique_ptr<VulkanImageView>& view,
+            unique_ptr<VulkanDeviceMemory>& memory
+        ) : image(std::move(image)), view(std::move(view)), memory(std::move(memory)) {
 
         }
 
-        std::optional<std::shared_ptr<VulkanImage>> VulkanDepthImageTuple::get_image() {
-            return image;
+        std::optional<std::unique_ptr<VulkanImage>> VulkanDepthImageTuple::get_image() {
+            LOG_WARNING("TODO get_image returning nullopt");
+            // return image;
+            return std::nullopt;
         }
 
-        std::optional<std::shared_ptr<VulkanImageView>> VulkanDepthImageTuple::get_view() {
-            return view;
+        std::optional<std::unique_ptr<VulkanImageView>> VulkanDepthImageTuple::get_view() {
+            LOG_WARNING("TODO get_view returning nullopt");
+            // return view;
+            return std::nullopt;
         }
 
-        std::optional<std::shared_ptr<VulkanDeviceMemory>> VulkanDepthImageTuple::get_memory() {
-            return memory;
+        std::optional<std::unique_ptr<VulkanDeviceMemory>> VulkanDepthImageTuple::get_memory() {
+            LOG_WARNING("TODO get_memory returning nullopt");
+            // return memory;
+            return std::nullopt;
         }
 
-        std::optional<std::shared_ptr<VulkanSampler>> VulkanDepthImageTuple::get_sampler() {
+        std::optional<std::unique_ptr<VulkanSampler>> VulkanDepthImageTuple::get_sampler() {
             return std::nullopt;
         }
 
@@ -78,9 +89,9 @@ namespace bebone::gfx {
          */
 
         VulkanImageMemoryTuple::VulkanImageMemoryTuple(
-            const shared_ptr<VulkanImage>& image,
-            const shared_ptr<VulkanDeviceMemory>& memory
-        ) : image(image), memory(memory) {
+            unique_ptr<VulkanImage>& image,
+            unique_ptr<VulkanDeviceMemory>& memory
+        ) : image(std::move(image)), memory(std::move(memory)) {
 
         }
 

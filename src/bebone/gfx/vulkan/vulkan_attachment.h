@@ -61,10 +61,10 @@ namespace bebone::gfx {
         private:
 
         public:
-            virtual std::optional<std::shared_ptr<VulkanImage>> get_image() = 0;
-            virtual std::optional<std::shared_ptr<VulkanImageView>> get_view() = 0;
-            virtual std::optional<std::shared_ptr<VulkanDeviceMemory>> get_memory() = 0;
-            virtual std::optional<std::shared_ptr<VulkanSampler>> get_sampler() = 0;
+            virtual std::optional<std::unique_ptr<VulkanImage>> get_image() = 0;
+            virtual std::optional<std::unique_ptr<VulkanImageView>> get_view() = 0;
+            virtual std::optional<std::unique_ptr<VulkanDeviceMemory>> get_memory() = 0;
+            virtual std::optional<std::unique_ptr<VulkanSampler>> get_sampler() = 0;
 
             virtual VulkanAttachmentType get_type() const = 0;
     };

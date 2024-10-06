@@ -19,8 +19,8 @@ namespace bebone::gfx {
             VulkanDescriptorPool(VulkanDevice& device);
             ~VulkanDescriptorPool();
 
-            std::shared_ptr<VulkanDescriptorSet> create_descriptor(const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
-            std::vector<std::shared_ptr<VulkanDescriptorSet>> create_descriptors(const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout, const size_t& count);
+            std::unique_ptr<VulkanDescriptorSet> create_descriptor(const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
+            std::vector<std::unique_ptr<VulkanDescriptorSet>> create_descriptors(const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout, const size_t& count);
     };
 }
 

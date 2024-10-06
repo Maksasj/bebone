@@ -36,12 +36,12 @@ namespace bebone::gfx {
             Self& begin_render_pass(const VulkanSwapChain& swap_chain);
 
             Self& begin_render_pass(
-                    const std::shared_ptr<VulkanRenderTarget>& render_target,
+                    const std::unique_ptr<VulkanRenderTarget>& render_target,
                     const std::unique_ptr<VulkanRenderPass>& render_pass,
                     const size_t& frame);
 
             Self& begin_render_pass(
-                const std::shared_ptr<VulkanFramebuffer>& framebuffer,
+                const std::unique_ptr<VulkanFramebuffer>& framebuffer,
                 const std::unique_ptr<VulkanRenderPass>& render_pass);
 
             Self& end_render_pass();
@@ -52,34 +52,34 @@ namespace bebone::gfx {
             Self& set_scissors(const i32& x, const i32& y, const u32& width, const u32& height);
 
             Self& bind_pipeline(const VulkanPipeline& pipeline);
-            Self& bind_pipeline(const std::shared_ptr<VulkanPipeline>& pipeline);
+            Self& bind_pipeline(const std::unique_ptr<VulkanPipeline>& pipeline);
 
-            Self& bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            Self& bind_vertex_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple);
+            Self& bind_vertex_buffer(const std::unique_ptr<VulkanBuffer>& tuple);
+            Self& bind_vertex_buffer(VulkanBufferMemoryTuple& tuple);
 
-            Self& bind_index_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            Self& bind_index_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple);
-
-            Self& bind_descriptor_set(
-                    const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                    const std::shared_ptr<VulkanDescriptorSet>& descriptor_set);
+            Self& bind_index_buffer(const std::unique_ptr<VulkanBuffer>& tuple);
+            Self& bind_index_buffer(VulkanBufferMemoryTuple& tuple);
 
             Self& bind_descriptor_set(
-                    const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                    const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::unique_ptr<VulkanDescriptorSet>& descriptor_set);
+
+            Self& bind_descriptor_set(
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
                     const size_t& frame);
 
             Self& bind_descriptor_sets(
-                    const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                    const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets);
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets);
 
             Self& push_constant(
-                    const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
                     const u32& size,
                     const void* ptr);
 
             Self& push_constant(
-                    const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
                     const uint32_t& size,
                     const size_t& offset,
                     const void* ptr);

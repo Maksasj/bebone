@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     VulkanPipelineLayout::VulkanPipelineLayout(
             VulkanDevice& device,
-            const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
+            const std::vector<std::unique_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
             const std::vector<VulkanConstRange>& constant_ranges
         ) : device_owner(device) {
         auto ranges = std::vector<VkPushConstantRange> {};

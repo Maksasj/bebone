@@ -35,7 +35,7 @@ namespace bebone::gfx {
         vkBindBufferMemory(device_owner.device, buffer.backend, backend, 0);
     }
 
-    void VulkanDeviceMemory::bind_buffer_memory(std::shared_ptr<VulkanBuffer>& buffer) {
+    void VulkanDeviceMemory::bind_buffer_memory(std::unique_ptr<VulkanBuffer>& buffer) {
         bind_buffer_memory(*buffer);
     }
 
@@ -43,7 +43,7 @@ namespace bebone::gfx {
         vkBindImageMemory(device_owner.device, image.backend, backend, 0);
     }
 
-    void VulkanDeviceMemory::bind_image_memory(std::shared_ptr<VulkanImage>& image) {
+    void VulkanDeviceMemory::bind_image_memory(std::unique_ptr<VulkanImage>& image) {
         bind_image_memory(*image);
     }
 

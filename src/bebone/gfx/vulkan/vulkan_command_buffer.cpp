@@ -55,7 +55,7 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
-        const std::shared_ptr<VulkanRenderTarget>& render_target,
+        const std::unique_ptr<VulkanRenderTarget>& render_target,
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         const size_t& frame
     ) {
@@ -68,7 +68,7 @@ namespace bebone::gfx {
 
     // This function should have multiple variants, with swap chain or just with custom render target
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
-        const std::shared_ptr<VulkanFramebuffer>& framebuffer,
+        const std::unique_ptr<VulkanFramebuffer>& framebuffer,
         const std::unique_ptr<VulkanRenderPass>& render_pass
     ) {
         VkRenderPassBeginInfo render_pass_info{};
@@ -156,13 +156,13 @@ namespace bebone::gfx {
     }
 
     // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const std::shared_ptr<VulkanPipeline>& pipeline) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const std::unique_ptr<VulkanPipeline>& pipeline) {
         vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->backend);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::unique_ptr<VulkanBuffer>& buffer) {
         VkBuffer buffers[] = { buffer->backend };
         VkDeviceSize offset[] = { 0 }; // Todo
 
@@ -171,19 +171,19 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple) {
-        return bind_vertex_buffer(tuple->buffer);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(VulkanBufferMemoryTuple& tuple) {
+        return bind_vertex_buffer(tuple.buffer);
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::shared_ptr<VulkanBuffer>& buffer) {
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::unique_ptr<VulkanBuffer>& buffer) {
         // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
         vkCmdBindIndexBuffer(backend, buffer->backend, 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::shared_ptr<VulkanBufferMemoryTuple>& tuple) {
-        return bind_index_buffer(tuple->buffer);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(VulkanBufferMemoryTuple& tuple) {
+        return bind_index_buffer(tuple.buffer);
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertex_count) {
@@ -200,8 +200,8 @@ namespace bebone::gfx {
 
     // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
     VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(
-        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        const std::shared_ptr<VulkanDescriptorSet>& descriptor_set
+        const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::unique_ptr<VulkanDescriptorSet>& descriptor_set
     ) {
         vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_set->backend, 0, nullptr);
 
@@ -210,8 +210,8 @@ namespace bebone::gfx {
 
     // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
     VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_set(
-        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
+        const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& frame
     ) {
         vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_sets[frame]->backend, 0, nullptr);
@@ -221,8 +221,8 @@ namespace bebone::gfx {
 
     // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
     VulkanCommandBuffer& VulkanCommandBuffer::bind_descriptor_sets(
-        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets
+        const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets
     ) {
         auto sets = std::vector<VkDescriptorSet> { };
         sets.reserve(descriptor_sets.size());
@@ -237,7 +237,7 @@ namespace bebone::gfx {
 
     // Todo VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT should be configured
     VulkanCommandBuffer& VulkanCommandBuffer::push_constant(
-        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
         const u32& size,
         const void* ptr
     ) {
@@ -248,7 +248,7 @@ namespace bebone::gfx {
 
     // Todo VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT should be configured
     VulkanCommandBuffer& VulkanCommandBuffer::push_constant(
-        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
         const uint32_t& size,
         const size_t& offset,
         const void* ptr

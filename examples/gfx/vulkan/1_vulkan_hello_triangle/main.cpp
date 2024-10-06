@@ -26,8 +26,8 @@ int main() {
     VulkanPipelineLayout pipeline_layout(device, {}, {});
     VulkanPipeline pipeline(device, swap_chain.render_pass, pipeline_layout, "vert.glsl", "frag.glsl", { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } });
 
-    auto vb = device.create_buffer_memory_from(vertices);
-    auto eb = device.create_buffer_memory_from(indices);
+    VulkanBufferMemoryTuple vb(device, vertices);
+    VulkanBufferMemoryTuple eb(device, indices);
 
     VulkanCommandBufferPool command_buffer_pool(device);
     auto command_buffers = command_buffer_pool.create_command_buffers(3);
@@ -39,7 +39,7 @@ int main() {
         if(!swap_chain.acquire_next_image(&frame).is_ok())
             continue;
 
-        auto& cmd = command_buffers[frame];
+        unique_ptr<VulkanCommandBuffer>& cmd = command_buffers[frame];
 
         cmd->begin_record();
 
@@ -53,7 +53,7 @@ int main() {
 
         cmd->end_record();
 
-        if(!swap_chain.submit_present_command_buffers(cmd, &frame).is_ok()) // Todo check if window is resized
+        if(!swap_chain.submit_present_command_buffers(*cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
 

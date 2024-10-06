@@ -35,21 +35,21 @@ namespace bebone::gfx {
         LOG_TRACE("Destroyed Descriptor pool");
     }
 
-    std::shared_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(
-        const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
+    std::unique_ptr<VulkanDescriptorSet> VulkanDescriptorPool::create_descriptor(
+        const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
     ) {
-        return std::make_shared<VulkanDescriptorSet>(device_owner, *this, descriptor_set_layout);
+        return std::make_unique<VulkanDescriptorSet>(device_owner, *this, descriptor_set_layout);
     }
 
-    std::vector<std::shared_ptr<VulkanDescriptorSet>> VulkanDescriptorPool::create_descriptors(
-        const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout,
+    std::vector<std::unique_ptr<VulkanDescriptorSet>> VulkanDescriptorPool::create_descriptors(
+        const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout,
         const size_t& count
     ) {
-        auto descriptors = std::vector<std::shared_ptr<VulkanDescriptorSet>>{};
+        auto descriptors = std::vector<std::unique_ptr<VulkanDescriptorSet>>{};
         descriptors.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
-            descriptors.push_back(std::make_shared<VulkanDescriptorSet>(device_owner, *this, descriptor_set_layout));
+            descriptors.push_back(std::make_unique<VulkanDescriptorSet>(device_owner, *this, descriptor_set_layout));
 
         return descriptors;
     }

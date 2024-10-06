@@ -2,9 +2,9 @@
 
 namespace bebone::gfx {
     VulkanBufferMemoryTuple::VulkanBufferMemoryTuple(
-        const shared_ptr<VulkanBuffer>& buffer,
-        const shared_ptr<VulkanDeviceMemory>& memory
-    ) : buffer(buffer), memory(memory) {
+        unique_ptr<VulkanBuffer>& buffer,
+        unique_ptr<VulkanDeviceMemory>& memory
+    ) : buffer(std::move(buffer)), memory(std::move(memory)) {
 
     }
 
