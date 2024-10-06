@@ -55,7 +55,7 @@ namespace bebone::gfx {
 
             // Todo, maybe this can be optimized
             std::vector<shared_ptr<VulkanApi>> child_objects;
-            std::shared_ptr<VulkanCommandBufferPool> command_buffer_pool;
+            std::unique_ptr<VulkanCommandBufferPool> command_buffer_pool;
 
         public:
             VkDevice device;
@@ -65,10 +65,7 @@ namespace bebone::gfx {
 
             VkPhysicalDeviceProperties properties;
 
-            VulkanDevice(
-                VulkanInstance& instance,
-                VulkanWindow &window);
-
+            VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window);
             ~VulkanDevice();
 
             std::shared_ptr<VulkanDeviceMemory> create_device_memory(
@@ -178,26 +175,26 @@ namespace bebone::gfx {
                 const std::vector<VulkanConstRange>& constant_ranges);
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
-                const std::shared_ptr<VulkanRenderPass>& render_pass,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
+                const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info = {});
 
-            std::shared_ptr<VulkanRenderPass> create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
+            std::unique_ptr<VulkanRenderPass> create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
 
             std::shared_ptr<VulkanFramebuffer> create_framebuffer(
                     const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
-                    const std::shared_ptr<VulkanRenderPass>& render_pass,
+                    const std::unique_ptr<VulkanRenderPass>& render_pass,
                     VkExtent2D extent);
 
             std::vector<std::shared_ptr<VulkanFramebuffer>> create_framebuffers(
                     const std::vector<std::shared_ptr<VulkanImageView>>& attachments,
-                    const std::shared_ptr<VulkanRenderPass>& render_pass,
+                    const std::unique_ptr<VulkanRenderPass>& render_pass,
                     VkExtent2D extent,
                     const size_t& count);
 
             // Create new instance of command buffer pool
-            std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
+            std::unique_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
 
             // Create command buffer from personal command buffer pool
             std::shared_ptr<VulkanCommandBuffer> create_command_buffer();
@@ -208,7 +205,7 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanCommandBuffer> begin_single_time_commands();
             void end_single_time_commands(std::shared_ptr<VulkanCommandBuffer>& command_buffer);
 
-            std::shared_ptr<VulkanShaderModule> create_shader_module(
+            std::unique_ptr<VulkanShaderModule> create_shader_module(
                 const std::string& source_code,
                 const ShaderType& type);
 
@@ -226,15 +223,15 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
 
-            std::shared_ptr<VulkanRenderTarget> create_render_target(
-                std::shared_ptr<VulkanRenderPass>& render_pass);
+            std::unique_ptr<VulkanRenderTarget> create_render_target(
+                std::unique_ptr<VulkanRenderPass>& render_pass);
 
             // Special constructor for swap chain
-            std::shared_ptr<VulkanRenderTarget> create_render_target(
-                std::shared_ptr<VulkanRenderPass>& render_pass,
+            std::unique_ptr<VulkanRenderTarget> create_render_target(
+                std::unique_ptr<VulkanRenderPass>& render_pass,
                 std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images);
 
-            std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
+            std::shared_ptr<VulkanSwapChain> create_swap_chain(std::unique_ptr<Window>& window);
 
             void wait_idle();
 

@@ -47,22 +47,24 @@ namespace bebone::gfx {
 
             std::vector<std::shared_ptr<VulkanSwapChainImageTuple>> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
 
+
+
     public:
             VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);
+            VulkanSwapChain(VulkanDevice& device, std::unique_ptr<Window> &window);
+
             ~VulkanSwapChain();
 
             const size_t& get_current_frame() const;
             const VkExtent2D& get_extent() const;
 
-            std::shared_ptr<VulkanRenderPass> render_pass;
-            std::shared_ptr<VulkanRenderTarget> render_target;
+            std::unique_ptr<VulkanRenderPass> render_pass;
+            std::unique_ptr<VulkanRenderTarget> render_target;
 
             VulkanResult acquire_next_image(
-                std::shared_ptr<VulkanDevice>& device,
                 uint32_t *image_index);
 
             VulkanResult submit_present_command_buffers(
-                std::shared_ptr<VulkanDevice>& device,
                 std::shared_ptr<VulkanCommandBuffer>& command_buffer,
                 uint32_t *image_index);
 

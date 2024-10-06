@@ -19,7 +19,7 @@ namespace bebone::renderer {
 
     class VulkanRenderer : public IRenderer {
         private:
-            std::shared_ptr<Window> window;
+            std::unique_ptr<Window>& window;
 
             // Vulkan specific stuff
             VulkanInstance instance;
@@ -42,7 +42,7 @@ namespace bebone::renderer {
             std::shared_ptr<IRenderGraphImpl> create_render_graph_impl() override;
 
         public:
-            explicit VulkanRenderer(const std::shared_ptr<gfx::Window>& window);
+            explicit VulkanRenderer(std::unique_ptr<gfx::Window>& window);
             ~VulkanRenderer() override;
 
             [[nodiscard]] std::shared_ptr<IProgramManager> get_program_manager() const override;

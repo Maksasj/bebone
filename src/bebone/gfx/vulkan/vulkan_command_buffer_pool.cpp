@@ -18,6 +18,7 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBufferPool::~VulkanCommandBufferPool() {
+        device.wait_idle();
         vkDestroyCommandPool(device.device, backend, nullptr);
 
         LOG_TRACE("Destroyed command buffer pool");
@@ -36,7 +37,6 @@ namespace bebone::gfx {
     }
 
     std::vector<std::shared_ptr<VulkanCommandBuffer>> VulkanCommandBufferPool::create_command_buffers(
-        std::shared_ptr<VulkanDevice>& device,
         const size_t& count
     ) {
         auto command_buffers = std::vector<std::shared_ptr<VulkanCommandBuffer>> {};

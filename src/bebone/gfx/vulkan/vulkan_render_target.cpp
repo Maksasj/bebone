@@ -8,7 +8,7 @@
 namespace bebone::gfx {
     VulkanRenderTarget::VulkanRenderTarget(
         VulkanDevice& device,
-        std::shared_ptr<VulkanRenderPass>& render_pass
+        std::unique_ptr<VulkanRenderPass>& render_pass
     ) {
         // Create color attachments
         color_attachments.reserve(render_pass->get_color_attachments_count());
@@ -62,7 +62,7 @@ namespace bebone::gfx {
 
     VulkanRenderTarget::VulkanRenderTarget(
         VulkanDevice& device,
-        std::shared_ptr<VulkanRenderPass>& render_pass,
+        std::unique_ptr<VulkanRenderPass>& render_pass,
         std::vector<std::shared_ptr<VulkanSwapChainImageTuple>>& images
     ) {
         // We do need to create color attachments, since swap chain handles them

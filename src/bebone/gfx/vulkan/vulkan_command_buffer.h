@@ -36,16 +36,16 @@ namespace bebone::gfx {
 
             // Swap chain specific begin render pass
             VulkanCommandBuffer& begin_render_pass(
-                const std::shared_ptr<VulkanSwapChain> swap_chain);
+                const VulkanSwapChain& swap_chain);
 
             VulkanCommandBuffer& begin_render_pass(
                 const std::shared_ptr<VulkanRenderTarget>& render_target,
-                const std::shared_ptr<VulkanRenderPass>& render_pass,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
                 const size_t& frame);
 
             VulkanCommandBuffer& begin_render_pass(
                 const std::shared_ptr<VulkanFramebuffer>& framebuffer,
-                const std::shared_ptr<VulkanRenderPass>& render_pass); // Extent probably could be encapsulated by framebuffer or render_pass
+                const std::unique_ptr<VulkanRenderPass>& render_pass); // Extent probably could be encapsulated by framebuffer or render_pass
 
             VulkanCommandBuffer& end_render_pass();
 

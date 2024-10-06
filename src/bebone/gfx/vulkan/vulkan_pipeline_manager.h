@@ -40,15 +40,15 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 std::shared_ptr<VulkanDevice>& device, // Todo  REMOVE THIS
-                const std::shared_ptr<VulkanRenderPass>& render_pass,
-                std::shared_ptr<VulkanShaderModule> vertex_shader_module,
-                std::shared_ptr<VulkanShaderModule> fragment_shader_module,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                std::unique_ptr<VulkanShaderModule> vertex_shader_module,
+                std::unique_ptr<VulkanShaderModule> fragment_shader_module,
                 VulkanPipelineConfig config_info
             );
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 std::shared_ptr<VulkanDevice>& device,
-                const std::shared_ptr<VulkanRenderPass>& render_pass,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
                 const std::string& vertex_shader_file_path,
                 const std::string& fragment_shader_file_path,
                 VulkanPipelineConfig config_info

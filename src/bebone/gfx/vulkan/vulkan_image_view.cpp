@@ -34,9 +34,9 @@ namespace bebone::gfx {
     }
 
     VulkanImageView::~VulkanImageView() {
-        vkDestroyImageView(device.device, backend, nullptr);
+        // vkDestroyImageView(device.device, backend, nullptr);
 
-        LOG_TRACE("Destroyed Vulkan image view");
+        LOG_DEBUG("Destroyed Vulkan image view");
     }
 
     /*

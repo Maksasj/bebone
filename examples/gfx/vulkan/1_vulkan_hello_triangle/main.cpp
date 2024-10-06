@@ -29,30 +29,30 @@ int main() {
     auto window = WindowFactory::create_window("1. Vulkan hello triangle example", 800, 600, Vulkan);
 
     VulkanInstance instance;
-    auto device = instance.create_device(window);
-    auto swap_chain = device->create_swap_chain(window);
+    VulkanDevice device(instance, window);
+    VulkanSwapChain swap_chain(device, window);
 
-    auto vert_shader_module = device->create_shader_module(vulkan_device_read_file("vert.glsl"), ShaderType::VertexShader);
-    auto frag_shader_module = device->create_shader_module(vulkan_device_read_file("frag.glsl"), ShaderType::FragmentShader);
+    auto pipeline_layout = device.create_pipeline_layout({}, {});
 
-    auto pipeline_layout = device->create_pipeline_layout({}, {});
+    std::vector<std::unique_ptr<VulkanShaderModule>> shader_modules;
+    shader_modules.push_back(device.create_shader_module(vulkan_device_read_file("vert.glsl"), ShaderType::VertexShader));
+    shader_modules.push_back(device.create_shader_module(vulkan_device_read_file("frag.glsl"), ShaderType::FragmentShader));
 
-    auto pipeline = device->create_pipeline(swap_chain->render_pass,
-        pipeline_layout, { vert_shader_module, frag_shader_module },
-        { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
+    auto pipeline = device.create_pipeline(swap_chain.render_pass,
+        pipeline_layout, shader_modules, { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } }
     );
 
-    auto vb = device->create_buffer_memory_from(vertices);
-    auto eb = device->create_buffer_memory_from(indices);
+    auto vb = device.create_buffer_memory_from(vertices);
+    auto eb = device.create_buffer_memory_from(indices);
 
-    auto command_buffer_pool = device->create_command_buffer_pool();
-    auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
+    auto command_buffer_pool = device.create_command_buffer_pool();
+    auto command_buffers = command_buffer_pool->create_command_buffers(3);
 
     while (!window->closing()) {
         window->pull_events();
 
         uint32_t frame;
-        if(!swap_chain->acquire_next_image(device, &frame).is_ok())
+        if(!swap_chain.acquire_next_image(&frame).is_ok())
             continue;
 
         auto& cmd = command_buffers[frame];
@@ -71,12 +71,9 @@ int main() {
 
         cmd->end_record();
 
-        if(!swap_chain->submit_present_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
+        if(!swap_chain.submit_present_command_buffers(cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
-
-    // Todo
-    // instance->destroy();
 
     return 0;
 }

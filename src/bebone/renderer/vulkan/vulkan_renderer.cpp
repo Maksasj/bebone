@@ -2,7 +2,7 @@
 
 namespace bebone::renderer {
     VulkanRenderer::VulkanRenderer(
-        const std::shared_ptr<gfx::Window>& window
+        std::unique_ptr<gfx::Window>& window
     ) : window(window), instance() {
         // Setup vulkan
         device = instance.create_device(this->window);

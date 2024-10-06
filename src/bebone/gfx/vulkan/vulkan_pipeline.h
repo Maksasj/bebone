@@ -19,14 +19,14 @@ namespace bebone::gfx {
 
         protected:
              static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(
-                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules);
+                 const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules);
 
         public:
             VulkanPipeline(
                 VulkanDevice& device,
-                const std::shared_ptr<VulkanRenderPass>& render_pass,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
                 const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
+                const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig& config_info);
 
             ~VulkanPipeline();

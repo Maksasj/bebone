@@ -60,19 +60,19 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(const std::shared_ptr<VulkanSwapChain> swap_chain) {
-        const auto& frame = swap_chain->get_current_frame();
+    VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(const VulkanSwapChain& swap_chain) {
+        const auto& frame = swap_chain.get_current_frame();
 
         begin_render_pass(
-            swap_chain->render_target->framebuffers[frame],
-            swap_chain->render_pass);
+            swap_chain.render_target->framebuffers[frame],
+            swap_chain.render_pass);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
         const std::shared_ptr<VulkanRenderTarget>& render_target,
-        const std::shared_ptr<VulkanRenderPass>& render_pass,
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
         const size_t& frame
     ) {
         begin_render_pass(
@@ -85,7 +85,7 @@ namespace bebone::gfx {
     // This function should have multiple variants, with swap chain or just with custom render target
     VulkanCommandBuffer& VulkanCommandBuffer::begin_render_pass(
         const std::shared_ptr<VulkanFramebuffer>& framebuffer,
-        const std::shared_ptr<VulkanRenderPass>& render_pass
+        const std::unique_ptr<VulkanRenderPass>& render_pass
     ) {
         VkRenderPassBeginInfo render_pass_info{};
         render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

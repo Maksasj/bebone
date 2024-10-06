@@ -5,11 +5,11 @@
 #include "../glfw_context.h"
 
 namespace bebone::gfx {
-    std::shared_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties) {
+    std::unique_ptr<Window> WindowFactory::create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties) {
         GLFWContext::init(); // this should be moved somewhere else
         LOG_TRACE("Initializing window {} {} with title: '{}'", width, height, title);
 
-        std::shared_ptr<Window> window;
+        std::unique_ptr<Window> window;
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
@@ -18,11 +18,11 @@ namespace bebone::gfx {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-            window = std::make_shared<GLWindow>(title, width, height, properties);
+            window = std::make_unique<GLWindow>(title, width, height, properties);
         } else {
             glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
             
-            window = std::make_shared<VulkanWindow>(title, width, height, properties);
+            window = std::make_unique<VulkanWindow>(title, width, height, properties);
         }
 
         if (window->get_backend() == nullptr) {

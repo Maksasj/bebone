@@ -47,10 +47,14 @@ namespace bebone::gfx {
 
     class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
         private:
+            VulkanDevice& device;
+
+        private:
             size_t size; // Todo, Do we really need to store buffer size there ?
 
         public:
             VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
+            ~VulkanBuffer();
 
             VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
 

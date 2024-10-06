@@ -7,10 +7,10 @@
 namespace bebone::renderer {
     class RendererFactory {
         public:
-            static std::shared_ptr<IRenderer> create_renderer(std::shared_ptr<gfx::Window>& window);
+            static std::shared_ptr<IRenderer> create_renderer(std::unique_ptr<gfx::Window>& window);
     };
 
-    std::pair<std::shared_ptr<Window>, std::shared_ptr<IRenderer>> create_window_renderer(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties);
+    std::pair<std::unique_ptr<Window>, std::shared_ptr<IRenderer>> create_window_renderer(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties);
 }
 
 #endif

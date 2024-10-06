@@ -8,7 +8,7 @@
 #include "sound/sound_engine.h"
 
 // Second API layer
-#include "renderer/renderer.h"
+// #include "renderer/renderer.h"
 
 // Third API layer
 // Probably app class

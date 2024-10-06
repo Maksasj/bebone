@@ -22,7 +22,6 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanCommandBuffer> create_command_buffer(std::shared_ptr<VulkanDevice>& device);
 
             std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(
-                std::shared_ptr<VulkanDevice>& device,
                 const size_t& count);
 
             // Todo, refactor this

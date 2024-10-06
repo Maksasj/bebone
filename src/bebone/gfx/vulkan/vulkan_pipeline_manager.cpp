@@ -54,18 +54,22 @@ namespace bebone::gfx {
 
     std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
         std::shared_ptr<VulkanDevice>& device,
-        const std::shared_ptr<VulkanRenderPass>& render_pass,
-        std::shared_ptr<VulkanShaderModule> vertex_shader_module,
-        std::shared_ptr<VulkanShaderModule> fragment_shader_module,
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        std::unique_ptr<VulkanShaderModule> vertex_shader_module,
+        std::unique_ptr<VulkanShaderModule> fragment_shader_module,
         VulkanPipelineConfig config_info
-    ) {
-        return device->create_pipeline(render_pass, bindless_pipeline_layout, { vertex_shader_module, fragment_shader_module }, std::move(config_info));;
+    )
+    {
+        std::vector<unique_ptr<VulkanShaderModule>> shader_modules;
+        shader_modules.push_back(std::move(vertex_shader_module));
+        shader_modules.push_back(std::move(fragment_shader_module));
+
+        return device->create_pipeline(render_pass, bindless_pipeline_layout, shader_modules, std::move(config_info));;
     }
 
-    // Todo, actually swap chain is not needed there
     std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
         std::shared_ptr<VulkanDevice>& device,
-        const std::shared_ptr<VulkanRenderPass>& render_pass,
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
         const std::string& vertex_shader_file_path,
         const std::string& fragment_shader_file_path,
         VulkanPipelineConfig config_info
@@ -73,7 +77,7 @@ namespace bebone::gfx {
         auto vert_shader_module = device->create_shader_module(vulkan_device_read_file(vertex_shader_file_path), ShaderType::VertexShader);
         auto frag_shader_module = device->create_shader_module(vulkan_device_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
 
-        auto pipeline = create_pipeline(device, render_pass, vert_shader_module, frag_shader_module, config_info);
+        auto pipeline = create_pipeline(device, render_pass, std::move(vert_shader_module), std::move(frag_shader_module), config_info);
 
         // device->destroy_all(vert_shader_module, frag_shader_module);
         // device->collect_garbage();

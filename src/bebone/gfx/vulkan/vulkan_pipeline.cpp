@@ -5,7 +5,7 @@
 #include "vulkan_pipeline_layout.h"
 
 namespace bebone::gfx {
-    std::vector<VkPipelineShaderStageCreateInfo> VulkanPipeline::collect_shader_stages(const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules) {
+    std::vector<VkPipelineShaderStageCreateInfo> VulkanPipeline::collect_shader_stages(const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules) {
         auto stages = std::vector<VkPipelineShaderStageCreateInfo>{};
         stages.reserve(shader_modules.size());
 
@@ -32,9 +32,9 @@ namespace bebone::gfx {
 
     VulkanPipeline::VulkanPipeline(
         VulkanDevice& device,
-        const std::shared_ptr<VulkanRenderPass>& render_pass,
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
         const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
+        const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig& config_info
     ) : device(device) {
         // VkPipelineShaderStageCreateInfo

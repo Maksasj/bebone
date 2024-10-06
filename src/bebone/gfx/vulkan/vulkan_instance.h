@@ -29,7 +29,7 @@ namespace bebone::gfx {
 
             VkInstance& get_instance();
 
-            std::shared_ptr<VulkanDevice> create_device(std::shared_ptr<Window>& window);
+            std::shared_ptr<VulkanDevice> create_device(std::unique_ptr<Window>& window);
 
             const std::vector<const char *> validation_layers = { "VK_LAYER_KHRONOS_validation" };
 

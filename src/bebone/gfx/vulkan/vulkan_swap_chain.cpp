@@ -28,7 +28,33 @@ namespace bebone::gfx {
         LOG_TRACE("Created Vulkan swap chain");
     }
 
+    VulkanSwapChain::VulkanSwapChain(VulkanDevice& device, std::unique_ptr<Window> &window) : device(device) {
+        auto window_extent = VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) };
+
+        auto swap_chain_support = device.get_swap_chain_support();
+        extent = choose_swap_extent(swap_chain_support.capabilities, window_extent);
+
+        create_swap_chain(device);
+
+        auto images = create_swap_chain_images(device, surface_format.format);
+
+        // This is default swap chain render pass,
+        // but I am not sure is swap chain should manage it own render pass
+        render_pass = device.create_render_pass(extent, {
+                VulkanAttachmentDesc::color2D(extent, { .format = surface_format.format }),
+                VulkanAttachmentDesc::depth2D(extent, { .format = device.find_depth_format() }),
+        });
+
+        render_target = device.create_render_target(render_pass, images);
+
+        create_sync_objects(device);
+
+        LOG_TRACE("Created Vulkan swap chain");
+    }
+
     VulkanSwapChain::~VulkanSwapChain() {
+        device.wait_idle();
+
         // Todo move this somewhere else
         for (size_t i = 0; i < image_count; i++) {
             vkDestroySemaphore(device.device, render_finished_semaphores[i], nullptr);
@@ -49,11 +75,11 @@ namespace bebone::gfx {
         return extent;
     }
 
-    VulkanResult VulkanSwapChain::acquire_next_image(std::shared_ptr<VulkanDevice>& device, uint32_t *image_index) {
-        vkWaitForFences(device->device, 1, &in_flight_fences[current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
+    VulkanResult VulkanSwapChain::acquire_next_image(uint32_t *image_index) {
+        vkWaitForFences(device.device, 1, &in_flight_fences[current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 
         auto result = vkAcquireNextImageKHR(
-            device->device,
+            device.device,
             backend,
             std::numeric_limits<uint64_t>::max(),
             image_available_semaphores[current_frame],  // must be a not signaled semaphore
@@ -69,13 +95,12 @@ namespace bebone::gfx {
     }
 
     VulkanResult VulkanSwapChain::submit_present_command_buffers(
-        std::shared_ptr<VulkanDevice>& device,
         std::shared_ptr<VulkanCommandBuffer>& command_buffer,
         uint32_t *image_index
     ) {
         // Submitting and synchronization
         if (images_in_flight[*image_index] != VK_NULL_HANDLE)
-            vkWaitForFences(device->device, 1, &images_in_flight[*image_index], VK_TRUE, UINT64_MAX);
+            vkWaitForFences(device.device, 1, &images_in_flight[*image_index], VK_TRUE, UINT64_MAX);
 
         images_in_flight[*image_index] = in_flight_fences[current_frame];
 
@@ -93,8 +118,8 @@ namespace bebone::gfx {
         submit_info.signalSemaphoreCount = 1;
         submit_info.pSignalSemaphores = signal_semaphores;
 
-        vkResetFences(device->device, 1, &in_flight_fences[current_frame]);
-        if(vkQueueSubmit(device->graphics_queue, 1, &submit_info, in_flight_fences[current_frame]) != VK_SUCCESS) {
+        vkResetFences(device.device, 1, &in_flight_fences[current_frame]);
+        if(vkQueueSubmit(device.graphics_queue, 1, &submit_info, in_flight_fences[current_frame]) != VK_SUCCESS) {
             LOG_ERROR("Failed to submit draw command buffer");
             // throw std::runtime_error("failed to submit draw command buffer!"); Todo
         }
@@ -110,7 +135,7 @@ namespace bebone::gfx {
         present_info.pSwapchains = swap_chains;
         present_info.pImageIndices = image_index;
 
-        VkResult result = vkQueuePresentKHR(device->present_queue, &present_info);
+        VkResult result = vkQueuePresentKHR(device.present_queue, &present_info);
 
         current_frame = (current_frame + 1) % image_count;
 

@@ -10,7 +10,7 @@ namespace bebone::gfx {
         VulkanDevice& device,
         const size_t& size,
         VulkanBufferInfo buffer_info
-    )  : size(size) {
+    )  : device(device), size(size) {
         VkBufferCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -28,6 +28,12 @@ namespace bebone::gfx {
         }
 
         LOG_TRACE("Created Vulkan buffer with size {}", size);
+    }
+
+    VulkanBuffer::~VulkanBuffer() {
+        vkDestroyBuffer(device.device, backend, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan buffer");
     }
 
     VkMemoryRequirements VulkanBuffer::get_memory_requirements(VulkanDevice& device) {
