@@ -10,7 +10,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    struct VulkanBufferMemoryTuple : public VulkanApi {
+    struct VulkanBufferMemoryTuple {
         public:
             std::shared_ptr<VulkanBuffer> buffer;
             std::shared_ptr<VulkanDeviceMemory> memory;

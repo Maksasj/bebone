@@ -13,7 +13,7 @@
 namespace bebone::gfx {
     class VulkanImage;
 
-    class VulkanRenderTarget : public VulkanApi {
+    class VulkanRenderTarget {
         public:
             // Vector of all FIFO attachments
             vector<vector<shared_ptr<IVulkanAttachment>>> color_attachments;

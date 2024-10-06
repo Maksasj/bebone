@@ -18,28 +18,35 @@ namespace bebone::gfx {
             VulkanDevice& device_owner;
 
         protected:
-             static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(
-                 const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules);
+             static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules);
+
+            // Todo recreate method
+            void create_pipeline(
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                VulkanPipelineLayout& pipeline_layout,
+                const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
+                VulkanPipelineConfig& config_info);
 
         public:
             VulkanPipeline(
                 VulkanDevice& device,
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+                VulkanPipelineLayout& pipeline_layout,
                 const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
-                VulkanPipelineConfig& config_info);
+                VulkanPipelineConfig config_info);
+
+            VulkanPipeline(
+                VulkanDevice& device,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                VulkanPipelineLayout& pipeline_layout,
+                const std::string& vertex_shader_path,
+                const std::string& fragment_shader_path,
+                VulkanPipelineConfig config_info);
 
             ~VulkanPipeline();
 
-            // void recreate(
-            //     VulkanDevice& device,
-            //     std::shared_ptr<VulkanShaderModule>& vertShaderModule,
-            //     std::shared_ptr<VulkanShaderModule>& fragShaderModule,
-            //     const PipelineConfigInfo& config_info);
 
             void bind(VkCommandBuffer command_buffer);
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

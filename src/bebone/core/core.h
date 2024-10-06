@@ -23,4 +23,13 @@
 // Timestamp
 #include "timestamp/watch.h"
 
+// Todo move this out
+
+#include <fstream>
+#include <string>
+
+namespace bebone::core {
+    std::string utils_read_file(const std::string& path);
+}
+
 #endif

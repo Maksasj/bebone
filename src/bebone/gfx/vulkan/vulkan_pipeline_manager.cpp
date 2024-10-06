@@ -10,16 +10,6 @@
 #include "vulkan_const_range.h"
 
 namespace bebone::gfx {
-    // Todo, move this
-    std::string vulkan_device_read_file(const std::string& path) {
-        std::ifstream file(path);
-        std::stringstream ss;
-
-        ss << file.rdbuf();
-
-        return ss.str();
-    }
-
     VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) : device(device), bindless_uniforms_index(0), bindless_storage_index(0), bindless_samplers_index(0) {
         descriptor_pool = device.create_descriptor_pool();
 
@@ -64,7 +54,7 @@ namespace bebone::gfx {
         shader_modules.push_back(std::move(vertex_shader_module));
         shader_modules.push_back(std::move(fragment_shader_module));
 
-        return device->create_pipeline(render_pass, bindless_pipeline_layout, shader_modules, std::move(config_info));;
+        return device->create_pipeline(render_pass, *bindless_pipeline_layout, shader_modules, std::move(config_info));;
     }
 
     std::shared_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
@@ -74,8 +64,8 @@ namespace bebone::gfx {
         const std::string& fragment_shader_file_path,
         VulkanPipelineConfig config_info
     ) {
-        auto vert_shader_module = device->create_shader_module(vulkan_device_read_file(vertex_shader_file_path), ShaderType::VertexShader);
-        auto frag_shader_module = device->create_shader_module(vulkan_device_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
+        auto vert_shader_module = device->create_shader_module(utils_read_file(vertex_shader_file_path), ShaderType::VertexShader);
+        auto frag_shader_module = device->create_shader_module(utils_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
 
         auto pipeline = create_pipeline(device, render_pass, std::move(vert_shader_module), std::move(frag_shader_module), config_info);
 

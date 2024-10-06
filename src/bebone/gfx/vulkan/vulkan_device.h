@@ -54,7 +54,6 @@ namespace bebone::gfx {
             void create_logical_device();
 
             // Todo, maybe this can be optimized
-            std::vector<shared_ptr<VulkanApi>> child_objects;
             std::unique_ptr<VulkanCommandBufferPool> command_buffer_pool;
 
         public:
@@ -71,10 +70,6 @@ namespace bebone::gfx {
             std::shared_ptr<VulkanDeviceMemory> create_device_memory(
                 VkMemoryRequirements requirements,
                 VkMemoryPropertyFlags properties);
-
-            std::shared_ptr<VulkanBuffer> create_buffer(
-                const size_t& size,
-                VulkanBufferInfo buffer_info = {});
 
             std::shared_ptr<VulkanBufferMemoryTuple> create_buffer_memory(
                 const size_t& size,
@@ -176,8 +171,15 @@ namespace bebone::gfx {
 
             std::shared_ptr<VulkanPipeline> create_pipeline(
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+                VulkanPipelineLayout& pipeline_layout,
                 const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
+                VulkanPipelineConfig config_info = {});
+
+            std::shared_ptr<VulkanPipeline> create_pipeline(
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                VulkanPipelineLayout& pipeline_layout,
+                const std::string& vertex_shader_path,
+                const std::string& fragment_shader_path,
                 VulkanPipelineConfig config_info = {});
 
             std::unique_ptr<VulkanRenderPass> create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);

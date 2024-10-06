@@ -34,6 +34,8 @@ namespace bebone::gfx {
     VulkanDevice::~VulkanDevice() {
         wait_idle();
 
+        command_buffer_pool.reset();
+
         vkDestroyDevice(device, nullptr);
 
         LOG_DEBUG("TODO, destroy surface KHR");
@@ -284,22 +286,11 @@ namespace bebone::gfx {
         return device_memory;
     }
 
-    std::shared_ptr<VulkanBuffer> VulkanDevice::create_buffer(
-        const size_t& size,
-        VulkanBufferInfo buffer_info
-    ) {
-        auto buffer = std::make_shared<VulkanBuffer>(*this, size, buffer_info);
-
-        // child_objects.push_back(buffer);
-
-        return buffer;
-    }
-
     std::shared_ptr<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memory(
         const size_t& size,
         VulkanBufferInfo buffer_info
     ) {
-        auto buffer = create_buffer(size, buffer_info);
+        auto buffer = std::make_shared<VulkanBuffer>(*this, size, buffer_info);
 
         auto requirements = buffer->get_memory_requirements(*this);
 
@@ -318,7 +309,7 @@ namespace bebone::gfx {
         buffers.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
-            buffers.push_back(create_buffer(size, buffer_info));
+            buffers.push_back(std::make_shared<VulkanBuffer>(*this, size, buffer_info));
 
         return buffers;
     }
@@ -411,13 +402,29 @@ namespace bebone::gfx {
 
     std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
         const std::unique_ptr<VulkanRenderPass>& render_pass,
-        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
+        VulkanPipelineLayout& pipeline_layout,
         const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig config_info
     ) {
         auto pipeline = std::make_shared<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);
 
         // // child_objects.push_back(pipeline);
+
+        return pipeline;
+    }
+
+    std::shared_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        VulkanPipelineLayout& pipeline_layout,
+        const std::string& vertex_shader_path,
+        const std::string& fragment_shader_path,
+        VulkanPipelineConfig config_info
+    ) {
+        std::vector<std::unique_ptr<VulkanShaderModule>> shader_modules;
+        shader_modules.push_back(create_shader_module(utils_read_file(vertex_shader_path), ShaderType::VertexShader));
+        shader_modules.push_back(create_shader_module(utils_read_file(fragment_shader_path), ShaderType::FragmentShader));
+
+        auto pipeline = std::make_shared<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);
 
         return pipeline;
     }

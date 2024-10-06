@@ -48,7 +48,7 @@ namespace bebone::gfx {
             // void destroy(VulkanDevice& device) override;
         };
 
-        struct VulkanImageMemoryTuple : public VulkanApi {
+        struct VulkanImageMemoryTuple {
             std::shared_ptr<VulkanImage> image;
             std::shared_ptr<VulkanDeviceMemory> memory;
 

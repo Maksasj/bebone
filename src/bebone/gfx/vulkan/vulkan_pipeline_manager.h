@@ -13,7 +13,7 @@ namespace bebone::gfx {
     enum class VulkanBindlessBufferHandle : uint32_t { Invalid = 0 };
     enum class VulkanBindlessTextureHandle : uint32_t { Invalid = 0 };
 
-    class VulkanPipelineManager : public VulkanApi, private core::NonCopyable {
+    class VulkanPipelineManager : private core::NonCopyable {
         private:
             VulkanDevice& device;
 
