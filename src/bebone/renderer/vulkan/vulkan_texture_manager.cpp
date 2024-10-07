@@ -34,7 +34,7 @@ namespace bebone::renderer {
             .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
         });
 
-        auto vulkan_texture = std::make_shared<VulkanTextureTuple>(image, memory, view, sampler);
+        auto vulkan_texture = std::make_shared<VulkanTexture>(image, memory, view, sampler);
         auto texture = std::make_shared<VulkanTextureImpl>(vulkan_texture);
 
         program_manager->bind_texture(texture);

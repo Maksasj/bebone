@@ -1,106 +1,64 @@
 #include "vulkan_image_tuples.h"
 
+#include "vulkan_device.h"
+
 #include "vulkan_image.h"
 #include "vulkan_image_view.h"
 #include "vulkan_sampler.h"
 
 namespace bebone::gfx {
-        VulkanSwapChainImageTuple::VulkanSwapChainImageTuple(
+        VulkanSwapChainImage::VulkanSwapChainImage(
             unique_ptr<VulkanImage>& image,
             unique_ptr<VulkanImageView>& view
         ) : image(std::move(image)), view(std::move(view))  {
 
         }
 
-        std::optional<std::unique_ptr<VulkanImage>> VulkanSwapChainImageTuple::get_image() {
-            LOG_WARNING("TODO get_image returning nullopt");
-            // return image;
-            return std::nullopt;
+        VulkanSwapChainImage::~VulkanSwapChainImage() {
+            LOG_DEBUG("Deleting vulkan swap chain image");
         }
 
-        std::optional<std::unique_ptr<VulkanImageView>> VulkanSwapChainImageTuple::get_view() {
-            LOG_WARNING("TODO get_view returning nullopt");
-            // return view;
-            return std::nullopt;
+        VkImage VulkanSwapChainImage::get_vulkan_image() const {
+            return image->backend;
         }
 
-        std::optional<std::unique_ptr<VulkanDeviceMemory>> VulkanSwapChainImageTuple::get_memory() {
-            return std::nullopt;
+        VkImageView VulkanSwapChainImage::get_vulkan_image_view() const {
+            return view->backend;
         }
 
-        std::optional<std::unique_ptr<VulkanSampler>> VulkanSwapChainImageTuple::get_sampler() {
-            return std::nullopt;
+        VulkanDepthImage::VulkanDepthImage(VulkanDevice& device, VkExtent3D extent) {
+            auto format = device.find_depth_format();
+
+            image = device.create_image(format, extent, {
+                .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+            });
+
+            auto req = image->get_memory_requirements();
+
+            memory = device.create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+            memory->bind_image_memory(image);
+
+            view = device.create_image_view(*image, format, {
+                .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
+            });
         }
 
-        VulkanAttachmentType VulkanSwapChainImageTuple::get_type() const {
-            return Color;
+        VkImage VulkanDepthImage::get_vulkan_image() const {
+            return image->backend;
         }
 
-        /*
-        void VulkanSwapChainImageTuple::destroy(VulkanDevice &device)  {
-            view->destroy(device);
-
-            mark_destroyed();
-        }
-         */
-
-        VulkanDepthImageTuple::VulkanDepthImageTuple(
-            unique_ptr<VulkanImage>& image,
-            unique_ptr<VulkanImageView>& view,
-            unique_ptr<VulkanDeviceMemory>& memory
-        ) : image(std::move(image)), view(std::move(view)), memory(std::move(memory)) {
-
+        VkImageView VulkanDepthImage::get_vulkan_image_view() const {
+            return view->backend;
         }
 
-        std::optional<std::unique_ptr<VulkanImage>> VulkanDepthImageTuple::get_image() {
-            LOG_WARNING("TODO get_image returning nullopt");
-            // return image;
-            return std::nullopt;
-        }
-
-        std::optional<std::unique_ptr<VulkanImageView>> VulkanDepthImageTuple::get_view() {
-            LOG_WARNING("TODO get_view returning nullopt");
-            // return view;
-            return std::nullopt;
-        }
-
-        std::optional<std::unique_ptr<VulkanDeviceMemory>> VulkanDepthImageTuple::get_memory() {
-            LOG_WARNING("TODO get_memory returning nullopt");
-            // return memory;
-            return std::nullopt;
-        }
-
-        std::optional<std::unique_ptr<VulkanSampler>> VulkanDepthImageTuple::get_sampler() {
-            return std::nullopt;
-        }
-
-        VulkanAttachmentType VulkanDepthImageTuple::get_type() const {
-            return Depth;
-        }
-
-        /*
-        void VulkanDepthImageTuple::destroy(VulkanDevice &device) {
-            image->destroy(device);
-            view->destroy(device);
-            memory->destroy(device);
-
-            mark_destroyed();
-        }
-         */
-
-        VulkanImageMemoryTuple::VulkanImageMemoryTuple(
+        VulkanImageMemory::VulkanImageMemory(
             unique_ptr<VulkanImage>& image,
             unique_ptr<VulkanDeviceMemory>& memory
         ) : image(std::move(image)), memory(std::move(memory)) {
 
         }
 
-        /*
-        void VulkanImageMemoryTuple::destroy(VulkanDevice &device) {
-            image->destroy(device);
-            memory->destroy(device);
-
-            mark_destroyed();
+        VkImage VulkanImageMemory::get_vulkan_image() const {
+            return image->backend;
         }
-         */
 }

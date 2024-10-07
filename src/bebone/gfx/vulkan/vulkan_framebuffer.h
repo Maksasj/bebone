@@ -12,7 +12,7 @@ namespace bebone::gfx {
 
     class VulkanDevice;
 
-    class VulkanImageView;
+    class IVulkanImageView;
     class VulkanRenderPass;
 
     class VulkanFramebuffer : public VulkanWrapper<VkFramebuffer>, private core::NonCopyable {
@@ -22,8 +22,8 @@ namespace bebone::gfx {
         public:
             VulkanFramebuffer(
                 VulkanDevice& device,
-                const std::vector<std::unique_ptr<VulkanImageView>>& attachment_views,
-                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                std::vector<std::unique_ptr<IVulkanImageView>>& attachment_views,
+                std::unique_ptr<VulkanRenderPass>& render_pass,
                 VkExtent2D extent);
 
             ~VulkanFramebuffer();

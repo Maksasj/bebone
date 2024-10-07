@@ -54,14 +54,16 @@ namespace bebone::gfx {
                 VulkanPipelineConfig config_info
             );
 
+            /*
             VulkanBindlessTextureHandle bind_texture(
                 std::unique_ptr<VulkanDevice>& device,
-                std::unique_ptr<VulkanTextureTuple>& texture);
+                std::unique_ptr<VulkanTexture>& texture);
 
             std::vector<VulkanBindlessTextureHandle> bind_textures(
                 std::unique_ptr<VulkanDevice>& device,
-                std::vector<std::unique_ptr<VulkanTextureTuple>>& texture);
+                std::vector<std::unique_ptr<VulkanTexture>>& texture);
 
+             * Todo lets pass not IVulkanAttachment but rather two objects, IVulkanSampler, IVulkanView
             VulkanBindlessTextureHandle bind_attachment(
                 std::unique_ptr<VulkanDevice>& device,
                 std::unique_ptr<IVulkanAttachment>& attachment);
@@ -69,6 +71,7 @@ namespace bebone::gfx {
             std::vector<VulkanBindlessTextureHandle> bind_attachments(
                 std::unique_ptr<VulkanDevice>& device,
                 std::vector<std::unique_ptr<IVulkanAttachment>>& attachments);
+            */
 
             VulkanBindlessBufferHandle bind_uniform_buffer(
                 std::unique_ptr<VulkanDevice>& device,

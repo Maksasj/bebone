@@ -78,9 +78,10 @@ namespace bebone::gfx {
         return pipeline;
     }
 
+    /*
     VulkanBindlessTextureHandle VulkanPipelineManager::bind_texture(
         std::unique_ptr<VulkanDevice>& device,
-        std::unique_ptr<VulkanTextureTuple>& texture
+        std::unique_ptr<VulkanTexture>& texture
     ) {
         const auto handle = bindless_samplers_index;
 
@@ -92,7 +93,7 @@ namespace bebone::gfx {
 
     std::vector<VulkanBindlessTextureHandle> VulkanPipelineManager::bind_textures(
         std::unique_ptr<VulkanDevice>& device,
-        std::vector<std::unique_ptr<VulkanTextureTuple>>& textures
+        std::vector<std::unique_ptr<VulkanTexture>>& textures
     ) {
         auto handles = std::vector<VulkanBindlessTextureHandle> {};
         handles.reserve(textures.size());
@@ -139,6 +140,7 @@ namespace bebone::gfx {
 
         return handles;
     }
+    */
 
     VulkanBindlessBufferHandle VulkanPipelineManager::bind_uniform_buffer(
         std::unique_ptr<VulkanDevice>& device,

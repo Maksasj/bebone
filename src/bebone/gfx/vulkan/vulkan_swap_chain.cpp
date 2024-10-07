@@ -147,14 +147,14 @@ namespace bebone::gfx {
         return { result };
     }
 
-    std::vector<std::unique_ptr<VulkanSwapChainImageTuple>> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat image_format) {
+    std::vector<std::unique_ptr<VulkanSwapChainImage>> VulkanSwapChain::create_swap_chain_images(VulkanDevice& device, VkFormat image_format) {
         uint32_t image_count;
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, nullptr);
         auto images = std::vector<VkImage> {};
         images.resize(image_count);
 
-        auto out = std::vector<std::unique_ptr<VulkanSwapChainImageTuple>> {};
+        auto out = std::vector<std::unique_ptr<VulkanSwapChainImage>> {};
         out.reserve(image_count);
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, images.data());
@@ -163,7 +163,7 @@ namespace bebone::gfx {
             auto image = device.create_image(vk_image);
             auto view = device.create_image_view(*image, image_format);
 
-            out.push_back(std::make_unique<VulkanSwapChainImageTuple>(image, view));
+            out.push_back(std::make_unique<VulkanSwapChainImage>(image, view));
         }
 
         return out;

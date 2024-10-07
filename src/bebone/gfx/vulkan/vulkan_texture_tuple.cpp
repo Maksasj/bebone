@@ -7,7 +7,7 @@ namespace bebone::gfx {
     using namespace bebone::core;
     using namespace bebone::assets;
 
-    VulkanTextureTuple::VulkanTextureTuple(
+    VulkanTexture::VulkanTexture(
         VulkanDevice& device,
         const std::shared_ptr<Image<ColorRGBA>>& raw
     ) {
@@ -39,7 +39,7 @@ namespace bebone::gfx {
         view = device.create_image_view(*image, ColorRGBA::get_vulkan_format());
     }
 
-    VulkanTextureTuple::VulkanTextureTuple(
+    VulkanTexture::VulkanTexture(
         std::unique_ptr<VulkanImage>& image,
         std::unique_ptr<VulkanDeviceMemory>& memory,
         std::unique_ptr<VulkanImageView>& view,
@@ -48,7 +48,7 @@ namespace bebone::gfx {
 
     }
 
-    VulkanTextureTuple::VulkanTextureTuple(
+    VulkanTexture::VulkanTexture(
         VulkanDevice& device,
         VkExtent3D extent,
         VkFormat image_format
@@ -64,36 +64,20 @@ namespace bebone::gfx {
         view = device.create_image_view(*image, image_format);
     }
 
-    std::optional<std::unique_ptr<VulkanImage>> VulkanTextureTuple::get_image() {
-        LOG_WARNING("TODO get_image returning nullopt");
-        // return image;
-        return std::nullopt;
+    VkImage VulkanTexture::get_vulkan_image() const {
+        return image->backend;
     }
 
-    std::optional<std::unique_ptr<VulkanImageView>> VulkanTextureTuple::get_view() {
-        LOG_WARNING("TODO get_view returning nullopt");
-        // return view;
-        return std::nullopt;
+    VkImageView VulkanTexture::get_vulkan_image_view() const {
+        return view->backend;
     }
 
-    std::optional<std::unique_ptr<VulkanDeviceMemory>> VulkanTextureTuple::get_memory() {
-        LOG_WARNING("TODO get_memory returning nullopt");
-        // return memory;
-        return std::nullopt;
-    }
-
-    std::optional<std::unique_ptr<VulkanSampler>> VulkanTextureTuple::get_sampler() {
-        LOG_WARNING("TODO get_memory returning get_sampler");
-        // return sampler;
-        return std::nullopt;
-    }
-
-    VulkanAttachmentType VulkanTextureTuple::get_type() const {
-        return Color; // Todo, this may not be always true
+    VkSampler VulkanTexture::get_vulkan_image_sampler() const {
+        return sampler->backend;
     }
 
     /*
-    void VulkanTextureTuple::destroy(VulkanDevice& device) {
+    void VulkanTexture::destroy(VulkanDevice& device) {
         if(is_destroyed())
             return;
 

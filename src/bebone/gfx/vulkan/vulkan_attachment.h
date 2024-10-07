@@ -52,21 +52,20 @@ namespace bebone::gfx {
         static VulkanAttachmentDesc color2D(VkExtent2D extent, VulkanColorAttachmentDescription description = {});
     };
 
-    class VulkanImage;
-    class VulkanImageView;
-    class VulkanDeviceMemory;
-    class VulkanSampler;
-
-    class IVulkanAttachment {
-        private:
-
+    class IVulkanImage {
         public:
-            virtual std::optional<std::unique_ptr<VulkanImage>> get_image() = 0;
-            virtual std::optional<std::unique_ptr<VulkanImageView>> get_view() = 0;
-            virtual std::optional<std::unique_ptr<VulkanDeviceMemory>> get_memory() = 0;
-            virtual std::optional<std::unique_ptr<VulkanSampler>> get_sampler() = 0;
+            virtual VkImage get_vulkan_image() const = 0;
+    };
 
-            virtual VulkanAttachmentType get_type() const = 0;
+    class IVulkanImageView {
+        public:
+            virtual VkImageView get_vulkan_image_view() const = 0;
+    };
+
+    class IVulkanSampler {
+        public:
+            virtual VkSampler get_vulkan_image_sampler() const = 0;
+
     };
 }
 

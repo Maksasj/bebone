@@ -105,7 +105,7 @@ namespace bebone::gfx {
                 VulkanImageInfo image_info = {});
 
             // Todo
-            std::unique_ptr<VulkanImageMemoryTuple> create_image_memory(
+            std::unique_ptr<VulkanImageMemory> create_image_memory(
                 VkFormat format,
                 VkExtent3D extent,
                 VulkanImageInfo image_info);
@@ -119,8 +119,8 @@ namespace bebone::gfx {
                 const VkFormat& image_format,
                 VulkanImageViewInfo image_view_info = {});
 
-            std::unique_ptr<VulkanDepthImageTuple> create_depth_image_tuple(VkExtent3D extent);
-            std::vector<std::unique_ptr<VulkanDepthImageTuple>> create_depth_image_tuples(VkExtent3D extent, const size_t& count);
+            std::unique_ptr<VulkanDepthImage> create_depth_image_tuple(VkExtent3D extent);
+            std::vector<std::unique_ptr<VulkanDepthImage>> create_depth_image_tuples(VkExtent3D extent, const size_t& count);
 
             std::unique_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
@@ -182,13 +182,13 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanRenderPass> create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
 
             std::unique_ptr<VulkanFramebuffer> create_framebuffer(
-                    const std::vector<std::unique_ptr<VulkanImageView>>& attachments,
-                    const std::unique_ptr<VulkanRenderPass>& render_pass,
+                    std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
+                    std::unique_ptr<VulkanRenderPass>& render_pass,
                     VkExtent2D extent);
 
             std::vector<std::unique_ptr<VulkanFramebuffer>> create_framebuffers(
-                    const std::vector<std::unique_ptr<VulkanImageView>>& attachments,
-                    const std::unique_ptr<VulkanRenderPass>& render_pass,
+                    std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
+                    std::unique_ptr<VulkanRenderPass>& render_pass,
                     VkExtent2D extent,
                     const size_t& count);
 
@@ -208,14 +208,14 @@ namespace bebone::gfx {
                 const std::string& source_code,
                 const ShaderType& type);
 
-            std::unique_ptr<VulkanTextureTuple> create_texture(
+            std::unique_ptr<VulkanTexture> create_texture(
                 const std::string& file_path);
 
-            std::unique_ptr<VulkanTextureTuple> create_texture(
+            std::unique_ptr<VulkanTexture> create_texture(
                 VkExtent3D extent,
                 VkFormat image_format);
 
-            std::vector<std::unique_ptr<VulkanTextureTuple>> create_textures(
+            std::vector<std::unique_ptr<VulkanTexture>> create_textures(
                 VkExtent3D extent,
                 VkFormat image_format,
                 const size_t& count);
@@ -228,7 +228,7 @@ namespace bebone::gfx {
             // Special constructor for swap chain
             std::unique_ptr<VulkanRenderTarget> create_render_target(
                 std::unique_ptr<VulkanRenderPass>& render_pass,
-                std::vector<std::unique_ptr<VulkanSwapChainImageTuple>>& images);
+                std::vector<std::unique_ptr<VulkanSwapChainImage>>& images);
 
             std::unique_ptr<VulkanSwapChain> create_swap_chain(std::unique_ptr<Window>& window);
 

@@ -184,7 +184,7 @@ namespace bebone::gfx {
 
     std::unique_ptr<VulkanRenderTarget>  VulkanDevice::create_render_target(
         std::unique_ptr<VulkanRenderPass>& render_pass,
-        std::vector<std::unique_ptr<VulkanSwapChainImageTuple>>& images
+        std::vector<std::unique_ptr<VulkanSwapChainImage>>& images
     ) {
         return std::make_unique<VulkanRenderTarget>(*this, render_pass, images);;
     }
@@ -283,7 +283,7 @@ namespace bebone::gfx {
         return std::make_unique<VulkanImage>(*this, format, extent, image_info);;
     }
 
-    std::unique_ptr<VulkanImageMemoryTuple> VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
+    std::unique_ptr<VulkanImageMemory> VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
         auto image = create_image(format, extent, image_info);
 
         auto req = image->get_memory_requirements();
@@ -291,7 +291,7 @@ namespace bebone::gfx {
         auto memory = create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(image);
 
-        return std::make_unique<VulkanImageMemoryTuple>(image, memory);
+        return std::make_unique<VulkanImageMemory>(image, memory);
     }
 
     // Todo Why this function is public ?, and probably could be static
@@ -311,22 +311,12 @@ namespace bebone::gfx {
         return std::make_unique<VulkanImageView>(*this, image, image_format, image_view_info);;
     }
 
-    std::unique_ptr<VulkanDepthImageTuple> VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
-        auto depthFormat = find_depth_format();
-
-        auto tuple = create_image_memory(depthFormat, extent, {
-            .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-        });
-
-        auto view = create_image_view(*tuple->image, depthFormat, {
-            .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
-        });
-
-        return std::make_unique<VulkanDepthImageTuple>(tuple->image, view, tuple->memory);
+    std::unique_ptr<VulkanDepthImage> VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
+        return std::make_unique<VulkanDepthImage>(*this, extent);
     }
 
-    std::vector<std::unique_ptr<VulkanDepthImageTuple>> VulkanDevice::create_depth_image_tuples(VkExtent3D extent, const size_t& count) {
-        auto tuples = std::vector<std::unique_ptr<VulkanDepthImageTuple>> {};
+    std::vector<std::unique_ptr<VulkanDepthImage>> VulkanDevice::create_depth_image_tuples(VkExtent3D extent, const size_t& count) {
+        auto tuples = std::vector<std::unique_ptr<VulkanDepthImage>> {};
         tuples.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
@@ -341,11 +331,7 @@ namespace bebone::gfx {
         const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig config_info
     ) {
-        auto pipeline = std::make_unique<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);
-
-        // // child_objects.push_back(pipeline);
-
-        return pipeline;
+        return std::make_unique<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);;
     }
 
     std::unique_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
@@ -367,16 +353,16 @@ namespace bebone::gfx {
     }
 
     std::unique_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
-        const std::vector<std::unique_ptr<VulkanImageView>>& attachments,
-        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
+        std::unique_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) {
         return std::make_unique<VulkanFramebuffer>(*this, attachments, render_pass, extent);
     }
 
     std::vector<std::unique_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
-        const std::vector<std::unique_ptr<VulkanImageView>>& attachments,
-        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
+        std::unique_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent,
         const size_t& count
     ) {
@@ -402,27 +388,27 @@ namespace bebone::gfx {
         return std::make_unique<VulkanShaderModule>(*this, shader_code);;
     }
 
-    std::unique_ptr<VulkanTextureTuple> VulkanDevice::create_texture(
+    std::unique_ptr<VulkanTexture> VulkanDevice::create_texture(
         const std::string& file_path
     ) {
         auto raw = assets::Image<ColorRGBA>::load_from_file(file_path);
 
-        return std::make_unique<VulkanTextureTuple>(*this, raw);
+        return std::make_unique<VulkanTexture>(*this, raw);
     }
 
-    std::unique_ptr<VulkanTextureTuple> VulkanDevice::create_texture(
+    std::unique_ptr<VulkanTexture> VulkanDevice::create_texture(
         VkExtent3D extent,
         VkFormat image_format
     ) {
-        return std::make_unique<VulkanTextureTuple>(*this, extent, image_format);;
+        return std::make_unique<VulkanTexture>(*this, extent, image_format);;
     }
 
-    std::vector<std::unique_ptr<VulkanTextureTuple>> VulkanDevice::create_textures(
+    std::vector<std::unique_ptr<VulkanTexture>> VulkanDevice::create_textures(
         VkExtent3D extent,
         VkFormat image_format,
         const size_t& count
     ) {
-        auto textures = std::vector<std::unique_ptr<VulkanTextureTuple>> {};
+        auto textures = std::vector<std::unique_ptr<VulkanTexture>> {};
         textures.reserve(3);
 
         for(size_t i = 0; i < count; ++i)

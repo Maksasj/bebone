@@ -8,15 +8,15 @@ namespace bebone::renderer {
 
     class VulkanTextureImpl : public ITextureImpl {
         private:
-            std::shared_ptr<VulkanTextureTuple> texture;
+            std::shared_ptr<VulkanTexture> texture;
 
         public:
             VulkanBindlessTextureHandle handle;
 
-            VulkanTextureImpl(std::shared_ptr<VulkanTextureTuple> texture);
+            VulkanTextureImpl(std::shared_ptr<VulkanTexture> texture);
             VulkanTextureImpl(const std::string& file_path, std::shared_ptr<gfx::VulkanDevice>& device);
 
-            std::shared_ptr<VulkanTextureTuple>& get_texture();
+            std::shared_ptr<VulkanTexture>& get_texture();
 
             TextureHandle get_handle() const override;
     };

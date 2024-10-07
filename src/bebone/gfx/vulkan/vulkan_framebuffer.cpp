@@ -9,15 +9,15 @@ namespace bebone::gfx {
 
     VulkanFramebuffer::VulkanFramebuffer(
         VulkanDevice& device,
-        const std::vector<std::unique_ptr<VulkanImageView>>& attachment_views,
-        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        std::vector<std::unique_ptr<IVulkanImageView>>& attachment_views,
+        std::unique_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) : device_owner(device) {
         auto attachments = std::vector<VkImageView> {};
         attachments.reserve(attachment_views.size());
         
         for(auto& view : attachment_views)
-            attachments.push_back(view->backend);
+            attachments.push_back(view->get_vulkan_image_view());
 
         VkFramebufferCreateInfo create_info = {};
         create_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

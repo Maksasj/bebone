@@ -36,7 +36,7 @@ namespace bebone::gfx {
         command_buffers.reserve(count);
 
         for(size_t i = 0; i < count; ++i)
-            command_buffers.push_back(std::move(create_command_buffer()));
+            command_buffers.push_back(create_command_buffer());
 
         return command_buffers;
     }

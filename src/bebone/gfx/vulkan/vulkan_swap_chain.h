@@ -44,7 +44,7 @@ namespace bebone::gfx {
             void create_swap_chain(VulkanDevice& device);
             void create_sync_objects(VulkanDevice& device);
 
-            std::vector<std::unique_ptr<VulkanSwapChainImageTuple>> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
+            std::vector<std::unique_ptr<VulkanSwapChainImage>> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
 
     public:
             VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);
