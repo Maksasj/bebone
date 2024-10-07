@@ -127,9 +127,6 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
-            std::vector<std::unique_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
-                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
-
             // Update descriptor set for single
             void update_descriptor_set(
                 const std::unique_ptr<VulkanBuffer>& buffer,

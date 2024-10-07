@@ -55,11 +55,7 @@ namespace bebone::gfx {
     }
 
     std::unique_ptr<VulkanDescriptorPool> VulkanDevice::create_descriptor_pool() {
-        auto descriptor_pool = std::make_unique<VulkanDescriptorPool>(*this);
-
-        // child_objects.push_back(descriptor_pool);
-
-        return descriptor_pool;
+        return std::make_unique<VulkanDescriptorPool>(*this);;
     }
 
     // Todo add buffer_info offset there
@@ -179,29 +175,10 @@ namespace bebone::gfx {
     }
 
     std::unique_ptr<VulkanDescriptorSetLayout> VulkanDevice::create_descriptor_set_layout(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
-        auto descriptor_set_layout = std::make_unique<VulkanDescriptorSetLayout>(*this, bindings);
-
-        // child_objects.push_back(descriptor_set_layout);
-
-        return descriptor_set_layout;
-    }
-
-    // Todo why there is a vector ?
-    std::vector<std::unique_ptr<VulkanDescriptorSetLayout>> VulkanDevice::create_descriptor_set_layouts(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
-        auto descriptor_set_layout = std::make_unique<VulkanDescriptorSetLayout>(*this, bindings);
-
-        // child_objects.push_back(descriptor_set_layout);
-
-        std::vector<std::unique_ptr<VulkanDescriptorSetLayout>> descriptor_set_layouts;
-        descriptor_set_layouts.push_back(std::move(descriptor_set_layout));
-
-        return std::move(descriptor_set_layouts);
+        return std::make_unique<VulkanDescriptorSetLayout>(*this, bindings);
     }
 
     std::unique_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(std::unique_ptr<VulkanRenderPass>& render_pass) {
-
-        // child_objects.push_back(render_target);
-
         return std::make_unique<VulkanRenderTarget>(*this, render_pass);
     }
 
@@ -209,41 +186,23 @@ namespace bebone::gfx {
         std::unique_ptr<VulkanRenderPass>& render_pass,
         std::vector<std::unique_ptr<VulkanSwapChainImageTuple>>& images
     ) {
-        // child_objects.push_back(render_target);
-
         return std::make_unique<VulkanRenderTarget>(*this, render_pass, images);;
     }
 
     std::unique_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::unique_ptr<Window> &window) {
-        auto swap_chain = std::make_unique<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });
-
-        // child_objects.push_back(swap_chain);
-
-        return swap_chain;
+        return std::make_unique<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });;
     }
 
     std::unique_ptr<VulkanPipelineLayout> VulkanDevice::create_pipeline_layout(const std::vector<std::unique_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VulkanConstRange>& constant_ranges) {
-        auto pipeline_layout = std::make_unique<VulkanPipelineLayout>(*this, layouts, constant_ranges);
-
-        // child_objects.push_back(pipeline_layout);
-
-        return pipeline_layout;
+        return std::make_unique<VulkanPipelineLayout>(*this, layouts, constant_ranges);
     }
 
     std::unique_ptr<VulkanCommandBufferPool> VulkanDevice::create_command_buffer_pool() {
-        auto command_buffer_pool = std::make_unique<VulkanCommandBufferPool>(*this);
-
-        // // child_objects.push_back(command_buffer_pool);
-
-        return std::make_unique<VulkanCommandBufferPool>(*this);;
+        return std::make_unique<VulkanCommandBufferPool>(*this);
     }
 
     std::unique_ptr<VulkanCommandBuffer> VulkanDevice::create_command_buffer() {
-        auto command_buffer = std::make_unique<VulkanCommandBuffer>(*this, *command_buffer_pool);
-
-        // Todo, ?
-
-        return command_buffer;
+        return std::make_unique<VulkanCommandBuffer>(*this, *command_buffer_pool);
     }
 
     std::vector<std::unique_ptr<VulkanCommandBuffer>> VulkanDevice::create_command_buffers(const size_t& count) {
@@ -282,25 +241,14 @@ namespace bebone::gfx {
         VkMemoryRequirements requirements,
         VkMemoryPropertyFlags local_properties
     ) {
-        auto device_memory = std::make_unique<VulkanDeviceMemory>(*this, requirements, local_properties);
-
-        // child_objects.push_back(device_memory);
-
-        return device_memory;
+        return std::make_unique<VulkanDeviceMemory>(*this, requirements, local_properties);
     }
 
     std::unique_ptr<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memory(
         const size_t& size,
         VulkanBufferInfo buffer_info
     ) {
-        auto buffer = std::make_unique<VulkanBuffer>(*this, size, buffer_info);
-
-        auto requirements = buffer->get_memory_requirements();
-
-        auto memory = create_device_memory(requirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT); // Todo this should be configurable
-        memory->bind_buffer_memory(buffer);
-
-        return std::make_unique<VulkanBufferMemoryTuple>(buffer, memory);
+        return std::make_unique<VulkanBufferMemoryTuple>(*this, size, buffer_info);
     }
 
     std::vector<std::unique_ptr<VulkanBuffer>> VulkanDevice::create_buffers(
@@ -332,11 +280,7 @@ namespace bebone::gfx {
     }
 
     std::unique_ptr<VulkanImage> VulkanDevice::create_image(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
-        auto image = std::make_unique<VulkanImage>(*this, format, extent, image_info);
-
-        // child_objects.push_back(image);
-
-        return image;
+        return std::make_unique<VulkanImage>(*this, format, extent, image_info);;
     }
 
     std::unique_ptr<VulkanImageMemoryTuple> VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
@@ -352,19 +296,11 @@ namespace bebone::gfx {
 
     // Todo Why this function is public ?, and probably could be static
     std::unique_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
-        auto im = std::make_unique<VulkanImage>(*this, image);
-
-        // This image provided by implementation so, no need in clearing
-
-        return im;
+        return std::make_unique<VulkanImage>(*this, image);;
     }
 
     std::unique_ptr<VulkanSampler> VulkanDevice::create_sampler() {
-        auto sampler = std::make_unique<VulkanSampler>(*this);
-
-        // child_objects.push_back(sampler);
-
-        return sampler;
+        return std::make_unique<VulkanSampler>(*this);;
     }
 
     std::unique_ptr<VulkanImageView> VulkanDevice::create_image_view(
@@ -372,11 +308,7 @@ namespace bebone::gfx {
         const VkFormat& image_format,
         VulkanImageViewInfo image_view_info
     ) {
-        auto view = std::make_unique<VulkanImageView>(*this, image, image_format, image_view_info);
-
-        // child_objects.push_back(view);
-
-        return view;
+        return std::make_unique<VulkanImageView>(*this, image, image_format, image_view_info);;
     }
 
     std::unique_ptr<VulkanDepthImageTuple> VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
@@ -427,14 +359,10 @@ namespace bebone::gfx {
         shader_modules.push_back(create_shader_module(utils_read_file(vertex_shader_path), ShaderType::VertexShader));
         shader_modules.push_back(create_shader_module(utils_read_file(fragment_shader_path), ShaderType::FragmentShader));
 
-        auto pipeline = std::make_unique<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);
-
-        return pipeline;
+        return std::make_unique<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);;
     }
 
     std::unique_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments) {
-        // // child_objects.push_back(render_pass);
-
         return std::make_unique<VulkanRenderPass>(*this, extent, attachments);;
     }
 
@@ -443,11 +371,7 @@ namespace bebone::gfx {
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
     ) {
-        auto framebuffer = std::make_unique<VulkanFramebuffer>(*this, attachments, render_pass, extent);
-
-        // child_objects.push_back(framebuffer);
-
-        return framebuffer;
+        return std::make_unique<VulkanFramebuffer>(*this, attachments, render_pass, extent);
     }
 
     std::vector<std::unique_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
@@ -474,9 +398,6 @@ namespace bebone::gfx {
         ));
 
         auto shader_code = shader_compiler.compile(type);
-        // auto shader = std::make_unique<VulkanShaderModule>(*this, shader_code);
-
-        // // child_objects.push_back(shader);
 
         return std::make_unique<VulkanShaderModule>(*this, shader_code);;
     }
@@ -493,11 +414,7 @@ namespace bebone::gfx {
         VkExtent3D extent,
         VkFormat image_format
     ) {
-        auto texture = std::make_unique<VulkanTextureTuple>(*this, extent, image_format);
-
-        // child_objects.push_back(texture);
-
-        return texture;
+        return std::make_unique<VulkanTextureTuple>(*this, extent, image_format);;
     }
 
     std::vector<std::unique_ptr<VulkanTextureTuple>> VulkanDevice::create_textures(
@@ -515,11 +432,7 @@ namespace bebone::gfx {
     }
 
     std::unique_ptr<VulkanPipelineManager> VulkanDevice::create_pipeline_manager() {
-        auto pipeline_manager = std::make_unique<VulkanPipelineManager>(*this);
-
-        // child_objects.push_back(pipeline_manager);
-
-        return pipeline_manager;
+        return std::make_unique<VulkanPipelineManager>(*this);;
     }
 
     void VulkanDevice::create_logical_device() {
@@ -615,31 +528,6 @@ namespace bebone::gfx {
     void VulkanDevice::wait_idle() {
         vkDeviceWaitIdle(device);
     }
-
-    /*
-    void VulkanDevice::collect_garbage() {
-        // child_objects.erase(std::remove_if(// child_objects.begin(), // child_objects.end(), [](unique_ptr<VulkanApi>& child) {
-            return child->is_destroyed();
-        }), // child_objects.end());
-    }
-
-    void VulkanDevice::destroy(VulkanInstance& instance) {
-        wait_idle();
-
-        collect_garbage();
-
-        for(auto& child : // child_objects) {
-            if(!child->is_destroyed()) {
-                destroy_all(child);
-            }
-        }
-
-        vkDestroyDevice(device, nullptr);
-        vkDestroySurfaceKHR(instance.get_instance(), surface, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan device");
-    }
-    */
 
     VkFormat VulkanDevice::find_depth_format() {
         return find_supported_format(
