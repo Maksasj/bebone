@@ -144,19 +144,20 @@ namespace bebone::gfx {
 
     VulkanBindlessBufferHandle VulkanPipelineManager::bind_uniform_buffer(
         std::unique_ptr<VulkanDevice>& device,
-        const std::unique_ptr<VulkanBufferMemoryTuple>& buffer
+        IVulkanBuffer& buffer
     ) {
         const auto handle = bindless_uniforms_index;
 
-        device->update_descriptor_set(buffer->buffer, bindless_descriptor_set, uniform_binding, bindless_uniforms_index);
+        device->update_descriptor_set(buffer, bindless_descriptor_set, uniform_binding, bindless_uniforms_index);
         ++bindless_uniforms_index;
 
         return static_cast<VulkanBindlessBufferHandle>(handle);
     }
 
+    /*
     std::vector<VulkanBindlessBufferHandle> VulkanPipelineManager::bind_uniform_buffers(
         std::unique_ptr<VulkanDevice>& device,
-        const std::vector<std::unique_ptr<VulkanBufferMemoryTuple>>& buffers
+        const std::vector<std::unique_ptr<VulkanBufferMemory>>& buffers
     ) {
         auto handles = std::vector<VulkanBindlessBufferHandle> {};
         handles.reserve(buffers.size());
@@ -166,6 +167,7 @@ namespace bebone::gfx {
 
         return handles;
     }
+    */
 
     const std::unique_ptr<VulkanDescriptorSet>& VulkanPipelineManager::get_descriptor_set() const {
         return bindless_descriptor_set;

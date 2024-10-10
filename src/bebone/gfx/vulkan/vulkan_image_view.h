@@ -5,7 +5,7 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
+#include "interface/i_vulkan_image_view.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -32,9 +32,11 @@ namespace bebone::gfx {
         VulkanImageSubresourceRange subresource_range = {};
     };
 
-    class VulkanImageView : public VulkanWrapper<VkImageView>, private core::NonCopyable {
+    class VulkanImageView : public IVulkanImageView, private core::NonCopyable {
         private:
             VulkanDevice& device_owner;
+
+            VkImageView image_view;
 
         public:
             VulkanImageView( // Todo add necessary const
@@ -45,7 +47,7 @@ namespace bebone::gfx {
 
             ~VulkanImageView();
 
-            // void destroy(VulkanDevice& device) override;
+            VkImageView get_vulkan_image_view() const override;
     };
 }
 

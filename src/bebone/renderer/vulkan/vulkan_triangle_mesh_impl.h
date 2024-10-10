@@ -18,8 +18,8 @@ namespace bebone::renderer {
             VulkanDevice& device;
 
             // This should be an IVertexBuffer and IIndexBuffer
-            optional<shared_ptr<VulkanBufferMemoryTuple>> vertices;
-            optional<shared_ptr<VulkanBufferMemoryTuple>> indices;
+            optional<shared_ptr<VulkanBufferMemory>> vertices;
+            optional<shared_ptr<VulkanBufferMemory>> indices;
 
         public:
             VulkanTriangleMeshImpl(VulkanDevice& device, const std::vector<Vertex>& vertices, const std::vector<u32>& indices);

@@ -54,11 +54,8 @@ namespace bebone::gfx {
             Self& bind_pipeline(const VulkanPipeline& pipeline);
             Self& bind_pipeline(const std::unique_ptr<VulkanPipeline>& pipeline);
 
-            Self& bind_vertex_buffer(const std::unique_ptr<VulkanBuffer>& tuple);
-            Self& bind_vertex_buffer(VulkanBufferMemoryTuple& tuple);
-
-            Self& bind_index_buffer(const std::unique_ptr<VulkanBuffer>& tuple);
-            Self& bind_index_buffer(VulkanBufferMemoryTuple& tuple);
+            Self& bind_vertex_buffer(IVulkanBuffer& buffer);
+            Self& bind_index_buffer(IVulkanBuffer& buffer);
 
             Self& bind_descriptor_set(
                     const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,

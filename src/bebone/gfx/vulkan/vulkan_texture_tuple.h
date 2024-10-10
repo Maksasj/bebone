@@ -10,7 +10,10 @@
 #include "vulkan_image.h"
 #include "vulkan_sampler.h"
 #include "vulkan_image_view.h"
-#include "vulkan_attachment.h"
+
+#include "interface/i_vulkan_image.h"
+#include "interface/i_vulkan_image_view.h"
+#include "interface/i_vulkan_sampler.h"
 
 namespace bebone::gfx {
     class VulkanDevice;
@@ -41,6 +44,7 @@ namespace bebone::gfx {
                 VkFormat image_format);
 
             VkImage get_vulkan_image() const override;
+            VkExtent3D get_extent() const override;
             VkImageView get_vulkan_image_view() const override;
             VkSampler get_vulkan_image_sampler() const override;
     };

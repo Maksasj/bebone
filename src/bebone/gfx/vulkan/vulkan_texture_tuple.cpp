@@ -26,7 +26,7 @@ namespace bebone::gfx {
         staged->upload_data(raw->data(), size);
 
         // Todo Probably uploading data to gpu need some sort of render graph api
-        staged->buffer->copy_to_image(image);
+        staged->copy_to_image(*image);
 
         /*
         device.destroy_all(staged);
@@ -65,28 +65,18 @@ namespace bebone::gfx {
     }
 
     VkImage VulkanTexture::get_vulkan_image() const {
-        return image->backend;
+        return image->get_vulkan_image();
+    }
+
+    VkExtent3D VulkanTexture::get_extent() const {
+        return image->get_extent();
     }
 
     VkImageView VulkanTexture::get_vulkan_image_view() const {
-        return view->backend;
+        return view->get_vulkan_image_view();
     }
 
     VkSampler VulkanTexture::get_vulkan_image_sampler() const {
-        return sampler->backend;
+        return sampler->get_vulkan_image_sampler();
     }
-
-    /*
-    void VulkanTexture::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        sampler->destroy(device);
-        view->destroy(device);
-        memory->destroy(device);
-        image->destroy(device);
-
-        mark_destroyed();
-    }
-    */
 }

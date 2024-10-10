@@ -6,21 +6,23 @@
 #include "../gfx_backend.h"
 
 #include "vulkan_buffer.h"
+#include "vulkan_device_memory.h"
 
 namespace bebone::gfx {
     class VulkanDevice;
 
     using namespace bebone::core;
 
-    struct VulkanBufferMemoryTuple {
-        public:
+    struct VulkanBufferMemory : public IVulkanBuffer, public IVulkanDeviceMemory {
+        private:
             std::unique_ptr<VulkanBuffer> buffer;
             std::unique_ptr<VulkanDeviceMemory> memory;
 
-            VulkanBufferMemoryTuple(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
+        public:
+            VulkanBufferMemory(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
 
             template<typename T>
-            VulkanBufferMemoryTuple(
+            VulkanBufferMemory(
                 VulkanDevice& device,
                 const std::vector<T>& data,
                 VulkanBufferInfo buffer_info = {}
@@ -37,7 +39,15 @@ namespace bebone::gfx {
                 memory->upload_data(data.data(), size);
             }
 
+            ~VulkanBufferMemory();
+
             void upload_data(const void* src, const size_t& size);
+
+            VkBuffer get_vulkan_buffer() const override;
+            void copy_to_image(IVulkanImage& image) override;
+            size_t get_size() const override;
+
+            VkDeviceMemory get_vulkan_device_memory() const;
     };
 }
 

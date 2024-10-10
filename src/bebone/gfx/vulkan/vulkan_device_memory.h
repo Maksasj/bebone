@@ -7,6 +7,8 @@
 
 #include "vulkan_wrapper.tpp"
 
+#include "interface/i_vulkan_device_memory.h"
+
 namespace bebone::gfx {
     using namespace bebone::core;
 
@@ -14,14 +16,17 @@ namespace bebone::gfx {
     class VulkanBuffer;
     class VulkanImage;
 
-    class VulkanDeviceMemory : public VulkanWrapper<VkDeviceMemory>, private core::NonCopyable {
+    class VulkanDeviceMemory : public IVulkanDeviceMemory, private core::NonCopyable {
         private:
             VulkanDevice& device_owner;
+
+            VkDeviceMemory device_memory;
 
         public:
             VulkanDeviceMemory(VulkanDevice& device, VkMemoryRequirements requirements, VkMemoryPropertyFlags properties);
             ~VulkanDeviceMemory();
 
+            // Todo move to interface
             void bind_buffer_memory(VulkanBuffer& buffer);
             void bind_buffer_memory(std::unique_ptr<VulkanBuffer>& buffer);
 
@@ -32,6 +37,8 @@ namespace bebone::gfx {
             void unmap();
 
             void upload_data(const void* src, const size_t& size);
+
+            VkDeviceMemory get_vulkan_device_memory() const override;
     };
 }
 

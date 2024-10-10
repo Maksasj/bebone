@@ -12,7 +12,7 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
 
         private:
-            std::shared_ptr<VulkanBufferMemoryTuple> material_uniform_buffer;
+            std::shared_ptr<VulkanBufferMemory> material_uniform_buffer;
 
             const size_t size;
             MaterialHandle handle;

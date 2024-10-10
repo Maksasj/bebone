@@ -26,8 +26,8 @@ int main() {
     VulkanPipelineLayout pipeline_layout(device, {}, {});
     VulkanPipeline pipeline(device, swap_chain.render_pass, pipeline_layout, "vert.glsl", "frag.glsl", { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } });
 
-    VulkanBufferMemoryTuple vb(device, vertices);
-    VulkanBufferMemoryTuple eb(device, indices);
+    VulkanBufferMemory vb(device, vertices);
+    VulkanBufferMemory eb(device, indices);
 
     VulkanCommandBufferPool command_buffer_pool(device);
     auto command_buffers = command_buffer_pool.create_command_buffers(3);

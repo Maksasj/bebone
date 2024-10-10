@@ -162,8 +162,8 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(const std::unique_ptr<VulkanBuffer>& buffer) {
-        VkBuffer buffers[] = { buffer->backend };
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(IVulkanBuffer& buffer) {
+        VkBuffer buffers[] = { buffer.get_vulkan_buffer() };
         VkDeviceSize offset[] = { 0 }; // Todo
 
         vkCmdBindVertexBuffers(backend, 0, 1, buffers, offset);
@@ -171,19 +171,10 @@ namespace bebone::gfx {
         return *this;
     }
 
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(VulkanBufferMemoryTuple& tuple) {
-        return bind_vertex_buffer(tuple.buffer);
-    }
-
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(const std::unique_ptr<VulkanBuffer>& buffer) {
-        // Todo, note that VK_INDEX_TYPE_UINT32 should match index size, akka for int should be used VK_INDEX_TYPE_UINT32
-        vkCmdBindIndexBuffer(backend, buffer->backend, 0, VK_INDEX_TYPE_UINT32);
+    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(IVulkanBuffer& buffer) {
+        vkCmdBindIndexBuffer(backend, buffer.get_vulkan_buffer(), 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
-    }
-
-    VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(VulkanBufferMemoryTuple& tuple) {
-        return bind_index_buffer(tuple.buffer);
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertex_count) {

@@ -6,8 +6,8 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImage::VulkanImage(VulkanDevice& device, const VkImage& image) : device_owner(device), swap_chain(true) {
-        backend = image;
+    VulkanImage::VulkanImage(VulkanDevice& device, const VkImage& arg) : device_owner(device), swap_chain(true) {
+        this->image = arg;
     }
 
     VulkanImage::VulkanImage(
@@ -34,7 +34,7 @@ namespace bebone::gfx {
         create_info.pQueueFamilyIndices = image_info.ptr_queue_family_indices;
         create_info.initialLayout = image_info.initial_layout;
 
-        if(vkCreateImage(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateImage(device.device, &create_info, nullptr, &image) != VK_SUCCESS) {
             LOG_ERROR("Failed to create image");
             throw std::runtime_error("failed to create image!");
         }
@@ -44,7 +44,7 @@ namespace bebone::gfx {
 
     VulkanImage::~VulkanImage() {
         if(!swap_chain)
-            vkDestroyImage(device_owner.device, backend, nullptr);
+            vkDestroyImage(device_owner.device, image, nullptr);
 
         LOG_DEBUG("Destroyed Vulkan image");
     };
@@ -63,7 +63,7 @@ namespace bebone::gfx {
         barrier.newLayout = new_layout;
         barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.image = backend;
+        barrier.image = image;
         barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         barrier.subresourceRange.baseMipLevel = 0;
         barrier.subresourceRange.levelCount = 1;
@@ -102,21 +102,12 @@ namespace bebone::gfx {
     VkMemoryRequirements VulkanImage::get_memory_requirements() {
         VkMemoryRequirements requirements;
 
-        vkGetImageMemoryRequirements(device_owner.device, backend, &requirements);
+        vkGetImageMemoryRequirements(device_owner.device, image, &requirements);
 
         return requirements;
     }
 
-    /*
-    void VulkanImage::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        vkDestroyImage(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan image");
-
-        mark_destroyed();
+    VkImage VulkanImage::get_vulkan_image() const {
+        return image;
     }
-    */
 }

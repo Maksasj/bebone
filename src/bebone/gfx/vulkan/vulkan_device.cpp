@@ -60,15 +60,15 @@ namespace bebone::gfx {
 
     // Todo add buffer_info offset there
     void VulkanDevice::update_descriptor_set(
-        const std::unique_ptr<VulkanBuffer>& buffer,
+        IVulkanBuffer& buffer,
         std::unique_ptr<VulkanDescriptorSet>& descriptor_set,
         const size_t& binding,
         const size_t& dst_array_element
     ) {
         VkDescriptorBufferInfo buffer_info{};
-        buffer_info.buffer = buffer->backend;
+        buffer_info.buffer = buffer.get_vulkan_buffer();
         buffer_info.offset = 0;
-        buffer_info.range = buffer->get_size();
+        buffer_info.range = buffer.get_size();
 
         VkWriteDescriptorSet descriptor_write{};
         descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -90,15 +90,15 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_set(
-        const std::unique_ptr<VulkanSampler>& sampler,
-        const std::unique_ptr<VulkanImageView>& view,
+        IVulkanSampler& sampler,
+        IVulkanImageView& view,
         std::unique_ptr<VulkanDescriptorSet>& descriptor_set,
         const size_t& binding,
         const size_t& dst_array_element
     ) {
         VkDescriptorImageInfo image_info{};
-        image_info.sampler = sampler->backend;
-        image_info.imageView = view->backend;
+        image_info.sampler = sampler.get_vulkan_image_sampler();
+        image_info.imageView = view.get_vulkan_image_view();
         image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // Todo, remove this hard coded cringe
 
         VkWriteDescriptorSet descriptor_write{};
@@ -119,6 +119,7 @@ namespace bebone::gfx {
         vkUpdateDescriptorSets(device, 1, &descriptor_write, 0, nullptr);
     }
 
+    /*
     void VulkanDevice::update_descriptor_sets(
         const std::vector<std::unique_ptr<VulkanBuffer>>& buffers,
         std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
@@ -140,7 +141,7 @@ namespace bebone::gfx {
     }
 
     void VulkanDevice::update_descriptor_sets(
-        const std::vector<std::unique_ptr<VulkanBufferMemoryTuple>>& tuples,
+        const std::vector<std::unique_ptr<VulkanBufferMemory>>& tuples,
         std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& binding,
         const std::vector<size_t>& dst_array_elements
@@ -173,6 +174,7 @@ namespace bebone::gfx {
             update_descriptor_set(sampler, view, descriptor_set, binding, dst_array_element);
         }
     }
+    */
 
     std::unique_ptr<VulkanDescriptorSetLayout> VulkanDevice::create_descriptor_set_layout(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
         return std::make_unique<VulkanDescriptorSetLayout>(*this, bindings);
@@ -244,11 +246,11 @@ namespace bebone::gfx {
         return std::make_unique<VulkanDeviceMemory>(*this, requirements, local_properties);
     }
 
-    std::unique_ptr<VulkanBufferMemoryTuple> VulkanDevice::create_buffer_memory(
+    std::unique_ptr<VulkanBufferMemory> VulkanDevice::create_buffer_memory(
         const size_t& size,
         VulkanBufferInfo buffer_info
     ) {
-        return std::make_unique<VulkanBufferMemoryTuple>(*this, size, buffer_info);
+        return std::make_unique<VulkanBufferMemory>(*this, size, buffer_info);
     }
 
     std::vector<std::unique_ptr<VulkanBuffer>> VulkanDevice::create_buffers(
@@ -265,12 +267,12 @@ namespace bebone::gfx {
         return buffers;
     }
 
-    std::vector<std::unique_ptr<VulkanBufferMemoryTuple>> VulkanDevice::create_buffer_memorys(
+    std::vector<std::unique_ptr<VulkanBufferMemory>> VulkanDevice::create_buffer_memorys(
         const size_t& size,
         const size_t& count,
         VulkanBufferInfo buffer_info
     ) {
-        auto tuples = std::vector<std::unique_ptr<VulkanBufferMemoryTuple>> {};
+        auto tuples = std::vector<std::unique_ptr<VulkanBufferMemory>> {};
         tuples.reserve(count);
 
         for(size_t i = 0; i < count; ++i)

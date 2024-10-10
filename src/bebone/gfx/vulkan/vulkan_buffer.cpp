@@ -22,7 +22,7 @@ namespace bebone::gfx {
         create_info.queueFamilyIndexCount = buffer_info.queue_family_index_count;
         create_info.pQueueFamilyIndices = buffer_info.ptr_queue_family_indices;
 
-        if(vkCreateBuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateBuffer(device.device, &create_info, nullptr, &buffer) != VK_SUCCESS) {
             LOG_ERROR("Failed to create Vulkan buffer");
             // throw std::runtime_error("failed to create vulkan buffer!"); Todo
         }
@@ -31,12 +31,12 @@ namespace bebone::gfx {
     }
 
     VulkanBuffer::~VulkanBuffer() {
-        vkDestroyBuffer(device_owner.device, backend, nullptr);
+        vkDestroyBuffer(device_owner.device, buffer, nullptr);
 
         LOG_TRACE("Destroyed Vulkan buffer");
     }
 
-    void VulkanBuffer::copy_to_image(std::unique_ptr<VulkanImage>& image) {
+    void VulkanBuffer::copy_to_image(IVulkanImage& image) {
         auto command_buffer = device_owner.begin_single_time_commands();
 
         VkBufferImageCopy region{};
@@ -50,9 +50,10 @@ namespace bebone::gfx {
         region.imageSubresource.layerCount = 1; // Todo
 
         region.imageOffset = { 0, 0, 0 };
-        region.imageExtent = image->get_extent();
+        region.imageExtent = image.get_extent();
 
-        vkCmdCopyBufferToImage(command_buffer->backend, backend, image->backend, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+        auto vk_image = image.get_vulkan_image();
+        vkCmdCopyBufferToImage(command_buffer->backend, buffer, vk_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
         device_owner.end_single_time_commands(command_buffer);
     }
@@ -60,25 +61,16 @@ namespace bebone::gfx {
     VkMemoryRequirements VulkanBuffer::get_memory_requirements() {
         VkMemoryRequirements requirements;
 
-        vkGetBufferMemoryRequirements(device_owner.device, backend, &requirements);
+        vkGetBufferMemoryRequirements(device_owner.device, buffer, &requirements);
 
         return requirements;
     }
 
-    const size_t& VulkanBuffer::get_size() const {
+    VkBuffer VulkanBuffer::get_vulkan_buffer() const {
+        return buffer;
+    }
+
+    size_t VulkanBuffer::get_size() const {
         return size;
     }
-
-    /*
-    void VulkanBuffer::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-            
-        vkDestroyBuffer(device.device, backend, nullptr);
-
-        mark_destroyed();
-
-        LOG_TRACE("Destroyed Vulkan buffer");
-    }
-    */
 }

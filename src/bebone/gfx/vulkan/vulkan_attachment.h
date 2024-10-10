@@ -51,22 +51,6 @@ namespace bebone::gfx {
         static VulkanAttachmentDesc color3D(VkExtent3D extent, VulkanColorAttachmentDescription description = {});
         static VulkanAttachmentDesc color2D(VkExtent2D extent, VulkanColorAttachmentDescription description = {});
     };
-
-    class IVulkanImage {
-        public:
-            virtual VkImage get_vulkan_image() const = 0;
-    };
-
-    class IVulkanImageView {
-        public:
-            virtual VkImageView get_vulkan_image_view() const = 0;
-    };
-
-    class IVulkanSampler {
-        public:
-            virtual VkSampler get_vulkan_image_sampler() const = 0;
-
-    };
 }
 
 #endif

@@ -5,7 +5,8 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
+#include "interface/i_vulkan_buffer.h"
+
 #include "vulkan_device_memory.h"
 
 namespace bebone::gfx {
@@ -45,9 +46,11 @@ namespace bebone::gfx {
         uint32_t* ptr_queue_family_indices = nullptr;
     };
 
-    class VulkanBuffer : public VulkanWrapper<VkBuffer>, private core::NonCopyable {
+    class VulkanBuffer : public IVulkanBuffer, private core::NonCopyable {
         private:
             VulkanDevice& device_owner;
+
+            VkBuffer buffer;
 
         private:
             size_t size; // Todo, Do we really need to store buffer size there ?
@@ -56,10 +59,12 @@ namespace bebone::gfx {
             VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
             ~VulkanBuffer();
 
-            void copy_to_image(std::unique_ptr<VulkanImage>& image);
 
             VkMemoryRequirements get_memory_requirements();
-            const size_t& get_size() const;
+
+            VkBuffer get_vulkan_buffer() const override;
+            void copy_to_image(IVulkanImage& image) override;
+            size_t get_size() const override;
 
             // void destroy(VulkanDevice& device) override;
     };

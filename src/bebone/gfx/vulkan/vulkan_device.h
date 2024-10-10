@@ -71,12 +71,12 @@ namespace bebone::gfx {
                 VkMemoryRequirements requirements,
                 VkMemoryPropertyFlags properties);
 
-            std::unique_ptr<VulkanBufferMemoryTuple> create_buffer_memory(
+            std::unique_ptr<VulkanBufferMemory> create_buffer_memory(
                 const size_t& size,
                 VulkanBufferInfo buffer_info = {});
 
             template<typename T>
-            std::unique_ptr<VulkanBufferMemoryTuple> create_buffer_memory_from(
+            std::unique_ptr<VulkanBufferMemory> create_buffer_memory_from(
                 const std::vector<T>& data,
                 VulkanBufferInfo buffer_info = {}
             ) {
@@ -94,7 +94,7 @@ namespace bebone::gfx {
                 const size_t& count,
                 VulkanBufferInfo buffer_info = {});
 
-            std::vector<std::unique_ptr<VulkanBufferMemoryTuple>> create_buffer_memorys(
+            std::vector<std::unique_ptr<VulkanBufferMemory>> create_buffer_memorys(
                 const size_t& size,
                 const size_t& count,
                 VulkanBufferInfo buffer_info = {});
@@ -129,19 +129,20 @@ namespace bebone::gfx {
 
             // Update descriptor set for single
             void update_descriptor_set(
-                const std::unique_ptr<VulkanBuffer>& buffer,
+                IVulkanBuffer& buffer,
                 std::unique_ptr<VulkanDescriptorSet>& descriptor_set,
                 const size_t& binding,
                 const size_t& dst_array_element);
 
             void update_descriptor_set(
-                const std::unique_ptr<VulkanSampler>& sampler,
-                const std::unique_ptr<VulkanImageView>& view,
+                IVulkanSampler& sampler,
+                IVulkanImageView& view,
                 std::unique_ptr<VulkanDescriptorSet>& descriptor_set,
                 const size_t& binding,
                 const size_t& dst_array_element);
 
             // Update descriptor sets for multiple descriptors
+            /*
             void update_descriptor_sets(
                 const std::vector<std::unique_ptr<VulkanBuffer>>& buffers,
                 std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
@@ -149,7 +150,7 @@ namespace bebone::gfx {
                 const std::vector<size_t>& dst_array_elements);
 
             void update_descriptor_sets(
-                const std::vector<std::unique_ptr<VulkanBufferMemoryTuple>>& tuples,
+                const std::vector<std::unique_ptr<VulkanBufferMemory>>& tuples,
                 std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
                 const size_t& binding,
                 const std::vector<size_t>& dst_array_elements);
@@ -160,6 +161,7 @@ namespace bebone::gfx {
                 std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
                 const size_t& binding,
                 const std::vector<size_t>& dst_array_elements);
+            */
 
             // Other
             std::unique_ptr<VulkanPipelineLayout> create_pipeline_layout(

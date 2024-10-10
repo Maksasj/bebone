@@ -8,20 +8,24 @@
 #include "vulkan_wrapper.tpp"
 #include "vulkan_device_memory.h"
 
+#include "interface/i_vulkan_sampler.h"
+
 namespace bebone::gfx {
     class VulkanDevice;
 
     using namespace bebone::core;
 
-    class VulkanSampler : public VulkanWrapper<VkSampler>, private core::NonCopyable {
+    class VulkanSampler : public IVulkanSampler, private core::NonCopyable {
         private:
             VulkanDevice& device_owner;
+
+            VkSampler sampler;
 
         public:
             VulkanSampler(VulkanDevice& device);
             ~VulkanSampler();
 
-            // void destroy(VulkanDevice& device) override;
+            VkSampler get_vulkan_image_sampler() const override;
     };
 }
 

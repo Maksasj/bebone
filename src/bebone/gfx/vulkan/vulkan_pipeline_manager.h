@@ -75,11 +75,13 @@ namespace bebone::gfx {
 
             VulkanBindlessBufferHandle bind_uniform_buffer(
                 std::unique_ptr<VulkanDevice>& device,
-                const std::unique_ptr<VulkanBufferMemoryTuple>& buffer);
+                IVulkanBuffer& buffer);
 
+            /*
             std::vector<VulkanBindlessBufferHandle> bind_uniform_buffers(
                 std::unique_ptr<VulkanDevice>& device,
-                const std::vector<std::unique_ptr<VulkanBufferMemoryTuple>>& buffers);
+                const std::vector<std::unique_ptr<VulkanBufferMemory>>& buffers);
+            */
 
             [[nodiscard]] const std::unique_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
             [[nodiscard]] const std::unique_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;

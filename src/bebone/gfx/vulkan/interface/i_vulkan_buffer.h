@@ -1,0 +1,19 @@
+#ifndef _BEBONE_GFX_I_VULKAN_BUFFER_H_
+#define _BEBONE_GFX_I_VULKAN_BUFFER_H_
+
+#include "../../gfx_backend.h"
+
+#include "i_vulkan_image.h"
+
+namespace bebone::gfx {
+    using namespace bebone::core;
+
+    class IVulkanBuffer {
+        public:
+            virtual VkBuffer get_vulkan_buffer() const = 0;
+            virtual void copy_to_image(IVulkanImage& image) = 0;
+            virtual size_t get_size() const = 0;
+    };
+}
+
+#endif

@@ -19,11 +19,15 @@ namespace bebone::gfx {
         }
 
         VkImage VulkanSwapChainImage::get_vulkan_image() const {
-            return image->backend;
+            return image->get_vulkan_image();
+        }
+
+        VkExtent3D VulkanSwapChainImage::get_extent() const {
+            return image->get_extent();
         }
 
         VkImageView VulkanSwapChainImage::get_vulkan_image_view() const {
-            return view->backend;
+            return view->get_vulkan_image_view();
         }
 
         VulkanDepthImage::VulkanDepthImage(VulkanDevice& device, VkExtent3D extent) {
@@ -44,11 +48,15 @@ namespace bebone::gfx {
         }
 
         VkImage VulkanDepthImage::get_vulkan_image() const {
-            return image->backend;
+            return image->get_vulkan_image();
+        }
+
+        VkExtent3D VulkanDepthImage::get_extent() const {
+            return image->get_extent();
         }
 
         VkImageView VulkanDepthImage::get_vulkan_image_view() const {
-            return view->backend;
+            return view->get_vulkan_image_view();
         }
 
         VulkanImageMemory::VulkanImageMemory(
@@ -59,6 +67,10 @@ namespace bebone::gfx {
         }
 
         VkImage VulkanImageMemory::get_vulkan_image() const {
-            return image->backend;
+            return image->get_vulkan_image();
+        }
+
+        VkExtent3D VulkanImageMemory::get_extent() const {
+            return image->get_extent();
         }
 }

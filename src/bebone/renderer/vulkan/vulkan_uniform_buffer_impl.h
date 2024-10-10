@@ -11,7 +11,7 @@ namespace bebone::renderer {
             std::shared_ptr<VulkanDevice> device;
 
         private:
-            std::shared_ptr<VulkanBufferMemoryTuple> buffer;
+            std::shared_ptr<VulkanBufferMemory> buffer;
             VulkanBindlessBufferHandle handle;
 
         public:

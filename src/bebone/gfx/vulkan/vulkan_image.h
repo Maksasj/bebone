@@ -5,8 +5,9 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_device_memory.h"
+
+#include "interface/i_vulkan_image.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -36,10 +37,12 @@ namespace bebone::gfx {
         VkImageLayout initial_layout = VK_IMAGE_LAYOUT_UNDEFINED;
     };
 
-    class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
+    class VulkanImage : public IVulkanImage, private core::NonCopyable {
         private:
             VulkanDevice& device_owner;
             bool swap_chain;
+
+            VkImage image;
 
         private:
             VkExtent3D extent;
@@ -58,8 +61,10 @@ namespace bebone::gfx {
 
             void transition_layout(VkImageLayout old_layout, VkImageLayout new_layout);
 
-            VkExtent3D get_extent() const;
             VkMemoryRequirements get_memory_requirements();
+
+            VkImage get_vulkan_image() const override;
+            VkExtent3D get_extent() const override;
     };
 }
 
