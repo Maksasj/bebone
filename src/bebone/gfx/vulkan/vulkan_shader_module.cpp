@@ -23,15 +23,4 @@ namespace bebone::gfx {
 
         LOG_TRACE("Destroyed Vulkan shader module");
     }
-
-    // void VulkanShaderModule::destroy(VulkanDevice& device) {
-    //     if(is_destroyed())
-    //         return;
-//
-    //     vkDestroyShaderModule(device.device, backend, nullptr);
-//
-    //     LOG_TRACE("Destroyed Vulkan shader module");
-//
-    //     mark_destroyed();
-    // }
 }

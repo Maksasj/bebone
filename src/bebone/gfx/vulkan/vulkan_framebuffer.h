@@ -5,8 +5,6 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-
 namespace bebone::gfx {
     using namespace bebone::core;
 
@@ -15,7 +13,10 @@ namespace bebone::gfx {
     class IVulkanImageView;
     class VulkanRenderPass;
 
-    class VulkanFramebuffer : public VulkanWrapper<VkFramebuffer>, private core::NonCopyable {
+    class VulkanFramebuffer : private core::NonCopyable {
+        public:
+            VkFramebuffer backend;
+
         private:
             VulkanDevice& device_owner;
 

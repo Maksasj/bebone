@@ -5,8 +5,6 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-
 #include "interface/i_vulkan_device_memory.h"
 
 namespace bebone::gfx {

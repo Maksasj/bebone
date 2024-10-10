@@ -7,13 +7,15 @@
 #include "../window/vulkan_window.h"
 #include "vulkan_debug_messenger.h"
 
-#include "vulkan_wrapper.tpp"
-
 namespace bebone::gfx {
     class VulkanDevice;
 
-    class VulkanInstance : public VulkanWrapper<VkInstance>, private core::NonCopyable {
+    class VulkanInstance : private core::NonCopyable {
+        public:
+            VkInstance instance;
+
         private:
+
             std::unique_ptr<VulkanDebugMessenger> debug_messenger;
             std::vector<std::unique_ptr<VulkanDevice>> child_devices;
 

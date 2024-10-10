@@ -3,8 +3,6 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-
 #include "../shaders/shader_code.h"
 #include "../shaders/shader_compiler.h"
 #include "../shaders/shader_source.h"
@@ -14,7 +12,10 @@
 namespace bebone::gfx {
     class VulkanDevice;
 
-    class VulkanShaderModule : public VulkanWrapper<VkShaderModule>, private core::NonCopyable {
+    class VulkanShaderModule : private core::NonCopyable {
+        public:
+            VkShaderModule backend;
+
         private:
             VulkanDevice& device_owner;
 
@@ -23,8 +24,6 @@ namespace bebone::gfx {
 
             VulkanShaderModule(VulkanDevice& device, const ShaderCode& code);
             ~VulkanShaderModule();
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

@@ -5,7 +5,6 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_device_memory.h"
 
 #include "interface/i_vulkan_sampler.h"

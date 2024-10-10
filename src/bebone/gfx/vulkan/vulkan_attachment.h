@@ -5,8 +5,6 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-
 namespace bebone::gfx {
     using namespace bebone::core;
 

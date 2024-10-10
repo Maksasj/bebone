@@ -11,7 +11,10 @@ namespace bebone::gfx {
     class VulkanDescriptorSet;
     class VulkanDescriptorSetLayout;
 
-    class VulkanDescriptorPool : public VulkanWrapper<VkDescriptorPool>, private core::NonCopyable {
+    class VulkanDescriptorPool : private core::NonCopyable {
+        public:
+            VkDescriptorPool backend;
+
         private:
             VulkanDevice& device_owner;
 

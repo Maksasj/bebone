@@ -3,7 +3,6 @@
 
 #include "../shaders/shader_code.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_shader_module.h"
 #include "vulkan_pipeline_config_info.h"
 
@@ -13,7 +12,10 @@ namespace bebone::gfx {
     class VulkanPipelineLayout;
     class VulkanRenderPass;
 
-    class VulkanPipeline : public VulkanWrapper<VkPipeline>, private core::NonCopyable {
+    class VulkanPipeline : private core::NonCopyable {
+        public:
+            VkPipeline backend;
+
         private:
             VulkanDevice& device_owner;
 

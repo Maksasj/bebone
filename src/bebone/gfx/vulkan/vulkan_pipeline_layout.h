@@ -9,7 +9,10 @@
 namespace bebone::gfx {
     class VulkanConstRange;
 
-    class VulkanPipelineLayout : public VulkanWrapper<VkPipelineLayout>, private core::NonCopyable {
+    class VulkanPipelineLayout : private core::NonCopyable {
+        public:
+            VkPipelineLayout backend;
+
         private:
             VulkanDevice& device_owner;
 

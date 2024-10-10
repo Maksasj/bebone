@@ -37,7 +37,7 @@ namespace bebone::gfx {
             create_info.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&create_info, nullptr, &backend) != VK_SUCCESS) {
+        if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS) {
             LOG_ERROR("Failed to create instance");
             throw std::runtime_error("failed to create instance!");
         }
@@ -55,7 +55,7 @@ namespace bebone::gfx {
     VulkanInstance::~VulkanInstance() {
         debug_messenger.reset();
 
-        vkDestroyInstance(backend, nullptr);
+        vkDestroyInstance(instance, nullptr);
     }
 
     bool VulkanInstance::check_validation_layer_support() {
@@ -121,29 +121,7 @@ namespace bebone::gfx {
     }
 
     std::unique_ptr<VulkanDevice> VulkanInstance::create_device(std::unique_ptr<Window>& window) {
-        auto device = std::make_unique<VulkanDevice>(*this, window);
-
-        // child_devices.push_back(device);
-
-        return device;
+        return std::make_unique<VulkanDevice>(*this, window);;
     }
-
-    /*
-    void VulkanInstance::destroy_all(std::unique_ptr<VulkanDevice>& device) {
-        device->destroy(*this);
-    }
-
-    void VulkanInstance::destroy() {
-        if(enable_validation_layers)
-            debug_messenger = nullptr;
-
-        for(auto& child : child_devices)
-            destroy_all(child);
-
-        vkDestroyInstance(instance, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan instance");
-    }
-    */
 }
 

@@ -6,7 +6,6 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline.h"
 
@@ -17,7 +16,10 @@ namespace bebone::gfx {
     class VulkanCommandBufferPool;
     class VulkanDescriptorSet;
 
-    class VulkanCommandBuffer : public VulkanWrapper<VkCommandBuffer>, private core::NonCopyable {
+    class VulkanCommandBuffer : private core::NonCopyable {
+        public:
+            VkCommandBuffer backend;
+
         private:
             VulkanDevice& device_owner;
 

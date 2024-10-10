@@ -56,14 +56,14 @@ namespace bebone::gfx {
 
         populate_debug_messenger_create_info(create_info);
 
-        if(CreateDebugUtilsMessengerEXT(instance_owner.backend, &create_info, nullptr, &debug_messenger) != VK_SUCCESS) {
+        if(CreateDebugUtilsMessengerEXT(instance_owner.instance, &create_info, nullptr, &debug_messenger) != VK_SUCCESS) {
             LOG_ERROR("Failed to set up debug messenger");
             throw std::runtime_error("failed to set up debug messenger!");
         }
     }
 
     VulkanDebugMessenger::~VulkanDebugMessenger() {
-        DestroyDebugUtilsMessengerEXT(instance_owner.backend, debug_messenger, nullptr);
+        DestroyDebugUtilsMessengerEXT(instance_owner.instance, debug_messenger, nullptr);
     }
 }
 

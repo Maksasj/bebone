@@ -6,11 +6,13 @@
 #include "../gfx_backend.h"
 
 #include "vulkan_device.h"
-#include "vulkan_wrapper.tpp"
 #include "vulkan_attachment.h"
 
 namespace bebone::gfx {
-    class VulkanRenderPass : public VulkanWrapper<VkRenderPass>, core::NonCopyable {
+    class VulkanRenderPass : private core::NonCopyable {
+        public:
+            VkRenderPass backend;
+
         private:
             VulkanDevice& device_owner;
 

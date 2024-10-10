@@ -14,13 +14,15 @@
 
 #include "vulkan_device.h"
 #include "vulkan_render_target.h"
-#include "vulkan_wrapper.tpp"
 
 namespace bebone::gfx {
     class VulkanResult;
     class VulkanCommandBuffer;
 
-    class VulkanSwapChain : public VulkanWrapper<VkSwapchainKHR>, private core::NonCopyable {
+    class VulkanSwapChain : private core::NonCopyable {
+        private:
+            VkSwapchainKHR backend;
+
         private:
             VulkanDevice& device_owner;
 

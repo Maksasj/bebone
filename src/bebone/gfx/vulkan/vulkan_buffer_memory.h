@@ -47,7 +47,7 @@ namespace bebone::gfx {
             void copy_to_image(IVulkanImage& image) override;
             size_t get_size() const override;
 
-            VkDeviceMemory get_vulkan_device_memory() const;
+            VkDeviceMemory get_vulkan_device_memory() const override;
     };
 }
 

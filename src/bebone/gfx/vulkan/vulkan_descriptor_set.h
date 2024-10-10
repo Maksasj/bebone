@@ -5,14 +5,15 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-
 namespace bebone::gfx {
     class VulkanDevice;
     class VulkanDescriptorPool;
     class VulkanDescriptorSetLayout;
 
-    class VulkanDescriptorSet : public VulkanWrapper<VkDescriptorSet>, private core::NonCopyable {
+    class VulkanDescriptorSet : private core::NonCopyable {
+        public:
+            VkDescriptorSet backend;
+
         public:
             VulkanDescriptorSet(
                 VulkanDevice& device,

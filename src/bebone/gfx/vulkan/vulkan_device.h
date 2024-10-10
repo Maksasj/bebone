@@ -11,7 +11,6 @@
 #include "../shaders/shader_type.h"
 #include "../shaders/shader_code.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_instance.h"
 #include "vulkan_device_chooser.h"
 

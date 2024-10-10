@@ -21,7 +21,7 @@
 namespace bebone::gfx {
     VulkanDevice::VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window) : instance_owner(instance) {
         auto& vulkan_window = *static_cast<VulkanWindow*>(window.get());
-        vulkan_window.create_window_surface(instance.backend, &surface);
+        vulkan_window.create_window_surface(instance.instance, &surface);
 
         pick_physical_device(instance);
         create_logical_device();
@@ -39,7 +39,7 @@ namespace bebone::gfx {
         vkDestroyDevice(device, nullptr);
 
         LOG_DEBUG("TODO, destroy surface KHR");
-        vkDestroySurfaceKHR(instance_owner.backend, surface, nullptr);
+        vkDestroySurfaceKHR(instance_owner.instance, surface, nullptr);
 
         LOG_TRACE("Destroyed Vulkan device");
     }
