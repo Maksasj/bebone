@@ -43,9 +43,15 @@ namespace bebone::gfx {
                 VkExtent3D extent,
                 VkFormat image_format);
 
+            // Image
             VkImage get_vulkan_image() const override;
+            VkMemoryRequirements get_memory_requirements() const override;
             VkExtent3D get_extent() const override;
+
+            // View
             VkImageView get_vulkan_image_view() const override;
+
+            // Sampler
             VkSampler get_vulkan_image_sampler() const override;
     };
 }

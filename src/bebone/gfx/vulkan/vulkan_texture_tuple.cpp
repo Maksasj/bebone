@@ -2,6 +2,7 @@
 
 #include "vulkan_device.h"
 #include "vulkan_command_buffer_pool.h"
+#include "vulkan_buffer_memory.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -11,22 +12,22 @@ namespace bebone::gfx {
         VulkanDevice& device,
         const std::shared_ptr<Image<ColorRGBA>>& raw
     ) {
-        auto tuple = device.create_image_memory(ColorRGBA::get_vulkan_format(),
-            { static_cast<uint32_t>(raw->get_width()), static_cast<uint32_t>(raw->get_height()), 1},
-            { .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
-        );
+        image = device.create_image(ColorRGBA::get_vulkan_format(), { static_cast<uint32_t>(raw->get_width()), static_cast<uint32_t>(raw->get_height()), 1}, { .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT });
 
-        image = std::move(tuple->image),
-        memory = std::move(tuple->memory);
+        auto req = image->get_memory_requirements();
+
+        memory = device.create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        memory->bind_image_memory(image);
 
         image->transition_layout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
         auto size = raw->get_width() * raw->get_height() * sizeof(ColorRGBA);
-        auto staged = device.create_buffer_memory(size);
-        staged->upload_data(raw->data(), size);
+        auto staged = VulkanBufferMemory(device, size);
+
+        staged.upload_data(raw->data(), size);
 
         // Todo Probably uploading data to gpu need some sort of render graph api
-        staged->copy_to_image(*image);
+        staged.copy_to_image(*image);
 
         /*
         device.destroy_all(staged);
@@ -53,15 +54,19 @@ namespace bebone::gfx {
         VkExtent3D extent,
         VkFormat image_format
     ) {
-        auto tuple = device.create_image_memory(image_format, extent, // Todo, image_format should be configurable
-            { .usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT }
-        );  // Todo, usage should be configurable
+        image = device.create_image(ColorRGBA::get_vulkan_format(), extent, { .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT });
 
-        image = std::move(tuple->image),
-        memory = std::move(tuple->memory);
+        auto req = image->get_memory_requirements();
+
+        memory = device.create_device_memory(req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        memory->bind_image_memory(image);
 
         sampler = device.create_sampler();
         view = device.create_image_view(*image, image_format);
+    }
+
+    VkMemoryRequirements VulkanTexture::get_memory_requirements() const {
+        return image->get_memory_requirements();
     }
 
     VkImage VulkanTexture::get_vulkan_image() const {

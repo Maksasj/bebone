@@ -43,10 +43,12 @@
 
 // Utils class
 #include "vulkan_pipeline_manager.h"
-
-#include "vulkan_buffer_tuples.h"
-#include "vulkan_image_tuples.h"
-
 #include "vulkan_texture_tuple.h"
+
+#include "vulkan_buffer_memory.h"
+
+#include "vulkan_depth_image.h"
+#include "vulkan_swap_chain_image.h"
+#include "vulkan_image_memory.h"
 
 #endif

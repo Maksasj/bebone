@@ -10,9 +10,6 @@
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline.h"
 
-#include "vulkan_buffer_tuples.h"
-#include "vulkan_image_tuples.h"
-
 namespace bebone::gfx {
     using namespace bebone::core;
 

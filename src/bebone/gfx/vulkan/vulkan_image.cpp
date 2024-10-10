@@ -95,11 +95,11 @@ namespace bebone::gfx {
         device_owner.end_single_time_commands(command_buffer);
     }
 
-    VkExtent3D VulkanImage::get_extent() const {
-        return extent;
+    VkImage VulkanImage::get_vulkan_image() const {
+        return image;
     }
 
-    VkMemoryRequirements VulkanImage::get_memory_requirements() {
+    VkMemoryRequirements VulkanImage::get_memory_requirements() const {
         VkMemoryRequirements requirements;
 
         vkGetImageMemoryRequirements(device_owner.device, image, &requirements);
@@ -107,7 +107,7 @@ namespace bebone::gfx {
         return requirements;
     }
 
-    VkImage VulkanImage::get_vulkan_image() const {
-        return image;
+    VkExtent3D VulkanImage::get_extent() const {
+        return extent;
     }
 }

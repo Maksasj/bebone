@@ -246,6 +246,7 @@ namespace bebone::gfx {
         return std::make_unique<VulkanDeviceMemory>(*this, requirements, local_properties);
     }
 
+    /*
     std::unique_ptr<VulkanBufferMemory> VulkanDevice::create_buffer_memory(
         const size_t& size,
         VulkanBufferInfo buffer_info
@@ -280,11 +281,13 @@ namespace bebone::gfx {
 
         return tuples;
     }
+    */
 
     std::unique_ptr<VulkanImage> VulkanDevice::create_image(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
         return std::make_unique<VulkanImage>(*this, format, extent, image_info);;
     }
 
+    /*
     std::unique_ptr<VulkanImageMemory> VulkanDevice::create_image_memory(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info) {
         auto image = create_image(format, extent, image_info);
 
@@ -295,6 +298,7 @@ namespace bebone::gfx {
 
         return std::make_unique<VulkanImageMemory>(image, memory);
     }
+    */
 
     // Todo Why this function is public ?, and probably could be static
     std::unique_ptr<VulkanImage> VulkanDevice::create_image(VkImage& image) {
@@ -313,6 +317,7 @@ namespace bebone::gfx {
         return std::make_unique<VulkanImageView>(*this, image, image_format, image_view_info);;
     }
 
+    /*
     std::unique_ptr<VulkanDepthImage> VulkanDevice::create_depth_image_tuple(VkExtent3D extent) {
         return std::make_unique<VulkanDepthImage>(*this, extent);
     }
@@ -326,6 +331,7 @@ namespace bebone::gfx {
 
         return tuples;
     }
+    */
 
     std::unique_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
         const std::unique_ptr<VulkanRenderPass>& render_pass,
@@ -390,6 +396,7 @@ namespace bebone::gfx {
         return std::make_unique<VulkanShaderModule>(*this, shader_code);;
     }
 
+    /*
     std::unique_ptr<VulkanTexture> VulkanDevice::create_texture(
         const std::string& file_path
     ) {
@@ -418,6 +425,7 @@ namespace bebone::gfx {
 
         return textures;
     }
+    */
 
     std::unique_ptr<VulkanPipelineManager> VulkanDevice::create_pipeline_manager() {
         return std::make_unique<VulkanPipelineManager>(*this);;

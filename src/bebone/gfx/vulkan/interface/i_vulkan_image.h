@@ -9,6 +9,7 @@ namespace bebone::gfx {
     class IVulkanImage {
         public:
             virtual VkImage get_vulkan_image() const = 0;
+            virtual VkMemoryRequirements get_memory_requirements() const = 0;
             virtual VkExtent3D get_extent() const = 0;
     };
 }

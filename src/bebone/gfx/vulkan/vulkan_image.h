@@ -61,9 +61,8 @@ namespace bebone::gfx {
 
             void transition_layout(VkImageLayout old_layout, VkImageLayout new_layout);
 
-            VkMemoryRequirements get_memory_requirements();
-
             VkImage get_vulkan_image() const override;
+            VkMemoryRequirements get_memory_requirements() const override;
             VkExtent3D get_extent() const override;
     };
 }

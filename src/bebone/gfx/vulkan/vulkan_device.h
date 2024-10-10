@@ -24,9 +24,7 @@
 #include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout_binding.h"
 #include "vulkan_attachment.h"
-
-#include "vulkan_buffer_tuples.h"
-#include "vulkan_image_tuples.h"
+#include "vulkan_swap_chain_image.h"
 
 namespace bebone::gfx {
     class VulkanSwapChain;
@@ -71,56 +69,17 @@ namespace bebone::gfx {
                 VkMemoryRequirements requirements,
                 VkMemoryPropertyFlags properties);
 
-            std::unique_ptr<VulkanBufferMemory> create_buffer_memory(
-                const size_t& size,
-                VulkanBufferInfo buffer_info = {});
-
-            template<typename T>
-            std::unique_ptr<VulkanBufferMemory> create_buffer_memory_from(
-                const std::vector<T>& data,
-                VulkanBufferInfo buffer_info = {}
-            ) {
-                const auto size = sizeof(T) * data.size();
-                auto tuple = create_buffer_memory(size, buffer_info);
-                auto [ _, b_memory ] = tuple;
-
-                b_memory->upload_data(data.data(), size);
-
-                return tuple;
-            }
-
             std::vector<std::unique_ptr<VulkanBuffer>> create_buffers(
                 const size_t& size,
                 const size_t& count,
                 VulkanBufferInfo buffer_info = {});
 
-            std::vector<std::unique_ptr<VulkanBufferMemory>> create_buffer_memorys(
-                const size_t& size,
-                const size_t& count,
-                VulkanBufferInfo buffer_info = {});
-
-            std::unique_ptr<VulkanImage> create_image(
-                VkFormat format,
-                VkExtent3D extent,
-                VulkanImageInfo image_info = {});
-
-            // Todo
-            std::unique_ptr<VulkanImageMemory> create_image_memory(
-                VkFormat format,
-                VkExtent3D extent,
-                VulkanImageInfo image_info);
-
             std::unique_ptr<VulkanImage> create_image(VkImage& image);
+            std::unique_ptr<VulkanImage> create_image(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info = {});
+
+            std::unique_ptr<VulkanImageView> create_image_view(VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
 
             std::unique_ptr<VulkanSampler> create_sampler();
-
-            std::unique_ptr<VulkanImageView> create_image_view(
-                VulkanImage& image,
-                const VkFormat& image_format,
-                VulkanImageViewInfo image_view_info = {});
-
-            std::unique_ptr<VulkanDepthImage> create_depth_image_tuple(VkExtent3D extent);
-            std::vector<std::unique_ptr<VulkanDepthImage>> create_depth_image_tuples(VkExtent3D extent, const size_t& count);
 
             std::unique_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
@@ -210,18 +169,6 @@ namespace bebone::gfx {
                 const std::string& source_code,
                 const ShaderType& type);
 
-            std::unique_ptr<VulkanTexture> create_texture(
-                const std::string& file_path);
-
-            std::unique_ptr<VulkanTexture> create_texture(
-                VkExtent3D extent,
-                VkFormat image_format);
-
-            std::vector<std::unique_ptr<VulkanTexture>> create_textures(
-                VkExtent3D extent,
-                VkFormat image_format,
-                const size_t& count);
-
             std::unique_ptr<VulkanPipelineManager> create_pipeline_manager();
 
             std::unique_ptr<VulkanRenderTarget> create_render_target(
@@ -230,7 +177,7 @@ namespace bebone::gfx {
             // Special constructor for swap chain
             std::unique_ptr<VulkanRenderTarget> create_render_target(
                 std::unique_ptr<VulkanRenderPass>& render_pass,
-                std::vector<std::unique_ptr<VulkanSwapChainImage>>& images);
+                std::vector<std::unique_ptr<VulkanSwapChainImage>>& images); // Todo remove VulkanSwapChainImage
 
             std::unique_ptr<VulkanSwapChain> create_swap_chain(std::unique_ptr<Window>& window);
 

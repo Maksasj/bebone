@@ -19,7 +19,7 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanDeviceMemory> memory;
 
         public:
-            VulkanBufferMemory(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
+            VulkanBufferMemory(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info = {});
 
             template<typename T>
             VulkanBufferMemory(

@@ -4,6 +4,7 @@
 #include "vulkan_image_view.h"
 #include "vulkan_device_memory.h"
 #include "vulkan_swap_chain.h"
+#include "vulkan_depth_image.h"
 
 namespace bebone::gfx {
     VulkanRenderTarget::VulkanRenderTarget(
@@ -21,7 +22,8 @@ namespace bebone::gfx {
             frame_attachments.reserve(3); // Todo, 3 should be configurable
 
             for (size_t f = 0; f < 3; ++f) {// Todo, 3 should be configurable
-                std::unique_ptr<IVulkanImageView> texture(static_cast<IVulkanImageView*>(device.create_texture(attachment.extent, attachment.description.format).release())); // Todo
+                auto tt = std::make_unique<VulkanTexture>(device, attachment.extent, attachment.description.format);
+                std::unique_ptr<IVulkanImageView> texture(static_cast<IVulkanImageView*>(tt.release())); // Todo
                 frame_attachments.push_back(std::move(texture));
             }
 
@@ -36,7 +38,8 @@ namespace bebone::gfx {
             frame_attachments.reserve(3); // Todo, 3 should be configurable
 
             for(size_t f = 0; f < 3; ++f)  { // Todo, 3 should be configurable
-                std::unique_ptr<IVulkanImageView> depth(static_cast<IVulkanImageView*>(device.create_depth_image_tuple(attachment.extent).release())); // Todo
+                auto dit = std::make_unique<VulkanDepthImage>(device, attachment.extent);
+                std::unique_ptr<IVulkanImageView> depth(static_cast<IVulkanImageView*>(dit.release())); // Todo
                 frame_attachments.push_back(std::move(depth));
             }
 
@@ -79,7 +82,9 @@ namespace bebone::gfx {
             frame_attachments.reserve(3); // Todo, 3 should be configurable
 
             for(size_t f = 0; f < 3; ++f) // Todo, 3 should be configurable
-                frame_attachments.push_back(device.create_depth_image_tuple(attachment.extent));
+            {
+                frame_attachments.push_back(std::make_unique<VulkanDepthImage>(device, attachment.extent));
+            }
 
             depth_attachments = std::move(frame_attachments);
         }
