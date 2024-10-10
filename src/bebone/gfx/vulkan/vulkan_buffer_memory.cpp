@@ -1,4 +1,4 @@
-#include "vulkan_buffer_tuples.h"
+#include "vulkan_buffer_memory.h"
 
 namespace bebone::gfx {
     VulkanBufferMemory::VulkanBufferMemory(
