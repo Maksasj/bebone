@@ -8,7 +8,7 @@ namespace bebone::renderer {
 
     using namespace bebone::core;
 
-    class IProgram : public core::NonCopyable {
+    class IProgram : private core::NonCopyable {
         public:
             virtual ~IProgram() = default;
 

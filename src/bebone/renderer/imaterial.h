@@ -13,7 +13,7 @@ namespace bebone::renderer {
         TextureHandle roughness;
     };
 
-    class IMaterial : public NonCopyable {
+    class IMaterial : private NonCopyable {
         private:
             std::shared_ptr<IMaterialImpl> impl;
 

@@ -9,7 +9,7 @@ namespace bebone::renderer {
 
     enum class MaterialHandle : u32 { Invalid = 0 };
 
-    class IMaterialImpl : public NonCopyable {
+    class IMaterialImpl : private NonCopyable {
         public:
             virtual ~IMaterialImpl() = default;
 

@@ -12,7 +12,7 @@ namespace bebone::renderer {
         Depth
     };
 
-    class IAttachmentImpl : public core::NonCopyable {
+    class IAttachmentImpl : private core::NonCopyable {
         public:
             virtual ~IAttachmentImpl() = default;
 

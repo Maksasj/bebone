@@ -7,7 +7,7 @@
 #include "iattachment_impl.h"
 
 namespace bebone::renderer {
-    class IAttachment : public NonCopyable {
+    class IAttachment : private NonCopyable {
         private:
             std::shared_ptr<IAttachmentImpl> impl;
             std::string name;

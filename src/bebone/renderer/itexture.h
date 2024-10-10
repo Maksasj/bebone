@@ -6,7 +6,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class ITexture : public NonCopyable {
+    class ITexture : private NonCopyable {
         private:
             std::shared_ptr<ITextureImpl> impl;
 

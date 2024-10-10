@@ -8,7 +8,7 @@ namespace bebone::renderer {
 
     enum class TextureHandle : u32 { Invalid = 0 };
 
-    class ITextureImpl : public NonCopyable {
+    class ITextureImpl : private NonCopyable {
         public:
             virtual ~ITextureImpl() = default;
 

@@ -6,7 +6,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class IPassImpl : public NonCopyable {
+    class IPassImpl : private NonCopyable {
         private:
 
         public:

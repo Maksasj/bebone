@@ -8,7 +8,7 @@ namespace bebone::renderer {
 
     enum class UniformBufferHandle : u32 { Invalid = 0 };
 
-    class IUniformBufferImpl : public NonCopyable {
+    class IUniformBufferImpl : private NonCopyable {
         private:
 
         public:

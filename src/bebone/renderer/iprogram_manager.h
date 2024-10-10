@@ -15,7 +15,7 @@ namespace bebone::renderer {
         std::string frag;
     };
 
-    class IProgramManager : public NonCopyable {
+    class IProgramManager : private NonCopyable {
         protected:
             std::unordered_map<std::string, CachedProgramSource> cached_sources;
 

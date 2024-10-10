@@ -14,7 +14,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class IPass : public NonCopyable {
+    class IPass : private NonCopyable {
         private:
             std::shared_ptr<IPassImpl> impl;
 

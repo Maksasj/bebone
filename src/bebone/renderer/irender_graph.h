@@ -9,7 +9,7 @@ namespace bebone::renderer {
     class GLRenderer;
     class VulkanRenderer;
 
-    class IRenderGraph : public NonCopyable {
+    class IRenderGraph : private NonCopyable {
         private:
             std::shared_ptr<IRenderGraphImpl> impl;
             std::string name;

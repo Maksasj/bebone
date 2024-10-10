@@ -6,7 +6,7 @@
 namespace bebone::renderer {
     using namespace bebone::core;
 
-    class IUniformBuffer : public NonCopyable {
+    class IUniformBuffer : private NonCopyable {
         private:
             std::shared_ptr<IUniformBufferImpl> impl;
 

@@ -28,7 +28,7 @@
 #include "imaterial_manager.h"
 
 namespace bebone::renderer {
-    class IRenderer : public NonCopyable {
+    class IRenderer : private NonCopyable {
         protected:
             virtual void resize_viewport(const Vec2i& new_size) = 0;
 
