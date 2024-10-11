@@ -5,6 +5,7 @@ namespace bebone::sound_system {
         ma_result result = ma_engine_init(NULL, &engine);
 
         if (result != MA_SUCCESS) {
+            LOG_ERROR("Failed to initialize sound engine");
             // TODO: Throw an exception
         }
     }

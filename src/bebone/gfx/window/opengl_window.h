@@ -14,6 +14,8 @@ namespace bebone::gfx {
              * @param height - desired window height
             */
             GLWindow(const std::string& title, const int& width, const int& height, const WindowProperties& properties = {});
+
+            GfxAPI get_api() const override;
     };
 }
 

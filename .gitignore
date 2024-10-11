@@ -4,3 +4,5 @@ build
 make.bat
 test.bat
 imgui.ini
+.vs
+./out

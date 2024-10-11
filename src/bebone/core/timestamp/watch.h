@@ -5,14 +5,14 @@
 
 namespace bebone::core {
     class Watch {
-    private:
-        Timestamp current_timestamp;
+        private:
+            Timestamp current_timestamp;
 
-    public:
-        Watch() = default;
+        public:
+            Watch() = default;
 
-        void update_timestamp();
-        double get_time_difference();
+            void update_timestamp();
+            double get_time_difference();
     };
 }
 

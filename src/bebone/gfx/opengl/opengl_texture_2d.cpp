@@ -7,9 +7,9 @@ namespace bebone::gfx {
 
         bind();
         glTexImage2D(
-                get_texture_type(),
-                0, format, width, height, 0,
-                format, type, nullptr);
+            get_texture_type(),
+            0, format, width, height, 0,
+            format, type, nullptr);
 
         const GLTextureParameters parameters;
         configure_gl_texture(parameters);
@@ -27,9 +27,9 @@ namespace bebone::gfx {
 
         bind();
         glTexImage2D(
-                get_texture_type(),
-                0, format, width, height, 0,
-                format, type, image->data());
+            get_texture_type(),
+            0, format, width, height, 0,
+            format, type, image->data());
 
         const GLTextureParameters parameters;
         configure_gl_texture(parameters);

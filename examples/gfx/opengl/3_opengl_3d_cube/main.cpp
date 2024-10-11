@@ -1,5 +1,4 @@
 #include <vector>
-
 #include "bebone/bebone.h"
 
 const unsigned int screen_width = 800;
@@ -12,47 +11,36 @@ struct Vertex {
     ColorRGBA color;
 };
 
-const std::vector<Vertex> vertices {
-    {{-1.0, -1.0,  1.0},   ColorRGBA::WHITE  },
-    {{ 1.0, -1.0,  1.0},   ColorRGBA::YELLOW },
-    {{ 1.0,  1.0,  1.0},   ColorRGBA::MAGENTA},
-    {{-1.0,  1.0,  1.0},   ColorRGBA::RED    },
-    {{-1.0, -1.0, -1.0},   ColorRGBA::CYAN   },
-    {{ 1.0, -1.0, -1.0},   ColorRGBA::GREEN  },
-    {{ 1.0,  1.0, -1.0},   ColorRGBA::BLUE   },
-    {{-1.0,  1.0, -1.0},   ColorRGBA::BLACK  }
+const vector<Vertex> vertices {
+    {{ -1.0, -1.0, 1.0 }, ColorRGBA::WHITE  },
+    {{ 1.0, -1.0, 1.0 }, ColorRGBA::YELLOW },
+    {{ 1.0, 1.0, 1.0 }, ColorRGBA::MAGENTA},
+    {{ -1.0, 1.0, 1.0 }, ColorRGBA::RED    },
+    {{ -1.0, -1.0, -1.0 }, ColorRGBA::CYAN   },
+    {{ 1.0, -1.0, -1.0 }, ColorRGBA::GREEN  },
+    {{ 1.0, 1.0, -1.0 }, ColorRGBA::BLUE   },
+    {{ -1.0, 1.0, -1.0 }, ColorRGBA::BLACK  }
 };
 
-const std::vector<u32> indices {
-    0, 1, 2, 2, 3, 0,
-    1, 5, 6, 6, 2, 1,
-    7, 6, 5, 5, 4, 7,
-    4, 0, 3, 3, 7, 4,
-    4, 5, 1, 1, 0, 4,
-    3, 2, 6, 6, 7, 3
+const vector<u32> indices {
+    0, 1, 2, 2, 3, 0, 1, 5, 6, 6, 2, 1, 7, 6, 5, 5, 4, 7, 4, 0, 3, 3, 7, 4, 4, 5, 1, 1, 0, 4, 3, 2, 6, 6, 7, 3
 };
 
 struct Transform {
     Mat4f translation;
-    Mat4f scale;
     Mat4f rotation;
-};
-
-struct Camera {
-    Mat4f proj;
-    Mat4f view;
 };
 
 int main() {
     glfwInit();
 
-    auto window = WindowFactory::create_window("3. OpenGL 3D cube example", screen_width, screen_height, GfxAPI::OpenGL);
+    auto window = WindowFactory::create_window("3. OpenGL 3D cube example", screen_width, screen_height, OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, screen_width, screen_height);
 
-    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderTypes::vertex_shader);
-    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderTypes::fragment_shader);
+    auto vertex_shader = GLShaderFactory::create_shader("vertex.glsl", ShaderType::VertexShader);
+    auto fragment_shader = GLShaderFactory::create_shader("fragment.glsl", ShaderType::FragmentShader);
     GLShaderProgram shader_program(vertex_shader, fragment_shader);
 
     vertex_shader.destroy();
@@ -71,44 +59,44 @@ int main() {
 	vbo.unbind();
 	ebo.unbind();
 
-    GLUniformBufferObject transform_ubo(sizeof(Transform));
-    GLUniformBufferObject camera_ubo(sizeof(Camera));
+    GLUniformBufferObject transform_ubo(sizeof(Mat4f));
+    GLUniformBufferObject camera_ubo(sizeof(Mat4f));
+
+    auto transform = Transform {};
+    transform.translation = Mat4f::translation(Vec3f(0.0f, 0.0f, 10.0f));
+    transform.rotation = Mat4f::identity();
 
     transform_ubo.bind();
     shader_program.bind_buffer("Transform", 0, transform_ubo);
-    auto transform_ptr = static_cast<Transform*>(transform_ubo.map());
-        transform_ptr->translation = Mat4f::translation(Vec3f::zero);
-        transform_ptr->scale = Mat4f::identity();
+    auto transform_ptr = static_cast<Mat4f*>(transform_ubo.map());
+        *transform_ptr = transform.translation * transform.rotation;
 
     camera_ubo.bind();
     shader_program.bind_buffer("Camera", 1, camera_ubo);
-    auto camera_ptr = static_cast<Camera*>(camera_ubo.map());
-        camera_ptr->proj = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f);
-        camera_ptr->view = Mat4f::view(Vec3f(0.0f, 0.0f, -10.0f), Vec3f::forward);
+    auto camera_ptr = static_cast<Mat4f*>(camera_ubo.map());
+        *camera_ptr = Mat4f::perspective(1, window->get_aspect(), 0.1f, 100.0f) *  Mat4f::look_at(Vec3f(0, 0, -10.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::up);
     camera_ubo.unmap();
     camera_ubo.unbind();
 
-    GLContext::enable(GL_DEPTH_TEST);
-
-    f32 t = 0.0f;
     while (!window->closing()) {
-        t += Time::get_delta_time();
-
         GLContext::clear_color(0.2f, 0.2f, 0.2f, 1.0f);
         GLContext::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        transform_ptr->rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
+        const auto t = static_cast<f32>(Time::get_seconds_elapsed());
+        transform.rotation = trait_bryan_angle_yxz(Vec3f(t, t, 0.0f));
+        *transform_ptr = transform.translation * transform.rotation;
+
+        auto time = Time::get_seconds_elapsed();
+        auto pos = Vec3f((sin(time)) * 5.0f, 0.0f, (sin(time)) * 5.0f);
+        transform.translation = Mat4f::translation(pos);
 
         shader_program.enable();
-
         vao.bind();
 
         GLContext::draw_elements(GL_TRIANGLES, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
         GLFWContext::swap_buffers(*window);
-        GLFWContext::poll_events();
-
-        window->end_frame();
+        window->pull_events();
     }
 
     transform_ubo.unmap();
@@ -118,8 +106,6 @@ int main() {
     vbo.destroy();
     ebo.destroy();
     shader_program.destroy();
-
-    GLFWContext::terminate();
 
     return 0;
 }

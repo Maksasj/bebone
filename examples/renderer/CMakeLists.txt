@@ -1,0 +1,5 @@
+add_subdirectory(0_renderer_window)
+add_subdirectory(1_renderer_hello_triangle)
+add_subdirectory(2_renderer_sprite)
+add_subdirectory(3_renderer_mesh)
+add_subdirectory(4_renderer_scene)

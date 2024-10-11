@@ -8,36 +8,37 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     VulkanFramebuffer::VulkanFramebuffer(
-        VulkanDevice& device,
-        std::vector<std::shared_ptr<VulkanImageView>>& attachment_views,
-        std::shared_ptr<VulkanRenderPass>& render_pass,
+        IVulkanDevice& device,
+        std::vector<std::unique_ptr<IVulkanImageView>>& attachment_views,
+        std::unique_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
-    ) {
+    ) : device_owner(device) {
         auto attachments = std::vector<VkImageView> {};
         attachments.reserve(attachment_views.size());
         
         for(auto& view : attachment_views)
-            attachments.push_back(view->backend);
+            attachments.push_back(view->get_vk_image_view());
 
         VkFramebufferCreateInfo create_info = {};
         create_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        create_info.renderPass = render_pass->backend;
+        create_info.renderPass = render_pass->render_pass;
         create_info.attachmentCount = static_cast<uint32_t>(attachments.size());
         create_info.pAttachments = attachments.data();
         create_info.width = extent.width;
         create_info.height = extent.height;
         create_info.layers = 1;
 
-        if(vkCreateFramebuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateFramebuffer(device_owner.get_vk_device(), &create_info, nullptr, &framebuffer) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create framebuffer");
             throw std::runtime_error("failed to create framebuffer!");
+        }
+
+        LOG_TRACE("Created Vulkan framebuffer");
     }
 
-    void VulkanFramebuffer::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-            
-        vkDestroyFramebuffer(device.device, backend, nullptr);
+    VulkanFramebuffer::~VulkanFramebuffer() {
+        vkDestroyFramebuffer(device_owner.get_vk_device(), framebuffer, nullptr);
 
-        mark_destroyed();
+        LOG_TRACE("Destroyed Vulkan framebuffer");
     }
 }

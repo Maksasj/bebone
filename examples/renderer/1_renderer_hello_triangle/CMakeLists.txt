@@ -1,0 +1,7 @@
+file(GLOB_RECURSE BEBONE_EXAMPLE_RENDERER_1_HELLO_TRIANGLE *.cpp)
+
+include_directories(".")
+include_directories(${BEBONE_INCLUDES})
+
+add_executable(Bebone_Example_Renderer_1_Renderer_Triangle ${BEBONE_EXAMPLE_RENDERER_1_HELLO_TRIANGLE})
+target_link_libraries(Bebone_Example_Renderer_1_Renderer_Triangle bebone)

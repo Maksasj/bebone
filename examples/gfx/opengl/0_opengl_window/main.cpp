@@ -6,9 +6,14 @@ const unsigned int screen_height = 600;
 using namespace bebone::gfx;
 
 int main() {
-    GLFWContext::init();
-    
-    auto window = WindowFactory::create_window("0. OpenGL window example", screen_width, screen_height, GfxAPI::OpenGL);
+    LOG_TRACE("Test message");
+    LOG_DEBUG("Test message");
+    LOG_INFORMATION("Test message");
+    LOG_WARNING("Test message");
+    LOG_ERROR("Test message");
+    LOG_CRITICAL("Test message");
+
+    auto window = WindowFactory::create_window("0. OpenGL window example", screen_width, screen_height, OpenGL);
 
     GLContext::load_opengl();
     GLContext::set_viewport(0, 0, screen_width, screen_height);
@@ -18,9 +23,8 @@ int main() {
         GLContext::clear(GL_COLOR_BUFFER_BIT);
 
         GLFWContext::swap_buffers(*window);
-        GLFWContext::poll_events();
+        window->pull_events();
     }
 
-    GLFWContext::terminate();
     return 0;
 }

@@ -19,4 +19,6 @@ namespace bebone::core {
     using f64 = double;
 }
 
+#define BEBONE_PI (f32) 3.14159265359f
+
 #endif

@@ -16,7 +16,7 @@ namespace bebone::assets {
 
     // Pixel data wrapper class
     template<typename Color>
-    class Image : public NonCopyable {
+    class Image : private NonCopyable {
         private:
             std::vector<Color> color;
 

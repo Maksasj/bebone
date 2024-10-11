@@ -21,6 +21,8 @@ namespace bebone::gfx {
              * @param surface - pointer to vulkan surface
             */
             void create_window_surface(VkInstance instance, VkSurfaceKHR *surface);
+
+            GfxAPI get_api() const override;
     };
 }
 

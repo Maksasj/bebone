@@ -16,7 +16,8 @@ namespace bebone::gfx {
         WindowIconify,
         WindowMaximize,
         FramebuffersSize,
-        WindowContentScale
+        WindowContentScale,
+        WindowPullEvents
     };
 
     /// Window position change event structure
@@ -112,6 +113,11 @@ namespace bebone::gfx {
          * @param y_scale - new window y content scale
         */
         WindowContentScaleEvent(const f32& x_scale, const f32& y_scale) : x_scale(x_scale), y_scale(y_scale) {}
+    };
+
+    /// Window content scale change event structure
+    struct WindowPullEventsEvent : public Event<WindowEvent, WindowPullEvents> {
+        WindowPullEventsEvent() {}
     };
 }
 

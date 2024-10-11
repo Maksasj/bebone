@@ -1,0 +1,52 @@
+name: Ubuntu Build
+
+on:
+  push:
+    branches: [ "master", "dev" ]
+  pull_request:
+    branches: [ "master", "dev" ]
+
+env:
+  BUILD_TYPE: Release
+  BUILD_DIR: build
+  CMAKE_C_COMPILER: gcc-13
+  CMAKE_CPP_COMPILER: g++-13
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
+    - name: Install prerequisites
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev xorg-dev
+
+    - name: Install Vulkan 0
+      run: wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+
+    - name: Install Vulkan 1
+      run: sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list http://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
+
+    - name: Install Vulkan 2
+      run: sudo apt update
+
+    - name: Install Vulkan 3
+      run: sudo apt install vulkan-sdk
+
+    - name: Install GCC 13
+      run: sudo apt-get update && sudo apt-get -y install g++-13
+
+    - name: Install Ninja
+      run: sudo apt install ninja-build
+
+    - name: Configure CMake
+      run: cmake -B ${{env.BUILD_DIR}} -D CMAKE_C_COMPILER=/usr/bin/gcc-13 -D CMAKE_CXX_COMPILER=/usr/bin/g++-13 -G Ninja
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/${{env.BUILD_DIR}} --config ${{env.BUILD_TYPE}}
+
+    - name: Run Core Unit Tests
+      run: cmake --build ${{github.workspace}}/${{env.BUILD_DIR}} --target run_core_tests

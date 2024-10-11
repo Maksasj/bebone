@@ -3,7 +3,6 @@
 
 #include "../shaders/shader_code.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_shader_module.h"
 #include "vulkan_pipeline_config_info.h"
 
@@ -11,29 +10,45 @@ namespace bebone::gfx {
     class VulkanSwapChain;
     class VulkanShaderModule;
     class VulkanPipelineLayout;
+    class VulkanRenderPass;
 
-    class VulkanPipeline : public VulkanWrapper<VkPipeline>, private core::NonCopyable {
+    class VulkanPipeline : private core::NonCopyable {
+        public:
+            VkPipeline pipeline;
+
         private:
-             static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(
-                 const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules);
+            IVulkanDevice& device_owner;
+
+        protected:
+             static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules);
+
+            // Todo recreate method
+            void create_pipeline(
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                VulkanPipelineLayout& pipeline_layout,
+                const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
+                VulkanPipelineConfig& config_info);
 
         public:
             VulkanPipeline(
-                VulkanDevice& device,
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
-                VulkanPipelineConfig& config_info);
+                IVulkanDevice& device,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                VulkanPipelineLayout& pipeline_layout,
+                const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
+                VulkanPipelineConfig config_info);
 
-            // void recreate(
-            //     VulkanDevice& device,
-            //     std::shared_ptr<VulkanShaderModule>& vertShaderModule,
-            //     std::shared_ptr<VulkanShaderModule>& fragShaderModule,
-            //     const PipelineConfigInfo& config_info);
+            VulkanPipeline(
+                IVulkanDevice& device,
+                const std::unique_ptr<VulkanRenderPass>& render_pass,
+                VulkanPipelineLayout& pipeline_layout,
+                const std::string& vertex_shader_path,
+                const std::string& fragment_shader_path,
+                VulkanPipelineConfig config_info);
+
+            ~VulkanPipeline();
+
 
             void bind(VkCommandBuffer command_buffer);
-
-            void destroy(VulkanDevice& device) override;
     };
 }
 

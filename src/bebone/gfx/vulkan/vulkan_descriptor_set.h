@@ -5,21 +5,28 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
+#include "interface/i_vulkan_buffer.h"
+#include "interface/i_vulkan_sampler.h"
+#include "interface/i_vulkan_image_view.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
-    class VulkanDevice;
     class VulkanDescriptorPool;
     class VulkanDescriptorSetLayout;
 
-    class VulkanDescriptorSet : public VulkanWrapper<VkDescriptorSet>, private core::NonCopyable {
+    class VulkanDescriptorSet : private core::NonCopyable {
+        public:
+            IVulkanDevice& device_owner;
+            VkDescriptorSet descriptor_set;
+
         public:
             VulkanDescriptorSet(
-                const std::shared_ptr<VulkanDevice>& device,
+                IVulkanDevice& device,
                 VulkanDescriptorPool& descriptor_pool,
-                const std::shared_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
+                const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
 
-            void destroy(VulkanDevice& device) override;
+            void update_descriptor_set(IVulkanBuffer& buffer, const size_t& binding, const size_t& dst_array_element);
+            void update_descriptor_set(IVulkanSampler& sampler, IVulkanImageView& view, const size_t& binding, const size_t& dst_array_element);
     };
 }
 

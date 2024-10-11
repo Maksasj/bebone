@@ -217,6 +217,7 @@ namespace bebone::core {
         };
     }
 
+    /*
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::perspective(f32 fov, const f32& aspect, const f32& near, const f32& far) {
         fov = 1.0f / std::tan(fov / 2.0f);
         f32 normalization = far / (far - near);
@@ -227,6 +228,27 @@ namespace bebone::core {
                   0.0f,            0.0f,   normalization,  -normalization * near,
                   0.0f,            0.0f,       1.0f,               0.0f
         };
+    }
+    */
+
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::perspective
+    (
+            f32 fovy,
+            const f32 & aspect,
+            const f32 & zNear,
+            const f32 & zFar
+    )
+    {
+        f32 const rad = fovy;
+        f32 const tanHalfFovy = tan(rad / static_cast<f32>(2));
+
+        auto Result = Matrix<f32, 4, 4>::splat(0);
+        Result.e[0][0] = static_cast<f32>(1) / (aspect * tanHalfFovy);
+        Result.e[1][1] = static_cast<f32>(1) / (tanHalfFovy);
+        Result.e[2][2] = - (zFar + zNear) / (zFar - zNear);
+        Result.e[2][3] = - static_cast<f32>(1);
+        Result.e[3][2] = - (static_cast<f32>(2) * zFar * zNear) / (zFar - zNear);
+        return Result;
     }
 
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::view(const Vec3f& origin, const Vec3f& direction, const Vec3f& up) {
@@ -242,7 +264,36 @@ namespace bebone::core {
         };
     }
 
+#if 1
+    Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at
+    (
+            Vec3f const & eye,
+            Vec3f const & center,
+            Vec3f const & up
+    )
+{
+    Vec3f const f((center - eye).normalize());
+    Vec3f const s(Vec3f::cross(f, up).normalize());
+    Vec3f const u(Vec3f::cross(s, f));
+
+    auto Result = Matrix<f32, 4, 4>::identity();
+    Result.e[0][0] = s.x;
+    Result.e[1][0] = s.y;
+    Result.e[2][0] = s.z;
+    Result.e[0][1] = u.x;
+    Result.e[1][1] = u.y;
+    Result.e[2][1] = u.z;
+    Result.e[0][2] =-f.x;
+    Result.e[1][2] =-f.y;
+    Result.e[2][2] =-f.z;
+    Result.e[3][0] = - Vec3f::dot(s, eye);
+    Result.e[3][1] = - Vec3f::dot(u, eye);
+    Result.e[3][2] =   Vec3f::dot(f, eye);
+    return Result;
+}
+#else
     Matrix<f32, 4, 4> Matrix<f32, 4, 4>::look_at(const Vec3f& origin, const Vec3f& center, const Vec3f& up) {
         return view(origin, center - origin, up);
     }
+#endif
 }

@@ -5,6 +5,8 @@
 #include <exception>
 
 #include "../gfx_backend.h"
+#include "../gfx_api.h"
+#include "../glfw_context.h"
 
 #include "events/window_event.h"
 #include "events/input_event.h"
@@ -14,6 +16,10 @@
 
 #include "../../core/timestamp/timestamp.h"
 #include "../../core/timestamp/watch.h"
+
+namespace bebone::renderer {
+    class IRenderer;
+}
 
 namespace bebone::gfx {
     using namespace core;
@@ -47,13 +53,13 @@ namespace bebone::gfx {
              * @param height - window height
             */
             Window(const std::string& title, const int& width, const int& height, const WindowProperties& properties = {});
-            ~Window();
+            virtual ~Window();
 
             /*!
              * Function that checks does window want to close
              * @return - boolean value is window closing
             */
-            bool closing() const;
+            [[nodiscard]] bool closing() const;
 
             /// Function that returns window width
             const int& get_width() const;
@@ -61,13 +67,22 @@ namespace bebone::gfx {
             /// Function that returns window height
             const int& get_height() const;
 
+            Vec2i get_size() const;
+
             /// Function that returns current window aspect ration
             f32 get_aspect() const;
 
             /// Function returns glfw window backend
             GLFWwindow* get_backend() const;
 
+            /// Gfx api
+            virtual GfxAPI get_api() const = 0;
+
+            const Watch& get_watch() const;
+
             void end_frame();
+
+            void pull_events();
 
         private:
             /// GLFW window position change callbacks

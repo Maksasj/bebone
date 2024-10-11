@@ -6,6 +6,7 @@ namespace bebone::sound_system {
 
         ma_result result = ma_sound_init_from_file(&engine, path.c_str(), 0, NULL, NULL, sound.get());
         if (result != MA_SUCCESS) {
+            LOG_ERROR("Failed to initialize sound from file {}", path);
             // TODO: Throw an exception
         }
 
@@ -17,6 +18,7 @@ namespace bebone::sound_system {
 
         ma_result result = ma_sound_init_from_file(&engine, path.c_str(), MA_SOUND_FLAG_STREAM, NULL, NULL, sound.get());
         if (result != MA_SUCCESS) {
+            LOG_ERROR("Failed to initialize sound from file {}", path);
             // TODO: Throw an exception
         }
 

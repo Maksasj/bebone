@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "../debug/logger.h"
 #include "noncopyable.h"
 
 #define BEBONE_MEMORY_BYTES_1KB 1024

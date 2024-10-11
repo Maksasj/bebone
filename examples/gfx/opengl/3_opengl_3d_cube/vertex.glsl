@@ -5,18 +5,10 @@ layout (location = 1) in vec4 aColor;
 
 layout (location = 0) out vec4 outColor;
 
-layout(binding = 0) uniform Transform {
-    mat4 translation;
-    mat4 scale;
-    mat4 rotation;
-};
-
-layout(binding = 1) uniform Camera {
-    mat4 proj;
-    mat4 view;
-};
+layout(binding = 0) uniform Transform { mat4 transform; };
+layout(binding = 1) uniform Camera { mat4 cam; };
 
 void main() {
-	gl_Position = proj * view * translation * rotation * scale * vec4(aPos, 1.0);
+	gl_Position = cam * transform * vec4(aPos, 1.0);
 	outColor = aColor;
 }

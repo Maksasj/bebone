@@ -5,22 +5,9 @@
 
 #include "vulkan_instance.h"
 
+#include "interface/i_vulkan_device.h"
+
 namespace bebone::gfx {
-    struct VulkanSwapChainSupportDetails {
-        VkSurfaceCapabilitiesKHR capabilities;
-        std::vector<VkSurfaceFormatKHR> formats;
-        std::vector<VkPresentModeKHR> present_modes;
-    };
-
-    struct VulkanQueueFamilyIndices {
-        uint32_t graphics_family;
-        uint32_t present_family;
-        bool graphics_family_has_value = false;
-        bool present_family_has_value  = false;
-
-        bool is_complete();
-    };
-
     class VulkanDeviceChooser {
         private:
             bool check_device_extension_support(VkPhysicalDevice device);
