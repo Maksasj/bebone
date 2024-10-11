@@ -14,7 +14,7 @@
 namespace bebone::gfx {
     class VulkanShaderModule : private core::NonCopyable {
         public:
-            VkShaderModule backend;
+            VkShaderModule shader_module;
 
         private:
             IVulkanDevice& device_owner;

@@ -12,9 +12,9 @@ namespace bebone::gfx {
     ) : device_owner(device) {
         VkDescriptorSetAllocateInfo alloc_info{};
         alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        alloc_info.descriptorPool = descriptor_pool.backend;
+        alloc_info.descriptorPool = descriptor_pool.descriptor_pool;
         alloc_info.descriptorSetCount = 1;
-        alloc_info.pSetLayouts = &descriptor_set_layout->backend;
+        alloc_info.pSetLayouts = &descriptor_set_layout->descriptor_set_layout;
 
         VkDescriptorSetVariableDescriptorCountAllocateInfoEXT count_info;
         count_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
@@ -27,7 +27,7 @@ namespace bebone::gfx {
         count_info.pDescriptorCounts = &max_binding;
         alloc_info.pNext = &count_info; // Todo
 
-        if (vkAllocateDescriptorSets(device_owner.get_vk_device(), &alloc_info, &backend) != VK_SUCCESS) {
+        if (vkAllocateDescriptorSets(device_owner.get_vk_device(), &alloc_info, &descriptor_set) != VK_SUCCESS) {
             LOG_ERROR("Failed to allocate descriptor sets");
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
@@ -49,7 +49,7 @@ void VulkanDescriptorSet::update_descriptor_set(
         VkWriteDescriptorSet descriptor_write{};
         descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
-        descriptor_write.dstSet = backend;
+        descriptor_write.dstSet = descriptor_set;
         descriptor_write.dstBinding = binding;
         descriptor_write.dstArrayElement = dst_array_element;
         // Todo, remember that this mean \/
@@ -79,7 +79,7 @@ void VulkanDescriptorSet::update_descriptor_set(
         VkWriteDescriptorSet descriptor_write{};
         descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
-        descriptor_write.dstSet = backend;
+        descriptor_write.dstSet = descriptor_set;
         descriptor_write.dstBinding = binding;
         descriptor_write.dstArrayElement = dst_array_element; // Todo THIS IS A HANDLE, and handle counter should work per shader binding, not a cpu binding thing
 

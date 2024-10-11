@@ -10,7 +10,7 @@ namespace bebone::gfx {
         create_info.codeSize = code.get_byte_code().size() * sizeof(unsigned int);
         create_info.pCode = reinterpret_cast<const uint32_t*>(code.get_byte_code().data());
 
-        if(vkCreateShaderModule(device_owner.get_vk_device(), &create_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateShaderModule(device_owner.get_vk_device(), &create_info, nullptr, &shader_module) != VK_SUCCESS) {
             LOG_ERROR("Failed to create shader module");
             throw std::runtime_error("Failed to create shader module");
         }
@@ -34,7 +34,7 @@ namespace bebone::gfx {
         create_info.codeSize = shader_code.get_byte_code().size() * sizeof(unsigned int);
         create_info.pCode = reinterpret_cast<const uint32_t*>(shader_code.get_byte_code().data());
 
-        if(vkCreateShaderModule(device_owner.get_vk_device(), &create_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateShaderModule(device_owner.get_vk_device(), &create_info, nullptr, &shader_module) != VK_SUCCESS) {
             LOG_ERROR("Failed to create shader module");
             throw std::runtime_error("Failed to create shader module");
         }
@@ -43,7 +43,7 @@ namespace bebone::gfx {
     }
 
     VulkanShaderModule::~VulkanShaderModule() {
-        vkDestroyShaderModule(device_owner.get_vk_device(), backend, nullptr);
+        vkDestroyShaderModule(device_owner.get_vk_device(), shader_module, nullptr);
 
         LOG_TRACE("Destroyed Vulkan shader module");
     }

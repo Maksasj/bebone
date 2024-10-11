@@ -11,10 +11,10 @@ namespace bebone::gfx {
 
         alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        alloc_info.commandPool = command_buffer_pool.backend;
+        alloc_info.commandPool = command_buffer_pool.command_buffer_pool;
         alloc_info.commandBufferCount = static_cast<uint32_t>(1); // Todo
 
-        if(vkAllocateCommandBuffers(device_owner.get_vk_device(), &alloc_info, &backend) != VK_SUCCESS) {
+        if(vkAllocateCommandBuffers(device_owner.get_vk_device(), &alloc_info, &command_buffer) != VK_SUCCESS) {
             LOG_ERROR("Failed to allocate command buffers");
             throw std::runtime_error("Failed to allocate command buffers !");
         }
@@ -27,7 +27,7 @@ namespace bebone::gfx {
 
         begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-        if(vkBeginCommandBuffer(backend, &begin_info) != VK_SUCCESS) {
+        if(vkBeginCommandBuffer(command_buffer, &begin_info) != VK_SUCCESS) {
             LOG_ERROR("Failed to being recording command buffer");
             throw std::runtime_error("failed to being recording command buffer");
         }
@@ -36,7 +36,7 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::end_record() {
-        if(vkEndCommandBuffer(backend) != VK_SUCCESS) {
+        if(vkEndCommandBuffer(command_buffer) != VK_SUCCESS) {
             LOG_ERROR("Failed to end command buffer");
             throw std::runtime_error("failed to end command buffer");
         }
@@ -73,8 +73,8 @@ namespace bebone::gfx {
     ) {
         VkRenderPassBeginInfo render_pass_info{};
         render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        render_pass_info.renderPass = render_pass->backend;
-        render_pass_info.framebuffer = framebuffer->backend;
+        render_pass_info.renderPass = render_pass->render_pass;
+        render_pass_info.framebuffer = framebuffer->framebuffer;
         render_pass_info.renderArea.offset = {0, 0};
         render_pass_info.renderArea.extent = render_pass->get_extent(); // Todo not sure is extent is right, maybe there should be extent of render target
 
@@ -92,7 +92,7 @@ namespace bebone::gfx {
         render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
         render_pass_info.pClearValues = clear_values.data();
 
-        vkCmdBeginRenderPass(backend, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
         return *this;
     }
@@ -123,7 +123,7 @@ namespace bebone::gfx {
         viewport.minDepth = min_depth;
         viewport.maxDepth = max_depth;
 
-        vkCmdSetViewport(backend, 0, 1, &viewport);
+        vkCmdSetViewport(command_buffer, 0, 1, &viewport);
 
         return *this;
     }
@@ -137,27 +137,27 @@ namespace bebone::gfx {
 
         VkRect2D scissor = { { x, y }, { width, height } };
 
-        vkCmdSetScissor(backend, 0, 1, &scissor);
+        vkCmdSetScissor(command_buffer, 0, 1, &scissor);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::end_render_pass() {
-        vkCmdEndRenderPass(backend);
+        vkCmdEndRenderPass(command_buffer);
 
         return *this;
     }
 
     // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
     VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const VulkanPipeline& pipeline) {
-        vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.backend);
+        vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
 
         return *this;
     }
 
     // Todo VK_PIPELINE_BIND_POINT_GRAPHICS should be configured
     VulkanCommandBuffer& VulkanCommandBuffer::bind_pipeline(const std::unique_ptr<VulkanPipeline>& pipeline) {
-        vkCmdBindPipeline(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->backend);
+        vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->pipeline);
 
         return *this;
     }
@@ -166,25 +166,25 @@ namespace bebone::gfx {
         VkBuffer buffers[] = { buffer.get_vk_buffer() };
         VkDeviceSize offset[] = { 0 }; // Todo
 
-        vkCmdBindVertexBuffers(backend, 0, 1, buffers, offset);
+        vkCmdBindVertexBuffers(command_buffer, 0, 1, buffers, offset);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(IVulkanBuffer& buffer) {
-        vkCmdBindIndexBuffer(backend, buffer.get_vk_buffer(), 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(command_buffer, buffer.get_vk_buffer(), 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw(const size_t& vertex_count) {
-        vkCmdDraw(backend, vertex_count, 1, 0, 0);
+        vkCmdDraw(command_buffer, vertex_count, 1, 0, 0);
 
         return *this;
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::draw_indexed(const size_t& index_count) {
-        vkCmdDrawIndexed(backend, static_cast<uint32_t>(index_count), 1, 0, 0, 0);
+        vkCmdDrawIndexed(command_buffer, static_cast<uint32_t>(index_count), 1, 0, 0, 0);
 
         return *this;
     }
@@ -194,7 +194,7 @@ namespace bebone::gfx {
         const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
         const std::unique_ptr<VulkanDescriptorSet>& descriptor_set
     ) {
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_set->backend, 0, nullptr);
+        vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->pipeline_layout, 0, 1, &descriptor_set->descriptor_set, 0, nullptr);
 
         return *this;
     }
@@ -205,7 +205,7 @@ namespace bebone::gfx {
         const std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
         const size_t& frame
     ) {
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, 1, &descriptor_sets[frame]->backend, 0, nullptr);
+        vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->pipeline_layout, 0, 1, &descriptor_sets[frame]->descriptor_set, 0, nullptr);
 
         return *this;
     }
@@ -219,9 +219,9 @@ namespace bebone::gfx {
         sets.reserve(descriptor_sets.size());
 
         for(const auto& descriptor : descriptor_sets)
-            sets.push_back(descriptor->backend);
+            sets.push_back(descriptor->descriptor_set);
 
-        vkCmdBindDescriptorSets(backend, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->backend, 0, sets.size(), sets.data(), 0, nullptr);
+        vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout->pipeline_layout, 0, sets.size(), sets.data(), 0, nullptr);
 
         return *this;
     }
@@ -232,7 +232,7 @@ namespace bebone::gfx {
         const u32& size,
         const void* ptr
     ) {
-        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_ALL, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
+        vkCmdPushConstants(command_buffer, pipeline_layout->pipeline_layout, VK_SHADER_STAGE_ALL, 0, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }
@@ -244,7 +244,7 @@ namespace bebone::gfx {
         const size_t& offset,
         const void* ptr
     ) {
-        vkCmdPushConstants(backend, pipeline_layout->backend, VK_SHADER_STAGE_ALL, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
+        vkCmdPushConstants(command_buffer, pipeline_layout->pipeline_layout, VK_SHADER_STAGE_ALL, offset, size, ptr); // Todo, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
 
         return *this;
     }

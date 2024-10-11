@@ -9,7 +9,7 @@ namespace bebone::gfx {
         pool_info.queueFamilyIndex = queue_family_indices.graphics_family;
         pool_info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-        if (vkCreateCommandPool(device_owner.get_vk_device(), &pool_info, nullptr, &backend) != VK_SUCCESS) {
+        if (vkCreateCommandPool(device_owner.get_vk_device(), &pool_info, nullptr, &command_buffer_pool) != VK_SUCCESS) {
             LOG_ERROR("Failed to create command pool");
             throw std::runtime_error("failed to create command pool!");
         }
@@ -20,7 +20,7 @@ namespace bebone::gfx {
     VulkanCommandBufferPool::~VulkanCommandBufferPool() {
         device_owner.wait_idle();
 
-        vkDestroyCommandPool(device_owner.get_vk_device(), backend, nullptr);
+        vkDestroyCommandPool(device_owner.get_vk_device(), command_buffer_pool, nullptr);
 
         LOG_TRACE("Destroyed command buffer pool");
     }
@@ -47,7 +47,7 @@ namespace bebone::gfx {
 
         alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        alloc_info.commandPool = backend;
+        alloc_info.commandPool = command_buffer_pool;
         alloc_info.commandBufferCount = 1;
 
         VkCommandBuffer command_buffer;
@@ -74,7 +74,7 @@ namespace bebone::gfx {
         vkQueueSubmit(device_owner.get_graphics_queue(), 1, &submit_info, VK_NULL_HANDLE);
         vkQueueWaitIdle(device_owner.get_graphics_queue());
 
-        vkFreeCommandBuffers(device_owner.get_vk_device(), backend, 1, &command_buffer);
+        vkFreeCommandBuffers(device_owner.get_vk_device(), command_buffer_pool, 1, &command_buffer);
     }
 
     // void copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {

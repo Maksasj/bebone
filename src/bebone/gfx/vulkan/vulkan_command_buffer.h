@@ -18,7 +18,7 @@ namespace bebone::gfx {
 
     class VulkanCommandBuffer : private core::NonCopyable {
         public:
-            VkCommandBuffer backend;
+            VkCommandBuffer command_buffer;
 
         private:
             IVulkanDevice& device_owner;

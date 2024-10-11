@@ -62,7 +62,7 @@ namespace bebone::gfx {
             vkDestroyFence(device_owner.get_vk_device(), in_flight_fences[i], nullptr);
         }
 
-        vkDestroySwapchainKHR(device_owner.get_vk_device(), backend, nullptr);
+        vkDestroySwapchainKHR(device_owner.get_vk_device(), swap_chain, nullptr);
 
         LOG_TRACE("Destroyed Vulkan swap chain");
     }
@@ -80,7 +80,7 @@ namespace bebone::gfx {
 
         auto result = vkAcquireNextImageKHR(
             device_owner.get_vk_device(),
-            backend,
+            swap_chain,
             std::numeric_limits<uint64_t>::max(),
             image_available_semaphores[current_frame],  // must be a not signaled semaphore
             VK_NULL_HANDLE,
@@ -114,7 +114,7 @@ namespace bebone::gfx {
         submit_info.pWaitSemaphores = wait_semaphores;
         submit_info.pWaitDstStageMask = wait_stages;
         submit_info.commandBufferCount = 1;
-        submit_info.pCommandBuffers = &command_buffer.backend;
+        submit_info.pCommandBuffers = &command_buffer.command_buffer;
         submit_info.signalSemaphoreCount = 1;
         submit_info.pSignalSemaphores = signal_semaphores;
 
@@ -125,7 +125,7 @@ namespace bebone::gfx {
         }
 
         // Todo, Presenting part
-        VkSwapchainKHR swap_chains[] = { backend };
+        VkSwapchainKHR swap_chains[] = { swap_chain };
 
         VkPresentInfoKHR present_info = {};
         present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -150,14 +150,14 @@ namespace bebone::gfx {
     std::vector<std::unique_ptr<VulkanSwapChainImage>> VulkanSwapChain::create_swap_chain_images(IVulkanDevice& device, VkFormat image_format) {
         uint32_t image_count;
 
-        vkGetSwapchainImagesKHR(device_owner.get_vk_device(), backend, &image_count, nullptr);
+        vkGetSwapchainImagesKHR(device_owner.get_vk_device(), swap_chain, &image_count, nullptr);
         auto images = std::vector<VkImage> {};
         images.resize(image_count);
 
         auto out = std::vector<std::unique_ptr<VulkanSwapChainImage>> {};
         out.reserve(image_count);
 
-        vkGetSwapchainImagesKHR(device_owner.get_vk_device(), backend, &image_count, images.data());
+        vkGetSwapchainImagesKHR(device_owner.get_vk_device(), swap_chain, &image_count, images.data());
 
         for(auto& vk_image : images)
             out.push_back(std::make_unique<VulkanSwapChainImage>(device, vk_image, image_format));
@@ -207,7 +207,7 @@ namespace bebone::gfx {
         create_info.clipped = VK_TRUE;
         create_info.oldSwapchain = VK_NULL_HANDLE;
 
-        if(vkCreateSwapchainKHR(device_owner.get_vk_device(), &create_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateSwapchainKHR(device_owner.get_vk_device(), &create_info, nullptr, &swap_chain) != VK_SUCCESS) {
             LOG_ERROR("Failed to create swap chain");
             // throw std::runtime_error("failed to create swap chain!"); Todo
         }

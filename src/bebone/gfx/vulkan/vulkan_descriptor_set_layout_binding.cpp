@@ -5,7 +5,7 @@ namespace bebone::gfx {
 
     VulkanDescriptorSetLayoutBinding::VulkanDescriptorSetLayoutBinding(const VulkanDescriptorSetLayoutBindingType& type, const u32& binding) {
         if(type == Uniform) {
-            backend = {
+            descriptor_set_layout_binding = {
                 .binding = binding,
                 .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                 .descriptorCount = 65536,
@@ -13,7 +13,7 @@ namespace bebone::gfx {
                 .pImmutableSamplers = nullptr
             };
         } else if(type == Storage) {
-            backend = {
+            descriptor_set_layout_binding = {
                 .binding = binding,
                 .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
                 .descriptorCount = 65536,
@@ -21,7 +21,7 @@ namespace bebone::gfx {
                 .pImmutableSamplers = nullptr
             };
         } else if(type == Sampler) {
-            backend = {
+            descriptor_set_layout_binding = {
                 .binding = binding,
                 .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                 .descriptorCount = 65536,

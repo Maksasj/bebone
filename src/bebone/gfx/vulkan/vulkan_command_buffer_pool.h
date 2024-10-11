@@ -7,12 +7,14 @@
 
 #include "vulkan_device.h"
 
+#include "interface/i_vulkan_command_buffer_pool.h"
+
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
-    class VulkanCommandBufferPool : private core::NonCopyable {
+    class VulkanCommandBufferPool : public IVulkanCommandBufferPool, private core::NonCopyable {
         public:
-            VkCommandPool backend;
+            VkCommandPool command_buffer_pool;
 
         private:
             IVulkanDevice& device_owner;
@@ -24,9 +26,9 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanCommandBuffer> create_command_buffer();
             std::vector<std::unique_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
 
-            // Todo, refactor this
-            VkCommandBuffer begin_single_time_commands();
-            void end_single_time_commands(VkCommandBuffer command_buffer);
+            // Vulkan Command Buffer Pool
+            VkCommandBuffer begin_single_time_commands() override;
+            void end_single_time_commands(VkCommandBuffer command_buffer) override;
     };
 }
 

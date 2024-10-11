@@ -14,7 +14,7 @@ namespace bebone::gfx {
 
     class VulkanDescriptorSetLayoutBinding {
         public:
-            VkDescriptorSetLayoutBinding backend;
+            VkDescriptorSetLayoutBinding descriptor_set_layout_binding;
 
         public:
             VulkanDescriptorSetLayoutBinding(const VulkanDescriptorSetLayoutBindingType& type, const u32& binding);

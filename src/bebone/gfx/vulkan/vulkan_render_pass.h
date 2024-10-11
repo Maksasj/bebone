@@ -11,7 +11,7 @@
 namespace bebone::gfx {
     class VulkanRenderPass : private core::NonCopyable {
         public:
-            VkRenderPass backend;
+            VkRenderPass render_pass;
 
         private:
             IVulkanDevice& device_owner;

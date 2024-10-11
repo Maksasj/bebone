@@ -21,7 +21,7 @@ namespace bebone::gfx {
 
     class VulkanSwapChain : private core::NonCopyable {
         private:
-            VkSwapchainKHR backend;
+            VkSwapchainKHR swap_chain;
 
         private:
             IVulkanDevice& device_owner;

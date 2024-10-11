@@ -15,7 +15,7 @@ namespace bebone::gfx {
             stage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
             stage.pNext = nullptr;
             stage.flags = 0;
-            stage.module = shader_module->backend;
+            stage.module = shader_module->shader_module;
             stage.pName = "main";
             stage.pSpecializationInfo = nullptr;
 
@@ -188,15 +188,15 @@ namespace bebone::gfx {
                 .pColorBlendState = &color_blend_state,
                 .pDynamicState = &dynamic_state,
 
-                .layout = pipeline_layout.backend,
-                .renderPass = render_pass->backend, // Todo, actually swap chain is not needed there
+                .layout = pipeline_layout.pipeline_layout,
+                .renderPass = render_pass->render_pass, // Todo, actually swap chain is not needed there
 
                 .subpass = config_info.subpass,
                 .basePipelineHandle = config_info.base_pipeline_handle,
                 .basePipelineIndex = config_info.base_pipeline_index
         };
 
-        if(vkCreateGraphicsPipelines(device_owner.get_vk_device(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateGraphicsPipelines(device_owner.get_vk_device(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS) {
             LOG_ERROR("Failed to create graphics pipeline");
             throw std::runtime_error("failed to create graphics pipeline");
         }
@@ -230,7 +230,7 @@ namespace bebone::gfx {
     }
 
     VulkanPipeline::~VulkanPipeline() {
-        vkDestroyPipeline(device_owner.get_vk_device(), backend, nullptr);
+        vkDestroyPipeline(device_owner.get_vk_device(), pipeline, nullptr);
 
         LOG_TRACE("Destroyed Vulkan graphics pipeline");
     }
@@ -250,6 +250,6 @@ namespace bebone::gfx {
     */
 
     void VulkanPipeline::bind(VkCommandBuffer command_buffer) {
-        vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, backend);
+        vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
     }
 }

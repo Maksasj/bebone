@@ -9,7 +9,7 @@ namespace bebone::gfx {
     // Todo simplify this class
     class VulkanConstRange {
         public:
-            VkPushConstantRange backend;
+            VkPushConstantRange const_range;
 
             VulkanConstRange(const size_t& size, const u32& offset, const VkShaderStageFlags& stage_flags = VK_SHADER_STAGE_ALL);
     };

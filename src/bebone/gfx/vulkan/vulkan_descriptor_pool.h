@@ -13,7 +13,7 @@ namespace bebone::gfx {
 
     class VulkanDescriptorPool : private core::NonCopyable {
         public:
-            VkDescriptorPool backend;
+            VkDescriptorPool descriptor_pool;
 
         private:
             IVulkanDevice& device_owner;
