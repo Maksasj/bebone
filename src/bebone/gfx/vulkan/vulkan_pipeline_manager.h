@@ -15,7 +15,7 @@ namespace bebone::gfx {
 
     class VulkanPipelineManager : private core::NonCopyable {
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         private:
             std::unique_ptr<VulkanDescriptorPool> descriptor_pool;
@@ -35,7 +35,7 @@ namespace bebone::gfx {
             static constexpr size_t const_ranges_size = 128;
 
         public:
-            VulkanPipelineManager(VulkanDevice& device);
+            VulkanPipelineManager(IVulkanDevice& device);
             ~VulkanPipelineManager();
 
             std::unique_ptr<VulkanPipeline> create_pipeline(

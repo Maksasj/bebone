@@ -17,7 +17,7 @@ namespace bebone::gfx {
             VkPipeline backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         protected:
              static std::vector<VkPipelineShaderStageCreateInfo> collect_shader_stages(const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules);
@@ -31,14 +31,14 @@ namespace bebone::gfx {
 
         public:
             VulkanPipeline(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
                 VulkanPipelineLayout& pipeline_layout,
                 const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
                 VulkanPipelineConfig config_info);
 
             VulkanPipeline(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
                 VulkanPipelineLayout& pipeline_layout,
                 const std::string& vertex_shader_path,

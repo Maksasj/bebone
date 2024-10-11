@@ -8,7 +8,7 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     VulkanFramebuffer::VulkanFramebuffer(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         std::vector<std::unique_ptr<IVulkanImageView>>& attachment_views,
         std::unique_ptr<VulkanRenderPass>& render_pass,
         VkExtent2D extent
@@ -28,7 +28,7 @@ namespace bebone::gfx {
         create_info.height = extent.height;
         create_info.layers = 1;
 
-        if(vkCreateFramebuffer(device.device, &create_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateFramebuffer(device_owner.get_vk_device(), &create_info, nullptr, &backend) != VK_SUCCESS) {
             LOG_ERROR("Failed to create framebuffer");
             throw std::runtime_error("failed to create framebuffer!");
         }
@@ -37,7 +37,7 @@ namespace bebone::gfx {
     }
 
     VulkanFramebuffer::~VulkanFramebuffer() {
-        vkDestroyFramebuffer(device_owner.device, backend, nullptr);
+        vkDestroyFramebuffer(device_owner.get_vk_device(), backend, nullptr);
 
         LOG_TRACE("Destroyed Vulkan framebuffer");
     }

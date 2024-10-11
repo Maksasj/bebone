@@ -11,7 +11,7 @@ namespace bebone::gfx {
     using namespace bebone::assets;
 
     VulkanTexture::VulkanTexture(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         const std::shared_ptr<Image<ColorRGBA>>& raw
     ) {
         VkExtent3D extent = { static_cast<uint32_t>(raw->get_width()), static_cast<uint32_t>(raw->get_height()), 1};
@@ -21,24 +21,16 @@ namespace bebone::gfx {
         image = std::make_unique<VulkanImage>(device, ColorRGBA::get_vulkan_format(), extent, image_info);
 
         auto req = image->get_memory_requirements();
-
         memory = std::make_unique<VulkanDeviceMemory>(device, req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(image);
 
         image->transition_layout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
+        // Upload data
         auto size = raw->get_width() * raw->get_height() * sizeof(ColorRGBA);
-        auto staged = VulkanBufferMemory(device, size);
-
-        staged.upload_data(raw->data(), size);
-
-        // Todo Probably uploading data to gpu need some sort of render graph api
-        staged.copy_to_image(*image);
-
-        /*
-        device.destroy_all(staged);
-        device.collect_garbage();
-        */
+        VulkanBufferMemory staged_buffer(device, size);
+        staged_buffer.upload_data(raw->data(), size);
+        staged_buffer.copy_to_image(*image);
 
         image->transition_layout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
@@ -47,16 +39,7 @@ namespace bebone::gfx {
     }
 
     VulkanTexture::VulkanTexture(
-        std::unique_ptr<VulkanImage>& image,
-        std::unique_ptr<VulkanDeviceMemory>& memory,
-        std::unique_ptr<VulkanImageView>& view,
-        std::unique_ptr<VulkanSampler>& sampler
-    ) : image(std::move(image)), memory(std::move(memory)), view(std::move(view)), sampler(std::move(sampler)) {
-
-    }
-
-    VulkanTexture::VulkanTexture(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         VkExtent3D extent,
         VkFormat image_format
     ) {
@@ -65,12 +48,10 @@ namespace bebone::gfx {
         image = std::make_unique<VulkanImage>(device, ColorRGBA::get_vulkan_format(), extent, image_info);
 
         auto req = image->get_memory_requirements();
-
         memory = std::make_unique<VulkanDeviceMemory>(device, req, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memory->bind_image_memory(image);
 
         sampler = std::make_unique<VulkanSampler>(device);
-
         view = std::make_unique<VulkanImageView>(device, *image, image_format);
     }
 

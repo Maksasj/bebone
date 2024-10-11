@@ -6,12 +6,10 @@
 #include "../gfx_backend.h"
 
 #include "interface/i_vulkan_image.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
-
-    class VulkanDevice;
-    class VulkanImage;
 
     struct VulkanImageInfo {
         // VkStructureType type;
@@ -33,20 +31,20 @@ namespace bebone::gfx {
 
     class VulkanImage : public IVulkanImage, private core::NonCopyable {
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
             VkImage image;
             VkExtent3D extent;
 
         public:
-            VulkanImage(VulkanDevice& device, VkFormat format, VkExtent3D extent, VulkanImageInfo image_info = {});
+            VulkanImage(IVulkanDevice& device, VkFormat format, VkExtent3D extent, VulkanImageInfo image_info = {});
 
             ~VulkanImage();
 
             void transition_layout(VkImageLayout old_layout, VkImageLayout new_layout);
 
-            VkImage get_vk_image() const override;
-            VkMemoryRequirements get_memory_requirements() const override;
-            VkExtent3D get_extent() const override;
+            [[nodiscard]] VkImage get_vk_image() const override;
+            [[nodiscard]] VkMemoryRequirements get_memory_requirements() const override;
+            [[nodiscard]] VkExtent3D get_extent() const override;
     };
 }
 

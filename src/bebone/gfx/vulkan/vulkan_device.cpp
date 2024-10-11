@@ -26,7 +26,7 @@ namespace bebone::gfx {
         pick_physical_device(instance);
         create_logical_device();
 
-        command_buffer_pool = create_command_buffer_pool();
+        command_buffer_pool = std::make_unique<VulkanCommandBufferPool>(*this);
 
         LOG_TRACE("Created Vulkan device");
     }
@@ -54,51 +54,7 @@ namespace bebone::gfx {
         LOG_INFORMATION("Physical device: {}", properties.deviceName);
     }
 
-    std::unique_ptr<VulkanDescriptorPool> VulkanDevice::create_descriptor_pool() {
-        return std::make_unique<VulkanDescriptorPool>(*this);;
-    }
-
-    std::unique_ptr<VulkanDescriptorSetLayout> VulkanDevice::create_descriptor_set_layout(const std::vector<VulkanDescriptorSetLayoutBinding>& bindings) {
-        return std::make_unique<VulkanDescriptorSetLayout>(*this, bindings);
-    }
-
-    std::unique_ptr<VulkanRenderTarget> VulkanDevice::create_render_target(std::unique_ptr<VulkanRenderPass>& render_pass) {
-        return std::make_unique<VulkanRenderTarget>(*this, render_pass);
-    }
-
-    std::unique_ptr<VulkanRenderTarget>  VulkanDevice::create_render_target(
-        std::unique_ptr<VulkanRenderPass>& render_pass,
-        std::vector<std::unique_ptr<VulkanSwapChainImage>>& images
-    ) {
-        return std::make_unique<VulkanRenderTarget>(*this, render_pass, images);;
-    }
-
-    std::unique_ptr<VulkanSwapChain> VulkanDevice::create_swap_chain(std::unique_ptr<Window> &window) {
-        return std::make_unique<VulkanSwapChain>(*this, VkExtent2D { static_cast<uint32_t>(window->get_width()), static_cast<uint32_t>(window->get_height()) });;
-    }
-
-    std::unique_ptr<VulkanPipelineLayout> VulkanDevice::create_pipeline_layout(const std::vector<std::unique_ptr<VulkanDescriptorSetLayout>>& layouts, const std::vector<VulkanConstRange>& constant_ranges) {
-        return std::make_unique<VulkanPipelineLayout>(*this, layouts, constant_ranges);
-    }
-
-    std::unique_ptr<VulkanCommandBufferPool> VulkanDevice::create_command_buffer_pool() {
-        return std::make_unique<VulkanCommandBufferPool>(*this);
-    }
-
-    std::unique_ptr<VulkanCommandBuffer> VulkanDevice::create_command_buffer() {
-        return std::make_unique<VulkanCommandBuffer>(*this, *command_buffer_pool);
-    }
-
-    std::vector<std::unique_ptr<VulkanCommandBuffer>> VulkanDevice::create_command_buffers(const size_t& count) {
-        auto command_buffers = std::vector<std::unique_ptr<VulkanCommandBuffer>> {};
-        command_buffers.reserve(count);
-
-        for(size_t i = 0; i < count; ++i)
-            command_buffers.push_back(create_command_buffer());
-
-        return command_buffers;
-    }
-
+    /*
     std::unique_ptr<VulkanCommandBuffer> VulkanDevice::begin_single_time_commands() {
         auto command_buffer = command_buffer_pool->create_command_buffer();
 
@@ -120,73 +76,7 @@ namespace bebone::gfx {
 
         vkFreeCommandBuffers(device, command_buffer_pool->backend, 1, &command_buffer->backend);
     }
-
-    std::unique_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-        const std::unique_ptr<VulkanRenderPass>& render_pass,
-        VulkanPipelineLayout& pipeline_layout,
-        const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
-        VulkanPipelineConfig config_info
-    ) {
-        return std::make_unique<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);;
-    }
-
-    std::unique_ptr<VulkanPipeline> VulkanDevice::create_pipeline(
-        const std::unique_ptr<VulkanRenderPass>& render_pass,
-        VulkanPipelineLayout& pipeline_layout,
-        const std::string& vertex_shader_path,
-        const std::string& fragment_shader_path,
-        VulkanPipelineConfig config_info
-    ) {
-        std::vector<std::unique_ptr<VulkanShaderModule>> shader_modules;
-        shader_modules.push_back(create_shader_module(utils_read_file(vertex_shader_path), ShaderType::VertexShader));
-        shader_modules.push_back(create_shader_module(utils_read_file(fragment_shader_path), ShaderType::FragmentShader));
-
-        return std::make_unique<VulkanPipeline>(*this, render_pass, pipeline_layout, shader_modules, config_info);;
-    }
-
-    std::unique_ptr<VulkanRenderPass> VulkanDevice::create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments) {
-        return std::make_unique<VulkanRenderPass>(*this, extent, attachments);;
-    }
-
-    std::unique_ptr<VulkanFramebuffer> VulkanDevice::create_framebuffer(
-        std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
-        std::unique_ptr<VulkanRenderPass>& render_pass,
-        VkExtent2D extent
-    ) {
-        return std::make_unique<VulkanFramebuffer>(*this, attachments, render_pass, extent);
-    }
-
-    std::vector<std::unique_ptr<VulkanFramebuffer>> VulkanDevice::create_framebuffers(
-        std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
-        std::unique_ptr<VulkanRenderPass>& render_pass,
-        VkExtent2D extent,
-        const size_t& count
-    ) {
-        auto framebuffers = std::vector<std::unique_ptr<VulkanFramebuffer>> {};
-        framebuffers.reserve(count);
-
-        for(size_t i = 0; i < count; ++i)
-            framebuffers.push_back(create_framebuffer(attachments, render_pass, extent));
-
-        return framebuffers;
-    }
-
-    std::unique_ptr<VulkanShaderModule> VulkanDevice::create_shader_module(const std::string& source_code, const ShaderType& type) {
-        auto shader_compiler = SpirVShaderCompiler();
-
-        shader_compiler.add_shader_source(ShaderSource(
-            source_code,
-            type
-        ));
-
-        auto shader_code = shader_compiler.compile(type);
-
-        return std::make_unique<VulkanShaderModule>(*this, shader_code);;
-    }
-
-    std::unique_ptr<VulkanPipelineManager> VulkanDevice::create_pipeline_manager() {
-        return std::make_unique<VulkanPipelineManager>(*this);;
-    }
+    */
 
     void VulkanDevice::create_logical_device() {
         auto indices = VulkanDeviceChooser::find_queue_families(physical_device, surface);
@@ -278,7 +168,7 @@ namespace bebone::gfx {
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-    void VulkanDevice::wait_idle() {
+    void VulkanDevice::wait_idle() const {
         vkDeviceWaitIdle(device);
     }
 
@@ -287,5 +177,21 @@ namespace bebone::gfx {
             {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
             VK_IMAGE_TILING_OPTIMAL,
             VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+    }
+
+    VkDevice VulkanDevice::get_vk_device() const {
+        return device;
+    }
+
+    VkSurfaceKHR VulkanDevice::get_surface() const {
+        return surface;
+    }
+
+    VkQueue VulkanDevice::get_graphics_queue() const {
+        return graphics_queue;
+    }
+
+    VkQueue VulkanDevice::get_present_queue() const {
+        return present_queue;
     }
 }

@@ -196,7 +196,7 @@ namespace bebone::gfx {
                 .basePipelineIndex = config_info.base_pipeline_index
         };
 
-        if(vkCreateGraphicsPipelines(device_owner.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateGraphicsPipelines(device_owner.get_vk_device(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &backend) != VK_SUCCESS) {
             LOG_ERROR("Failed to create graphics pipeline");
             throw std::runtime_error("failed to create graphics pipeline");
         }
@@ -205,7 +205,7 @@ namespace bebone::gfx {
     }
 
     VulkanPipeline::VulkanPipeline(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         VulkanPipelineLayout& pipeline_layout,
         const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
@@ -215,7 +215,7 @@ namespace bebone::gfx {
     }
 
     VulkanPipeline::VulkanPipeline(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         VulkanPipelineLayout& pipeline_layout,
         const std::string& vertex_shader_path,
@@ -223,27 +223,27 @@ namespace bebone::gfx {
         VulkanPipelineConfig config_info
     ) : device_owner(device) {
         std::vector<std::unique_ptr<VulkanShaderModule>> shader_modules;
-        shader_modules.push_back(device.create_shader_module(utils_read_file(vertex_shader_path), ShaderType::VertexShader));
-        shader_modules.push_back(device.create_shader_module(utils_read_file(fragment_shader_path), ShaderType::FragmentShader));
+        shader_modules.push_back(std::make_unique<VulkanShaderModule>(device_owner, utils_read_file(vertex_shader_path), ShaderType::VertexShader));
+        shader_modules.push_back(std::make_unique<VulkanShaderModule>(device_owner, utils_read_file(fragment_shader_path), ShaderType::FragmentShader));
 
         create_pipeline(render_pass, pipeline_layout, shader_modules, config_info);
     }
 
     VulkanPipeline::~VulkanPipeline() {
-        vkDestroyPipeline(device_owner.device, backend, nullptr);
+        vkDestroyPipeline(device_owner.get_vk_device(), backend, nullptr);
 
         LOG_TRACE("Destroyed Vulkan graphics pipeline");
     }
 
     /*
     void VulkanPipeline::recreate(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         std::unique_ptr<VulkanShaderModule>& vertShaderModule,
         std::unique_ptr<VulkanShaderModule>& fragShaderModule,
         const PipelineConfigInfo& config_info
     ) {
         // Todo move this
-        vkDestroyPipeline(device.device, backend, nullptr);
+        vkDestroyPipeline(device_owner.get_vk_device(), backend, nullptr);
 
         create_graphics_pipeline(device, vertShaderModule, fragShaderModule, config_info);
     }

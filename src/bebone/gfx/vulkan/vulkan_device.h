@@ -23,6 +23,8 @@
 #include "vulkan_attachment.h"
 #include "vulkan_swap_chain_image.h"
 
+#include "interface/i_vulkan_device.h"
+
 namespace bebone::gfx {
     class VulkanSwapChain;
     class VulkanPipeline;
@@ -38,9 +40,16 @@ namespace bebone::gfx {
     class VulkanRenderPass;
     class VulkanFramebuffer;
 
-    class VulkanDevice : private core::NonCopyable {
+    class VulkanDevice : public IVulkanDevice, private core::NonCopyable {
         private:
             VulkanInstance& instance_owner;
+
+            VkDevice device;
+            VkSurfaceKHR surface;
+            VkQueue graphics_queue;
+            VkQueue present_queue;
+
+            VkPhysicalDeviceProperties properties;
 
             // Todo, abstract all things below
             VkPhysicalDevice physical_device = VK_NULL_HANDLE;
@@ -52,112 +61,27 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanCommandBufferPool> command_buffer_pool;
 
         public:
-            VkDevice device;
-            VkSurfaceKHR surface;
-            VkQueue graphics_queue;
-            VkQueue present_queue;
-
-            VkPhysicalDeviceProperties properties;
-
             VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window);
             ~VulkanDevice();
 
-            std::unique_ptr<VulkanDescriptorPool> create_descriptor_pool();
+            //  Todo make this a ICommandBufferPool interaface
+            // std::unique_ptr<VulkanCommandBuffer> begin_single_time_commands() override;
+            // void end_single_time_commands(std::unique_ptr<VulkanCommandBuffer>& command_buffer) override;
 
-            std::unique_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
-                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
+            VulkanQueueFamilyIndices find_physical_queue_families() override { return VulkanDeviceChooser::find_queue_families(physical_device, surface); }
+            VulkanSwapChainSupportDetails get_swap_chain_support() override { return VulkanDeviceChooser::query_swap_chain_support(physical_device, surface); }
 
-            // Update descriptor set for single
+            uint32_t find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags properties) override;
+            VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) override;
+            VkFormat find_depth_format() override;
 
+            // Vulkan Device
+            [[nodiscard]] VkDevice get_vk_device() const override;
+            [[nodiscard]] VkSurfaceKHR get_surface() const override;
+            [[nodiscard]] VkQueue get_graphics_queue() const override;
+            [[nodiscard]] VkQueue get_present_queue() const override;
+            void wait_idle() const override;
 
-            // Update descriptor sets for multiple descriptors
-            /*
-            void update_descriptor_sets(
-                const std::vector<std::unique_ptr<VulkanBuffer>>& buffers,
-                std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
-                const size_t& binding,
-                const std::vector<size_t>& dst_array_elements);
-
-            void update_descriptor_sets(
-                const std::vector<std::unique_ptr<VulkanBufferMemory>>& tuples,
-                std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
-                const size_t& binding,
-                const std::vector<size_t>& dst_array_elements);
-
-            void update_descriptor_sets(
-                const std::unique_ptr<VulkanSampler>& sampler,
-                const std::unique_ptr<VulkanImageView>& view,
-                std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
-                const size_t& binding,
-                const std::vector<size_t>& dst_array_elements);
-            */
-
-            // Other
-            std::unique_ptr<VulkanPipelineLayout> create_pipeline_layout(
-                const std::vector<std::unique_ptr<VulkanDescriptorSetLayout>>& layouts,
-                const std::vector<VulkanConstRange>& constant_ranges);
-
-            std::unique_ptr<VulkanPipeline> create_pipeline(
-                const std::unique_ptr<VulkanRenderPass>& render_pass,
-                VulkanPipelineLayout& pipeline_layout,
-                const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
-                VulkanPipelineConfig config_info = {});
-
-            std::unique_ptr<VulkanPipeline> create_pipeline(
-                const std::unique_ptr<VulkanRenderPass>& render_pass,
-                VulkanPipelineLayout& pipeline_layout,
-                const std::string& vertex_shader_path,
-                const std::string& fragment_shader_path,
-                VulkanPipelineConfig config_info = {});
-
-            std::unique_ptr<VulkanRenderPass> create_render_pass(VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
-
-            std::unique_ptr<VulkanFramebuffer> create_framebuffer(
-                    std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
-                    std::unique_ptr<VulkanRenderPass>& render_pass,
-                    VkExtent2D extent);
-
-            std::vector<std::unique_ptr<VulkanFramebuffer>> create_framebuffers(
-                    std::vector<std::unique_ptr<IVulkanImageView>>& attachments,
-                    std::unique_ptr<VulkanRenderPass>& render_pass,
-                    VkExtent2D extent,
-                    const size_t& count);
-
-            // Create new instance of command buffer pool
-            std::unique_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
-
-            // Create command buffer from personal command buffer pool
-            std::unique_ptr<VulkanCommandBuffer> create_command_buffer();
-
-            // Create command buffers from personal command buffer pool
-            std::vector<std::unique_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
-
-            std::unique_ptr<VulkanCommandBuffer> begin_single_time_commands();
-            void end_single_time_commands(std::unique_ptr<VulkanCommandBuffer>& command_buffer);
-
-            std::unique_ptr<VulkanShaderModule> create_shader_module(const std::string& source_code, const ShaderType& type);
-
-            std::unique_ptr<VulkanPipelineManager> create_pipeline_manager();
-
-            std::unique_ptr<VulkanRenderTarget> create_render_target(std::unique_ptr<VulkanRenderPass>& render_pass);
-
-            // Special constructor for swap chain
-            std::unique_ptr<VulkanRenderTarget> create_render_target(
-                std::unique_ptr<VulkanRenderPass>& render_pass,
-                std::vector<std::unique_ptr<VulkanSwapChainImage>>& images); // Todo remove VulkanSwapChainImage
-
-            std::unique_ptr<VulkanSwapChain> create_swap_chain(std::unique_ptr<Window>& window);
-
-            void wait_idle();
-
-            uint32_t find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags properties);
-
-            VulkanQueueFamilyIndices find_physical_queue_families() { return VulkanDeviceChooser::find_queue_families(physical_device, surface); }
-            VulkanSwapChainSupportDetails get_swap_chain_support() { return VulkanDeviceChooser::query_swap_chain_support(physical_device, surface); }
-
-            VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-
-            VkFormat find_depth_format();
     };
 }
 

@@ -6,11 +6,11 @@
 #include "../gfx_backend.h"
 
 #include "interface/i_vulkan_image_view.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    class VulkanDevice;
     class VulkanImage;
 
     struct VulkanImageSubresourceRange {
@@ -34,13 +34,13 @@ namespace bebone::gfx {
 
     class VulkanImageView : public IVulkanImageView, private core::NonCopyable {
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
             VkImageView image_view;
 
         public:
-            VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
-            VulkanImageView(VulkanDevice& device, VkImage image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
+            VulkanImageView(IVulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
+            VulkanImageView(IVulkanDevice& device, VkImage image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
 
             ~VulkanImageView();
 

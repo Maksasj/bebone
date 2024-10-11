@@ -19,11 +19,11 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanDeviceMemory> memory;
 
         public:
-            VulkanBufferMemory(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info = {});
+            VulkanBufferMemory(IVulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info = {});
 
             template<typename T>
             VulkanBufferMemory(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 const std::vector<T>& data,
                 VulkanBufferInfo buffer_info = {}
             ) {
@@ -43,10 +43,13 @@ namespace bebone::gfx {
 
             void upload_data(const void* src, const size_t& size);
 
-            VkBuffer get_vk_buffer() const override;
+            // Vulkan Buffer
+            [[nodiscard]] VkBuffer get_vk_buffer() const override;
+            [[nodiscard]] VkMemoryRequirements get_memory_requirements() const override;
+            [[nodiscard]] size_t get_size() const override;
             void copy_to_image(IVulkanImage& image) override;
-            size_t get_size() const override;
 
+            // Vulkan Device Memory
             VkDeviceMemory get_vk_device_memory() const override;
     };
 }

@@ -14,11 +14,11 @@ namespace bebone::gfx {
             VkPipelineLayout backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         public:
             VulkanPipelineLayout(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 const std::vector<std::unique_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
                 const std::vector<VulkanConstRange>& constant_ranges);
 

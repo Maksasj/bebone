@@ -6,22 +6,22 @@
 #include "../gfx_backend.h"
 
 #include "interface/i_vulkan_device_memory.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    class VulkanDevice;
     class VulkanBuffer;
     class VulkanImage;
 
     class VulkanDeviceMemory : public IVulkanDeviceMemory, private core::NonCopyable {
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
             VkDeviceMemory device_memory;
 
         public:
-            VulkanDeviceMemory(VulkanDevice& device, VkMemoryRequirements requirements, VkMemoryPropertyFlags properties);
+            VulkanDeviceMemory(IVulkanDevice& device, VkMemoryRequirements requirements, VkMemoryPropertyFlags properties);
             ~VulkanDeviceMemory();
 
             // Todo move to interface

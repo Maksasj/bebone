@@ -2,7 +2,7 @@
 
 namespace bebone::gfx {
     VulkanBufferMemory::VulkanBufferMemory(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         const size_t& size,
         VulkanBufferInfo buffer_info
     ) {
@@ -13,9 +13,7 @@ namespace bebone::gfx {
         memory->bind_buffer_memory(buffer);
     }
 
-    VulkanBufferMemory::~VulkanBufferMemory() {
-
-    }
+    VulkanBufferMemory::~VulkanBufferMemory() = default;
 
     void VulkanBufferMemory::upload_data(const void* src, const size_t& size) {
         memory->upload_data(src, size);
@@ -23,6 +21,10 @@ namespace bebone::gfx {
 
     VkBuffer VulkanBufferMemory::get_vk_buffer() const {
         return buffer->get_vk_buffer();
+    }
+
+    VkMemoryRequirements VulkanBufferMemory::get_memory_requirements() const {
+        return buffer->get_memory_requirements();
     }
 
     size_t VulkanBufferMemory::get_size() const {

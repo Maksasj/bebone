@@ -7,7 +7,7 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     VulkanImage::VulkanImage(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         VkFormat format,
         VkExtent3D extent,
         VulkanImageInfo image_info
@@ -30,7 +30,7 @@ namespace bebone::gfx {
         create_info.pQueueFamilyIndices = image_info.ptr_queue_family_indices;
         create_info.initialLayout = image_info.initial_layout;
 
-        if(vkCreateImage(device.device, &create_info, nullptr, &image) != VK_SUCCESS) {
+        if(vkCreateImage(device_owner.get_vk_device(), &create_info, nullptr, &image) != VK_SUCCESS) {
             LOG_ERROR("Failed to create image");
             throw std::runtime_error("failed to create image!");
         }
@@ -39,7 +39,7 @@ namespace bebone::gfx {
     }
 
     VulkanImage::~VulkanImage() {
-        vkDestroyImage(device_owner.device, image, nullptr);
+        vkDestroyImage(device_owner.get_vk_device(), image, nullptr);
         LOG_DEBUG("Destroyed Vulkan image");
     };
 
@@ -48,6 +48,8 @@ namespace bebone::gfx {
         VkImageLayout old_layout,
         VkImageLayout new_layout
     ) {
+        LOG_CRITICAL("VulkanImage::transition_layout is not implemented");
+        /*
         auto command_buffer = device_owner.begin_single_time_commands();
 
         VkImageMemoryBarrier barrier{};
@@ -87,6 +89,7 @@ namespace bebone::gfx {
         vkCmdPipelineBarrier(command_buffer->backend, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
         device_owner.end_single_time_commands(command_buffer);
+        */
     }
 
     VkImage VulkanImage::get_vk_image() const {
@@ -96,7 +99,7 @@ namespace bebone::gfx {
     VkMemoryRequirements VulkanImage::get_memory_requirements() const {
         VkMemoryRequirements requirements;
 
-        vkGetImageMemoryRequirements(device_owner.device, image, &requirements);
+        vkGetImageMemoryRequirements(device_owner.get_vk_device(), image, &requirements);
 
         return requirements;
     }

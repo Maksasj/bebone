@@ -5,6 +5,8 @@
 
 #include "../gfx_backend.h"
 
+#include "interface/i_vulkan_device.h"
+
 namespace bebone::gfx {
     using namespace bebone::core;
 
@@ -18,11 +20,11 @@ namespace bebone::gfx {
             VkFramebuffer backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         public:
             VulkanFramebuffer(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 std::vector<std::unique_ptr<IVulkanImageView>>& attachment_views,
                 std::unique_ptr<VulkanRenderPass>& render_pass,
                 VkExtent2D extent);

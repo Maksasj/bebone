@@ -8,20 +8,20 @@
 #include "interface/i_vulkan_buffer.h"
 #include "interface/i_vulkan_sampler.h"
 #include "interface/i_vulkan_image_view.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
-    class VulkanDevice;
     class VulkanDescriptorPool;
     class VulkanDescriptorSetLayout;
 
     class VulkanDescriptorSet : private core::NonCopyable {
         public:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
             VkDescriptorSet backend;
 
         public:
             VulkanDescriptorSet(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 VulkanDescriptorPool& descriptor_pool,
                 const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
 

@@ -10,8 +10,8 @@
 #include "vulkan_const_range.h"
 
 namespace bebone::gfx {
-    VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) : device_owner(device), bindless_uniforms_index(0), bindless_storage_index(0), bindless_samplers_index(0) {
-        descriptor_pool = device.create_descriptor_pool();
+    VulkanPipelineManager::VulkanPipelineManager(IVulkanDevice& device) : device_owner(device), bindless_uniforms_index(0), bindless_storage_index(0), bindless_samplers_index(0) {
+        descriptor_pool = std::make_unique<VulkanDescriptorPool>(device);
 
         const std::vector<VulkanDescriptorSetLayoutBinding> bindless_bindings = {
             { Uniform, uniform_binding },
@@ -20,7 +20,7 @@ namespace bebone::gfx {
         };
 
         // Creating bindless descriptor set layout
-        bindless_descriptor_set_layout = device.create_descriptor_set_layout(bindless_bindings);
+        bindless_descriptor_set_layout = std::make_unique<VulkanDescriptorSetLayout>(device, bindless_bindings);
         bindless_descriptor_set = descriptor_pool->create_descriptor(bindless_descriptor_set_layout);
 
         // Creating bindless pipeline layout
@@ -29,7 +29,7 @@ namespace bebone::gfx {
         std::vector<std::unique_ptr<VulkanDescriptorSetLayout>> layouts;
         layouts.push_back(std::move(bindless_descriptor_set_layout));
 
-        bindless_pipeline_layout = device.create_pipeline_layout(layouts, constant_ranges);
+        bindless_pipeline_layout = std::make_unique<VulkanPipelineLayout>(device, layouts, constant_ranges);
 
         std::ignore = bindless_storage_index; // Todo
 
@@ -51,7 +51,7 @@ namespace bebone::gfx {
         shader_modules.push_back(std::move(vertex_shader_module));
         shader_modules.push_back(std::move(fragment_shader_module));
 
-        return device_owner.create_pipeline(render_pass, *bindless_pipeline_layout, shader_modules, std::move(config_info));;
+        return std::make_unique<VulkanPipeline>(device_owner, render_pass, *bindless_pipeline_layout, shader_modules, std::move(config_info));;
     }
 
     std::unique_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
@@ -60,12 +60,10 @@ namespace bebone::gfx {
         const std::string& fragment_shader_file_path,
         VulkanPipelineConfig config_info
     ) {
-        auto vert_shader_module = device_owner.create_shader_module(utils_read_file(vertex_shader_file_path), ShaderType::VertexShader);
-        auto frag_shader_module = device_owner.create_shader_module(utils_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
+        auto vert_shader_module = std::make_unique<VulkanShaderModule>(device_owner, utils_read_file(vertex_shader_file_path), ShaderType::VertexShader);
+        auto frag_shader_module = std::make_unique<VulkanShaderModule>(device_owner, utils_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
 
-        auto pipeline = create_pipeline(render_pass, std::move(vert_shader_module), std::move(frag_shader_module), config_info);
-
-        return pipeline;
+        return std::make_unique<VulkanPipeline>(device_owner, render_pass, *bindless_pipeline_layout, vertex_shader_file_path, fragment_shader_file_path, config_info);
     }
 
     /*

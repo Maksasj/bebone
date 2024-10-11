@@ -48,7 +48,7 @@ namespace bebone::gfx {
 
     class VulkanBuffer : public IVulkanBuffer, private core::NonCopyable {
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
             VkBuffer buffer;
 
@@ -56,15 +56,14 @@ namespace bebone::gfx {
             size_t size; // Todo, Do we really need to store buffer size there ?
 
         public:
-            VulkanBuffer(VulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
+            VulkanBuffer(IVulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
             ~VulkanBuffer();
 
-
-            VkMemoryRequirements get_memory_requirements();
-
-            VkBuffer get_vk_buffer() const override;
+            // Vulkan Buffer
+            [[nodiscard]] VkBuffer get_vk_buffer() const override;
+            [[nodiscard]] VkMemoryRequirements get_memory_requirements() const override;
+            [[nodiscard]] size_t get_size() const override;
             void copy_to_image(IVulkanImage& image) override;
-            size_t get_size() const override;
     };
 }
 

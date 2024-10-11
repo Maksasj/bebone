@@ -4,7 +4,7 @@
 #include "vulkan_device.h"
 
 namespace bebone::gfx {
-    VulkanDepthImage::VulkanDepthImage(VulkanDevice& device, VkExtent3D extent) {
+    VulkanDepthImage::VulkanDepthImage(IVulkanDevice& device, VkExtent3D extent) {
         auto format = device.find_depth_format();
 
         VulkanImageInfo image_info{};

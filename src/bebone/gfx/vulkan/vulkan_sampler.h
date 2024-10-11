@@ -16,12 +16,12 @@ namespace bebone::gfx {
 
     class VulkanSampler : public IVulkanSampler, private core::NonCopyable {
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
             VkSampler sampler;
 
         public:
-            VulkanSampler(VulkanDevice& device);
+            VulkanSampler(IVulkanDevice& device);
             ~VulkanSampler();
 
             VkSampler get_vk_image_sampler() const override;

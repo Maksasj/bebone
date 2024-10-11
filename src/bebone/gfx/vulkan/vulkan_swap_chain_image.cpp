@@ -8,7 +8,7 @@
 
 namespace bebone::gfx {
     VulkanSwapChainImage::VulkanSwapChainImage(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         VkImage vk_image,
         VkFormat image_format
     ) : device_owner(device), image(vk_image) {
@@ -28,7 +28,7 @@ namespace bebone::gfx {
     VkMemoryRequirements VulkanSwapChainImage::get_memory_requirements() const {
         VkMemoryRequirements requirements;
 
-        vkGetImageMemoryRequirements(device_owner.device, image, &requirements);
+        vkGetImageMemoryRequirements(device_owner.get_vk_device(), image, &requirements);
 
         return requirements;
     }

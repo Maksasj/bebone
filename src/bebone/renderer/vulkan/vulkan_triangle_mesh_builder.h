@@ -12,14 +12,14 @@ namespace bebone::renderer {
 
     class VulkanTriangleMeshBuilder : public IMeshBuilder {
         protected:
-            VulkanDevice& device;
+            IVulkanDevice& device;
 
             std::vector<Vertex> vertices;
             std::vector<u32> indices;
             u32 index_offset;
 
         public:
-            VulkanTriangleMeshBuilder(VulkanDevice& device);
+            VulkanTriangleMeshBuilder(IVulkanDevice& device);
 
             void append_triangle(const VertexTriangle& triangle) override;
             void append_triangles(const VertexTriangle* triangles, const u64& count) override;

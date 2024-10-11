@@ -28,31 +28,19 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanSampler> sampler;
 
         public:
-            VulkanTexture(
-                VulkanDevice& device,
-                const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
+            VulkanTexture(IVulkanDevice& device, const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
+            VulkanTexture(IVulkanDevice& device, VkExtent3D extent, VkFormat image_format);
 
-            VulkanTexture(
-                std::unique_ptr<VulkanImage>& image,
-                std::unique_ptr<VulkanDeviceMemory>& memory,
-                std::unique_ptr<VulkanImageView>& view,
-                std::unique_ptr<VulkanSampler>& sampler);
+            // Vulkan Image
+            [[nodiscard]] VkImage get_vk_image() const override;
+            [[nodiscard]] VkMemoryRequirements get_memory_requirements() const override;
+            [[nodiscard]] VkExtent3D get_extent() const override;
 
-            VulkanTexture(
-                VulkanDevice& device,
-                VkExtent3D extent,
-                VkFormat image_format);
+            // Vulkan Image View
+            [[nodiscard]] VkImageView get_vk_image_view() const override;
 
-            // Image
-            VkImage get_vk_image() const override;
-            VkMemoryRequirements get_memory_requirements() const override;
-            VkExtent3D get_extent() const override;
-
-            // View
-            VkImageView get_vk_image_view() const override;
-
-            // Sampler
-            VkSampler get_vk_image_sampler() const override;
+            // Vulkan Sampler
+            [[nodiscard]] VkSampler get_vk_image_sampler() const override;
     };
 }
 

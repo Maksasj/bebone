@@ -14,11 +14,11 @@ namespace bebone::gfx {
             VkDescriptorSetLayout backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         public:
             VulkanDescriptorSetLayout( // Todo move to private
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 const std::vector<VulkanDescriptorSetLayoutBinding>& all_bindings);
 
             ~VulkanDescriptorSetLayout();

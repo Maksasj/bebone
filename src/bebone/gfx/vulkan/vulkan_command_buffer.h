@@ -21,12 +21,12 @@ namespace bebone::gfx {
             VkCommandBuffer backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         public:
             using Self = VulkanCommandBuffer;
 
-            VulkanCommandBuffer(VulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool);
+            VulkanCommandBuffer(IVulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool);
 
             Self& begin_record();
             Self& end_record();

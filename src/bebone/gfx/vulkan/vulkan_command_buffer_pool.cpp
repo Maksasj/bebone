@@ -1,7 +1,7 @@
 #include "vulkan_command_buffer_pool.h"
 
 namespace bebone::gfx {
-    VulkanCommandBufferPool::VulkanCommandBufferPool(VulkanDevice& device) : device_owner(device) {
+    VulkanCommandBufferPool::VulkanCommandBufferPool(IVulkanDevice& device) : device_owner(device) {
         VulkanQueueFamilyIndices queue_family_indices = device.find_physical_queue_families();
 
         VkCommandPoolCreateInfo pool_info = {};
@@ -9,7 +9,7 @@ namespace bebone::gfx {
         pool_info.queueFamilyIndex = queue_family_indices.graphics_family;
         pool_info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-        if (vkCreateCommandPool(device.device, &pool_info, nullptr, &backend) != VK_SUCCESS) {
+        if (vkCreateCommandPool(device_owner.get_vk_device(), &pool_info, nullptr, &backend) != VK_SUCCESS) {
             LOG_ERROR("Failed to create command pool");
             throw std::runtime_error("failed to create command pool!");
         }
@@ -20,7 +20,7 @@ namespace bebone::gfx {
     VulkanCommandBufferPool::~VulkanCommandBufferPool() {
         device_owner.wait_idle();
 
-        vkDestroyCommandPool(device_owner.device, backend, nullptr);
+        vkDestroyCommandPool(device_owner.get_vk_device(), backend, nullptr);
 
         LOG_TRACE("Destroyed command buffer pool");
     }
@@ -51,7 +51,7 @@ namespace bebone::gfx {
         alloc_info.commandBufferCount = 1;
 
         VkCommandBuffer command_buffer;
-        vkAllocateCommandBuffers(device_owner.device, &alloc_info, &command_buffer);
+        vkAllocateCommandBuffers(device_owner.get_vk_device(), &alloc_info, &command_buffer);
 
         VkCommandBufferBeginInfo begin_info{};
         begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -71,10 +71,10 @@ namespace bebone::gfx {
         submit_info.commandBufferCount = 1;
         submit_info.pCommandBuffers = &command_buffer;
 
-        vkQueueSubmit(device_owner.graphics_queue, 1, &submit_info, VK_NULL_HANDLE);
-        vkQueueWaitIdle(device_owner.graphics_queue);
+        vkQueueSubmit(device_owner.get_graphics_queue(), 1, &submit_info, VK_NULL_HANDLE);
+        vkQueueWaitIdle(device_owner.get_graphics_queue());
 
-        vkFreeCommandBuffers(device_owner.device, backend, 1, &command_buffer);
+        vkFreeCommandBuffers(device_owner.get_vk_device(), backend, 1, &command_buffer);
     }
 
     // void copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {

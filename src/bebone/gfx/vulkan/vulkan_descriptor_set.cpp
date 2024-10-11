@@ -6,7 +6,7 @@
 
 namespace bebone::gfx {
     VulkanDescriptorSet::VulkanDescriptorSet(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         VulkanDescriptorPool& descriptor_pool,
         const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout
     ) : device_owner(device) {
@@ -27,7 +27,7 @@ namespace bebone::gfx {
         count_info.pDescriptorCounts = &max_binding;
         alloc_info.pNext = &count_info; // Todo
 
-        if (vkAllocateDescriptorSets(device.device, &alloc_info, &backend) != VK_SUCCESS) {
+        if (vkAllocateDescriptorSets(device_owner.get_vk_device(), &alloc_info, &backend) != VK_SUCCESS) {
             LOG_ERROR("Failed to allocate descriptor sets");
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
@@ -62,7 +62,7 @@ void VulkanDescriptorSet::update_descriptor_set(
         descriptor_write.pImageInfo = nullptr; // Optional
         descriptor_write.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(device_owner.device, 1, &descriptor_write, 0, nullptr);
+        vkUpdateDescriptorSets(device_owner.get_vk_device(), 1, &descriptor_write, 0, nullptr);
     }
 
     void VulkanDescriptorSet::update_descriptor_set(
@@ -91,6 +91,6 @@ void VulkanDescriptorSet::update_descriptor_set(
         // descriptorWrite.pImageInfo = nullptr; // Optional
         descriptor_write.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(device_owner.device, 1, &descriptor_write, 0, nullptr);
+        vkUpdateDescriptorSets(device_owner.get_vk_device(), 1, &descriptor_write, 0, nullptr);
     }
 }

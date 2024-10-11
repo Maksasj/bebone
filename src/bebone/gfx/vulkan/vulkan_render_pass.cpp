@@ -2,7 +2,7 @@
 
 namespace bebone::gfx {
     VulkanRenderPass::VulkanRenderPass(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         VkExtent2D extent,
         const std::vector<VulkanAttachmentDesc>& attachments
     ) : device_owner(device), attachments(attachments), depth_attachment_index(0), has_depth_attachment_flag(false), color_attachment_count(0), extent(extent) {
@@ -63,7 +63,7 @@ namespace bebone::gfx {
         render_pass_info.dependencyCount = 1;
         render_pass_info.pDependencies = &dependency;
 
-        if(vkCreateRenderPass(device.device, &render_pass_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateRenderPass(device_owner.get_vk_device(), &render_pass_info, nullptr, &backend) != VK_SUCCESS) {
             LOG_ERROR("Failed to create render pass");
             throw std::runtime_error("failed to create render pass!");
         }
@@ -72,7 +72,7 @@ namespace bebone::gfx {
     }
 
     VulkanRenderPass::~VulkanRenderPass() {
-        vkDestroyRenderPass(device_owner.device, backend, nullptr);
+        vkDestroyRenderPass(device_owner.get_vk_device(), backend, nullptr);
 
         LOG_TRACE("Destroyed Vulkan render pass");
     }

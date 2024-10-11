@@ -18,19 +18,21 @@ namespace bebone::gfx {
 
     struct VulkanSwapChainImage : public IVulkanImage, public IVulkanImageView {
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
             VkImage image;
 
             std::unique_ptr<VulkanImageView> view;
 
         public:
-            VulkanSwapChainImage(VulkanDevice& device, VkImage vk_image, VkFormat image_format);
+            VulkanSwapChainImage(IVulkanDevice& device, VkImage vk_image, VkFormat image_format);
             ~VulkanSwapChainImage();
 
+            // Vulkan Image
             [[nodiscard]] VkImage get_vk_image() const override;
             [[nodiscard]] VkMemoryRequirements get_memory_requirements() const override;
             [[nodiscard]] VkExtent3D get_extent() const override;
 
+            // Vulkan Image View
             [[nodiscard]] VkImageView get_vk_image_view() const override;
     };
 }

@@ -5,10 +5,11 @@
 #include "vulkan_device_memory.h"
 #include "vulkan_swap_chain.h"
 #include "vulkan_depth_image.h"
+#include "vulkan_framebuffer.h"
 
 namespace bebone::gfx {
     VulkanRenderTarget::VulkanRenderTarget(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         std::unique_ptr<VulkanRenderPass>& render_pass
     ) {
         // Create color attachments
@@ -60,7 +61,7 @@ namespace bebone::gfx {
             if(!depth_attachments.empty())
                 attachments.push_back(std::move(depth_attachments[i]));
 
-            auto framebuffer = device.create_framebuffer(attachments, render_pass, render_pass->get_extent());
+            auto framebuffer = std::make_unique<VulkanFramebuffer>(device, attachments, render_pass, render_pass->get_extent());
             framebuffers.push_back(std::move(framebuffer));
         }
 
@@ -68,7 +69,7 @@ namespace bebone::gfx {
     }
 
     VulkanRenderTarget::VulkanRenderTarget(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         std::unique_ptr<VulkanRenderPass>& render_pass,
         std::vector<std::unique_ptr<VulkanSwapChainImage>>& images
     ) {
@@ -99,7 +100,7 @@ namespace bebone::gfx {
             if(!depth_attachments.empty())
                 attachments.push_back(std::move(depth_attachments[i]));
 
-            auto framebuffer = device.create_framebuffer(attachments, render_pass, render_pass->get_extent());
+            auto framebuffer = std::make_unique<VulkanFramebuffer>(device, attachments, render_pass, render_pass->get_extent());
 
             framebuffers.push_back(std::move(framebuffer));
 

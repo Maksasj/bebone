@@ -15,10 +15,10 @@ namespace bebone::gfx {
             VkCommandPool backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         public:
-            VulkanCommandBufferPool(VulkanDevice& device);
+            VulkanCommandBufferPool(IVulkanDevice& device);
             ~VulkanCommandBufferPool();
 
             std::unique_ptr<VulkanCommandBuffer> create_command_buffer();

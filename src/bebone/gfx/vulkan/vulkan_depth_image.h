@@ -16,20 +16,22 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    class VulkanDepthImage : public IVulkanImage, public IVulkanImageView {
+    class VulkanDepthImage : public IVulkanImage, public IVulkanImageView, private core::NonCopyable{
         private:
             std::unique_ptr<VulkanImage> image;
             std::unique_ptr<VulkanImageView> view;
             std::unique_ptr<VulkanDeviceMemory> memory;
 
         public:
-            VulkanDepthImage(VulkanDevice& device, VkExtent3D extent);
+            VulkanDepthImage(IVulkanDevice& device, VkExtent3D extent);
 
-            VkImage get_vk_image() const override;
-            VkMemoryRequirements get_memory_requirements() const override;
-            VkExtent3D get_extent() const override;
+            // Vulkan Image
+            [[nodiscard]] VkImage get_vk_image() const override;
+            [[nodiscard]] VkMemoryRequirements get_memory_requirements() const override;
+            [[nodiscard]] VkExtent3D get_extent() const override;
 
-            VkImageView get_vk_image_view() const override;
+            // Vulkan Image View
+            [[nodiscard]] VkImageView get_vk_image_view() const override;
     };
 }
 

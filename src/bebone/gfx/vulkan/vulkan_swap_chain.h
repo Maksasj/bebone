@@ -24,7 +24,7 @@ namespace bebone::gfx {
             VkSwapchainKHR backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         protected:
             VkExtent2D extent;
@@ -43,14 +43,14 @@ namespace bebone::gfx {
             static VkPresentModeKHR choose_swap_present_mode(const std::vector<VkPresentModeKHR> &available_present_modes);
             static VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR &capabilities, VkExtent2D window_extent);
 
-            void create_swap_chain(VulkanDevice& device);
-            void create_sync_objects(VulkanDevice& device);
+            void create_swap_chain(IVulkanDevice& device);
+            void create_sync_objects(IVulkanDevice& device);
 
-            std::vector<std::unique_ptr<VulkanSwapChainImage>> create_swap_chain_images(VulkanDevice& device, VkFormat image_format);
+            std::vector<std::unique_ptr<VulkanSwapChainImage>> create_swap_chain_images(IVulkanDevice& device, VkFormat image_format);
 
     public:
-            VulkanSwapChain(VulkanDevice& device, VkExtent2D window_extent);
-            VulkanSwapChain(VulkanDevice& device, std::unique_ptr<Window> &window);
+            VulkanSwapChain(IVulkanDevice& device, VkExtent2D window_extent);
+            VulkanSwapChain(IVulkanDevice& device, std::unique_ptr<Window> &window);
 
             ~VulkanSwapChain();
 

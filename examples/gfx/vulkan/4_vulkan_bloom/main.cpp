@@ -36,7 +36,7 @@ int main() {
         VulkanAttachmentDesc::depth2D({ 800,600 }, { .format = device->find_depth_format() }),
     });
 
-    auto geometry_render_target = device->create_render_target(geometry_render_pass);
+    auto geometry_render_target = std::unique_ptr<VulkanRenderTarget>(device, geometry_render_pass);
 
     auto geometry_pipeline = pipeline_manager->create_pipeline(
         device, geometry_render_pass, "geometry.vert.glsl", "geometry.frag.glsl",

@@ -9,20 +9,22 @@
 #include "../shaders/shader_type.h"
 #include "../shaders/spirv_shader_compiler.h"
 
-namespace bebone::gfx {
-    class VulkanDevice;
+#include "interface/i_vulkan_device.h"
 
+namespace bebone::gfx {
     class VulkanShaderModule : private core::NonCopyable {
         public:
             VkShaderModule backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         public:
             ShaderType type;
 
-            VulkanShaderModule(VulkanDevice& device, const ShaderCode& code);
+            VulkanShaderModule(IVulkanDevice& device, const ShaderCode& code);
+            VulkanShaderModule(IVulkanDevice& device, const std::string& source_code, const ShaderType& type);
+
             ~VulkanShaderModule();
     };
 }

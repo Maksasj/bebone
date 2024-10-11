@@ -2,7 +2,7 @@
 
 namespace bebone::renderer {
     VulkanTriangleMeshImpl::VulkanTriangleMeshImpl(
-        VulkanDevice& device, const std::vector<Vertex>& vertices, const std::vector<u32>& indices
+        IVulkanDevice& device, const std::vector<Vertex>& vertices, const std::vector<u32>& indices
     ) : indices_count(indices.size()), device(device) {
         this->vertices = device.create_buffer_memory_from(vertices);
         this->indices = device.create_buffer_memory_from(indices);

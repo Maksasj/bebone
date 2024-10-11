@@ -7,7 +7,7 @@
 
 namespace bebone::gfx {
     VulkanDeviceMemory::VulkanDeviceMemory(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         VkMemoryRequirements requirements,
         VkMemoryPropertyFlags properties
     ) : device_owner(device) {
@@ -17,7 +17,7 @@ namespace bebone::gfx {
         alloc_info.allocationSize = requirements.size;
         alloc_info.memoryTypeIndex = device.find_memory_type(requirements.memoryTypeBits, properties);
 
-        if (vkAllocateMemory(device.device, &alloc_info, nullptr, &device_memory) != VK_SUCCESS) {
+        if (vkAllocateMemory(device_owner.get_vk_device(), &alloc_info, nullptr, &device_memory) != VK_SUCCESS) {
             LOG_ERROR("Failed to allocate vulkan buffer memory");
             throw std::runtime_error("failed to allocate vulkan buffer memory!");
         }
@@ -26,14 +26,14 @@ namespace bebone::gfx {
     }
 
     VulkanDeviceMemory::~VulkanDeviceMemory() {
-        vkFreeMemory(device_owner.device, device_memory, nullptr);
+        vkFreeMemory(device_owner.get_vk_device(), device_memory, nullptr);
 
         LOG_TRACE("Freed Vulkan device memory");
     }
 
     void VulkanDeviceMemory::bind_buffer_memory(VulkanBuffer& buffer) {
         auto vk_buffer = buffer.get_vk_buffer();
-        vkBindBufferMemory(device_owner.device, vk_buffer, device_memory, 0);
+        vkBindBufferMemory(device_owner.get_vk_device(), vk_buffer, device_memory, 0);
     }
 
     void VulkanDeviceMemory::bind_buffer_memory(std::unique_ptr<VulkanBuffer>& buffer) {
@@ -42,7 +42,7 @@ namespace bebone::gfx {
 
     void VulkanDeviceMemory::bind_image_memory(VulkanImage& image) {
         auto vk_image = image.get_vk_image();
-        vkBindImageMemory(device_owner.device, vk_image, device_memory, 0);
+        vkBindImageMemory(device_owner.get_vk_device(), vk_image, device_memory, 0);
     }
 
     void VulkanDeviceMemory::bind_image_memory(std::unique_ptr<VulkanImage>& image) {
@@ -50,11 +50,11 @@ namespace bebone::gfx {
     }
 
     void VulkanDeviceMemory::map(const size_t& size, void** data) {
-        vkMapMemory(device_owner.device, device_memory, 0, size, 0, data);
+        vkMapMemory(device_owner.get_vk_device(), device_memory, 0, size, 0, data);
     }
 
     void VulkanDeviceMemory::unmap() {
-        vkUnmapMemory(device_owner.device, device_memory);
+        vkUnmapMemory(device_owner.get_vk_device(), device_memory);
     }
 
     void VulkanDeviceMemory::upload_data(const void* src, const size_t& size) {

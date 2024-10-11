@@ -5,7 +5,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanSampler::VulkanSampler(VulkanDevice& device) : device_owner(device) {
+    VulkanSampler::VulkanSampler(IVulkanDevice& device) : device_owner(device) {
         VkSamplerCreateInfo sampler_info{};
 
         sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -24,14 +24,14 @@ namespace bebone::gfx {
         sampler_info.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
         // Todo
-        vkCreateSampler(device.device, &sampler_info, nullptr, &sampler);
+        vkCreateSampler(device_owner.get_vk_device(), &sampler_info, nullptr, &sampler);
         LOG_WARNING("vkCreateSampler result is not handled");
 
         LOG_TRACE("Created Vulkan sampler");
     }
 
     VulkanSampler::~VulkanSampler() {
-        vkDestroySampler(device_owner.device, sampler, nullptr);
+        vkDestroySampler(device_owner.get_vk_device(), sampler, nullptr);
 
         LOG_TRACE("Destroyed Vulkan sampler");
     }

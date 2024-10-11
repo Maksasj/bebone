@@ -1,7 +1,7 @@
 #include "vulkan_triangle_mesh_builder.h"
 
 namespace bebone::renderer {
-    VulkanTriangleMeshBuilder::VulkanTriangleMeshBuilder(VulkanDevice& device) : device(device), index_offset(0) {
+    VulkanTriangleMeshBuilder::VulkanTriangleMeshBuilder(IVulkanDevice& device) : device(device), index_offset(0) {
 
     }
 

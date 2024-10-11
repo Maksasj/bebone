@@ -5,7 +5,7 @@
 
 namespace bebone::gfx {
     VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         const std::vector<VulkanDescriptorSetLayoutBinding>& all_bindings
     ) : device_owner(device) {
         auto binding_flags = std::vector<VkDescriptorBindingFlags> {};
@@ -53,7 +53,7 @@ namespace bebone::gfx {
 
         layout_info.pNext = &extended_info;
 
-        if(vkCreateDescriptorSetLayout(device.device, &layout_info, nullptr, &backend) != VK_SUCCESS) {
+        if(vkCreateDescriptorSetLayout(device_owner.get_vk_device(), &layout_info, nullptr, &backend) != VK_SUCCESS) {
             LOG_ERROR("Failed to create descriptor set layout");
             throw std::runtime_error("failed to create descriptor set layout!");
         }
@@ -62,7 +62,7 @@ namespace bebone::gfx {
     }
 
     VulkanDescriptorSetLayout::~VulkanDescriptorSetLayout() {
-        vkDestroyDescriptorSetLayout(device_owner.device, backend, nullptr);
+        vkDestroyDescriptorSetLayout(device_owner.get_vk_device(), backend, nullptr);
 
         LOG_TRACE("Destroyed Descriptor set layout");
     }

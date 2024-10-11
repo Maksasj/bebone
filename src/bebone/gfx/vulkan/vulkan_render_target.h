@@ -22,11 +22,11 @@ namespace bebone::gfx {
 
             // This is still just a swap chain render target constructor
             VulkanRenderTarget(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 std::unique_ptr<VulkanRenderPass>& render_pass);
 
             VulkanRenderTarget(
-                VulkanDevice& device,
+                IVulkanDevice& device,
                 std::unique_ptr<VulkanRenderPass>& render_pass,
                 std::vector<std::unique_ptr<VulkanSwapChainImage>>& images);
 

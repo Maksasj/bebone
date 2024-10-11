@@ -16,10 +16,10 @@ namespace bebone::gfx {
             VkDescriptorPool backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         public:
-            VulkanDescriptorPool(VulkanDevice& device);
+            VulkanDescriptorPool(IVulkanDevice& device);
             ~VulkanDescriptorPool();
 
             std::unique_ptr<VulkanDescriptorSet> create_descriptor(const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);

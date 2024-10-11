@@ -14,7 +14,7 @@ namespace bebone::gfx {
             VkRenderPass backend;
 
         private:
-            VulkanDevice& device_owner;
+            IVulkanDevice& device_owner;
 
         private:
             vector<VulkanAttachmentDesc> attachments;
@@ -28,7 +28,7 @@ namespace bebone::gfx {
             VkExtent2D extent;
 
         public:
-            VulkanRenderPass(VulkanDevice& device, VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
+            VulkanRenderPass(IVulkanDevice& device, VkExtent2D extent, const std::vector<VulkanAttachmentDesc>& attachments);
             ~VulkanRenderPass();
 
             std::optional<VulkanAttachmentDesc> get_depth_attachment() const;

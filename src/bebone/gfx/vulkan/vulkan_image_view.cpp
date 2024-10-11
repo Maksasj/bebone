@@ -6,7 +6,7 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImageView::VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) : device_owner(device) {
+    VulkanImageView::VulkanImageView(IVulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) : device_owner(device) {
         VkImageViewCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -25,7 +25,7 @@ namespace bebone::gfx {
                 .layerCount = image_view_info.subresource_range.layer_count
         };
 
-        if(vkCreateImageView(device.device, &create_info, nullptr, &image_view) != VK_SUCCESS) {
+        if(vkCreateImageView(device_owner.get_vk_device(), &create_info, nullptr, &image_view) != VK_SUCCESS) {
             LOG_ERROR("Failed to create texture image view");
             throw std::runtime_error("failed to create texture image view!");
         }
@@ -33,7 +33,7 @@ namespace bebone::gfx {
         LOG_TRACE("Created Vulkan image view");
     }
 
-    VulkanImageView::VulkanImageView(VulkanDevice& device, VkImage image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) : device_owner(device) {
+    VulkanImageView::VulkanImageView(IVulkanDevice& device, VkImage image, const VkFormat& image_format, VulkanImageViewInfo image_view_info) : device_owner(device) {
         VkImageViewCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -52,7 +52,7 @@ namespace bebone::gfx {
             .layerCount = image_view_info.subresource_range.layer_count
         };
 
-        if(vkCreateImageView(device.device, &create_info, nullptr, &image_view) != VK_SUCCESS) {
+        if(vkCreateImageView(device_owner.get_vk_device(), &create_info, nullptr, &image_view) != VK_SUCCESS) {
             LOG_ERROR("Failed to create texture image view");
             throw std::runtime_error("failed to create texture image view!");
         }
@@ -61,7 +61,7 @@ namespace bebone::gfx {
     }
 
     VulkanImageView::~VulkanImageView() {
-        vkDestroyImageView(device_owner.device, image_view, nullptr);
+        vkDestroyImageView(device_owner.get_vk_device(), image_view, nullptr);
         LOG_DEBUG("Destroyed Vulkan image view");
     }
 

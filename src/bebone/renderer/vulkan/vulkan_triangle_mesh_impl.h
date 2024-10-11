@@ -15,14 +15,14 @@ namespace bebone::renderer {
             u64 indices_count;
 
         protected:
-            VulkanDevice& device;
+            IVulkanDevice& device;
 
             // This should be an IVertexBuffer and IIndexBuffer
             optional<shared_ptr<VulkanBufferMemory>> vertices;
             optional<shared_ptr<VulkanBufferMemory>> indices;
 
         public:
-            VulkanTriangleMeshImpl(VulkanDevice& device, const std::vector<Vertex>& vertices, const std::vector<u32>& indices);
+            VulkanTriangleMeshImpl(IVulkanDevice& device, const std::vector<Vertex>& vertices, const std::vector<u32>& indices);
 
             u64 get_triangle_count() const override;
             u64 get_vertex_count() const override;
