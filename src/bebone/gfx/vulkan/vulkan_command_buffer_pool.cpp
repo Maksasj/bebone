@@ -77,20 +77,6 @@ namespace bebone::gfx {
         vkFreeCommandBuffers(device_owner.device, backend, 1, &command_buffer);
     }
 
-    /*
-    void VulkanCommandBufferPool::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        vkDestroyCommandPool(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed command buffer pool");
-
-        mark_destroyed();
-    }
-    */
-
-
     // void copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
     //     VkCommandBuffer command_buffer = begin_single_time_commands();
 //

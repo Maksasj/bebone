@@ -53,17 +53,4 @@ namespace bebone::gfx {
 
         return descriptors;
     }
-
-    /*
-    void VulkanDescriptorPool::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-        
-        vkDestroyDescriptorPool(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed Descriptor pool");
-
-        mark_destroyed();
-    }
-    */
 }

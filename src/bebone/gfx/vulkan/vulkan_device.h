@@ -14,8 +14,6 @@
 #include "vulkan_instance.h"
 #include "vulkan_device_chooser.h"
 
-#include "vulkan_buffer.h"
-#include "vulkan_image.h"
 #include "vulkan_sampler.h"
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
@@ -64,40 +62,13 @@ namespace bebone::gfx {
             VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window);
             ~VulkanDevice();
 
-            std::unique_ptr<VulkanDeviceMemory> create_device_memory(
-                VkMemoryRequirements requirements,
-                VkMemoryPropertyFlags properties);
-
-            std::vector<std::unique_ptr<VulkanBuffer>> create_buffers(
-                const size_t& size,
-                const size_t& count,
-                VulkanBufferInfo buffer_info = {});
-
-            std::unique_ptr<VulkanImage> create_image(VkImage& image);
-            std::unique_ptr<VulkanImage> create_image(VkFormat format, VkExtent3D extent, VulkanImageInfo image_info = {});
-
-            std::unique_ptr<VulkanImageView> create_image_view(VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
-
-            std::unique_ptr<VulkanSampler> create_sampler();
-
             std::unique_ptr<VulkanDescriptorPool> create_descriptor_pool();
 
             std::unique_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
                 const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
 
             // Update descriptor set for single
-            void update_descriptor_set(
-                IVulkanBuffer& buffer,
-                std::unique_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element);
 
-            void update_descriptor_set(
-                IVulkanSampler& sampler,
-                IVulkanImageView& view,
-                std::unique_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element);
 
             // Update descriptor sets for multiple descriptors
             /*
@@ -164,14 +135,11 @@ namespace bebone::gfx {
             std::unique_ptr<VulkanCommandBuffer> begin_single_time_commands();
             void end_single_time_commands(std::unique_ptr<VulkanCommandBuffer>& command_buffer);
 
-            std::unique_ptr<VulkanShaderModule> create_shader_module(
-                const std::string& source_code,
-                const ShaderType& type);
+            std::unique_ptr<VulkanShaderModule> create_shader_module(const std::string& source_code, const ShaderType& type);
 
             std::unique_ptr<VulkanPipelineManager> create_pipeline_manager();
 
-            std::unique_ptr<VulkanRenderTarget> create_render_target(
-                std::unique_ptr<VulkanRenderPass>& render_pass);
+            std::unique_ptr<VulkanRenderTarget> create_render_target(std::unique_ptr<VulkanRenderPass>& render_pass);
 
             // Special constructor for swap chain
             std::unique_ptr<VulkanRenderTarget> create_render_target(
@@ -188,29 +156,6 @@ namespace bebone::gfx {
             VulkanSwapChainSupportDetails get_swap_chain_support() { return VulkanDeviceChooser::query_swap_chain_support(physical_device, surface); }
 
             VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-
-            /*
-            template <typename... Args>
-            void destroy_all(Args... args) {
-                (args.destroy(*this), ...);
-            }
-
-            template <typename... Args>
-            void destroy_all(std::unique_ptr<Args>... args) {
-                (args->destroy(*this), ...);
-            }
-
-            template <typename... Args>
-            void destroy_all(std::vector<std::unique_ptr<Args>>... args) {
-                for(auto& arg : (args, ...)) {
-                    arg->destroy(*this);
-                }
-            }
-
-            void collect_garbage();
-
-            void destroy(VulkanInstance& instance);
-            */
 
             VkFormat find_depth_format();
     };

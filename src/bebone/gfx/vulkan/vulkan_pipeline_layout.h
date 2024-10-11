@@ -23,8 +23,6 @@ namespace bebone::gfx {
                 const std::vector<VulkanConstRange>& constant_ranges);
 
             ~VulkanPipelineLayout();
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

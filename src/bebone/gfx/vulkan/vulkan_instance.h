@@ -31,11 +31,6 @@ namespace bebone::gfx {
 
             std::unique_ptr<VulkanDevice> create_device(std::unique_ptr<Window>& window);
             const std::vector<const char *> validation_layers = { "VK_LAYER_KHRONOS_validation" };
-
-            /*
-            void destroy_all(std::unique_ptr<VulkanDevice>& device);
-            void destroy();
-            */
     };
 }
 

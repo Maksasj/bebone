@@ -32,7 +32,7 @@ namespace bebone::gfx {
     }
 
     void VulkanDeviceMemory::bind_buffer_memory(VulkanBuffer& buffer) {
-        auto vk_buffer = buffer.get_vulkan_buffer();
+        auto vk_buffer = buffer.get_vk_buffer();
         vkBindBufferMemory(device_owner.device, vk_buffer, device_memory, 0);
     }
 
@@ -41,7 +41,7 @@ namespace bebone::gfx {
     }
 
     void VulkanDeviceMemory::bind_image_memory(VulkanImage& image) {
-        auto vk_image = image.get_vulkan_image();
+        auto vk_image = image.get_vk_image();
         vkBindImageMemory(device_owner.device, vk_image, device_memory, 0);
     }
 
@@ -65,7 +65,7 @@ namespace bebone::gfx {
         unmap();
     }
 
-    VkDeviceMemory VulkanDeviceMemory::get_vulkan_device_memory() const {
+    VkDeviceMemory VulkanDeviceMemory::get_vk_device_memory() const {
         return device_memory;
     }
 }

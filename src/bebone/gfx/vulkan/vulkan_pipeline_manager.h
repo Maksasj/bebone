@@ -15,7 +15,7 @@ namespace bebone::gfx {
 
     class VulkanPipelineManager : private core::NonCopyable {
         private:
-            VulkanDevice& device;
+            VulkanDevice& device_owner;
 
         private:
             std::unique_ptr<VulkanDescriptorPool> descriptor_pool;
@@ -39,20 +39,16 @@ namespace bebone::gfx {
             ~VulkanPipelineManager();
 
             std::unique_ptr<VulkanPipeline> create_pipeline(
-                std::unique_ptr<VulkanDevice>& device, // Todo  REMOVE THIS
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
                 std::unique_ptr<VulkanShaderModule> vertex_shader_module,
                 std::unique_ptr<VulkanShaderModule> fragment_shader_module,
-                VulkanPipelineConfig config_info
-            );
+                VulkanPipelineConfig config_info = {});
 
             std::unique_ptr<VulkanPipeline> create_pipeline(
-                std::unique_ptr<VulkanDevice>& device,
                 const std::unique_ptr<VulkanRenderPass>& render_pass,
                 const std::string& vertex_shader_file_path,
                 const std::string& fragment_shader_file_path,
-                VulkanPipelineConfig config_info
-            );
+                VulkanPipelineConfig config_info = {});
 
             /*
             VulkanBindlessTextureHandle bind_texture(
@@ -73,9 +69,7 @@ namespace bebone::gfx {
                 std::vector<std::unique_ptr<IVulkanAttachment>>& attachments);
             */
 
-            VulkanBindlessBufferHandle bind_uniform_buffer(
-                std::unique_ptr<VulkanDevice>& device,
-                IVulkanBuffer& buffer);
+            VulkanBindlessBufferHandle bind_uniform_buffer(IVulkanBuffer& buffer);
 
             /*
             std::vector<VulkanBindlessBufferHandle> bind_uniform_buffers(
@@ -86,8 +80,6 @@ namespace bebone::gfx {
             [[nodiscard]] const std::unique_ptr<VulkanDescriptorSet>& get_descriptor_set() const;
             [[nodiscard]] const std::unique_ptr<VulkanDescriptorSetLayout>& get_descriptor_set_layout() const;
             [[nodiscard]] const std::unique_ptr<VulkanPipelineLayout>& get_pipeline_layout() const;
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

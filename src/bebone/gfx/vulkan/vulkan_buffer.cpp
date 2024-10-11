@@ -52,7 +52,7 @@ namespace bebone::gfx {
         region.imageOffset = { 0, 0, 0 };
         region.imageExtent = image.get_extent();
 
-        auto vk_image = image.get_vulkan_image();
+        auto vk_image = image.get_vk_image();
         vkCmdCopyBufferToImage(command_buffer->backend, buffer, vk_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
         device_owner.end_single_time_commands(command_buffer);
@@ -66,7 +66,7 @@ namespace bebone::gfx {
         return requirements;
     }
 
-    VkBuffer VulkanBuffer::get_vulkan_buffer() const {
+    VkBuffer VulkanBuffer::get_vk_buffer() const {
         return buffer;
     }
 

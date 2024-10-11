@@ -24,7 +24,7 @@ namespace bebone::gfx {
             VulkanSampler(VulkanDevice& device);
             ~VulkanSampler();
 
-            VkSampler get_vulkan_image_sampler() const override;
+            VkSampler get_vk_image_sampler() const override;
     };
 }
 

@@ -6,16 +6,12 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImage::VulkanImage(VulkanDevice& device, const VkImage& arg) : device_owner(device), swap_chain(true) {
-        this->image = arg;
-    }
-
     VulkanImage::VulkanImage(
         VulkanDevice& device,
         VkFormat format,
         VkExtent3D extent,
         VulkanImageInfo image_info
-    ) : device_owner(device), swap_chain(false), extent(extent) {
+    ) : device_owner(device), extent(extent) {
         VkImageCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -43,9 +39,7 @@ namespace bebone::gfx {
     }
 
     VulkanImage::~VulkanImage() {
-        if(!swap_chain)
-            vkDestroyImage(device_owner.device, image, nullptr);
-
+        vkDestroyImage(device_owner.device, image, nullptr);
         LOG_DEBUG("Destroyed Vulkan image");
     };
 
@@ -95,7 +89,7 @@ namespace bebone::gfx {
         device_owner.end_single_time_commands(command_buffer);
     }
 
-    VkImage VulkanImage::get_vulkan_image() const {
+    VkImage VulkanImage::get_vk_image() const {
         return image;
     }
 

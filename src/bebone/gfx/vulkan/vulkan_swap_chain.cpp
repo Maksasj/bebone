@@ -159,12 +159,8 @@ namespace bebone::gfx {
 
         vkGetSwapchainImagesKHR(device.device, backend, &image_count, images.data());
 
-        for(auto& vk_image : images) {
-            auto image = device.create_image(vk_image);
-            auto view = device.create_image_view(*image, image_format);
-
-            out.push_back(std::make_unique<VulkanSwapChainImage>(image, view));
-        }
+        for(auto& vk_image : images)
+            out.push_back(std::make_unique<VulkanSwapChainImage>(device, vk_image, image_format));
 
         return out;
     }
@@ -285,26 +281,4 @@ namespace bebone::gfx {
             return actual_extent;
         }
     }
-
-    /*
-    void VulkanSwapChain::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        render_target->destroy(device);
-
-        // Todo move this somewhere else
-        for (size_t i = 0; i < image_count; i++) {
-            vkDestroySemaphore(device.device, render_finished_semaphores[i], nullptr);
-            vkDestroySemaphore(device.device, image_available_semaphores[i], nullptr);
-            vkDestroyFence(device.device, in_flight_fences[i], nullptr);
-        }
-
-        vkDestroySwapchainKHR(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan swap chain");
-
-        mark_destroyed();
-    }
-    */
 }

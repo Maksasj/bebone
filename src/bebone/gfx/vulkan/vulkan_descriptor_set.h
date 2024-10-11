@@ -5,6 +5,10 @@
 
 #include "../gfx_backend.h"
 
+#include "interface/i_vulkan_buffer.h"
+#include "interface/i_vulkan_sampler.h"
+#include "interface/i_vulkan_image_view.h"
+
 namespace bebone::gfx {
     class VulkanDevice;
     class VulkanDescriptorPool;
@@ -12,6 +16,7 @@ namespace bebone::gfx {
 
     class VulkanDescriptorSet : private core::NonCopyable {
         public:
+            VulkanDevice& device_owner;
             VkDescriptorSet backend;
 
         public:
@@ -20,7 +25,8 @@ namespace bebone::gfx {
                 VulkanDescriptorPool& descriptor_pool,
                 const std::unique_ptr<VulkanDescriptorSetLayout>& descriptor_set_layout);
 
-            // void destroy(VulkanDevice& device) override;
+            void update_descriptor_set(IVulkanBuffer& buffer, const size_t& binding, const size_t& dst_array_element);
+            void update_descriptor_set(IVulkanSampler& sampler, IVulkanImageView& view, const size_t& binding, const size_t& dst_array_element);
     };
 }
 

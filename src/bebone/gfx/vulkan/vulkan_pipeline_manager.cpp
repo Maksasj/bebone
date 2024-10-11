@@ -10,7 +10,7 @@
 #include "vulkan_const_range.h"
 
 namespace bebone::gfx {
-    VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) : device(device), bindless_uniforms_index(0), bindless_storage_index(0), bindless_samplers_index(0) {
+    VulkanPipelineManager::VulkanPipelineManager(VulkanDevice& device) : device_owner(device), bindless_uniforms_index(0), bindless_storage_index(0), bindless_samplers_index(0) {
         descriptor_pool = device.create_descriptor_pool();
 
         const std::vector<VulkanDescriptorSetLayoutBinding> bindless_bindings = {
@@ -37,16 +37,10 @@ namespace bebone::gfx {
     }
 
     VulkanPipelineManager::~VulkanPipelineManager() {
-        // bindless_pipeline_layout->destroy(device);
-        // bindless_descriptor_set_layout->destroy(device);
-        // bindless_descriptor_set->destroy(device);
-        // descriptor_pool->destroy(device);
-
         LOG_DEBUG("Destroyed Vulkan pipeline manager");
     }
 
     std::unique_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
-        std::unique_ptr<VulkanDevice>& device,
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         std::unique_ptr<VulkanShaderModule> vertex_shader_module,
         std::unique_ptr<VulkanShaderModule> fragment_shader_module,
@@ -57,23 +51,19 @@ namespace bebone::gfx {
         shader_modules.push_back(std::move(vertex_shader_module));
         shader_modules.push_back(std::move(fragment_shader_module));
 
-        return device->create_pipeline(render_pass, *bindless_pipeline_layout, shader_modules, std::move(config_info));;
+        return device_owner.create_pipeline(render_pass, *bindless_pipeline_layout, shader_modules, std::move(config_info));;
     }
 
     std::unique_ptr<VulkanPipeline> VulkanPipelineManager::create_pipeline(
-        std::unique_ptr<VulkanDevice>& device,
         const std::unique_ptr<VulkanRenderPass>& render_pass,
         const std::string& vertex_shader_file_path,
         const std::string& fragment_shader_file_path,
         VulkanPipelineConfig config_info
     ) {
-        auto vert_shader_module = device->create_shader_module(utils_read_file(vertex_shader_file_path), ShaderType::VertexShader);
-        auto frag_shader_module = device->create_shader_module(utils_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
+        auto vert_shader_module = device_owner.create_shader_module(utils_read_file(vertex_shader_file_path), ShaderType::VertexShader);
+        auto frag_shader_module = device_owner.create_shader_module(utils_read_file(fragment_shader_file_path), ShaderType::FragmentShader);
 
-        auto pipeline = create_pipeline(device, render_pass, std::move(vert_shader_module), std::move(frag_shader_module), config_info);
-
-        // device->destroy_all(vert_shader_module, frag_shader_module);
-        // device->collect_garbage();
+        auto pipeline = create_pipeline(render_pass, std::move(vert_shader_module), std::move(frag_shader_module), config_info);
 
         return pipeline;
     }
@@ -142,13 +132,10 @@ namespace bebone::gfx {
     }
     */
 
-    VulkanBindlessBufferHandle VulkanPipelineManager::bind_uniform_buffer(
-        std::unique_ptr<VulkanDevice>& device,
-        IVulkanBuffer& buffer
-    ) {
+    VulkanBindlessBufferHandle VulkanPipelineManager::bind_uniform_buffer(IVulkanBuffer& buffer) {
         const auto handle = bindless_uniforms_index;
 
-        device->update_descriptor_set(buffer, bindless_descriptor_set, uniform_binding, bindless_uniforms_index);
+        bindless_descriptor_set->update_descriptor_set(buffer, uniform_binding, bindless_uniforms_index);
         ++bindless_uniforms_index;
 
         return static_cast<VulkanBindlessBufferHandle>(handle);
@@ -180,20 +167,4 @@ namespace bebone::gfx {
     const std::unique_ptr<VulkanPipelineLayout>& VulkanPipelineManager::get_pipeline_layout() const {
         return bindless_pipeline_layout;
     }
-
-    /*
-    void VulkanPipelineManager::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        bindless_pipeline_layout->destroy(device);
-        bindless_descriptor_set_layout->destroy(device);
-        bindless_descriptor_set->destroy(device);
-        descriptor_pool->destroy(device);
-
-        LOG_TRACE("Destroyed Vulkan pipeline manager");
-
-        mark_destroyed();
-    }
-    */
 }

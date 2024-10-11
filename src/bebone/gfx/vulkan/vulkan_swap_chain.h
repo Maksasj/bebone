@@ -66,8 +66,6 @@ namespace bebone::gfx {
             VulkanResult submit_present_command_buffers(
                 VulkanCommandBuffer& command_buffer,
                 uint32_t *image_index);
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

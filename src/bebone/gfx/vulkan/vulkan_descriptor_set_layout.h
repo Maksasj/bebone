@@ -22,8 +22,6 @@ namespace bebone::gfx {
                 const std::vector<VulkanDescriptorSetLayoutBinding>& all_bindings);
 
             ~VulkanDescriptorSetLayout();
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

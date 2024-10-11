@@ -10,7 +10,7 @@ namespace bebone::gfx {
 
     class IVulkanBuffer {
         public:
-            virtual VkBuffer get_vulkan_buffer() const = 0;
+            virtual VkBuffer get_vk_buffer() const = 0;
             virtual void copy_to_image(IVulkanImage& image) = 0;
             virtual size_t get_size() const = 0;
     };

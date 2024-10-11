@@ -252,17 +252,4 @@ namespace bebone::gfx {
     void VulkanPipeline::bind(VkCommandBuffer command_buffer) {
         vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, backend);
     }
-
-    /*
-    void VulkanPipeline::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        vkDestroyPipeline(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan graphics pipeline");
-
-        mark_destroyed();
-    }
-    */
 }

@@ -43,11 +43,11 @@ namespace bebone::gfx {
 
             void upload_data(const void* src, const size_t& size);
 
-            VkBuffer get_vulkan_buffer() const override;
+            VkBuffer get_vk_buffer() const override;
             void copy_to_image(IVulkanImage& image) override;
             size_t get_size() const override;
 
-            VkDeviceMemory get_vulkan_device_memory() const override;
+            VkDeviceMemory get_vk_device_memory() const override;
     };
 }
 

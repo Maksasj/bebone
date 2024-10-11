@@ -23,7 +23,7 @@ namespace bebone::gfx {
     public:
         VulkanImageMemory(unique_ptr<VulkanImage>& image, unique_ptr<VulkanDeviceMemory>& memory);
 
-        VkImage get_vulkan_image() const override;
+        VkImage get_vk_image() const override;
         VkMemoryRequirements get_memory_requirements() const override;
         VkExtent3D get_extent() const override;
     };

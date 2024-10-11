@@ -17,7 +17,7 @@ namespace bebone::gfx {
         attachments.reserve(attachment_views.size());
         
         for(auto& view : attachment_views)
-            attachments.push_back(view->get_vulkan_image_view());
+            attachments.push_back(view->get_vk_image_view());
 
         VkFramebufferCreateInfo create_info = {};
         create_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -41,17 +41,4 @@ namespace bebone::gfx {
 
         LOG_TRACE("Destroyed Vulkan framebuffer");
     }
-
-    /*
-    void VulkanFramebuffer::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-            
-        vkDestroyFramebuffer(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan framebuffer");
-
-        mark_destroyed();
-    }
-    */
 }

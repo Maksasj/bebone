@@ -163,7 +163,7 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_vertex_buffer(IVulkanBuffer& buffer) {
-        VkBuffer buffers[] = { buffer.get_vulkan_buffer() };
+        VkBuffer buffers[] = { buffer.get_vk_buffer() };
         VkDeviceSize offset[] = { 0 }; // Todo
 
         vkCmdBindVertexBuffers(backend, 0, 1, buffers, offset);
@@ -172,7 +172,7 @@ namespace bebone::gfx {
     }
 
     VulkanCommandBuffer& VulkanCommandBuffer::bind_index_buffer(IVulkanBuffer& buffer) {
-        vkCmdBindIndexBuffer(backend, buffer.get_vulkan_buffer(), 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(backend, buffer.get_vk_buffer(), 0, VK_INDEX_TYPE_UINT32);
 
         return *this;
     }
@@ -248,12 +248,4 @@ namespace bebone::gfx {
 
         return *this;
     }
-
-    /*
-    void VulkanCommandBuffer::destroy(VulkanDevice&) {
-        // Todo
-
-        mark_destroyed();
-    }
-    */
 }

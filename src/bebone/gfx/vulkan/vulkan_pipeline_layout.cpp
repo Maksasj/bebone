@@ -42,17 +42,4 @@ namespace bebone::gfx {
 
         LOG_TRACE("Destroyed Vulkan pipeline layout");
     }
-
-    /*
-    void VulkanPipelineLayout::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        vkDestroyPipelineLayout(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan pipeline layout");
-
-        mark_destroyed();
-    }
-    */
 }

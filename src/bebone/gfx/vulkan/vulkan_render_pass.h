@@ -36,8 +36,6 @@ namespace bebone::gfx {
             const size_t& get_color_attachments_count() const;
             const vector<VulkanAttachmentDesc>& get_attachments() const;
             const VkExtent2D& get_extent() const;
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

@@ -8,29 +8,37 @@
 
 namespace bebone::gfx {
     VulkanSwapChainImage::VulkanSwapChainImage(
-            unique_ptr<VulkanImage>& image,
-            unique_ptr<VulkanImageView>& view
-    ) : image(std::move(image)), view(std::move(view))  {
-
+        VulkanDevice& device,
+        VkImage vk_image,
+        VkFormat image_format
+    ) : device_owner(device), image(vk_image) {
+        VulkanImageViewInfo image_view_info{};
+        view = std::make_unique<VulkanImageView>(device, image, image_format, image_view_info);
     }
 
     VulkanSwapChainImage::~VulkanSwapChainImage() {
         LOG_DEBUG("Deleting vulkan swap chain image");
+        view.reset();
     }
 
-    VkImage VulkanSwapChainImage::get_vulkan_image() const {
-        return image->get_vulkan_image();
+    VkImage VulkanSwapChainImage::get_vk_image() const {
+        return image;
     }
 
     VkMemoryRequirements VulkanSwapChainImage::get_memory_requirements() const {
-        return image->get_memory_requirements();
+        VkMemoryRequirements requirements;
+
+        vkGetImageMemoryRequirements(device_owner.device, image, &requirements);
+
+        return requirements;
     }
 
     VkExtent3D VulkanSwapChainImage::get_extent() const {
-        return image->get_extent();
+        LOG_CRITICAL("IVulkanImage::get_extent() is not implemented for VulkanSwapChainImage class");
+        return VkExtent3D { 0u, 0u, 0u };
     }
 
-    VkImageView VulkanSwapChainImage::get_vulkan_image_view() const {
-        return view->get_vulkan_image_view();
+    VkImageView VulkanSwapChainImage::get_vk_image_view() const {
+        return view->get_vk_image_view();
     }
 }

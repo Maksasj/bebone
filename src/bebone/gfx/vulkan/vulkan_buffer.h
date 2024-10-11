@@ -62,11 +62,9 @@ namespace bebone::gfx {
 
             VkMemoryRequirements get_memory_requirements();
 
-            VkBuffer get_vulkan_buffer() const override;
+            VkBuffer get_vk_buffer() const override;
             void copy_to_image(IVulkanImage& image) override;
             size_t get_size() const override;
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

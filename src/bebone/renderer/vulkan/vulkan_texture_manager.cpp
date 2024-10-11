@@ -29,7 +29,7 @@ namespace bebone::renderer {
             { .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT } // Todo VK_IMAGE_USAGE_SAMPLED_BIT
         );
 
-        auto sampler = device->create_sampler();
+        auto sampler = std::make_unique<VulkanSampler>(device);
         auto view = device->create_image_view(*image, format, {
             .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
         });

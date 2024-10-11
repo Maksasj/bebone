@@ -21,8 +21,8 @@ namespace bebone::gfx {
         memory->upload_data(src, size);
     }
 
-    VkBuffer VulkanBufferMemory::get_vulkan_buffer() const {
-        return buffer->get_vulkan_buffer();
+    VkBuffer VulkanBufferMemory::get_vk_buffer() const {
+        return buffer->get_vk_buffer();
     }
 
     size_t VulkanBufferMemory::get_size() const {
@@ -33,7 +33,7 @@ namespace bebone::gfx {
         return buffer->copy_to_image(image);
     }
 
-    VkDeviceMemory VulkanBufferMemory::get_vulkan_device_memory() const {
-        return memory->get_vulkan_device_memory();
+    VkDeviceMemory VulkanBufferMemory::get_vk_device_memory() const {
+        return memory->get_vk_device_memory();
     }
 }

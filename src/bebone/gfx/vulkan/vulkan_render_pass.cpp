@@ -95,17 +95,4 @@ namespace bebone::gfx {
     const VkExtent2D& VulkanRenderPass::get_extent() const {
         return extent;
     }
-
-    /*
-    void VulkanRenderPass::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        vkDestroyRenderPass(device.device, backend, nullptr);
-
-        LOG_TRACE("Destroyed Vulkan render pass");
-
-        mark_destroyed();
-    }
-    */
 }

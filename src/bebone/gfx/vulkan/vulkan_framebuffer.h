@@ -28,8 +28,6 @@ namespace bebone::gfx {
                 VkExtent2D extent);
 
             ~VulkanFramebuffer();
-
-            // void destroy(VulkanDevice& device) override;
     };
 }
 

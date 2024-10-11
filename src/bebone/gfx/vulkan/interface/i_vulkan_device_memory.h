@@ -8,7 +8,7 @@ namespace bebone::gfx {
 
     class IVulkanDeviceMemory {
         public:
-            virtual VkDeviceMemory get_vulkan_device_memory() const = 0;
+            virtual VkDeviceMemory get_vk_device_memory() const = 0;
     };
 }
 

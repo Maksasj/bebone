@@ -39,15 +39,12 @@ namespace bebone::gfx {
             VkImageView image_view;
 
         public:
-            VulkanImageView( // Todo add necessary const
-                VulkanDevice& device,
-                VulkanImage& image,
-                const VkFormat& image_format,
-                VulkanImageViewInfo image_view_info = {});
+            VulkanImageView(VulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
+            VulkanImageView(VulkanDevice& device, VkImage image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
 
             ~VulkanImageView();
 
-            VkImageView get_vulkan_image_view() const override;
+            VkImageView get_vk_image_view() const override;
     };
 }
 

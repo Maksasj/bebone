@@ -5,19 +5,13 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_device_memory.h"
-
 #include "interface/i_vulkan_image.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
 
     class VulkanDevice;
-    class VulkanCommandBufferPool;
-
     class VulkanImage;
-    class VulkanImageView;
-    class VulkanDeviceMemory;
 
     struct VulkanImageInfo {
         // VkStructureType type;
@@ -40,28 +34,17 @@ namespace bebone::gfx {
     class VulkanImage : public IVulkanImage, private core::NonCopyable {
         private:
             VulkanDevice& device_owner;
-            bool swap_chain;
-
             VkImage image;
-
-        private:
             VkExtent3D extent;
 
         public:
-            VulkanImage(VulkanDevice& device, const VkImage& image);
-
-            // Todo save extent somewhere
-            VulkanImage(
-                VulkanDevice& device,
-                VkFormat format,
-                VkExtent3D extent,
-                VulkanImageInfo image_info = {});
+            VulkanImage(VulkanDevice& device, VkFormat format, VkExtent3D extent, VulkanImageInfo image_info = {});
 
             ~VulkanImage();
 
             void transition_layout(VkImageLayout old_layout, VkImageLayout new_layout);
 
-            VkImage get_vulkan_image() const override;
+            VkImage get_vk_image() const override;
             VkMemoryRequirements get_memory_requirements() const override;
             VkExtent3D get_extent() const override;
     };

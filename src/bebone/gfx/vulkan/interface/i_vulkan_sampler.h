@@ -8,7 +8,7 @@ namespace bebone::gfx {
 
     class IVulkanSampler {
         public:
-            virtual VkSampler get_vulkan_image_sampler() const = 0;
+            virtual VkSampler get_vk_image_sampler() const = 0;
     };
 }
 

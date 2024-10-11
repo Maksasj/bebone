@@ -36,7 +36,7 @@ namespace bebone::gfx {
         LOG_TRACE("Destroyed Vulkan sampler");
     }
 
-    VkSampler VulkanSampler::get_vulkan_image_sampler() const {
+    VkSampler VulkanSampler::get_vk_image_sampler() const {
         return sampler;
     }
 }

@@ -36,7 +36,7 @@ namespace bebone::gfx {
 
             void upload_data(const void* src, const size_t& size);
 
-            VkDeviceMemory get_vulkan_device_memory() const override;
+            VkDeviceMemory get_vk_device_memory() const override;
     };
 }
 

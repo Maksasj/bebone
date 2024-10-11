@@ -25,11 +25,11 @@ namespace bebone::gfx {
         public:
             VulkanDepthImage(VulkanDevice& device, VkExtent3D extent);
 
-            VkImage get_vulkan_image() const override;
+            VkImage get_vk_image() const override;
             VkMemoryRequirements get_memory_requirements() const override;
             VkExtent3D get_extent() const override;
 
-            VkImageView get_vulkan_image_view() const override;
+            VkImageView get_vk_image_view() const override;
     };
 }
 
