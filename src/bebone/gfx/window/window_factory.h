@@ -20,7 +20,7 @@ namespace bebone::gfx {
              *
              * @return Window object
             */
-            static std::shared_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties = {});
+            static std::unique_ptr<Window> create_window(const std::string& title, const int& width, const int& height, const GfxAPI& gfx_api, const WindowProperties& properties = {});
     };
 }
 

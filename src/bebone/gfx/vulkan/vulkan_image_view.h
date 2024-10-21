@@ -5,12 +5,12 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
+#include "interface/i_vulkan_image_view.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    class VulkanDevice;
     class VulkanImage;
 
     struct VulkanImageSubresourceRange {
@@ -32,15 +32,19 @@ namespace bebone::gfx {
         VulkanImageSubresourceRange subresource_range = {};
     };
 
-    class VulkanImageView : public VulkanWrapper<VkImageView>, private core::NonCopyable {
-        public:
-            VulkanImageView( // Todo add necessary const
-                VulkanDevice& device,
-                VulkanImage& image,
-                const VkFormat& image_format,
-                VulkanImageViewInfo image_view_info = {});
+    class VulkanImageView : public IVulkanImageView, private core::NonCopyable {
+        private:
+            IVulkanDevice& device_owner;
 
-            void destroy(VulkanDevice& device) override;
+            VkImageView image_view;
+
+        public:
+            VulkanImageView(IVulkanDevice& device, VulkanImage& image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
+            VulkanImageView(IVulkanDevice& device, VkImage image, const VkFormat& image_format, VulkanImageViewInfo image_view_info = {});
+
+            ~VulkanImageView() override;
+
+            VkImageView get_vk_image_view() const override;
     };
 }
 

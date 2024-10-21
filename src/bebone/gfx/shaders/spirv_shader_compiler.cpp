@@ -2,12 +2,14 @@
 
 namespace bebone::gfx {
     ShaderCode SpirVShaderCompiler::compile(const ShaderType& shader_type) {
-        const auto target_shader_type = shader_type.to_glslang();
+        const auto target_shader_type = to_glslang(shader_type);
 
         // First we check if all shader source type match
         for(auto& shader_source : shader_sources)
-            if(shader_type != shader_source.get_type())
-                throw std::runtime_error("shader source type do not match with desired shader code target type");
+            if(shader_type != shader_source.get_type()) {
+                LOG_ERROR("Shader source type do not match with desired shader code target type");
+                // throw std::runtime_error("shader source type do not match with desired shader code target type"); Todo
+            }
 
         std::vector<const char*> raw_shader_sources;
 
@@ -38,10 +40,10 @@ namespace bebone::gfx {
         EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
         // EShMessages messages = (EShMessages)(EShMsgSpvRules);
         if (!shader.parse(GetDefaultResources(), default_version, false, messages)) {
-            std::cerr << "Error in shader compilation:\n" << shader.getInfoLog() << std::endl;
-            // std::cerr << "Error in shader source:\n" << shader_source << std::endl;
+            LOG_ERROR("Error in shader compilation: {}", shader.getInfoLog());
+
             glslang::FinalizeProcess();
-            throw std::runtime_error("Error in shader source");
+            // throw std::runtime_error("Error in shader source"); Todo
         }
 
         glslang::TProgram program;
@@ -51,16 +53,16 @@ namespace bebone::gfx {
         // program.getReflectionIndex
 
         if (!program.link(messages)) {
-            std::cerr << "Error while linking shaders:\n" << program.getInfoLog() << std::endl;
+            LOG_ERROR("Error while linking shaders: {}", program.getInfoLog());
             glslang::FinalizeProcess();
-            throw std::runtime_error("Error while linking shaders");
+            // throw std::runtime_error("Error while linking shaders"); Todo
         }
 
         glslang::TIntermediate *intermediate = program.getIntermediate(target_shader_type);
         if (!intermediate) {
-            std::cerr << "Failed to get SPIR-V intermediate code." << std::endl;
+            LOG_ERROR("Failed to get SPIR-V intermediate code.");
             glslang::FinalizeProcess();
-            throw std::runtime_error("Failed to get SPIR-V intermediate code");
+            // throw std::runtime_error("Failed to get SPIR-V intermediate code"); Todo
         }
 
         // SpirV to be returned

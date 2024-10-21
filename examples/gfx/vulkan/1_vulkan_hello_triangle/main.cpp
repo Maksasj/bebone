@@ -3,78 +3,59 @@
 using namespace bebone::core;
 using namespace bebone::gfx;
 
-struct Vertex {
-    Vec3f pos;
-    Vec3f color;
-};
-
-const std::vector<Vertex> vertices = {
-    {{0.5f, 0.5f, 0.0f},  {1.0f, 0.0f, 0.0f}},
-    {{0.0f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
-    {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-};
-
 // Todo make this nicer
 const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     .binding_descriptions = {
-        { 0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX }
+        { 0, sizeof(Vec3f), VK_VERTEX_INPUT_RATE_VERTEX }
     },
     .attribute_descriptions = {
-        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
-        { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) },
+        { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0 }
     }
 };
 
-const std::vector<int> indices = { 0, 1, 2 };
-
 int main() {
-    GLFWContext::init();
+    auto window = WindowFactory::create_window("1. Vulkan hello triangle example", 800, 600, Vulkan);
 
-    auto window = WindowFactory::create_window("1. Vulkan hello window example", 800, 600, GfxAPI::Vulkan);
+    VulkanInstance instance;
+    VulkanDevice device(instance, window);
+    VulkanSwapChain swap_chain(device, window);
 
-    auto instance = VulkanInstance::create_instance();
-    auto device = instance->create_device(window);
-    auto swap_chain = device->create_swap_chain(window);
+    VulkanPipelineLayout pipeline_layout(device, {}, {});
+    VulkanPipeline pipeline(device, swap_chain.render_pass, pipeline_layout, "vert.glsl", "frag.glsl", { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } });
 
-    auto vert_shader_module = device->create_shader_module("vert.glsl", ShaderTypes::vertex_shader);
-    auto frag_shader_module = device->create_shader_module("frag.glsl", ShaderTypes::fragment_shader);
-    auto pipeline_layout = device->create_pipeline_layout({}, {});
-    auto pipeline = device->create_pipeline(swap_chain, pipeline_layout, { vert_shader_module, frag_shader_module }, {
-        .vertex_input_state = { .vertex_descriptions = vertex_descriptions }
-    });
+    const std::vector<Vec3f> vertices = { {-0.5f, -0.5f, 0.0f}, {0.5f, -0.5f, 0.0f}, {0.0f,  0.5f, 0.0f} };
+    const std::vector<u32> indices = { 0, 1, 2, };
 
-    auto vb = device->create_buffer_memory_from(vertices);
-    auto eb = device->create_buffer_memory_from(indices);
+    VulkanBufferMemory vb(device, vertices);
+    VulkanBufferMemory eb(device, indices);
 
-    auto command_buffer_pool = device->create_command_buffer_pool();
-    auto command_buffers = command_buffer_pool->create_command_buffers(device, 3);
+    VulkanCommandBufferPool command_buffer_pool(device);
+    auto command_buffers = command_buffer_pool.create_command_buffers(3);
 
     while (!window->closing()) {
-        GLFWContext::poll_events();
+        window->pull_events();
 
         uint32_t frame;
-        if(!swap_chain->acquire_next_image(device, &frame).is_ok())
+        if(!swap_chain.acquire_next_image(&frame).is_ok())
             continue;
 
-        auto& cmd = command_buffers[frame];
+        unique_ptr<VulkanCommandBuffer>& cmd = command_buffers[frame];
 
-        cmd->begin_record()
-            .begin_render_pass(swap_chain, frame)
-            .set_viewport(0, 0, window->get_width(), window->get_height())
-            .bind_pipeline(pipeline)
-            .bind_vertex_buffer(vb)
-            .bind_index_buffer(eb)
-            .draw_indexed(indices.size())
-            .end_render_pass()
-            .end_record();
+        cmd->begin_record();
 
-        if(!swap_chain->submit_command_buffers(device, cmd, &frame).is_ok()) // Todo check if window is resized
+        cmd->begin_render_pass(swap_chain);
+            cmd->set_viewport(window);
+            cmd->bind_pipeline(pipeline);
+            cmd->bind_vertex_buffer(vb)
+                .bind_index_buffer(eb)
+                .draw_indexed(indices.size());
+        cmd->end_render_pass();
+
+        cmd->end_record();
+
+        if(!swap_chain.submit_present_command_buffers(*cmd, &frame).is_ok()) // Todo check if window is resized
             continue;
     }
-
-    instance->destroy();
-
-    GLFWContext::terminate();
 
     return 0;
 }

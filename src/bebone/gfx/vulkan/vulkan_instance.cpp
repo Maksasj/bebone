@@ -2,13 +2,11 @@
 #include "vulkan_device.h"
 
 namespace bebone::gfx {
-    VkInstance& VulkanInstance::get_instance() {
-        return instance;
-    }
-
     VulkanInstance::VulkanInstance() {
-        if (enable_validation_layers && !check_validation_layer_support())
+        if (enable_validation_layers && !check_validation_layer_support()) {
+            LOG_ERROR("Validation layers requested, but not available");
             throw std::runtime_error("validation layers requested, but not available!");
+        }
 
         VkApplicationInfo app_info = {};
         app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -39,13 +37,25 @@ namespace bebone::gfx {
             create_info.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS)
+        if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create instance");
             throw std::runtime_error("failed to create instance!");
+        }
 
         has_gflw_required_instance_extensions();
 
-        if(enable_validation_layers)
+        if(enable_validation_layers) {
+            LOG_INFORMATION("Enabled vulkan validation layers");
             debug_messenger = std::make_unique<VulkanDebugMessenger>(*this);
+        }
+
+        LOG_TRACE("Created Vulkan instance");
+    }
+
+    VulkanInstance::~VulkanInstance() {
+        debug_messenger.reset();
+
+        vkDestroyInstance(instance, nullptr);
     }
 
     bool VulkanInstance::check_validation_layer_support() {
@@ -72,7 +82,6 @@ namespace bebone::gfx {
         return true;
     }
 
-    // Todo remove all std::couts
     void VulkanInstance::has_gflw_required_instance_extensions() {
         uint32_t extension_count = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extension_count, nullptr);
@@ -80,21 +89,21 @@ namespace bebone::gfx {
         auto extensions = std::vector<VkExtensionProperties>(extension_count);
         vkEnumerateInstanceExtensionProperties(nullptr, &extension_count, extensions.data());
 
-        std::cout << "available extensions:" << std::endl;
         auto available = std::unordered_set<std::string>{};
-
         for(const auto &extension : extensions) {
-            std::cout << "\t" << extension.extensionName << std::endl;
+            LOG_INFORMATION("Available extensions: {}", extension.extensionName);
+
             available.insert(extension.extensionName);
         }
 
-        std::cout << "required extensions:" << std::endl;
         auto required_extensions = get_required_extensions();
-
         for(const auto &required : required_extensions) {
-            std::cout << "\t" << required << std::endl;
-            if(available.find(required) == available.end())
+            LOG_INFORMATION("Required extensions: {}", required);
+
+            if(available.find(required) == available.end()) {
+                LOG_ERROR("Missing required GLFW extension");
                 throw std::runtime_error("Missing required glfw extension");
+            }
         }
     }
 
@@ -111,27 +120,8 @@ namespace bebone::gfx {
         return extensions;
     }
 
-    std::shared_ptr<VulkanDevice> VulkanInstance::create_device(std::shared_ptr<Window>& window) {
-        auto& vulkan_window = *static_cast<VulkanWindow*>(window.get());
-        auto device = std::make_shared<VulkanDevice>(*this, vulkan_window);
-
-        child_devices.push_back(device);
-
-        return device;
-    }
-
-    void VulkanInstance::destroy_all(std::shared_ptr<VulkanDevice>& device) {
-        device->destroy(*this);
-    }
-
-    void VulkanInstance::destroy() {
-        if(enable_validation_layers)
-            debug_messenger = nullptr;
-
-        for(auto& child : child_devices)
-            destroy_all(child);
-
-        vkDestroyInstance(instance, nullptr);
+    std::unique_ptr<VulkanDevice> VulkanInstance::create_device(std::unique_ptr<Window>& window) {
+        return std::make_unique<VulkanDevice>(*this, window);;
     }
 }
 

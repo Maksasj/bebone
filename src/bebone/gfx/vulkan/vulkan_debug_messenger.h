@@ -8,12 +8,13 @@ namespace bebone::gfx {
 
     class VulkanDebugMessenger : private core::NonCopyable {
         private:
-            VulkanInstance& vulkan_instance;
+            VulkanInstance& instance_owner;
+
+        private:
             VkDebugUtilsMessengerEXT debug_messenger;
 
         public:
             VulkanDebugMessenger(VulkanInstance& instance);
-
             ~VulkanDebugMessenger();
 
             static void populate_debug_messenger_create_info(VkDebugUtilsMessengerCreateInfoEXT &create_info);

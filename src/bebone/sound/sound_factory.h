@@ -8,19 +8,19 @@
 
 namespace bebone::sound_system {
     class SoundFactory {
-    public:
-        virtual ~SoundFactory() = default;
-        virtual std::shared_ptr<ma_sound> create_sound(ma_engine& engine, const std::string& path) = 0;
+        public:
+            virtual ~SoundFactory() = default;
+            virtual std::shared_ptr<ma_sound> create_sound(ma_engine& engine, const std::string& path) = 0;
     };
 
     class LightweightSoundFactory : public SoundFactory {
-    public:
-        std::shared_ptr<ma_sound> create_sound(ma_engine& engine, const std::string& path) override;
+        public:
+            std::shared_ptr<ma_sound> create_sound(ma_engine& engine, const std::string& path) override;
     };
 
     class StreamSoundFactory : public SoundFactory {
-    public:
-        std::shared_ptr<ma_sound> create_sound(ma_engine& engine, const std::string& path) override;
+        public:
+            std::shared_ptr<ma_sound> create_sound(ma_engine& engine, const std::string& path) override;
     };
 }
 

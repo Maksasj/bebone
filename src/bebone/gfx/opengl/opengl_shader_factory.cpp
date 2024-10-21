@@ -1,13 +1,6 @@
 #include "opengl_shader_factory.h"
 
 namespace bebone::gfx {
-    std::string GLShaderFactory::read_file(const std::string& path) {
-        std::ifstream file(path);
-        std::stringstream ss;
-        ss << file.rdbuf();
-        return ss.str();
-    }
-
     bool GLShaderFactory::is_use_legacy_compiler(const GLShaderProperties& properties) {
         if (properties & GLShaderProperties::EnableUniforms)
             return true;
@@ -20,7 +13,7 @@ namespace bebone::gfx {
     }
 
     GLShader GLShaderFactory::create_shader(const std::string& path, const ShaderType& shader_type, const GLShaderProperties& properties) {
-        const auto source = read_file(path);
+        const auto source = utils_read_file(path);
 
         if (is_use_legacy_compiler(properties))
             return GLShader(source, shader_type, properties);

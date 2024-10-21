@@ -34,17 +34,19 @@
 #include "vulkan_swap_chain.h"
 #include "vulkan_render_target.h"
 
-#include "vulkan_const_range.h"
+#include "vulkan_attachment.h"
+#include "vulkan_render_pass.h"
 
-#include "vulkan_wrapper.tpp"
+#include "vulkan_const_range.h"
 
 // Utils class
 #include "vulkan_pipeline_manager.h"
+#include "vulkan_texture_tuple.h"
 
-#include "vulkan_pipeline_tuples.h"
-#include "vulkan_buffer_tuples.h"
-#include "vulkan_image_tuples.h"
+#include "vulkan_buffer_memory.h"
 
-#include "vulkan_texture.h"
+#include "vulkan_depth_image.h"
+#include "vulkan_swap_chain_image.h"
+#include "vulkan_image_memory.h"
 
 #endif

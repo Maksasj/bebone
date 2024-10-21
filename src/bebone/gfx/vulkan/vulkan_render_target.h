@@ -13,21 +13,24 @@
 namespace bebone::gfx {
     class VulkanImage;
 
-    class VulkanRenderTarget : public VulkanApi {
+    class VulkanRenderTarget {
         public:
-            std::shared_ptr<VulkanRenderPass> render_pass;
+            // Vector of all FIFO attachments
+            vector<vector<unique_ptr<IVulkanImageView>>> color_attachments;
+            vector<unique_ptr<IVulkanImageView>> depth_attachments;
+            vector<unique_ptr<VulkanFramebuffer>> framebuffers;
 
-            std::vector<std::shared_ptr<VulkanFramebuffer>> swap_chain_framebuffers;
-            std::vector<VulkanDepthImageTuple> depth_images;
-            std::vector<VulkanSwapChainImageTuple> swap_chain_images;
+            // This is still just a swap chain render target constructor
+            VulkanRenderTarget(
+                IVulkanDevice& device,
+                std::unique_ptr<VulkanRenderPass>& render_pass);
 
             VulkanRenderTarget(
-                VulkanDevice& device,
-                std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
-                VkFormat image_format,
-                VkExtent2D extent);
+                IVulkanDevice& device,
+                std::unique_ptr<VulkanRenderPass>& render_pass,
+                std::vector<std::unique_ptr<VulkanSwapChainImage>>& images);
 
-            void destroy(VulkanDevice& device);
+            ~VulkanRenderTarget();
     };
 }
 

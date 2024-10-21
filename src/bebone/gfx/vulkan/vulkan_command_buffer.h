@@ -6,13 +6,8 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_swap_chain.h"
 #include "vulkan_pipeline.h"
-
-#include "vulkan_buffer_tuples.h"
-#include "vulkan_image_tuples.h"
-#include "vulkan_pipeline_tuples.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
@@ -21,65 +16,72 @@ namespace bebone::gfx {
     class VulkanCommandBufferPool;
     class VulkanDescriptorSet;
 
-    class VulkanCommandBuffer : public VulkanWrapper<VkCommandBuffer>, private core::NonCopyable {
+    class VulkanCommandBuffer : private core::NonCopyable {
         public:
-            VulkanCommandBuffer(
-                std::shared_ptr<VulkanDevice>& device,
-                VulkanCommandBufferPool& command_buffer_pool);
+            VkCommandBuffer command_buffer;
 
-            VulkanCommandBuffer& begin_record();
-            VulkanCommandBuffer& end_record();
+        private:
+            IVulkanDevice& device_owner;
 
-            VulkanCommandBuffer& begin_render_pass(
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const u32& frame_buffer);
+        public:
+            using Self = VulkanCommandBuffer;
 
-            VulkanCommandBuffer& end_render_pass();
+            VulkanCommandBuffer(IVulkanDevice& device, VulkanCommandBufferPool& command_buffer_pool);
 
-            VulkanCommandBuffer& set_viewport(
-                const i32& x,
-                const i32& y,
-                const u32& width,
-                const u32& height);
+            Self& begin_record();
+            Self& end_record();
 
-            VulkanCommandBuffer& bind_pipeline(const VulkanPipeline& pipeline);
-            VulkanCommandBuffer& bind_pipeline(const std::shared_ptr<VulkanPipeline>& pipeline);
-            VulkanCommandBuffer& bind_managed_pipeline(const VulkanManagedPipelineTuple& tuple, const size_t& frame);
+            // Swap chain specific begin render pass
+            Self& begin_render_pass(const VulkanSwapChain& swap_chain);
 
-            VulkanCommandBuffer& bind_vertex_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            VulkanCommandBuffer& bind_vertex_buffer(const VulkanBufferMemoryTuple& tuple);
+            Self& begin_render_pass(
+                    const std::unique_ptr<VulkanRenderTarget>& render_target,
+                    const std::unique_ptr<VulkanRenderPass>& render_pass,
+                    const size_t& frame);
 
-            VulkanCommandBuffer& bind_index_buffer(const std::shared_ptr<VulkanBuffer>& tuple);
-            VulkanCommandBuffer& bind_index_buffer(const VulkanBufferMemoryTuple& tuple);
+            Self& begin_render_pass(
+                const std::unique_ptr<VulkanFramebuffer>& framebuffer,
+                const std::unique_ptr<VulkanRenderPass>& render_pass);
 
-            VulkanCommandBuffer& bind_descriptor_set(
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::shared_ptr<VulkanDescriptorSet>& descriptor_set);
+            Self& end_render_pass();
 
-            VulkanCommandBuffer& bind_descriptor_set(
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
-                const size_t& frame);
+            Self& set_viewport(std::unique_ptr<Window>& window);
+            Self& set_viewport(const Vec2i& viewport, const f32& min_depth = 0.0f, const f32& max_depth = 1.0f);
+            Self& set_viewport(const f32& x, const f32& y, const f32& width, const f32& height, const f32& min_depth = 0.0f, const f32& max_depth = 1.0f);
+            Self& set_scissors(const i32& x, const i32& y, const u32& width, const u32& height);
 
-            VulkanCommandBuffer& bind_descriptor_sets(
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets);
+            Self& bind_pipeline(const VulkanPipeline& pipeline);
+            Self& bind_pipeline(const std::unique_ptr<VulkanPipeline>& pipeline);
 
-            VulkanCommandBuffer& push_constant(
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const u32& size,
-                const void* ptr);
+            Self& bind_vertex_buffer(IVulkanBuffer& buffer);
+            Self& bind_index_buffer(IVulkanBuffer& buffer);
 
-            VulkanCommandBuffer& push_constant(
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const uint32_t& size,
-                const size_t& offset,
-                const void* ptr);
+            Self& bind_descriptor_set(
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::unique_ptr<VulkanDescriptorSet>& descriptor_set);
 
-            VulkanCommandBuffer& draw(const size_t& vertex_count);
-            VulkanCommandBuffer& draw_indexed(const size_t& vertex_count);
+            Self& bind_descriptor_set(
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets,
+                    const size_t& frame);
 
-            void destroy(VulkanDevice& device) override;
+            Self& bind_descriptor_sets(
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const std::vector<std::unique_ptr<VulkanDescriptorSet>>& descriptor_sets);
+
+            Self& push_constant(
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const u32& size,
+                    const void* ptr);
+
+            Self& push_constant(
+                    const std::unique_ptr<VulkanPipelineLayout>& pipeline_layout,
+                    const uint32_t& size,
+                    const size_t& offset,
+                    const void* ptr);
+
+            Self& draw(const size_t& vertex_count);
+            Self& draw_indexed(const size_t& vertex_count);
     };
 }
 

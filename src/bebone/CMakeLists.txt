@@ -11,6 +11,10 @@ if(BEBONE_BUILD_GFX)
     add_subdirectory(gfx)
 endif()
 
+# if(BEBONE_BUILD_RENDERER)
+#     add_subdirectory(renderer)
+# endif()
+
 if(BEBONE_BUILD_SOUND)
     add_subdirectory(sound)
 endif()
@@ -32,6 +36,10 @@ if(BEBONE_BUILD_CORE)
     target_link_libraries(bebone bebone_core)
 endif()
 
+# if(BEBONE_BUILD_RENDERER)
+#     target_link_libraries(bebone bebone_renderer)
+# endif()
+
 if(BEBONE_BUILD_SOUND)
     target_link_libraries(bebone bebone_sound)
 endif()
@@ -41,7 +49,7 @@ set(BEBONE_INCLUDES "${CMAKE_SOURCE_DIR}/src")
 list(APPEND BEBONE_INCLUDES ${BEBONE_ASSETS_INCLUDES})   
 list(APPEND BEBONE_INCLUDES ${BEBONE_CORE_INCLUDES})   
 list(APPEND BEBONE_INCLUDES ${BEBONE_GFX_INCLUDES})   
-list(APPEND BEBONE_INCLUDES ${BEBONE_RENDERER_INCLUDES})
+# list(APPEND BEBONE_INCLUDES ${BEBONE_RENDERER_INCLUDES})
 list(APPEND BEBONE_INCLUDES ${BEBONE_SOUND_INCLUDES})
 
 # Set BEBONE_INCLUDES as global variable 

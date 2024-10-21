@@ -4,62 +4,125 @@
 #include "vulkan_image_view.h"
 #include "vulkan_device_memory.h"
 #include "vulkan_swap_chain.h"
+#include "vulkan_depth_image.h"
+#include "vulkan_framebuffer.h"
 
 namespace bebone::gfx {
     VulkanRenderTarget::VulkanRenderTarget(
-        VulkanDevice& device,
-        std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
-        VkFormat image_format,
-        VkExtent2D extent
-    ) : swap_chain_images(swap_chain_images) {
-        // Create render pass
-        render_pass = std::make_shared<VulkanRenderPass>(device, image_format);
+        IVulkanDevice& device,
+        std::unique_ptr<VulkanRenderPass>& render_pass
+    ) {
+        // Create color attachments
+        color_attachments.reserve(render_pass->get_color_attachments_count());
 
-        // Create depth resources
-        auto depthFormat = device.find_depth_format();
-        depth_images.reserve(swap_chain_images.size());
+        for(auto& attachment : render_pass->get_attachments()) {
+            if (attachment.type != Color)
+                continue;
 
-        for(size_t i = 0; i < swap_chain_images.size(); ++i) {
-            auto image = device.create_image(depthFormat, { extent.width, extent.height, 1}, {
-                .usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-            });
+            auto frame_attachments = std::vector<std::unique_ptr<IVulkanImageView>>{};
+            frame_attachments.reserve(3); // Todo, 3 should be configurable
 
-            auto requirements = image->get_memory_requirements(device);
+            for (size_t f = 0; f < 3; ++f) {// Todo, 3 should be configurable
+                auto tt = std::make_unique<VulkanTexture>(device, attachment.extent, attachment.description.format);
+                std::unique_ptr<IVulkanImageView> texture(static_cast<IVulkanImageView*>(tt.release())); // Todo
+                frame_attachments.push_back(std::move(texture));
+            }
 
-            auto memory = device.create_device_memory(requirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-            memory->bind_image_memory(device, *image);
+            color_attachments.push_back(std::move(frame_attachments));
+        }
 
-            auto view = device.create_image_view(*image, depthFormat, {
-                .subresource_range = { .aspect_mask = VK_IMAGE_ASPECT_DEPTH_BIT },
-            });
+        // Create depth attachments
+        if(render_pass->get_depth_attachment().has_value()) {
+            auto attachment = render_pass->get_depth_attachment().value();
 
-            depth_images.emplace_back(image, view, memory);
+            auto frame_attachments = std::vector<std::unique_ptr<IVulkanImageView>> {};
+            frame_attachments.reserve(3); // Todo, 3 should be configurable
+
+            for(size_t f = 0; f < 3; ++f)  { // Todo, 3 should be configurable
+                auto dit = std::make_unique<VulkanDepthImage>(device, attachment.extent);
+                std::unique_ptr<IVulkanImageView> depth(static_cast<IVulkanImageView*>(dit.release())); // Todo
+                frame_attachments.push_back(std::move(depth));
+            }
+
+            depth_attachments = std::move(frame_attachments);
         }
 
         // Create frame buffers
-        for(size_t i = 0; i < swap_chain_images.size(); ++i) {
-            auto attachments = std::vector { swap_chain_images[i].view, depth_images[i].view };
-            auto framebuffer = std::make_shared<VulkanFramebuffer>(device, attachments, render_pass, extent);
+        for(size_t i = 0; i < 3; ++i) { // Todo, 3 should be configurable
+            auto attachments = std::vector<std::unique_ptr<IVulkanImageView>> {};
+            attachments.reserve(color_attachments.size());
 
-            swap_chain_framebuffers.push_back(framebuffer);
+            for(auto& color_attachment : color_attachments) {
+                auto& attachment = color_attachment[i];
+                attachments.push_back(std::move(attachment));
+            }
+
+            // Todo, depth attachment order should be configurable
+            if(!depth_attachments.empty())
+                attachments.push_back(std::move(depth_attachments[i]));
+
+            auto framebuffer = std::make_unique<VulkanFramebuffer>(device, attachments, render_pass, render_pass->get_extent());
+            framebuffers.push_back(std::move(framebuffer));
         }
+
+        LOG_TRACE("Created Vulkan render target");
     }
 
-    void VulkanRenderTarget::destroy(VulkanDevice& device) {
-        render_pass->destroy(device);
+    VulkanRenderTarget::VulkanRenderTarget(
+        IVulkanDevice& device,
+        std::unique_ptr<VulkanRenderPass>& render_pass,
+        std::vector<std::unique_ptr<VulkanSwapChainImage>>& images
+    ) {
+        // We do need to create color attachments, since swap chain handles them
 
-        for(auto& [_, view] : swap_chain_images)
-            view->destroy(device); // Since image is provided by swap chain we should not destroy it, only view
+        // Create depth attachments
+        if(render_pass->get_depth_attachment().has_value()) {
+            auto attachment = render_pass->get_depth_attachment().value();
 
-        for(auto& [memory, view, image] : depth_images) { // Todo
-            memory->destroy(device);
-            view->destroy(device);
-            image->destroy(device);
+            auto frame_attachments = std::vector<std::unique_ptr<IVulkanImageView>> {};
+            frame_attachments.reserve(3); // Todo, 3 should be configurable
+
+            for(size_t f = 0; f < 3; ++f) // Todo, 3 should be configurable
+            {
+                frame_attachments.push_back(std::make_unique<VulkanDepthImage>(device, attachment.extent));
+            }
+
+            depth_attachments = std::move(frame_attachments);
         }
 
-        for (auto& framebuffer : swap_chain_framebuffers)
-            framebuffer->destroy(device);
+        // Create frame buffers
+        for(size_t i = 0; i < 3; ++i) { // Todo, 3 should be configurable
+            // auto attachments = std::vector { image_views[i]->get_view().value(), depth_attachments[i]->get_view().value() };
 
-        mark_destroyed();
+            auto attachments = std::vector<std::unique_ptr<IVulkanImageView>> {};
+            attachments.push_back(std::move(images[i]));
+
+            if(!depth_attachments.empty())
+                attachments.push_back(std::move(depth_attachments[i]));
+
+            auto framebuffer = std::make_unique<VulkanFramebuffer>(device, attachments, render_pass, render_pass->get_extent());
+
+            framebuffers.push_back(std::move(framebuffer));
+
+            // Todo, there we need to safe color_attachment since we how own it
+            color_attachments.push_back(std::move(attachments));
+        }
+
+        LOG_TRACE("Created Vulkan render target");
+    }
+
+    VulkanRenderTarget::~VulkanRenderTarget() {
+        // Todo
+        for(auto& frame : color_attachments)
+            for(auto& tuple : frame)
+                tuple.reset(); // Since image is provided by swap chain we should not destroy it, only view
+
+        for(auto& tuple : depth_attachments)
+            tuple.reset();
+
+        for (auto& framebuffer : framebuffers)
+            framebuffer.reset();
+
+        LOG_DEBUG("Destroyed Vulkan render target");
     }
 }

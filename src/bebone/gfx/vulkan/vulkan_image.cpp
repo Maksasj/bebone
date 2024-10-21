@@ -6,16 +6,12 @@
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    VulkanImage::VulkanImage(const VkImage& image) {
-        backend = image;
-    }
-
     VulkanImage::VulkanImage(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         VkFormat format,
         VkExtent3D extent,
         VulkanImageInfo image_info
-    ) : extent(extent) {
+    ) : device_owner(device), extent(extent) {
         VkImageCreateInfo create_info{};
 
         create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -34,18 +30,27 @@ namespace bebone::gfx {
         create_info.pQueueFamilyIndices = image_info.ptr_queue_family_indices;
         create_info.initialLayout = image_info.initial_layout;
 
-        if(vkCreateImage(device.device, &create_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateImage(device_owner.get_vk_device(), &create_info, nullptr, &image) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create image");
             throw std::runtime_error("failed to create image!");
+        }
+
+        LOG_TRACE("Created Vulkan image");
     }
 
-    // Todo clear out this
+    VulkanImage::~VulkanImage() {
+        vkDestroyImage(device_owner.get_vk_device(), image, nullptr);
+        LOG_DEBUG("Destroyed Vulkan image");
+    };
+
+    // Todo, clear out this
     void VulkanImage::transition_layout(
-        VulkanCommandBufferPool& pool,
-        VulkanDevice& device,
         VkImageLayout old_layout,
         VkImageLayout new_layout
     ) {
-        VkCommandBuffer command_buffer = pool.begin_single_time_commands(device);
+        LOG_CRITICAL("VulkanImage::transition_layout is not implemented");
+        /*
+        auto command_buffer = device_owner.begin_single_time_commands();
 
         VkImageMemoryBarrier barrier{};
 
@@ -54,7 +59,7 @@ namespace bebone::gfx {
         barrier.newLayout = new_layout;
         barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.image = backend;
+        barrier.image = image;
         barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         barrier.subresourceRange.baseMipLevel = 0;
         barrier.subresourceRange.levelCount = 1;
@@ -76,32 +81,30 @@ namespace bebone::gfx {
 
             source_stage = VK_PIPELINE_STAGE_TRANSFER_BIT;
             destination_stage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        } else
+        } else {
+            LOG_ERROR("Unsupported image layout transition");
             throw std::runtime_error("unsupported layout transition!");
+        }
 
-        vkCmdPipelineBarrier(command_buffer, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+        vkCmdPipelineBarrier(command_buffer->backend, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-        pool.end_single_time_commands(device, command_buffer);
+        device_owner.end_single_time_commands(command_buffer);
+        */
     }
 
-    VkExtent3D VulkanImage::get_extent() const {
-        return extent;
+    VkImage VulkanImage::get_vk_image() const {
+        return image;
     }
 
-    VkMemoryRequirements VulkanImage::get_memory_requirements(VulkanDevice& device) {
+    VkMemoryRequirements VulkanImage::get_memory_requirements() const {
         VkMemoryRequirements requirements;
 
-        vkGetImageMemoryRequirements(device.device, backend, &requirements);
+        vkGetImageMemoryRequirements(device_owner.get_vk_device(), image, &requirements);
 
         return requirements;
     }
 
-    void VulkanImage::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        vkDestroyImage(device.device, backend, nullptr);
-
-        mark_destroyed();
+    VkExtent3D VulkanImage::get_extent() const {
+        return extent;
     }
 }

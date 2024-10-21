@@ -2,7 +2,7 @@
 
 namespace bebone::core {
     ArenaContainer::ArenaContainer(const size_t& size) : data(size), indices(size) {
-
+        LOG_TRACE("Created arena container");
     }
 
     void* ArenaContainer::alloc(const size_t& size) noexcept {

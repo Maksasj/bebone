@@ -9,14 +9,20 @@
 namespace bebone::gfx {
     class VulkanConstRange;
 
-    class VulkanPipelineLayout : public VulkanWrapper<VkPipelineLayout>, private core::NonCopyable {
+    class VulkanPipelineLayout : private core::NonCopyable {
+        public:
+            VkPipelineLayout pipeline_layout;
+
+        private:
+            IVulkanDevice& device_owner;
+
         public:
             VulkanPipelineLayout(
-                VulkanDevice& device,
-                const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
+                IVulkanDevice& device,
+                const std::vector<std::unique_ptr<VulkanDescriptorSetLayout>>& descriptor_set_layouts,
                 const std::vector<VulkanConstRange>& constant_ranges);
 
-            void destroy(VulkanDevice& device) override;
+            ~VulkanPipelineLayout();
     };
 }
 

@@ -5,7 +5,7 @@
 #include "vulkan_pipeline_layout.h"
 
 namespace bebone::gfx {
-    std::vector<VkPipelineShaderStageCreateInfo> VulkanPipeline::collect_shader_stages(const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules) {
+    std::vector<VkPipelineShaderStageCreateInfo> VulkanPipeline::collect_shader_stages(const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules) {
         auto stages = std::vector<VkPipelineShaderStageCreateInfo>{};
         stages.reserve(shader_modules.size());
 
@@ -15,13 +15,13 @@ namespace bebone::gfx {
             stage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
             stage.pNext = nullptr;
             stage.flags = 0;
-            stage.module = shader_module->backend;
+            stage.module = shader_module->shader_module;
             stage.pName = "main";
             stage.pSpecializationInfo = nullptr;
 
-            if(shader_module->type == ShaderTypes::vertex_shader)
+            if(shader_module->type == ShaderType::VertexShader)
                 stage.stage = VK_SHADER_STAGE_VERTEX_BIT;
-            else if(shader_module->type == ShaderTypes::fragment_shader)
+            else if(shader_module->type == ShaderType::FragmentShader)
                 stage.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
             stages.push_back(stage);
@@ -30,11 +30,10 @@ namespace bebone::gfx {
         return stages;
     }
 
-    VulkanPipeline::VulkanPipeline(
-        VulkanDevice& device,
-        const std::shared_ptr<VulkanSwapChain>& swap_chain,
-        const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-        const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
+    void VulkanPipeline::create_pipeline(
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        VulkanPipelineLayout& pipeline_layout,
+        const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
         VulkanPipelineConfig& config_info
     ) {
         // VkPipelineShaderStageCreateInfo
@@ -71,6 +70,12 @@ namespace bebone::gfx {
             .primitiveRestartEnable = config_info.input_assembly_state.primitive_restart_enable
         };
 
+        // Static scissors
+        const auto scissors = VkRect2D {
+            { 0, 0 },
+            { render_pass->get_extent().width, render_pass->get_extent().height }
+        };
+
         // VulkanPipelineViewportStateConfig
         const VkPipelineViewportStateCreateInfo viewport_state = {
             .sType = config_info.viewport_state.type,
@@ -78,8 +83,8 @@ namespace bebone::gfx {
             .flags = config_info.viewport_state.flags,
             .viewportCount = config_info.viewport_state.viewport_count,
             .pViewports = config_info.viewport_state.ptr_viewports,
-            .scissorCount = config_info.viewport_state.scissor_count,
-            .pScissors = config_info.viewport_state.ptr_scissors
+            .scissorCount = 1,
+            .pScissors = &scissors
         };
 
         // VulkanPipelineRasterizationStateConfig
@@ -128,6 +133,12 @@ namespace bebone::gfx {
             .maxDepthBounds = config_info.depth_stencil_state.max_depth_bounds
         };
 
+        // Todo fix this cringe,
+        auto g = config_info.color_blend_state.ptr_attachments[0];
+        config_info.color_blend_state.ptr_attachments.clear();
+        for(size_t i = 0; i < render_pass->get_color_attachments_count(); ++i)
+            config_info.color_blend_state.ptr_attachments.push_back(g);
+
         // VulkanPipelineColorBlendStateConfig
         const VkPipelineColorBlendStateCreateInfo color_blend_state = {
             .sType = config_info.color_blend_state.type,
@@ -135,8 +146,11 @@ namespace bebone::gfx {
             .flags = config_info.color_blend_state.flags,
             .logicOpEnable = config_info.color_blend_state.logic_op_enable,
             .logicOp = config_info.color_blend_state.logic_op,
+
+            // Todo, since we have may have multiple color attachments, that means that this also should be computed
             .attachmentCount = static_cast<uint32_t>(config_info.color_blend_state.ptr_attachments.size()),
             .pAttachments = config_info.color_blend_state.ptr_attachments.data(),
+
             .blendConstants = {
                 config_info.color_blend_state.blend_constants[0],
                 config_info.color_blend_state.blend_constants[1],
@@ -174,42 +188,68 @@ namespace bebone::gfx {
             .pColorBlendState = &color_blend_state,
             .pDynamicState = &dynamic_state,
 
-            .layout = pipeline_layout->backend,
-            .renderPass = swap_chain->render_target->render_pass->backend,
+            .layout = pipeline_layout.pipeline_layout,
+            .renderPass = render_pass->render_pass, // Todo, actually swap chain is not needed there
 
             .subpass = config_info.subpass,
             .basePipelineHandle = config_info.base_pipeline_handle,
             .basePipelineIndex = config_info.base_pipeline_index
         };
 
-        if(vkCreateGraphicsPipelines(device.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateGraphicsPipelines(device_owner.get_vk_device(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create graphics pipeline");
             throw std::runtime_error("failed to create graphics pipeline");
+        }
+
+        LOG_TRACE("Created Vulkan graphics pipeline");
+    }
+
+    VulkanPipeline::VulkanPipeline(
+        IVulkanDevice& device,
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        VulkanPipelineLayout& pipeline_layout,
+        const std::vector<std::unique_ptr<VulkanShaderModule>>& shader_modules,
+        VulkanPipelineConfig config_info
+    ) : device_owner(device) {
+        create_pipeline(render_pass, pipeline_layout, shader_modules, config_info);
+    }
+
+    VulkanPipeline::VulkanPipeline(
+        IVulkanDevice& device,
+        const std::unique_ptr<VulkanRenderPass>& render_pass,
+        VulkanPipelineLayout& pipeline_layout,
+        const std::string& vertex_shader_path,
+        const std::string& fragment_shader_path,
+        VulkanPipelineConfig config_info
+    ) : device_owner(device) {
+        std::vector<std::unique_ptr<VulkanShaderModule>> shader_modules;
+        shader_modules.push_back(std::make_unique<VulkanShaderModule>(device_owner, utils_read_file(vertex_shader_path), ShaderType::VertexShader));
+        shader_modules.push_back(std::make_unique<VulkanShaderModule>(device_owner, utils_read_file(fragment_shader_path), ShaderType::FragmentShader));
+
+        create_pipeline(render_pass, pipeline_layout, shader_modules, config_info);
+    }
+
+    VulkanPipeline::~VulkanPipeline() {
+        vkDestroyPipeline(device_owner.get_vk_device(), pipeline, nullptr);
+
+        LOG_TRACE("Destroyed Vulkan graphics pipeline");
     }
 
     /*
     void VulkanPipeline::recreate(
-        VulkanDevice& device,
-        std::shared_ptr<VulkanShaderModule>& vertShaderModule,
-        std::shared_ptr<VulkanShaderModule>& fragShaderModule,
+        IVulkanDevice& device,
+        std::unique_ptr<VulkanShaderModule>& vertShaderModule,
+        std::unique_ptr<VulkanShaderModule>& fragShaderModule,
         const PipelineConfigInfo& config_info
     ) {
         // Todo move this
-        vkDestroyPipeline(device.device, backend, nullptr);
+        vkDestroyPipeline(device_owner.get_vk_device(), backend, nullptr);
 
         create_graphics_pipeline(device, vertShaderModule, fragShaderModule, config_info);
     }
     */
 
     void VulkanPipeline::bind(VkCommandBuffer command_buffer) {
-        vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, backend);
-    }
-
-    void VulkanPipeline::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-
-        vkDestroyPipeline(device.device, backend, nullptr);
-        
-        mark_destroyed();
+        vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
     }
 }

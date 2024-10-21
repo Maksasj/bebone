@@ -4,8 +4,9 @@
 #include "types/types.h"
 
 // Debug
-#include "debug/logger.tpp"
-#include "debug/profiler.h"
+#include "debug/ilogger.h"
+#include "debug/console_logger.h"
+#include "debug/logger.h"
 
 // Memory
 #include "memory/arena_allocator.h"
@@ -21,5 +22,14 @@
 
 // Timestamp
 #include "timestamp/watch.h"
+
+// Todo move this out
+
+#include <fstream>
+#include <string>
+
+namespace bebone::core {
+    std::string utils_read_file(const std::string& path);
+}
 
 #endif

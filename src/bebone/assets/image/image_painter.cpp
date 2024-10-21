@@ -5,7 +5,7 @@ namespace bebone::assets {
 
     template<typename Color>
     ImagePainter<Color>::ImagePainter(const std::shared_ptr<Image<Color>>& target_image) : target_image(target_image) {
-
+        LOG_TRACE("Created image painter");
     }
 
     template<typename Color>

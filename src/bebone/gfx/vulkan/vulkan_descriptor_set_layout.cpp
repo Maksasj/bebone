@@ -5,9 +5,9 @@
 
 namespace bebone::gfx {
     VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(
-        VulkanDevice& device,
+        IVulkanDevice& device,
         const std::vector<VulkanDescriptorSetLayoutBinding>& all_bindings
-    ) {
+    ) : device_owner(device) {
         auto binding_flags = std::vector<VkDescriptorBindingFlags> {};
         binding_flags.reserve(all_bindings.size());
 
@@ -15,7 +15,7 @@ namespace bebone::gfx {
         bindings.reserve(all_bindings.size());
 
         for(const auto& b : all_bindings)
-            bindings.push_back(b.backend);
+            bindings.push_back(b.descriptor_set_layout_binding);
 
         for(size_t i = 0; i < bindings.size(); ++i) {
             VkDescriptorBindingFlags flags;
@@ -53,16 +53,17 @@ namespace bebone::gfx {
 
         layout_info.pNext = &extended_info;
 
-        if(vkCreateDescriptorSetLayout(device.device, &layout_info, nullptr, &backend) != VK_SUCCESS)
+        if(vkCreateDescriptorSetLayout(device_owner.get_vk_device(), &layout_info, nullptr, &descriptor_set_layout) != VK_SUCCESS) {
+            LOG_ERROR("Failed to create descriptor set layout");
             throw std::runtime_error("failed to create descriptor set layout!");
+        }
+
+        LOG_TRACE("Created Descriptor set layout");
     }
 
-    void VulkanDescriptorSetLayout::destroy(VulkanDevice& device) {
-        if(is_destroyed())
-            return;
-            
-        vkDestroyDescriptorSetLayout(device.device, backend, nullptr);
+    VulkanDescriptorSetLayout::~VulkanDescriptorSetLayout() {
+        vkDestroyDescriptorSetLayout(device_owner.get_vk_device(), descriptor_set_layout, nullptr);
 
-        mark_destroyed();
+        LOG_TRACE("Destroyed Descriptor set layout");
     }
 }

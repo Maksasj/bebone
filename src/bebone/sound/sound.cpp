@@ -8,6 +8,7 @@ namespace bebone::sound_system {
 
     void Sound::play() const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to play not loaded sound");
             // TODO: throw a warning
             return;
         }
@@ -18,6 +19,7 @@ namespace bebone::sound_system {
 
     void Sound::stop() const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to stop not loaded sound");
             // TODO: throw a warning
             return;
         }
@@ -28,6 +30,7 @@ namespace bebone::sound_system {
 
     void Sound::rewind() const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to rewind not loaded sound");
             // TODO: throw a warning
             return;
         }
@@ -38,6 +41,7 @@ namespace bebone::sound_system {
 
     void Sound::set_volume(const float& volume) const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to set volume to not loaded sound");
             // TODO: throw a warning
             return;
         }
@@ -48,6 +52,7 @@ namespace bebone::sound_system {
 
     void Sound::set_pan(const float& pan) const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to set pan to not loaded sound");
             // TODO: throw a warning
             return;
         }
@@ -58,6 +63,7 @@ namespace bebone::sound_system {
 
     void Sound::set_pitch(const float& pitch) const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to set pitch to not loaded sound");
             // TODO: throw a warning
             return;
         }
@@ -68,6 +74,8 @@ namespace bebone::sound_system {
 
     void Sound::set_looping(const bool& loop) const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to set looping to not loaded sound");
+
             // TODO: throw a warning
             return;
         }
@@ -78,6 +86,7 @@ namespace bebone::sound_system {
 
     bool Sound::is_playing() const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to check is sound playing on not loaded sound");
             // TODO: throw a warning
             return false;
         }
@@ -88,6 +97,7 @@ namespace bebone::sound_system {
 
     bool Sound::at_end() const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to check is sound ending on not loaded sound");
             // TODO: throw a warning
             return false;
         }
@@ -98,6 +108,7 @@ namespace bebone::sound_system {
 
     bool Sound::is_looping() const {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to check is sound looping on not loaded sound");
             // TODO: throw a warning
             return false;
         }
@@ -108,6 +119,7 @@ namespace bebone::sound_system {
 
     void Sound::free() {
         if (loaded_sound == nullptr) {
+            LOG_WARNING("Trying to free not loaded sound");
             // TODO: throw a warning
             return;
         }

@@ -7,25 +7,28 @@
 
 #include "vulkan_device.h"
 
+#include "interface/i_vulkan_command_buffer_pool.h"
+
 #include "vulkan_command_buffer.h"
 
 namespace bebone::gfx {
-    class VulkanCommandBufferPool : public VulkanWrapper<VkCommandPool>, private core::NonCopyable {
+    class VulkanCommandBufferPool : public IVulkanCommandBufferPool, private core::NonCopyable {
         public:
-            VulkanCommandBufferPool(VulkanDevice& device);
+            VkCommandPool command_buffer_pool;
 
-            std::vector<std::shared_ptr<VulkanCommandBuffer>> create_command_buffers(
-                std::shared_ptr<VulkanDevice>& device,
-                const size_t& count);
+        private:
+            IVulkanDevice& device_owner;
 
-            // Todo, refactor this
-            VkCommandBuffer begin_single_time_commands(VulkanDevice& device);
-            void end_single_time_commands(VulkanDevice& device, VkCommandBuffer command_buffer);
+        public:
+            VulkanCommandBufferPool(IVulkanDevice& device);
+            ~VulkanCommandBufferPool();
 
-            // Wait why copy buffer to image is in VulkanCommandBufferPool class ?
-            void copy_buffer_to_image(VulkanDevice& device, std::shared_ptr<VulkanBuffer> buffer, std::shared_ptr<VulkanImage> image);
+            std::unique_ptr<VulkanCommandBuffer> create_command_buffer();
+            std::vector<std::unique_ptr<VulkanCommandBuffer>> create_command_buffers(const size_t& count);
 
-            void destroy(VulkanDevice& device) override;
+            // Vulkan Command Buffer Pool
+            VkCommandBuffer begin_single_time_commands() override;
+            void end_single_time_commands(VkCommandBuffer command_buffer) override;
     };
 }
 

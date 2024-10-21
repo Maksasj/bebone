@@ -9,8 +9,11 @@ namespace bebone::renderer {
     struct Vertex {
         Vec3f position; 
         Vec3f normal;
-        Vec2f texCord;   
+        Vec2f texcoord;
     };
+
+    // tangent
+    // bitangent
 }
 
 #endif

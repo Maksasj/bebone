@@ -1,4 +1,5 @@
 #include "glfw_context.h"
+#include "gfx_backend.h"
 
 namespace bebone::gfx {
     void GLFWContext::init() {

@@ -5,19 +5,26 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_device_memory.h"
+
+#include "interface/i_vulkan_sampler.h"
 
 namespace bebone::gfx {
     class VulkanDevice;
 
     using namespace bebone::core;
 
-    class VulkanSampler : public VulkanWrapper<VkSampler>, private core::NonCopyable {
-        public:
-            VulkanSampler(VulkanDevice& device);
+    class VulkanSampler : public IVulkanSampler, private core::NonCopyable {
+        private:
+            IVulkanDevice& device_owner;
 
-            void destroy(VulkanDevice& device) override;
+            VkSampler sampler;
+
+        public:
+            VulkanSampler(IVulkanDevice& device);
+            ~VulkanSampler();
+
+            VkSampler get_vk_image_sampler() const override;
     };
 }
 

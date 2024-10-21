@@ -5,18 +5,11 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-#include "vulkan_device_memory.h"
+#include "interface/i_vulkan_image.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
     using namespace bebone::core;
-
-    class VulkanDevice;
-    class VulkanCommandBufferPool;
-
-    class VulkanImage;
-    class VulkanImageView;
-    class VulkanDeviceMemory;
 
     struct VulkanImageInfo {
         // VkStructureType type;
@@ -36,31 +29,21 @@ namespace bebone::gfx {
         VkImageLayout initial_layout = VK_IMAGE_LAYOUT_UNDEFINED;
     };
 
-    class VulkanImage : public VulkanWrapper<VkImage>, private core::NonCopyable {
+    class VulkanImage : public IVulkanImage, private core::NonCopyable {
         private:
+            IVulkanDevice& device_owner;
+            VkImage image;
             VkExtent3D extent;
 
         public:
-            VulkanImage(const VkImage& image);
+            VulkanImage(IVulkanDevice& device, VkFormat format, VkExtent3D extent, VulkanImageInfo image_info = {});
+            ~VulkanImage();
 
-            // Todo save extent somewhere
-            VulkanImage(
-                VulkanDevice& device,
-                VkFormat format,
-                VkExtent3D extent,
-                VulkanImageInfo image_info = {});
+            void transition_layout(VkImageLayout old_layout, VkImageLayout new_layout);
 
-            void transition_layout(
-                VulkanCommandBufferPool& pool,
-                VulkanDevice& device,
-                VkImageLayout old_layout,
-                VkImageLayout new_layout);
-
-            VkExtent3D get_extent() const;
-
-            VkMemoryRequirements get_memory_requirements(VulkanDevice& device);
-
-            void destroy(VulkanDevice& device) override;
+            [[nodiscard]] VkImage get_vk_image() const override;
+            [[nodiscard]] VkMemoryRequirements get_memory_requirements() const override;
+            [[nodiscard]] VkExtent3D get_extent() const override;
     };
 }
 

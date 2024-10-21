@@ -35,6 +35,12 @@ namespace bebone::gfx {
 
     Window::~Window() {
         glfwDestroyWindow(window);
+        GLFWContext::terminate();// this should be moved somewhere else
+    }
+
+    void Window::pull_events() {
+        GLFWContext::poll_events();
+        fire(WindowPullEventsEvent());
     }
 
     void Window::glfw_window_pos_callback(GLFWwindow* glfw_window, int x_pos, int y_pos) {
@@ -108,8 +114,16 @@ namespace bebone::gfx {
         return height;
     }
 
+    Vec2i Window::get_size() const {
+        return Vec2i(width, height);
+    }
+
     f32 Window::get_aspect() const {
         return static_cast<f32>(width) / static_cast<f32>(height);
+    }
+
+    const Watch& Window::get_watch() const {
+        return watch;
     }
 
     void Window::end_frame() {

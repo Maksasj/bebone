@@ -3,18 +3,15 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-
 namespace bebone::gfx {
     using namespace bebone::core;
 
-    class VulkanConstRange : public VulkanWrapper<VkPushConstantRange> {
+    // Todo simplify this class
+    class VulkanConstRange {
         public:
-            VulkanConstRange(const VkPushConstantRange& range);
+            VkPushConstantRange const_range;
 
-            static VulkanConstRange common(const size_t& size, const u32& offset);
-
-            void destroy(VulkanDevice& device) override;
+            VulkanConstRange(const size_t& size, const u32& offset, const VkShaderStageFlags& stage_flags = VK_SHADER_STAGE_ALL);
     };
 }
 

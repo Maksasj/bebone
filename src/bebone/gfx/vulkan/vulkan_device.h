@@ -11,46 +11,39 @@
 #include "../shaders/shader_type.h"
 #include "../shaders/shader_code.h"
 
-#include "vulkan_wrapper.tpp"
 #include "vulkan_instance.h"
 #include "vulkan_device_chooser.h"
 
-#include "vulkan_buffer.h"
-#include "vulkan_image.h"
 #include "vulkan_sampler.h"
 #include "vulkan_image_view.h"
 #include "vulkan_pipeline.h"
-#include "vulkan_texture.h"
+#include "vulkan_texture_tuple.h"
 #include "vulkan_descriptor_set.h"
 #include "vulkan_descriptor_set_layout_binding.h"
+#include "vulkan_attachment.h"
+#include "vulkan_swap_chain_image.h"
 
-#include "vulkan_buffer_tuples.h"
-#include "vulkan_image_tuples.h"
+#include "interface/i_vulkan_device.h"
 
 namespace bebone::gfx {
     class VulkanSwapChain;
     class VulkanPipeline;
     class VulkanDescriptorPool;
     class VulkanCommandBufferPool;
+    class VulkanCommandBuffer;
     class VulkanShaderModule;
     class VulkanPipelineLayout;
     class VulkanDescriptorSetLayout;
     class VulkanConstRange;
     class VulkanPipelineManager;
     class VulkanRenderTarget;
+    class VulkanRenderPass;
+    class VulkanFramebuffer;
 
-    class VulkanDevice : private core::NonCopyable {
+    class VulkanDevice : public IVulkanDevice, private core::NonCopyable {
         private:
-            // Todo, abstract all things below
-            VkPhysicalDevice physical_device = VK_NULL_HANDLE;
+            VulkanInstance& instance_owner;
 
-            void pick_physical_device(VulkanInstance &instance);
-            void create_logical_device();
-
-            // Todo, maybe this can be optimized
-            std::vector<shared_ptr<VulkanApi>> child_objects;
-
-        public:
             VkDevice device;
             VkSurfaceKHR surface;
             VkQueue graphics_queue;
@@ -58,179 +51,36 @@ namespace bebone::gfx {
 
             VkPhysicalDeviceProperties properties;
 
-            VulkanDevice(
-                VulkanInstance& instance,
-                VulkanWindow &window);
+            // Todo, abstract all things below
+            VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 
-            std::shared_ptr<VulkanDeviceMemory> create_device_memory(
-                VkMemoryRequirements requirements,
-                VkMemoryPropertyFlags properties);
+            void pick_physical_device(VulkanInstance &instance);
+            void create_logical_device();
 
-            std::shared_ptr<VulkanBuffer> create_buffer(
-                const size_t& size,
-                VulkanBufferInfo buffer_info = {});
+            // Todo, maybe this can be optimized
+            std::unique_ptr<VulkanCommandBufferPool> command_buffer_pool;
 
-            VulkanBufferMemoryTuple create_buffer_memory(
-                const size_t& size,
-                VulkanBufferInfo buffer_info = {});
+        public:
+            VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window);
+            ~VulkanDevice() override;
 
-            template<typename T>
-            VulkanBufferMemoryTuple create_buffer_memory_from(
-                const std::vector<T>& data,
-                VulkanBufferInfo buffer_info = {}
-            ) {
-                const auto size = sizeof(T) * data.size();
-                auto tuple = create_buffer_memory(size, buffer_info);
-                auto [ _, b_memory ] = tuple;
+            //  Todo make this a ICommandBufferPool interface
+            // std::unique_ptr<VulkanCommandBuffer> begin_single_time_commands() override;
+            // void end_single_time_commands(std::unique_ptr<VulkanCommandBuffer>& command_buffer) override;
 
-                b_memory->upload_data(*this, data.data(), size);
+            VulkanQueueFamilyIndices find_physical_queue_families() override { return VulkanDeviceChooser::find_queue_families(physical_device, surface); }
+            VulkanSwapChainSupportDetails get_swap_chain_support() override { return VulkanDeviceChooser::query_swap_chain_support(physical_device, surface); }
 
-                return tuple;
-            }
+            uint32_t find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags properties) override;
+            VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) override;
+            VkFormat find_depth_format() override;
 
-            std::vector<std::shared_ptr<VulkanBuffer>> create_buffers(
-                const size_t& size,
-                const size_t& count,
-                VulkanBufferInfo buffer_info = {});
-
-            std::vector<VulkanBufferMemoryTuple> create_buffer_memorys(
-                const size_t& size,
-                const size_t& count,
-                VulkanBufferInfo buffer_info = {});
-
-            std::shared_ptr<VulkanImage> create_image(
-                VkFormat format,
-                VkExtent3D extent,
-                VulkanImageInfo image_info = {});
-
-            // Todo
-            VulkanImageMemoryTuple create_image_memory(
-                VkFormat format,
-                VkExtent3D extent,
-                VulkanImageInfo image_info);
-
-            std::shared_ptr<VulkanImage> create_image(VkImage& image);
-
-            std::shared_ptr<VulkanSampler> create_sampler();
-
-            std::shared_ptr<VulkanImageView> create_image_view(
-                VulkanImage& image,
-                const VkFormat& image_format,
-                VulkanImageViewInfo image_view_info = {});
-
-            std::shared_ptr<VulkanDescriptorPool> create_descriptor_pool();
-
-            std::shared_ptr<VulkanDescriptorSetLayout> create_descriptor_set_layout(
-                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
-
-            std::vector<std::shared_ptr<VulkanDescriptorSetLayout>> create_descriptor_set_layouts(
-                const std::vector<VulkanDescriptorSetLayoutBinding>& bindings);
-
-            void update_descriptor_set(
-                const std::shared_ptr<VulkanBuffer>& buffer,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element
-            );
-
-            void update_descriptor_set(
-                const std::shared_ptr<VulkanTexture>& texture,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element
-            );
-
-            void update_descriptor_set(
-                const std::shared_ptr<VulkanSampler>& sampler,
-                const std::shared_ptr<VulkanImageView>& view,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element);
-
-            void update_descriptor_set(
-                const VulkanBufferMemoryTuple& tuple,
-                std::shared_ptr<VulkanDescriptorSet>& descriptor_set,
-                const size_t& binding,
-                const size_t& dst_array_element);
-
-            void update_descriptor_sets(
-                const std::vector<std::shared_ptr<VulkanBuffer>>& buffers,
-                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
-                const size_t& binding,
-                const std::vector<size_t>& dst_array_elements);
-
-            void update_descriptor_sets(
-                const std::vector<VulkanBufferMemoryTuple>& tuples,
-                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
-                const size_t& binding,
-                const std::vector<size_t>& dst_array_elements);
-
-            void update_descriptor_sets(
-                const std::shared_ptr<VulkanTexture>& texture,
-                std::vector<std::shared_ptr<VulkanDescriptorSet>>& descriptor_sets,
-                const size_t& binding,
-                const std::vector<size_t>& dst_array_elements);
-
-            std::shared_ptr<VulkanPipelineLayout> create_pipeline_layout(
-                const std::vector<std::shared_ptr<VulkanDescriptorSetLayout>>& layouts,
-                const std::vector<VulkanConstRange>& constant_ranges);
-
-            std::shared_ptr<VulkanPipeline> create_pipeline(
-                const std::shared_ptr<VulkanSwapChain>& swap_chain,
-                const std::shared_ptr<VulkanPipelineLayout>& pipeline_layout,
-                const std::vector<std::shared_ptr<VulkanShaderModule>>& shader_modules,
-                VulkanPipelineConfig config_info = {});
-
-            std::shared_ptr<VulkanCommandBufferPool> create_command_buffer_pool();
-
-            std::shared_ptr<VulkanShaderModule> create_shader_module(
-                const std::string& file_path,
-                const ShaderType& type);
-
-            std::shared_ptr<VulkanTexture> create_texture(
-                std::shared_ptr<VulkanCommandBufferPool>& command_buffer_pool,
-                const std::string& file_path);
-
-            std::shared_ptr<VulkanPipelineManager> create_pipeline_manager();
-
-            std::shared_ptr<VulkanRenderTarget> create_render_target(
-                std::vector<VulkanSwapChainImageTuple>& swap_chain_images,
-                VkFormat image_format,
-                VkExtent2D extent);
-
-            std::shared_ptr<VulkanSwapChain> create_swap_chain(std::shared_ptr<Window>& window);
-
-            void wait_idle();
-
-            uint32_t find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags properties);
-
-            VulkanQueueFamilyIndices find_physical_queue_families() { return VulkanDeviceChooser::find_queue_families(physical_device, surface); }
-            VulkanSwapChainSupportDetails get_swap_chain_support() { return VulkanDeviceChooser::query_swap_chain_support(physical_device, surface); }
-
-            VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-
-            template <typename... Args>
-            void destroy_all(Args... args) {
-                (args.destroy(*this), ...);
-            }
-
-            template <typename... Args>
-            void destroy_all(std::shared_ptr<Args>... args) {
-                (args->destroy(*this), ...);
-            }
-
-            template <typename... Args>
-            void destroy_all(std::vector<std::shared_ptr<Args>>... args) {
-                for(auto& arg : (args, ...)) {
-                    arg->destroy(*this);
-                }
-            }
-
-            void collect_garbage();
-
-            void destroy(VulkanInstance& instance);
-
-            VkFormat find_depth_format();
+            // Vulkan Device
+            [[nodiscard]] VkDevice get_vk_device() const override;
+            [[nodiscard]] VkSurfaceKHR get_surface() const override;
+            [[nodiscard]] VkQueue get_graphics_queue() const override;
+            [[nodiscard]] VkQueue get_present_queue() const override;
+            void wait_idle() const override;
     };
 }
 

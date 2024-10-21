@@ -4,7 +4,7 @@ namespace bebone::gfx {
     GLShader::GLShader(const ShaderCode& code, const ShaderType& shader_type, const GLShaderProperties& properties)
             : properties(properties) {
 
-        shader = glCreateShader(shader_type.to_opengl());
+        shader = glCreateShader(to_opengl(shader_type));
 
         const auto& source = code.get_byte_code();
 
@@ -22,7 +22,7 @@ namespace bebone::gfx {
     GLShader::GLShader(const std::string& code, const ShaderType& shader_type, const GLShaderProperties& properties)
             : properties(properties) {
 
-        shader = glCreateShader(shader_type.to_opengl());
+        shader = glCreateShader(to_opengl(shader_type));
 
         const auto str = code.c_str();
 
@@ -41,10 +41,8 @@ namespace bebone::gfx {
         if(!success) {
             glGetShaderInfoLog(shader, 512, nullptr, info_log);
 
-            // Todo resolve this
-            std::cout << info_log << "\n";
-
-            throw std::runtime_error("Failed to compile shader, with error: " + std::string(info_log));
+            LOG_ERROR("Failed to compile shader, with error: {}", std::string(info_log));
+            // throw std::runtime_error("Failed to compile shader, with error: " + ); Todo
         }
     }
 

@@ -3,24 +3,29 @@
 
 #include "../gfx_backend.h"
 
-#include "vulkan_wrapper.tpp"
-
 #include "../shaders/shader_code.h"
 #include "../shaders/shader_compiler.h"
 #include "../shaders/shader_source.h"
 #include "../shaders/shader_type.h"
 #include "../shaders/spirv_shader_compiler.h"
 
-namespace bebone::gfx {
-    class VulkanDevice;
+#include "interface/i_vulkan_device.h"
 
-    class VulkanShaderModule : public VulkanWrapper<VkShaderModule>, private core::NonCopyable {
+namespace bebone::gfx {
+    class VulkanShaderModule : private core::NonCopyable {
+        public:
+            VkShaderModule shader_module;
+
+        private:
+            IVulkanDevice& device_owner;
+
         public:
             ShaderType type;
 
-            VulkanShaderModule(VulkanDevice& device, const ShaderCode& code);
+            VulkanShaderModule(IVulkanDevice& device, const ShaderCode& code);
+            VulkanShaderModule(IVulkanDevice& device, const std::string& source_code, const ShaderType& type);
 
-            void destroy(VulkanDevice& device) override;
+            ~VulkanShaderModule();
     };
 }
 
