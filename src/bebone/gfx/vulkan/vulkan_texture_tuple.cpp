@@ -55,6 +55,8 @@ namespace bebone::gfx {
         view = std::make_unique<VulkanImageView>(device, *image, image_format);
     }
 
+    VulkanTexture::~VulkanTexture() = default;
+
     VkMemoryRequirements VulkanTexture::get_memory_requirements() const {
         return image->get_memory_requirements();
     }

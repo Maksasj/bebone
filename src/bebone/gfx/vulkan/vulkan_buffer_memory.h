@@ -39,7 +39,7 @@ namespace bebone::gfx {
                 memory->upload_data(data.data(), size);
             }
 
-            ~VulkanBufferMemory();
+            ~VulkanBufferMemory() override;
 
             void upload_data(const void* src, const size_t& size);
 

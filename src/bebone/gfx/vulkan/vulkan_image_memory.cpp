@@ -14,6 +14,8 @@ namespace bebone::gfx {
 
     }
 
+    VulkanImageMemory::~VulkanImageMemory() = default;
+
     VkImage VulkanImageMemory::get_vk_image() const {
         return image->get_vk_image();
     }

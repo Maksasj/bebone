@@ -57,7 +57,7 @@ namespace bebone::gfx {
 
         public:
             VulkanBuffer(IVulkanDevice& device, const size_t& size, VulkanBufferInfo buffer_info);
-            ~VulkanBuffer();
+            ~VulkanBuffer() override;
 
             // Vulkan Buffer
             [[nodiscard]] VkBuffer get_vk_buffer() const override;

@@ -3,9 +3,6 @@
 using namespace bebone::core;
 using namespace bebone::gfx;
 
-const std::vector<Vec3f> vertices = { {-0.5f, -0.5f, 0.0f}, {0.5f, -0.5f, 0.0f}, {0.0f,  0.5f, 0.0f} };
-const std::vector<u32> indices = { 0, 1, 2, };
-
 // Todo make this nicer
 const auto vertex_descriptions = VulkanPipelineVertexInputStateTuple {
     .binding_descriptions = {
@@ -25,6 +22,9 @@ int main() {
 
     VulkanPipelineLayout pipeline_layout(device, {}, {});
     VulkanPipeline pipeline(device, swap_chain.render_pass, pipeline_layout, "vert.glsl", "frag.glsl", { .vertex_input_state = { .vertex_descriptions = vertex_descriptions } });
+
+    const std::vector<Vec3f> vertices = { {-0.5f, -0.5f, 0.0f}, {0.5f, -0.5f, 0.0f}, {0.0f,  0.5f, 0.0f} };
+    const std::vector<u32> indices = { 0, 1, 2, };
 
     VulkanBufferMemory vb(device, vertices);
     VulkanBufferMemory eb(device, indices);

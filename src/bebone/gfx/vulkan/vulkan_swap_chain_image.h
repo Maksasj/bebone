@@ -25,7 +25,7 @@ namespace bebone::gfx {
 
         public:
             VulkanSwapChainImage(IVulkanDevice& device, VkImage vk_image, VkFormat image_format);
-            ~VulkanSwapChainImage();
+            ~VulkanSwapChainImage() override;
 
             // Vulkan Image
             [[nodiscard]] VkImage get_vk_image() const override;

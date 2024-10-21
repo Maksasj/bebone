@@ -25,6 +25,8 @@ namespace bebone::gfx {
 
     class IVulkanDevice {
         public:
+            virtual ~IVulkanDevice() = default;
+
             virtual uint32_t find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags properties) = 0;
             virtual VkFormat find_supported_format(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) = 0;
             virtual VkFormat find_depth_format() = 0;

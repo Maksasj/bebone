@@ -21,6 +21,8 @@ namespace bebone::gfx {
         view = std::make_unique<VulkanImageView>(device, *image, format, image_view_info);
     }
 
+    VulkanDepthImage::~VulkanDepthImage() = default;
+
     VkImage VulkanDepthImage::get_vk_image() const {
         return image->get_vk_image();
     }

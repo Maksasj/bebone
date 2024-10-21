@@ -7,7 +7,9 @@ namespace bebone::gfx {
     using namespace bebone::core;
 
     class IVulkanInstance {
-
+        private:
+        public:
+            virtual ~IVulkanInstance() = default;
     };
 }
 

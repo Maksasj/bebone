@@ -30,6 +30,7 @@ namespace bebone::gfx {
         public:
             VulkanTexture(IVulkanDevice& device, const std::shared_ptr<assets::Image<ColorRGBA>>& raw);
             VulkanTexture(IVulkanDevice& device, VkExtent3D extent, VkFormat image_format);
+            ~VulkanTexture() override;
 
             // Vulkan Image
             [[nodiscard]] VkImage get_vk_image() const override;

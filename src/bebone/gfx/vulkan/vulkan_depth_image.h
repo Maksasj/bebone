@@ -24,6 +24,7 @@ namespace bebone::gfx {
 
         public:
             VulkanDepthImage(IVulkanDevice& device, VkExtent3D extent);
+            ~VulkanDepthImage() override;
 
             // Vulkan Image
             [[nodiscard]] VkImage get_vk_image() const override;

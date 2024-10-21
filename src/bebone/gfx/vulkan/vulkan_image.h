@@ -37,7 +37,6 @@ namespace bebone::gfx {
 
         public:
             VulkanImage(IVulkanDevice& device, VkFormat format, VkExtent3D extent, VulkanImageInfo image_info = {});
-
             ~VulkanImage();
 
             void transition_layout(VkImageLayout old_layout, VkImageLayout new_layout);

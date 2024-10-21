@@ -62,9 +62,9 @@ namespace bebone::gfx {
 
         public:
             VulkanDevice(VulkanInstance& instance, std::unique_ptr<Window>& window);
-            ~VulkanDevice();
+            ~VulkanDevice() override;
 
-            //  Todo make this a ICommandBufferPool interaface
+            //  Todo make this a ICommandBufferPool interface
             // std::unique_ptr<VulkanCommandBuffer> begin_single_time_commands() override;
             // void end_single_time_commands(std::unique_ptr<VulkanCommandBuffer>& command_buffer) override;
 
@@ -81,7 +81,6 @@ namespace bebone::gfx {
             [[nodiscard]] VkQueue get_graphics_queue() const override;
             [[nodiscard]] VkQueue get_present_queue() const override;
             void wait_idle() const override;
-
     };
 }
 

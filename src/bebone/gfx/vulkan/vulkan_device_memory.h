@@ -22,7 +22,7 @@ namespace bebone::gfx {
 
         public:
             VulkanDeviceMemory(IVulkanDevice& device, VkMemoryRequirements requirements, VkMemoryPropertyFlags properties);
-            ~VulkanDeviceMemory();
+            ~VulkanDeviceMemory() override;
 
             // Todo move to interface
             void bind_buffer_memory(VulkanBuffer& buffer);

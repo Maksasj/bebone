@@ -8,6 +8,8 @@ namespace bebone::gfx {
 
     class IVulkanImageView {
         public:
+            virtual ~IVulkanImageView() = default;
+
             virtual VkImageView get_vk_image_view() const = 0;
     };
 }

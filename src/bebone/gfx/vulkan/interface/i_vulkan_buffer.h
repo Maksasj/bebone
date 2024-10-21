@@ -10,6 +10,8 @@ namespace bebone::gfx {
 
     class IVulkanBuffer {
         public:
+            virtual ~IVulkanBuffer() = default;
+
             [[nodiscard]] virtual VkBuffer get_vk_buffer() const = 0;
             [[nodiscard]] virtual VkMemoryRequirements get_memory_requirements() const = 0;
             [[nodiscard]] virtual size_t get_size() const = 0;
